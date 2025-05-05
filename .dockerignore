@@ -1,0 +1,16 @@
+.env
+.git
+.gitignore
+*.pyc
+__pycache__/
+.pytest_cache/
+*.log
+logfile
+dist/
+build/
+*.egg-info/
+venv/
+.venv/
+*.zip
+*.tar.gz
+docs/_build/

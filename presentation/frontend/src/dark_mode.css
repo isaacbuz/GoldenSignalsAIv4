@@ -1,0 +1,6 @@
+/* presentation/frontend/src/dark_mode.css */
+body.dark-mode { background-color: #1a202c; color: #e2e8f0; }
+.dark-mode h1 { color: #60a5fa; }
+.dark-mode h2 { color: #93c5fd; }
+.dark-mode button { background-color: #3b82f6; }
+.dark-mode button:hover { background-color: #2563eb; }

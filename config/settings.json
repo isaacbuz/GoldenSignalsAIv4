@@ -1,0 +1,38 @@
+{
+  "autonomous_mode": true,
+  "default_symbols": [
+    "TSLA",
+    "AAPL"
+  ],
+  "risk_profiles": {
+    "conservative": {
+      "max_drawdown": 0.1,
+      "trade_frequency": "low",
+      "max_loss": 0.01,
+      "position_size": 0.02
+    },
+    "balanced": {
+      "max_drawdown": 0.2,
+      "trade_frequency": "medium",
+      "max_loss": 0.02,
+      "position_size": 0.05
+    },
+    "aggressive": {
+      "max_drawdown": 0.3,
+      "trade_frequency": "high",
+      "max_loss": 0.03,
+      "position_size": 0.1
+    }
+  },
+  "data_sources": {
+    "market_data": "polygon",
+    "news": "newsapi",
+    "fundamentals": "alpha_vantage"
+  },
+  "alert_preferences": {
+    "email": true,
+    "whatsapp": false,
+    "dashboard": true
+  },
+  "created_at": "2025-05-05T14:04:23.881554"
+}

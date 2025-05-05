@@ -1,0 +1,11 @@
+groups:
+- name: example
+  rules:
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{status="500"}[5m]) > 0.05
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High error rate detected"
+      description: "The rate of HTTP 500 errors has exceeded 5% for 5 minutes."
