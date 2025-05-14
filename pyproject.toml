@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "GoldenSignalsAI"
-version = "1.0.84"
+version = "1.1.0"
 description = "AI-driven stock trading system"
 authors = ["Isaac Buziba"]
 [tool.poetry.dependencies]

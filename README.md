@@ -17,4 +17,4 @@ AI-driven stock trading system using LSTM, XGBoost, LightGBM, FinBERT, SAC RL. F
 7. Run tests: `pytest GoldenSignalsAI/presentation/tests/`
 
 ## Download
-- [v1.0.85](https://github.com/isaacbuz/GoldenSignalsAI/releases/tag/v1.0.85)
+- [v1.1.0](https://github.com/isaacbuz/GoldenSignalsAI/releases/tag/v1.1.0)
