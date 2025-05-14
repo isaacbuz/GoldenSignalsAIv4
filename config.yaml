@@ -1,0 +1,108 @@
+# GoldenSignalsAI Configuration
+
+version: 1.2.0
+environment: development
+
+# Application-wide settings
+app:
+  name: GoldenSignalsAI
+  debug: true
+  log_level: INFO
+  machine_id: ${MACHINE_ID}
+  deployment_mode: microservices
+
+# Trading Strategy Configuration
+trading:
+  risk_management:
+    max_portfolio_risk: 0.05
+    var_confidence_level: 0.95
+    max_trade_amount: 5000
+    stop_loss_percentage: 2.5
+
+  strategies:
+    pairs_trading:
+      enabled: true
+      correlation_threshold: 0.8
+      max_deviation: 2.0
+
+    momentum:
+      enabled: true
+      lookback_period: 20
+      threshold: 0.02
+
+    volatility_breakout:
+      enabled: true
+      bollinger_periods: 20
+      standard_deviations: 2.0
+
+    machine_learning:
+      enabled: true
+      model_type: transformer
+      retraining_frequency: weekly
+      feature_set: comprehensive
+
+# API Configuration
+apis:
+  alpha_vantage:
+    base_url: https://www.alphavantage.co/query
+    timeout: 10  # seconds
+  twitter:
+    bearer_token: ${TWITTER_BEARER_TOKEN}
+  news_api:
+    base_url: https://newsapi.org/v2
+    timeout: 15  # seconds
+
+# Feature Flags
+features:
+  sentiment_analysis: true
+  options_flow_tracking: true
+  risk_management: true
+  machine_learning_models: true
+
+# Performance and Resource Limits
+performance:
+  max_concurrent_agents: 10
+  memory_limit_mb: 2048
+  cpu_limit_percent: 80
+
+# Notification Channels
+notifications:
+  email:
+    enabled: true
+    smtp_host: smtp.gmail.com
+    smtp_port: 587
+  slack:
+    enabled: false
+    webhook_url: ${SLACK_WEBHOOK_URL}
+  telegram:
+    enabled: false
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+
+# Machine Learning Model Settings
+ml_models:
+  default_model: transformer
+  models:
+    lstm:
+      hidden_layers: 2
+      dropout_rate: 0.3
+    transformer:
+      attention_heads: 4
+      max_sequence_length: 512
+    gru:
+      bidirectional: true
+      hidden_units: 128
+
+# Trading Strategy Parameters
+trading_strategy:
+  risk_tolerance: moderate
+  rebalance_frequency: daily
+  max_position_size_percent: 5
+  stop_loss_percent: 2
+  take_profit_percent: 10
+
+# Data Source Priorities
+data_sources:
+  priority:
+    - alpha_vantage
+    - yfinance
+    - local_cache
