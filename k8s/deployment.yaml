@@ -1,0 +1,242 @@
+# k8s/deployment.yaml
+# Purpose: Defines Kubernetes deployment and service configurations for the
+# GoldenSignalsAI application, including FastAPI backend, React frontend, Redis,
+# and dashboard. Optimized for scalability and reliability in options trading
+# workflows, with resource limits and health checks.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goldensignalsai-backend
+  labels:
+    app: goldensignalsai-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: goldensignalsai-backend
+  template:
+    metadata:
+      labels:
+        app: goldensignalsai-backend
+    spec:
+      containers:
+      - name: backend
+        image: user/goldensignalsai-backend:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: "2"
+            memory: "2Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: ALPHA_VANTAGE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: alpha-vantage-api-key
+        - name: NEWS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: news-api-key
+        - name: TWITTER_BEARER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: twitter-bearer-token
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: goldensignalsai-backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goldensignalsai-frontend
+  labels:
+    app: goldensignalsai-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: goldensignalsai-frontend
+  template:
+    metadata:
+      labels:
+        app: goldensignalsai-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: user/goldensignalsai-frontend:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: goldensignalsai-frontend
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goldensignalsai-dashboard
+  labels:
+    app: goldensignalsai-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goldensignalsai-dashboard
+  template:
+    metadata:
+      labels:
+        app: goldensignalsai-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: user/goldensignalsai-backend:latest
+        command: ["python", "-m", "monitoring.agent_dashboard"]
+        ports:
+        - containerPort: 8050
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8050
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8050
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+spec:
+  selector:
+    app: goldensignalsai-dashboard
+  ports:
+  - protocol: TCP
+    port: 8050
+    targetPort: 8050
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:6.2
+        ports:
+        - containerPort: 6379
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            cpu: "0.5"
+            memory: "256Mi"
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 15
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+  type: ClusterIP

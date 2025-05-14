@@ -1,0 +1,15 @@
+# Dockerfile.frontend
+# Purpose: Docker configuration for the React frontend of GoldenSignalsAI.
+
+FROM node:18
+
+WORKDIR /app
+
+COPY presentation/frontend/package.json presentation/frontend/package-lock.json ./
+RUN npm install
+
+COPY presentation/frontend .
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
