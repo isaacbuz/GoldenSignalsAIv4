@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    env_file:
+      - .env
+    expose:
+      - 8000
+    restart: always
+
+  frontend:
+    build:
+      context: ./presentation/frontend
+      dockerfile: Dockerfile.frontend
+    environment:
+      - REACT_APP_API_BASE_URL=https://your-domain.com/api
+    expose:
+      - 3000
+    restart: always
+
+  dash:
+    build:
+      context: ./presentation/frontend/app
+      dockerfile: Dockerfile.dash
+    expose:
+      - 8050
+    restart: always
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+      - dash
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,7 @@
+your-domain.com {
+  reverse_proxy /api/* backend:8000
+  reverse_proxy /dash/* dash:8050
+  reverse_proxy frontend:3000
+  encode gzip
+  tls you@example.com
+}

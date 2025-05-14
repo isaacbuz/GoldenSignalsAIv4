@@ -40,43 +40,41 @@ class EnvironmentValidator:
     
     def _validate_required_env_vars(self) -> bool:
         """
-        Validate critical environment variables.
+        Validate critical environment variables, including all required API keys.
         
         Returns:
             bool: True if all required variables are set
         """
         required_vars = [
-            'GOLDENSIGNALS_ENV',
+            'APP_ENV',
             'ALPHA_VANTAGE_API_KEY',
-            'MACHINE_ID'
+            'TWITTER_API_KEY',
+            'NEWS_API_KEY',
+            'REDIS_URL',
         ]
-        
         missing_vars = [var for var in required_vars if not os.environ.get(var)]
-        
         if missing_vars:
             self.logger.error(f"Missing required environment variables: {missing_vars}")
             return False
-        
         return True
     
     def _validate_api_configurations(self) -> bool:
         """
-        Validate API configurations and keys.
+        Validate API configurations and keys, including presence and format of API keys.
         
         Returns:
             bool: True if API configurations are valid
         """
-        api_configs = {
-            'alpha_vantage': self.config.get('apis.alpha_vantage.base_url'),
-            'twitter': self.config.get('apis.twitter.bearer_token')
+        api_keys = {
+            'ALPHA_VANTAGE_API_KEY': os.environ.get('ALPHA_VANTAGE_API_KEY'),
+            'TWITTER_API_KEY': os.environ.get('TWITTER_API_KEY'),
+            'NEWS_API_KEY': os.environ.get('NEWS_API_KEY'),
         }
-        
-        invalid_configs = [name for name, config in api_configs.items() if not config]
-        
-        if invalid_configs:
-            self.logger.error(f"Invalid API configurations: {invalid_configs}")
+        invalid_keys = [name for name, key in api_keys.items() if not key or key == f'your_{name.lower()}']
+        if invalid_keys:
+            self.logger.error(f"Missing or invalid API keys: {invalid_keys}")
             return False
-        
+        # Additional config checks can be added here
         return True
     
     def _validate_system_resources(self) -> bool:
@@ -184,6 +182,22 @@ class EnvironmentValidator:
         self.logger.info(f"System Report: {report}")
         
         return True
+
+    def log_api_key_statuses(self):
+        """
+        Log the status (set/missing) of all critical API keys at startup.
+        """
+        api_keys = [
+            'ALPHA_VANTAGE_API_KEY',
+            'TWITTER_API_KEY',
+            'NEWS_API_KEY',
+        ]
+        for key in api_keys:
+            value = os.environ.get(key)
+            if value and not value.startswith('your_'):
+                self.logger.info(f"{key} is set.")
+            else:
+                self.logger.warning(f"{key} is missing or using a placeholder value.")
 
 # Singleton instance for global access
 env_validator = EnvironmentValidator()

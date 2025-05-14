@@ -1,58 +1,139 @@
 # GoldenSignalsAI
-AI-driven stock trading system using LSTM, XGBoost, LightGBM, FinBERT, SAC RL. Features real-time data, backtesting, SMS/WhatsApp/X alerts, and a Plotly Dash dashboard.
+
+AI-powered, multi-agent options trading and arbitrage platform with advanced admin panel, real-time monitoring, and robust security.
 
 ---
 
 ## Architecture Overview
 ![Architecture Diagram](docs/architecture.png)
-*_(Replace with your architecture diagram)_*
 
-- **Backend:** FastAPI (REST API), Python 3.10+
-- **Frontend:** React & Dash (dashboard)
-- **ML:** LSTM, XGBoost, LightGBM, RL, FinBERT
-- **Orchestration:** Prefect, Docker, K8s
-- **CI/CD:** Poetry, pytest, GitHub Actions, Heroku
-
-## API Usage Example
-```bash
-curl -X GET http://localhost:8000/signals?symbol=AAPL
-```
-
-## Agent & Strategy Explanations
-- **Predictive Agents:** Generate signals using ML models
-- **Risk Agents:** Manage exposure and risk
-- **Sentiment Agents:** Analyze news/social data
-- **Strategy Orchestrators:** Combine signals for trading decisions
+- **Backend:** FastAPI (REST API, trading logic, admin endpoints)
+- **Frontend:** React (dashboard UI, admin panel), Dash (advanced analytics)
+- **Agents:** Modular Python classes for each data source (Alpha Vantage, Finnhub, Polygon, Benzinga, Bloomberg, StockTwits)
+- **Arbitrage:** AI-powered arbitrage agents and executor, real-time monitoring
+- **Deployment:** Poetry, Docker Compose, .env for secrets
+- **Security:** Firebase multi-auth, RBAC, audit logging, no hardcoded keys
 
 ---
 
-## Security & Secrets
-- Never commit real API keys or secrets. Use `.env` files and environment variables. See `.env.example`.
+## Features
 
-## Frontend & UX
-- Dash/React dashboards for real-time monitoring
-- Add authentication for production deployments
+### ⚡️ Trading & Arbitrage
+- Real-time options trading signals, arbitrage detection, and execution
+- Modular, extensible agent framework (add new data sources easily)
+- Handles API key rotation, missing/expired keys gracefully
 
-## CI/CD & Automation
-- Automated tests, linting, and deployment via GitHub Actions (see `.github/workflows/ci.yml`).
-- Use semantic versioning. Tag releases for changelog and deployment.
+### 📊 Admin Panel (React)
+- **Multi-provider authentication:** Firebase (email/password, Google, GitHub)
+- **Role-based access control:** Admin/operator/user via Firebase custom claims
+- **Live monitoring:**
+  - Performance charts (CPU, memory, uptime)
+  - Agent health/heartbeat, error rates
+  - Queue/task status
+  - Real-time logs
+- **Agent controls:** Restart, disable agents (admin only)
+- **User management:**
+  - List users, change roles, enable/disable, invite, reset password, delete
+  - All sensitive actions are audit-logged
+- **Alerts:** Visual alerts for unhealthy agents, high queue depth, errors
+- **Onboarding:** Built-in onboarding modal for new admins
+- **Accessibility:** Keyboard navigation, ARIA labels, color contrast
+
+### 🛡️ Security & Compliance
+- All secrets in `.env`, never committed
+- Firebase ID token required for all admin endpoints
+- Audit logging for all sensitive admin/user actions
+- RBAC enforced on backend and frontend
+
+---
+
+## Quickstart
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/isaacbuz/GoldenSignalsAI.git
+cd GoldenSignalsAI
+pip install poetry
+poetry install
+```
+
+### 2. Environment Setup
+- Copy `.env.example` to `.env` and fill in:
+  - All API keys (Alpha Vantage, Finnhub, etc.)
+  - Firebase Admin SDK path
+  - `FIREBASE_WEB_API_KEY` (from Firebase Console)
+  - Any other required secrets
+
+### 3. Run the Platform
+```bash
+# Start FastAPI backend
+uvicorn GoldenSignalsAI.presentation.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Start React frontend (from presentation/frontend)
+npm install
+npm start
+
+# (Optional) Start Dash analytics dashboard
+python GoldenSignalsAI/presentation/frontend/app/dashboard.py
+```
+
+---
+
+## Admin Panel Usage
+
+- Access the admin panel from the main dashboard UI (localhost:8080)
+- Log in with Firebase (email/password, Google, GitHub)
+- Admins can:
+  - Monitor performance, agent health, queue
+  - Manage users and roles
+  - Restart/disable agents
+  - Invite, reset password, or delete users
+- All actions are audit-logged to `./logs/admin_audit.log`
+- Alerts are shown for system or agent issues
+
+---
+
+## Security Best Practices
+- Never commit real API keys or secrets
+- Use `.env` for all secrets, reference with `os.getenv`
+- Restrict admin access via Firebase custom claims
+- All admin endpoints require valid Firebase ID token
+- Regularly review `admin_audit.log` for compliance
+
+---
+
+## Extending & Customizing
+- **Add new agents:** Create a new Python agent class and register in the backend
+- **Add new admin features:** Add endpoints in FastAPI, then UI in React
+- **Integrate new auth providers:** Enable in Firebase console and update frontend
+- **Customize onboarding:** Edit `AdminOnboardingModal.js`
+
+---
+
+## Troubleshooting
+- **Auth errors:** Check Firebase config and service account
+- **API errors:** Check `.env` for missing/expired keys
+- **Frontend/backend not connecting:** Confirm CORS and port settings
+- **Audit log missing:** Ensure `logs/` directory exists and is writable
 
 ---
 
 ## Project Structure
-- **Presentation**: `api/` (REST API), `frontend/` (Dash dashboard)
-- **Application**: `ai_service/`, `events/`, `services/`, `strategies/`, `workflows/`, `monitoring/`
-- **Domain**: `trading/`, `models/`, `analytics/`, `portfolio/`
-- **Infrastructure**: `data/`, `external_services/`, `event_sourcing/`, `ml_pipeline/`, `monitoring/`, `kyc/`
+- `presentation/api/` — FastAPI backend (admin endpoints, trading logic)
+- `presentation/frontend/` — React frontend (dashboard, admin panel)
+- `infrastructure/` — Agent definitions, data sources
+- `logs/` — System and audit logs
+- `.env` — Secrets and API keys (never commit!)
 
-## Setup
-1. Install Poetry: `pip install poetry`
-2. Activate env: `conda activate goldensignalsai-py310`
-3. Install deps: `poetry install`
-4. Run Prefect: `prefect server start`, deploy `daily_cycle.py`
-5. Start API: `uvicorn GoldenSignalsAI.presentation.api.main:app --host 0.0.0.0 --port 8000 --reload`
-6. Launch dashboard: `python GoldenSignalsAI/presentation/frontend/app/dashboard.py`
-7. Run tests: `pytest GoldenSignalsAI/presentation/tests/`
+---
 
-## Download
-- [v1.1.0](https://github.com/isaacbuz/GoldenSignalsAI/releases/tag/v1.1.0)
+## License & Credits
+- MIT License
+- Created by Isaac Buz and contributors
+
+---
+
+## Need Help?
+- See the onboarding modal in the admin panel
+- Open an issue on GitHub
+- Contact project maintainers
