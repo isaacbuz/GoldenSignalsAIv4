@@ -1,3 +1,8 @@
+"""
+autonomous_engine.py
+Purpose: Implements the AutonomousEngine for GoldenSignalsAI, responsible for analyzing market data, making trade decisions, and managing risk profiles using multi-timeframe indicators and ensemble logic.
+"""
+
 from dataclasses import dataclass
 from enum import Enum, auto
 import numpy as np

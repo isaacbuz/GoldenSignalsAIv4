@@ -1,21 +1,26 @@
+// AdminOnboardingModal.js
+// Purpose: Displays a modal dialog to onboard new admin users in GoldenSignalsAI. Provides information about the admin panel's features and functionality. Tracks onboarding completion in local storage to avoid repeat displays for the same user.
+
 import React, { useState, useEffect } from "react";
 import "./AdminPanel.css";
 
 function AdminOnboardingModal() {
-  const [show, setShow] = useState(false);
+  // State to track whether onboarding modal is visible
+  const [show, setShow] = useState(() => {
+    // Check local storage to see if onboarding is already complete
+    return !localStorage.getItem("admin_onboarding_seen");
+  });
 
-  useEffect(() => {
-    if (!localStorage.getItem("admin_onboarding_seen")) {
-      setShow(true);
-    }
-  }, []);
-
+  // Handle closing of onboarding modal and mark as complete in local storage
   const handleClose = () => {
     setShow(false);
     localStorage.setItem("admin_onboarding_seen", "1");
   };
 
+  // If onboarding is complete, render nothing
   if (!show) return null;
+
+  // Render onboarding modal with admin panel instructions
   return (
     <div className="onboarding-modal" role="dialog" aria-modal="true" tabIndex={-1}>
       <div className="modal-content">

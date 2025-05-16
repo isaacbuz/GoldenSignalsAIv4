@@ -1,6 +1,7 @@
-# agents/backtest_research/backtest_research.py
-# Purpose: Implements a BacktestResearchAgent that runs backtests on multiple strategies
-# to identify optimal parameters for options trading.
+"""
+backtest_research.py
+Purpose: Implements a BacktestResearchAgent that runs backtests on multiple strategies to identify optimal parameters for options trading. Integrates with the GoldenSignalsAI agent framework.
+"""
 
 import logging
 

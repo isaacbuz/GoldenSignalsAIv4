@@ -1,3 +1,8 @@
+"""
+orchestrator.py
+Purpose: Implements the Orchestrator for GoldenSignalsAI, coordinating data fetching, model training, strategy execution, alerting, and event publishing for autonomous trading workflows.
+"""
+
 import os
 import pandas as pd
 import logging

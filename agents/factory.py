@@ -1,3 +1,8 @@
+"""
+factory.py
+Purpose: Defines the AgentFactory class for creating and orchestrating multiple agent types and trading strategies in GoldenSignalsAI. Integrates sentiment, predictive, and risk agents as well as strategy orchestration.
+"""
+
 import logging
 import numpy as np
 from typing import Dict, Any, List, Optional
@@ -16,6 +21,7 @@ logger = logging.getLogger(__name__)
 class AgentFactory:
     """
     Advanced agent factory with strategy orchestration and multi-agent signal processing.
+    Handles instantiation of agents, strategy orchestration, and multi-agent workflows.
     """
 
     def __init__(
@@ -35,7 +41,7 @@ class AgentFactory:
         self.data_fetcher = data_fetcher
         self.agents = {}
         
-        # Initialize strategy orchestrator
+        # Initialize strategy orchestrator for multi-strategy workflows
         self.strategy_orchestrator = StrategyOrchestrator(
             strategies=strategies, 
             strategy_weights=None

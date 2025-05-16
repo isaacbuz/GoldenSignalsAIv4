@@ -1,3 +1,5 @@
 from typing import Dict, Any
-# agents/predictive/__init__.py
-# Purpose: Marks the predictive agents directory as a Python subpackage.
+"""
+__init__.py
+Purpose: Marks the predictive agents directory as a Python subpackage. No runtime logic is present in this file.
+"""

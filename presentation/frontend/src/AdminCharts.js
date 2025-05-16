@@ -1,3 +1,6 @@
+// AdminCharts.js
+// Purpose: Visualizes system performance metrics (CPU usage, memory usage, uptime, and active requests) for GoldenSignalsAI administrators. Fetches historical performance data from the backend and displays it using Chart.js. Charts are updated every minute for near real-time monitoring and capacity planning.
+
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -11,6 +14,7 @@ import {
   Legend,
 } from "chart.js";
 
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,25 +25,36 @@ ChartJS.register(
   Legend
 );
 
+// AdminCharts component
 function AdminCharts() {
+  // State to store historical performance data
   const [history, setHistory] = useState([]);
 
+  // Fetch historical performance data and update charts every minute
   useEffect(() => {
+    // Fetch initial data
     fetch("/api/admin/performance/history")
       .then((res) => res.json())
       .then(setHistory);
+
+    // Set up polling to update charts every minute
     const interval = setInterval(() => {
       fetch("/api/admin/performance/history")
         .then((res) => res.json())
         .then(setHistory);
     }, 60000); // update every minute
+
+    // Clean up interval on unmount
     return () => clearInterval(interval);
   }, []);
 
+  // If no data, display loading message
   if (!history.length) return <p>Loading charts...</p>;
 
+  // Extract labels from historical data
   const labels = history.map((h) => new Date(h.timestamp * 1000).toLocaleTimeString());
 
+  // CPU Usage Chart data
   const cpuData = {
     labels,
     datasets: [
@@ -53,6 +68,7 @@ function AdminCharts() {
     ],
   };
 
+  // Memory Usage Chart data
   const memData = {
     labels,
     datasets: [
@@ -66,6 +82,7 @@ function AdminCharts() {
     ],
   };
 
+  // Uptime Chart data
   const uptimeData = {
     labels,
     datasets: [
@@ -79,6 +96,7 @@ function AdminCharts() {
     ],
   };
 
+  // Render three charts for CPU, memory, and uptime
   return (
     <div className="admin-charts">
       <h4>Performance Trends</h4>

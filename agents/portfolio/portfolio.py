@@ -1,6 +1,7 @@
-# agents/portfolio/portfolio.py
-# Purpose: Implements a PortfolioAgent that manages portfolio positions and adjusts allocations
-# based on risk profiles, supporting options trading by maintaining balanced exposures.
+"""
+portfolio.py
+Purpose: Implements a PortfolioAgent that manages portfolio positions and adjusts allocations based on risk profiles, supporting options trading by maintaining balanced exposures. Integrates with the GoldenSignalsAI agent framework.
+"""
 
 import asyncio
 import logging

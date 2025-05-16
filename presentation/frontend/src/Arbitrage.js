@@ -1,36 +1,54 @@
+// Arbitrage.js
+// Purpose: Displays arbitrage opportunities and allows users to execute trades. Fetches arbitrage data from the backend and manages trade execution state. Designed for user-facing arbitrage discovery and action within GoldenSignalsAI.
+
 import React, { useEffect, useState } from 'react';
 import './Arbitrage.css';
 
+// Arbitrage component: displays arbitrage opportunities and allows users to execute trades
 function Arbitrage() {
-  const [symbol, setSymbol] = useState('AAPL');
+  // State for storing arbitrage opportunities
   const [opportunities, setOpportunities] = useState([]);
+  // State for tracking loading state
+  const [loading, setLoading] = useState(true);
+  // State for tracking trade execution status
+  const [tradeStatus, setTradeStatus] = useState("");
+  const [symbol, setSymbol] = useState('AAPL');
   const [executing, setExecuting] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Fetch arbitrage opportunities from backend
   const fetchOpportunities = async () => {
+    // Send POST request to backend with symbol and min spread
     const res = await fetch('http://localhost:8000/arbitrage/opportunities', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbol, min_spread: 0.01 })
     });
+    // Parse response data and update opportunities state
     const data = await res.json();
     setOpportunities(data);
   };
 
+  // Execute arbitrage trade for all opportunities
   const executeArbitrage = async () => {
+    // Set executing state to true and clear message
     setExecuting(true);
     setMessage('');
+    // Send POST request to backend with symbol and min spread
     const res = await fetch('http://localhost:8000/arbitrage/execute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbol, min_spread: 0.01 })
     });
+    // Parse response data and update message state
     const data = await res.json();
     setMessage(`Executed ${data.executed} out of ${data.total} opportunities.`);
+    // Set executing state to false and refetch opportunities
     setExecuting(false);
     fetchOpportunities();
   };
 
+  // Fetch arbitrage opportunities on mount and every 15 seconds
   useEffect(() => {
     fetchOpportunities();
     const interval = setInterval(fetchOpportunities, 15000);

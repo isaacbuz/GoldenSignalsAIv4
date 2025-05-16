@@ -1,6 +1,7 @@
-# agents/predictive/options_chain.py
-# Purpose: Implements an OptionsChainAgent that analyzes options chain data to detect
-# trading opportunities and generate signals.
+"""
+options_chain.py
+Purpose: Implements an OptionsChainAgent that analyzes options chain data to detect trading opportunities and generate signals. Integrates with the GoldenSignalsAI agent framework.
+"""
 
 import logging
 

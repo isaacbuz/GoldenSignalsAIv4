@@ -1,6 +1,10 @@
+// AdminAlerts.js
+// Purpose: Displays real-time system and agent alerts for GoldenSignalsAI administrators. Aggregates and presents alerts based on agent health, queue status, and anomaly detection. Polls backend endpoints for up-to-date alerts and allows editing of alert thresholds. Designed to keep admins aware of critical issues and system health.
+
 import React, { useEffect, useState } from "react";
 import "./AdminPanel.css";
 
+// Generate alerts based on agent health data
 function getAgentAlerts(health) {
   const alerts = [];
   Object.entries(health).forEach(([name, info]) => {
@@ -19,6 +23,7 @@ function getAgentAlerts(health) {
   return alerts;
 }
 
+// Generate alerts based on queue status
 function getQueueAlerts(queue) {
   const alerts = [];
   if (queue && queue.depth > 10) {
@@ -37,10 +42,17 @@ function getQueueAlerts(queue) {
 }
 
 function AdminAlerts() {
+  // State for agent health, queue status, and alert messages
   const [health, setHealth] = useState({});
   const [queue, setQueue] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  // State for alert thresholds and anomaly alerts
+  const [thresholds, setThresholds] = useState({});
+  const [anomalyAlerts, setAnomalyAlerts] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [saveMsg, setSaveMsg] = useState("");
 
+  // Poll agent health and queue status every 5 seconds
   useEffect(() => {
     function fetchData() {
       fetch("/api/admin/agents/health")
@@ -55,12 +67,14 @@ function AdminAlerts() {
     return () => clearInterval(interval);
   }, []);
 
+  // Fetch alert thresholds once on mount
   useEffect(() => {
     fetch("/api/admin/alert_thresholds")
       .then(res => res.json())
       .then(setThresholds);
   }, []);
 
+  // Poll anomaly alerts every 10 seconds
   useEffect(() => {
     let mounted = true;
     const fetchAnomalyAlerts = () => {
@@ -76,12 +90,14 @@ function AdminAlerts() {
     return () => { mounted = false; clearInterval(interval); };
   }, []);
 
+  // Aggregate all alerts into a single array for display
   useEffect(() => {
     const agentAlerts = getAgentAlerts(health);
     const queueAlerts = getQueueAlerts(queue);
     setAlerts([...anomalyAlerts, ...agentAlerts, ...queueAlerts]);
   }, [health, queue, anomalyAlerts]);
 
+  // Handlers for editing and saving alert thresholds
   const handleEdit = () => setEditing(true);
   const handleChange = (k, v) => setThresholds({ ...thresholds, [k]: v });
   const handleSave = async () => {
@@ -95,8 +111,10 @@ function AdminAlerts() {
     setSaveMsg("Thresholds updated.");
   };
 
+  // If no alerts, render nothing
   if (!alerts.length) return null;
 
+  // Render all current alerts as styled boxes
   return (
     <div className="admin-alerts">
       {alerts.map((alert, idx) => (

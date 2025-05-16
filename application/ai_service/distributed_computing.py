@@ -1,3 +1,8 @@
+"""
+distributed_computing.py
+Purpose: Provides distributed computing utilities for GoldenSignalsAI using Ray, enabling parallel model training and prediction across nodes.
+"""
+
 import ray
 
 class DistributedComputing:

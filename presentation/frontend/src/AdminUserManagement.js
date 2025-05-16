@@ -1,11 +1,34 @@
+// AdminUserManagement.js
+// Purpose: Provides user management functionality for GoldenSignalsAI administrators. Allows listing, inviting, enabling, disabling, and bulk managing users via backend API calls. Handles user feedback, loading state, and error reporting for robust admin operations.
+
 import React, { useEffect, useState } from "react";
 import "./AdminPanel.css";
 
 function AdminUserManagement() {
+  // State for list of users
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // State for selected users (for bulk actions)
+  const [selected, setSelected] = useState([]);
+  // State for loading indicator
+  const [loading, setLoading] = useState(false);
+  // State for error messages
+  const [error, setError] = useState("");
+  // State for feedback messages
   const [msg, setMsg] = useState("");
+  // State for new user email input
+  const [inviteEmail, setInviteEmail] = useState("");
+  // State for inviting a new user
+  const [inviting, setInviting] = useState(false);
+  // State for resetting a user's password
+  const [resettingUid, setResettingUid] = useState("");
+  // State for deleting a user
+  const [deletingUid, setDeletingUid] = useState("");
+  // State for bulk actions
+  const [selectAll, setSelectAll] = useState(false);
+  const [bulkAction, setBulkAction] = useState("");
+  const [bulkLoading, setBulkLoading] = useState(false);
 
+  // Fetch user list from backend on mount
   useEffect(() => {
     fetch("/api/admin/users/")
       .then((res) => res.json())
@@ -15,11 +38,7 @@ function AdminUserManagement() {
       });
   }, []);
 
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviting, setInviting] = useState(false);
-  const [resettingUid, setResettingUid] = useState("");
-  const [deletingUid, setDeletingUid] = useState("");
-
+  // Handle setting a user's role
   const handleSetRole = async (uid, role) => {
     setMsg("");
     const res = await fetch(`/api/admin/users/${uid}/set_role?role=${role}`, { method: "POST" });
@@ -27,6 +46,7 @@ function AdminUserManagement() {
     setMsg(data.message);
   };
 
+  // Handle disabling a user
   const handleDisable = async (uid) => {
     setMsg("");
     const res = await fetch(`/api/admin/users/${uid}/disable`, { method: "POST" });
@@ -34,6 +54,7 @@ function AdminUserManagement() {
     setMsg(data.message);
   };
 
+  // Handle enabling a user
   const handleEnable = async (uid) => {
     setMsg("");
     const res = await fetch(`/api/admin/users/${uid}/enable`, { method: "POST" });
@@ -41,6 +62,7 @@ function AdminUserManagement() {
     setMsg(data.message);
   };
 
+  // Handle inviting a new user by email
   const handleInvite = async () => {
     if (!inviteEmail) return;
     setInviting(true);
@@ -56,6 +78,7 @@ function AdminUserManagement() {
     setInviting(false);
   };
 
+  // Handle resetting a user's password
   const handleResetPassword = async (uid) => {
     setResettingUid(uid);
     setMsg("");
@@ -65,6 +88,7 @@ function AdminUserManagement() {
     setResettingUid("");
   };
 
+  // Handle deleting a user
   const handleDelete = async (uid, email) => {
     if (!window.confirm(`Are you sure you want to delete user ${email}? This cannot be undone.`)) return;
     setDeletingUid(uid);
@@ -75,16 +99,12 @@ function AdminUserManagement() {
     setDeletingUid("");
   };
 
-  if (loading) return <p>Loading users...</p>;
-
-  const [selected, setSelected] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
-  const [bulkAction, setBulkAction] = useState("");
-  const [bulkLoading, setBulkLoading] = useState(false);
-
+  // Handle user selection for bulk actions
   const handleSelect = (uid) => {
     setSelected(selected.includes(uid) ? selected.filter(id => id !== uid) : [...selected, uid]);
   };
+
+  // Handle selecting all users for bulk actions
   const handleSelectAll = () => {
     if (selectAll) {
       setSelected([]);
@@ -94,6 +114,8 @@ function AdminUserManagement() {
       setSelectAll(true);
     }
   };
+
+  // Handle bulk actions
   const handleBulkAction = async () => {
     if (!bulkAction || selected.length === 0) return;
     setBulkLoading(true);
@@ -112,8 +134,10 @@ function AdminUserManagement() {
     setBulkLoading(false);
     setSelected([]);
     setSelectAll(false);
-    fetchUsers();
-  }
+  };
+
+  // Render user management UI: invite, feedback, user table, and bulk actions
+  if (loading) return <p>Loading users...</p>;
 
   return (
     <div className="admin-users">

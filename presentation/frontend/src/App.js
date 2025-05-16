@@ -1,8 +1,7 @@
 // presentation/frontend/src/App.js
-// Purpose: Implements the React frontend for GoldenSignalsAI, providing a dashboard for
-// viewing trading signals, agent activity, and market data, with options trading-specific features.
+// Purpose: Main entry point for the GoldenSignalsAI frontend. Handles routing, authentication state, and renders the appropriate component (dashboard, arbitrage, admin panel, etc.) based on user role and authentication status. Ensures a clean separation between user and admin experiences.
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import './App.css';
 import Arbitrage from './Arbitrage';
 import './Arbitrage.css';
@@ -11,12 +10,43 @@ import ErrorBoundary from "./ErrorBoundary";
 import { setupTokenExpiryListener, auth } from "./firebase";
 import './AdminPanel.css';
 
+/**
+ * App Component: Handles authentication state, routing, and rendering of components.
+ * 
+ * @returns {JSX.Element} The rendered App component.
+ */
 function App() {
+  // State for tracking authentication status
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // State for tracking if the user is an admin
+  const [isAdmin, setIsAdmin] = useState(false);
+  // State for current user info
+  const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('signals');
   const [symbol, setSymbol] = useState('AAPL');
   const [data, setData] = useState(null);
   const [token, setToken] = useState(null);
 
+  /**
+   * On mount, fetch authentication status from backend or Firebase.
+   * 
+   * @description This effect is used to check the authentication status of the user.
+   */
+  useEffect(() => {
+    fetch("/api/auth/status")
+      .then((res) => res.json())
+      .then((data) => {
+        setIsAuthenticated(data.authenticated);
+        setIsAdmin(data.is_admin);
+        setUser(data.user);
+      });
+  }, []);
+
+  /**
+   * On mount, login to get token.
+   * 
+   * @description This effect is used to fetch the authentication token from the backend.
+   */
   useEffect(() => {
     // Login to get token
     fetch('http://localhost:8000/token', {
@@ -32,6 +62,11 @@ function App() {
       .catch(error => console.error('Login failed:', error));
   }, []);
 
+  /**
+   * Fetch dashboard data when token is available and active tab is 'signals'.
+   * 
+   * @description This effect is used to fetch the dashboard data from the backend.
+   */
   useEffect(() => {
     if (token && activeTab === 'signals') {
       fetch(`http://localhost:8000/dashboard/${symbol}`, {
@@ -45,6 +80,16 @@ function App() {
     }
   }, [symbol, token, activeTab]);
 
+  // If authenticated and admin, render admin panel
+  if (isAdmin) {
+    return (
+      <ErrorBoundary>
+        <AdminPanel user={user} />
+      </ErrorBoundary>
+    );
+  }
+
+  // If authenticated and not admin, render user dashboard (trading signals and arbitrage)
   return (
     <div className="App">
       {tokenExpired && (

@@ -1,6 +1,7 @@
-# agents/sentiment/news.py
-# Purpose: Implements a NewsSentimentAgent that analyzes news sentiment
-# to generate trading signals based on media coverage.
+"""
+news.py
+Purpose: Implements a NewsSentimentAgent that analyzes news sentiment to generate trading signals based on media coverage. Integrates with the GoldenSignalsAI agent framework.
+"""
 
 import logging
 import pandas as pd

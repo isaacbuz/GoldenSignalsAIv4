@@ -1,6 +1,7 @@
-# agents/predictive/options_flow.py
-# Purpose: Implements an OptionsFlowAgent that analyzes options flow data to detect
-# unusual activity, supporting options trading strategies by identifying bullish/bearish signals.
+"""
+options_flow.py
+Purpose: Implements an OptionsFlowAgent that analyzes options flow data to detect unusual activity, supporting options trading strategies by identifying bullish/bearish signals. Integrates with the GoldenSignalsAI agent framework.
+"""
 
 import logging
 

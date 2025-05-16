@@ -1,8 +1,12 @@
 // Firebase config for GoldenSignalsAI Admin Panel
 // Replace the below config with your actual Firebase project credentials
+// firebase.js
+// Purpose: Initializes and exports Firebase app and authentication providers for GoldenSignalsAI frontend. Centralizes Firebase configuration and ensures secure, maintainable integration with Firebase services.
+
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, onIdTokenChanged, signOut } from "firebase/auth";
 
+// Firebase configuration object for the GoldenSignalsAI project
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -12,7 +16,9 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
+// Initialize Firebase app instance
 const app = initializeApp(firebaseConfig);
+// Initialize Firebase authentication instance
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -28,9 +34,11 @@ export function setupTokenExpiryListener(onExpire) {
         if (onExpire) onExpire();
       }
     } else {
+      // If the user is not authenticated, call the onExpire callback.
       if (onExpire) onExpire();
     }
   });
 }
 
-export { auth, googleProvider, githubProvider };
+// Export initialized Firebase app and authentication providers for use in the frontend
+export { app, auth, googleProvider, githubProvider };

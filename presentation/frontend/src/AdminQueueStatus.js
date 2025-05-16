@@ -1,9 +1,14 @@
+// AdminQueueStatus.js
+// Purpose: Displays the status of the background task queue for GoldenSignalsAI administrators. Fetches and presents queue depth and active worker count by polling the backend every 5 seconds. Designed for real-time monitoring of system throughput and worker health.
+
 import React, { useEffect, useState } from "react";
 import "./AdminPanel.css";
 
 function AdminQueueStatus() {
+  // State to store queue status from backend
   const [queue, setQueue] = useState(null);
 
+  // Poll queue status every 5 seconds for real-time updates
   useEffect(() => {
     fetch("/api/admin/queue")
       .then((res) => res.json())
@@ -13,24 +18,22 @@ function AdminQueueStatus() {
         .then((res) => res.json())
         .then(setQueue);
     }, 5000); // update every 5 seconds
+
+    // Clean up interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
+  // If no queue data yet, show loading state
   if (!queue) return <p>Loading queue status...</p>;
 
+  // Render queue depth and active worker count
   return (
     <div className="queue-status">
-      <h4>Queue & Task Monitoring</h4>
-      <table className="queue-status-table">
+      <h4>Task Queue Status</h4>
+      <div>Queue Depth: <b>{queue.depth}</b></div>
+      <div>Active Workers: <b>{queue.active_workers}</b></div>
+      <table>
         <tbody>
-          <tr>
-            <td>Queue Depth</td>
-            <td>{queue.depth}</td>
-          </tr>
-          <tr>
-            <td>Workers</td>
-            <td>{queue.workers}</td>
-          </tr>
           <tr>
             <td>Active Workers</td>
             <td>{queue.active}</td>
