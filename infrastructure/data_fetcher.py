@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 class MarketDataFetcher:
     """Fetches market data from external APIs."""
 
+
     def __init__(self, api_key=None):
         # Accept api_key for DI compatibility, but fallback to env var if not provided
         self.alpha_vantage_api_key = api_key or os.getenv("ALPHA_VANTAGE_API_KEY")

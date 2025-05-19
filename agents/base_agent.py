@@ -1,14 +1,18 @@
+<<<<<<< HEAD
 """
 base_agent.py
 Purpose: Defines the abstract base class for all trading agents in GoldenSignalsAI. Provides a common interface for agent implementations with the process_signal method.
 """
 
+=======
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 
 class BaseAgent(ABC):
+<<<<<<< HEAD
     """Abstract base class for all trading agents."""
 
     @abstractmethod
@@ -32,10 +36,20 @@ class RiskAverseAgent(BaseAgent):
         Returns:
             Dict[str, Any]: Risk-adjusted signal.
         """
+=======
+    @abstractmethod
+    def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+        """Process and potentially modify a trading signal."""
+
+class RiskAverseAgent(BaseAgent):
+    def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+        """Modify signal to reduce risk."""
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
         signal['risk_adjusted'] = True
         return signal
 
 class AggressiveAgent(BaseAgent):
+<<<<<<< HEAD
     """Agent that modifies signals to maximize potential returns."""
 
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
@@ -46,5 +60,9 @@ class AggressiveAgent(BaseAgent):
         Returns:
             Dict[str, Any]: Aggressively modified signal.
         """
+=======
+    def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+        """Modify signal to maximize potential returns."""
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
         signal['aggressive_mode'] = True
         return signal

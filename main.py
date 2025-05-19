@@ -33,7 +33,13 @@ def read_root():
     """
     try:
         return {
+
             "message": "Welcome to GoldenSignalsAI"
+
+            "message": "Welcome to GoldenSignalsAI",
+            "version": config_manager.get('version', '1.0.0'),
+            "environment": config_manager.get('environment', 'development')
+ b3d312fc9c631d3b59f644472ad576448be06c0b
         }
     except Exception as e:
         error_report = ErrorHandler.handle_error(e)

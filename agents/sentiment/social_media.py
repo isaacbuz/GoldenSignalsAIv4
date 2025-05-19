@@ -1,8 +1,14 @@
 from typing import Dict, Any
+<<<<<<< HEAD
 """
 social_media.py
 Purpose: Implements a SocialMediaSentimentAgent that analyzes social media sentiment to generate trading signals, useful for options trading during sentiment-driven volatility. Integrates with the GoldenSignalsAI agent framework.
 """
+=======
+# agents/sentiment/social_media.py
+# Purpose: Implements a SocialMediaSentimentAgent that analyzes social media sentiment
+# to generate trading signals, useful for options trading during sentiment-driven volatility.
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
 import logging
 

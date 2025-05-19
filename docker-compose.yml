@@ -1,4 +1,5 @@
 version: '3.8'
+<<<<<<< HEAD
 services:
   nginx:
     image: nginx:latest
@@ -79,3 +80,40 @@ services:
       - "3000:3000"
     volumes:
       - ./infrastructure/monitoring/grafana_dashboard.json:/var/lib/grafana/dashboards/dashboard.json
+=======
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8050:8050"
+    command: python -m monitoring.agent_dashboard
+    depends_on:
+      - backend
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b

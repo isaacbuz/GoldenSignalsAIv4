@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 """
 regime.py
 Purpose: Implements a RegimeAgent that uses the RegimeDetector to identify market regimes, helping adjust options trading strategies based on market conditions. Integrates with the GoldenSignalsAI agent framework.
 """
+=======
+# agents/predictive/regime.py
+# Purpose: Implements a RegimeAgent that uses the RegimeDetector to identify market regimes,
+# helping adjust options trading strategies based on market conditions.
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
 import logging
 

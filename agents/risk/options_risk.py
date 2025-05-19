@@ -1,8 +1,14 @@
 from typing import Dict, Any
+<<<<<<< HEAD
 """
 options_risk.py
 Purpose: Implements an OptionsRiskAgent that evaluates risks in options trading using Greeks, ensuring safe position sizing and risk management for options strategies. Integrates with the GoldenSignalsAI agent framework.
 """
+=======
+# agents/risk/options_risk.py
+# Purpose: Implements an OptionsRiskAgent that evaluates risks in options trading using Greeks,
+# ensuring safe position sizing and risk management for options strategies.
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
 import logging
 

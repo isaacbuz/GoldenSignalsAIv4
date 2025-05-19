@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 """
 breakout.py
 Purpose: Implements a BreakoutAgent that identifies breakout patterns in stock prices for directional options trading strategies. Integrates with the GoldenSignalsAI agent framework.
 """
+=======
+# agents/predictive/breakout.py
+# Purpose: Implements a BreakoutAgent that identifies breakout patterns in stock prices,
+# suitable for directional options trading strategies.
+>>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
 import asyncio
 import logging

@@ -73,11 +73,14 @@ git push origin feature/your-feature-name
 3. Add comments explaining complex logic
 4. Get approval from maintainers
 
+
 ## Versioning & Releases
 - Follow [Semantic Versioning](https://semver.org/)
 - Tag releases (e.g., `v1.1.0`) for changelog and deployment
 - GitHub Actions automates tests and deployment (see `.github/workflows/ci.yml`)
 
+
+ b3d312fc9c631d3b59f644472ad576448be06c0b
 ## Contact
 For questions, please open a GitHub Issue or contact the maintainer.
 

@@ -29,6 +29,7 @@ class EnvironmentValidator:
         Returns:
             bool: True if environment is valid, False otherwise
         """
+
         print("[DEBUG] Running environment checks...")
         required_env = self._validate_required_env_vars()
         print(f"[DEBUG] Required env vars: {required_env}")
@@ -39,14 +40,21 @@ class EnvironmentValidator:
         deploy_prereq = self._validate_deployment_prerequisites()
         print(f"[DEBUG] Deployment prerequisites: {deploy_prereq}")
         
-        checks = [required_env, api_config, sys_res, deploy_prereq]
+        checks = [
+            self._validate_required_env_vars(),
+            self._validate_api_configurations(),
+            self._validate_system_resources(),
+            self._validate_deployment_prerequisites()
+        ]
+        
         print(f"[DEBUG] All checks: {checks}")
+
         return all(checks)
     
     def _validate_required_env_vars(self) -> bool:
         """
         Validate critical environment variables, including all required API keys.
-        
+
         Returns:
             bool: True if all required variables are set
         """
@@ -56,20 +64,24 @@ class EnvironmentValidator:
             'TWITTER_API_KEY',
             'NEWS_API_KEY',
             'REDIS_URL',
+            'GOLDENSIGNALS_ENV',
+            'MACHINE_ID'
         ]
         missing_vars = [var for var in required_vars if not os.environ.get(var)]
         if missing_vars:
             self.logger.error(f"Missing required environment variables: {missing_vars}")
             return False
+
         return True
     
     def _validate_api_configurations(self) -> bool:
         """
         Validate API configurations and keys, including presence and format of API keys.
-        
+
         Returns:
             bool: True if API configurations are valid
         """
+
         api_keys = {
             'ALPHA_VANTAGE_API_KEY': os.environ.get('ALPHA_VANTAGE_API_KEY'),
             'TWITTER_API_KEY': os.environ.get('TWITTER_API_KEY'),
@@ -80,6 +92,15 @@ class EnvironmentValidator:
             self.logger.error(f"Missing or invalid API keys: {invalid_keys}")
             return False
         # Additional config checks can be added here
+        api_configs = {
+            'alpha_vantage': self.config.get('apis.alpha_vantage.base_url'),
+            'twitter': self.config.get('apis.twitter.bearer_token')
+        }
+        invalid_configs = [name for name, config in api_configs.items() if not config]
+        if invalid_configs:
+            self.logger.error(f"Invalid API configurations: {invalid_configs}")
+            return False
+
         return True
     
     def _validate_system_resources(self) -> bool:
@@ -160,8 +181,10 @@ class EnvironmentValidator:
                 'cpu_frequency_mhz': psutil.cpu_freq().current
             },
             'configuration': {
-                'trading_strategies': self.config.get('trading.strategies') if isinstance(self.config.get('trading.strategies'), dict) else {},
-                'risk_management': self.config.get('trading.risk_management') if isinstance(self.config.get('trading.risk_management'), dict) else {},
+
+                'trading_strategies': self.config.get('trading.strategies', {}),
+                'risk_management': self.config.get('trading.risk_management', {}),
+
                 'feature_flags': {
                     flag: self.config.get_feature_flag(flag) 
                     for flag in ['machine_learning.sentiment_analysis', 'advanced_trading_strategies.pairs_trading']
@@ -188,6 +211,7 @@ class EnvironmentValidator:
         
         return True
 
+
     def log_api_key_statuses(self):
         """
         Log the status (set/missing) of all critical API keys at startup.
@@ -203,6 +227,8 @@ class EnvironmentValidator:
                 self.logger.info(f"{key} is set.")
             else:
                 self.logger.warning(f"{key} is missing or using a placeholder value.")
+
+
 
 # Singleton instance for global access
 env_validator = EnvironmentValidator()
