@@ -8,10 +8,29 @@ AI-powered, multi-agent options trading and arbitrage platform with advanced adm
 
 ---
 
+## Features
+
+- 📈 **Real-Time Options Trading Signals**
+- 🤖 **Multi-Agent Architecture** (Alpha Vantage, Finnhub, Polygon, Benzinga, Bloomberg, StockTwits)
+- 🔄 **AI-Powered Arbitrage Detection & Execution**
+- 🛡️ **Role-Based Admin Panel** (user management, agent controls)
+- 📊 **Live Monitoring** (performance charts, agent health, queue, logs)
+- ⚡ **Dynamic Ticker Search**
+- 🔔 **Visual Alerts** for unhealthy agents, errors, and high queue depth
+- 🔑 **Multi-Provider Auth** (Firebase, Google, GitHub)
+- 🔒 **Audit Logging** for all sensitive actions
+- 🧩 **Modular Frontend & Backend** for easy extensibility
+
+---
+
 ## Screenshots & Demo
 
 ![Dashboard Screenshot](docs/dashboard_placeholder.png)
-*Add GIFs or screenshots of the dashboard here!*
+*Replace this with a real dashboard screenshot!*
+
+**Demo GIF:**
+![Demo GIF](docs/demo_placeholder.gif)
+*Replace this with a short GIF/video of the dashboard in action (e.g., use Recordit or Loom).*
 
 ---
 

@@ -1,0 +1,98 @@
+.watchlist-sidebar {
+  width: 220px;
+  background: linear-gradient(120deg, #232323 80%, #181818 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px #FFD70033, 0 1.5px 12px #C9A10011;
+  padding: 1.5rem 1rem 1rem 1rem;
+  color: #FFD700;
+  font-family: inherit;
+  margin-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.watchlist-sidebar h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.watchlist-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.watchlist-sidebar li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.38rem;
+  margin-bottom: 0.22rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+  font-size: 1.04em;
+  opacity: 0;
+  animation: fadeInWatchlist 0.5s ease forwards;
+  position: relative;
+}
+.watchlist-sidebar li.selected,
+.watchlist-sidebar li:hover,
+.watchlist-sidebar li:focus {
+  background: #33331a;
+  box-shadow: 0 4px 16px #FFD70033, 0 2px 8px #C9A10022;
+  transform: translateY(-2px) scale(1.02);
+  outline: none;
+}
+@keyframes fadeInWatchlist {
+  to { opacity: 1; }
+}
+.watchlist-sidebar li.selected,
+.watchlist-sidebar li:hover {
+  background: #33331a;
+}
+.watchlist-symbol {
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: 0.05em;
+  flex: 0 0 50px;
+  cursor: help;
+  position: relative;
+}
+.watchlist-symbol[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  left: 0;
+  top: 110%;
+  background: #181818;
+  color: #FFD700;
+  padding: 0.25em 0.7em;
+  border-radius: 6px;
+  font-size: 0.98em;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px #FFD70022;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.97;
+}
+.watchlist-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 60px;
+}
+.watchlist-price .up {
+  color: #00FF99;
+}
+.watchlist-price .down {
+  color: #FF5555;
+}
+.watchlist-change {
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+.watchlist-sparkline {
+  margin-left: 0.6rem;
+  flex: 0 0 60px;
+}

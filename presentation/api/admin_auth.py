@@ -3,6 +3,16 @@
 import os
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import os
+import sys
+
+# Patch firebase_admin for test mode if needed
+if os.getenv("TEST_MODE") == "1":
+    from unittest import mock
+    sys.modules['firebase_admin'] = mock.MagicMock()
+    sys.modules['firebase_admin.auth'] = mock.MagicMock()
+    sys.modules['firebase_admin.credentials'] = mock.MagicMock()
+
 import firebase_admin
 from firebase_admin import auth as firebase_auth, credentials
 from typing import Optional

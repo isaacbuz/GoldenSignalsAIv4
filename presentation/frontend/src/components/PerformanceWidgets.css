@@ -1,0 +1,63 @@
+.performance-widgets {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: stretch;
+  margin: 1.2rem 0 1rem 0;
+  flex-wrap: wrap;
+}
+.perf-widget {
+  background: linear-gradient(120deg, #232323 80%, #181818 100%);
+  border-radius: 13px;
+  box-shadow: 0 2px 8px #FFD70022, 0 1.5px 8px #C9A10011;
+  min-width: 90px;
+  padding: 0.85em 1.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1.2px solid #FFD70033;
+  transition: box-shadow 0.24s, transform 0.18s;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 0.97em;
+  cursor: pointer;
+}
+.perf-widget:hover {
+  box-shadow: 0 6px 24px #FFD70033, 0 2px 16px #C9A10022;
+  transform: translateY(-2px) scale(1.04);
+}
+
+.perf-label {
+  font-size: 0.93em;
+  color: #FFD700AA;
+  font-weight: 500;
+  margin-bottom: 0.13em;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px #00000033;
+}
+
+.perf-value {
+  font-size: 1.35em;
+  font-weight: bold;
+  color: #FFD700;
+  letter-spacing: 0.02em;
+}
+.perf-pnl .perf-value {
+  color: #00FF99;
+  text-shadow: 0 1px 2px #00331a44;
+}
+.perf-pnl .perf-value:before {
+  content: '$';
+  color: #FFD700;
+  font-size: 0.93em;
+  margin-right: 0.07em;
+  font-weight: 400;
+}
+
+.perf-drawdown .perf-value {
+  color: #FF5555;
+  text-shadow: 0 1px 2px #33000044;
+}
+.perf-sharpe .perf-value {
+  color: #00BFFF;
+  text-shadow: 0 1px 2px #00335544;
+}

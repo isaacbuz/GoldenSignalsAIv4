@@ -27,8 +27,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-AUDIT_LOG_FILE = os.getenv("ADMIN_AUDIT_LOG", "./logs/admin_audit.log")
-os.makedirs(os.path.dirname(AUDIT_LOG_FILE), exist_ok=True)
+AUDIT_LOG_FILE = os.getenv("ADMIN_AUDIT_LOG", os.path.join("logs", "admin_audit.log"))
+os.makedirs(os.path.dirname(AUDIT_LOG_FILE), exist_ok=True)  # Use os.path.join for portability
 if not logging.getLogger("audit").handlers:
     audit_handler = RotatingFileHandler(AUDIT_LOG_FILE, maxBytes=2*1024*1024, backupCount=5)
     audit_handler.setFormatter(logging.Formatter('%(asctime)s | %(message)s'))
@@ -231,7 +231,9 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="GoldenSignalsAI API")
 
 # Security setup
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key")
+from dotenv import load_dotenv
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key")  # Loaded from .env
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -336,12 +338,17 @@ async def predict(data: Dict, current_user: User = Depends(get_current_user)):
 
 
 @app.get("/dashboard/{symbol}")
-async def get_dashboard_data(
-    symbol: str, current_user: User = Depends(get_current_user)
-):
-    logger.info(
-        {"message": f"Dashboard data requested for {symbol} by {current_user.username}"}
-    )
-    # Mock dashboard data
-    return {"symbol": symbol, "price": 150.0, "trend": "up"}
- b3d312fc9c631d3b59f644472ad576448be06c0b
+async def get_dashboard_data(symbol: str, current_user: User = Depends(get_current_user)):
+    logger.info({"message": f"Dashboard data requested for {symbol} by {current_user.username}"})
+    # Mock dashboard data with options metrics
+    return {
+        "symbol": symbol,
+        "price": 150.0,
+        "trend": "up",
+        "options_data": {
+            "iv": 0.3,
+            "delta": 0.5,
+            "gamma": 0.1,
+            "theta": -0.02
+        }
+    }

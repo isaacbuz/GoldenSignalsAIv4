@@ -1,0 +1,87 @@
+.backtest-panel {
+  background: linear-gradient(120deg, #232323 80%, #181818 100%);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #FFD70022, 0 1.5px 12px #C9A10011;
+  padding: 1.1em 1.5em 1em 1.5em;
+  margin: 1em auto 1.5em auto;
+  max-width: 380px;
+  color: #FFD700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 0.98em;
+  transition: box-shadow 0.22s;
+}
+.backtest-panel:hover {
+  box-shadow: 0 6px 24px #FFD70033, 0 2px 16px #C9A10022;
+}
+
+.backtest-panel h3 {
+  margin-bottom: 0.7em;
+  font-size: 1.03em;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+
+.backtest-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em 1.3em;
+  margin-bottom: 0.7em;
+  justify-content: center;
+}
+
+.backtest-fields label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #FFD700;
+  margin-bottom: 0.1em;
+}
+
+.backtest-fields input[type="number"] {
+  margin-top: 0.18em;
+  background: #181818;
+  color: #FFD700;
+  border: 1.2px solid #FFD70044;
+  border-radius: 7px;
+  padding: 0.28em 0.6em;
+  font-size: 0.97em;
+  width: 90px;
+  outline: none;
+  transition: border 0.13s, box-shadow 0.15s;
+}
+.backtest-fields input[type="number"]:focus {
+  border: 1.2px solid #FFD700;
+  box-shadow: 0 0 0 2px #FFD70033;
+}
+
+.backtest-run-btn {
+  margin-top: 0.5em;
+  background: linear-gradient(90deg, #FFD700 60%, #FFFACD 100%);
+  color: #181818;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 0.38em 1.1em;
+  font-size: 1em;
+  cursor: pointer;
+  box-shadow: 0 1px 5px #FFD70033;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.backtest-run-btn:hover {
+  background: #C9A100;
+  color: #FFFACD;
+}
+
+.backtest-result {
+  margin-top: 0.7em;
+  color: #00FF99;
+  font-weight: 600;
+  font-size: 1.02em;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+

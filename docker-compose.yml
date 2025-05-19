@@ -41,9 +41,11 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/alerts.yml:/etc/prometheus/alerts.yml
     ports:
       - "9090:9090"
+    # Prometheus config and alert rules are now in ./config/
   grafana:
     image: grafana/grafana:latest
     ports:

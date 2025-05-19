@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 """
 reversion.py
 Purpose: Implements a ReversionAgent that identifies mean-reversion opportunities, suitable for options trading strategies like straddles in mean-reverting markets. Integrates with the GoldenSignalsAI agent framework.
 """
-=======
-# agents/predictive/reversion.py
-# Purpose: Implements a ReversionAgent that identifies mean-reversion opportunities,
-# suitable for options trading strategies like straddles in mean-reverting markets.
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
 import logging
 
@@ -25,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 class ReversionAgent(BaseAgent):
-<<<<<<< HEAD
     """
     Agent that identifies mean-reversion opportunities for swing or day trading.
 
@@ -118,25 +111,6 @@ class ReversionAgent(BaseAgent):
         else:
             return 'within'
 
-=======
-    """Agent that identifies mean-reversion opportunities."""
-
-    def __init__(self, mean_reversion_window: int = 20, z_score_threshold: float = 2.0):
-        """Initialize the ReversionAgent.
-
-        Args:
-            mean_reversion_window (int): Lookback period for mean-reversion calculation.
-            z_score_threshold (float): Threshold for z-score calculation.
-        """
-        self.mean_reversion_window = mean_reversion_window
-        self.z_score_threshold = z_score_threshold
-        logger.info(
-            {
-                "message": f"ReversionAgent initialized with mean_reversion_window={mean_reversion_window} and z_score_threshold={z_score_threshold}"
-            }
-        )
-
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
@@ -152,11 +126,7 @@ class ReversionAgent(BaseAgent):
         return signal
 
     def process(self, data: Dict) -> Dict:
-<<<<<<< HEAD
         """Process market data to identify mean-reversion opportunities for swing or day trading.
-=======
-        """Process market data to identify mean-reversion opportunities.
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
         Args:
             data (Dict): Market observation with 'stock_data'.
@@ -164,11 +134,7 @@ class ReversionAgent(BaseAgent):
         Returns:
             Dict: Decision with 'action', 'confidence', and 'metadata'.
         """
-<<<<<<< HEAD
         logger.info({"message": f"Processing data for ReversionAgent (horizon={self.trade_horizon})"})
-=======
-        logger.info({"message": "Processing data for ReversionAgent"})
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
         try:
             stock_data = pd.DataFrame(data["stock_data"])
             if stock_data.empty:
@@ -177,7 +143,6 @@ class ReversionAgent(BaseAgent):
 
             prices = stock_data["Close"]
             if len(prices) < self.mean_reversion_window:
-<<<<<<< HEAD
                 logger.warning({
                     "message": f"Insufficient data: {len(prices)} < {self.mean_reversion_window}"
                 })
@@ -247,44 +212,12 @@ class ReversionAgent(BaseAgent):
                     "volatility": float(recent_vol) if self.use_volatility_adjustment else None,
                     **factors
                 },
-=======
-                logger.warning(
-                    {
-                        "message": f"Insufficient data: {len(prices)} < {self.mean_reversion_window}"
-                    }
-                )
-                return {"action": "hold", "confidence": 0.0, "metadata": {}}
-
-            mean_price = prices[-self.mean_reversion_window :].mean()
-            current_price = prices.iloc[-1]
-            deviation = (current_price - mean_price) / mean_price
-
-            # Detect mean-reversion opportunity
-            if deviation > 0.05:
-                action = "sell"  # Overbought
-                confidence = deviation
-            elif deviation < -0.05:
-                action = "buy"  # Oversold
-                confidence = abs(deviation)
-            else:
-                action = "hold"
-                confidence = 0.0
-
-            decision = {
-                "action": action,
-                "confidence": min(confidence, 1.0),
-                "metadata": {"deviation": deviation, "mean_price": mean_price},
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
             }
             logger.info({"message": f"ReversionAgent decision: {decision}"})
             return decision
         except Exception as e:
             logger.error({"message": f"ReversionAgent processing failed: {str(e)}"})
-<<<<<<< HEAD
             return {"action": "hold", "confidence": 0.0, "metadata": {"error": str(e), "signal_type": self.trade_horizon}}
-=======
-            return {"action": "hold", "confidence": 0.0, "metadata": {"error": str(e)}}
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 
     def adapt(self, new_data: pd.DataFrame):
         """Adapt the agent to new market data (placeholder for learning).
@@ -292,9 +225,7 @@ class ReversionAgent(BaseAgent):
         Args:
             new_data (pd.DataFrame): New market data.
         """
-        logger.info({"message": "ReversionAgent adapting to new data"})
         try:
-<<<<<<< HEAD
             # Example: Could update volatility baseline or factor weights
             pass
         except Exception as e:
@@ -334,12 +265,8 @@ class ReversionAgent(BaseAgent):
                     wins += 1
                 else:
                     pnl -= 1
-        win_rate = wins / trades if trades > 0 else 0.0
-        logger.info({"message": f"Backtest complete. Trades: {trades}, Win rate: {win_rate:.2f}, PnL: {pnl}"})
-        return {"trades": trades, "win_rate": win_rate, "pnl": pnl}
-=======
-            # Placeholder: Adjust window based on volatility
-            pass
-        except Exception as e:
-            logger.error({"message": f"ReversionAgent adaptation failed: {str(e)}"})
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
+        return {
+            "pnl": pnl,
+            "win_rate": wins / trades if trades > 0 else 0,
+            "trades": trades,
+        }

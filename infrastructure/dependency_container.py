@@ -35,12 +35,8 @@ class Container(containers.DeclarativeContainer):
     
     signal_engine = providers.Singleton(
         SignalEngine,
-<<<<<<< HEAD
-        agent_factory=agent_factory
-=======
         agent_factory=agent_factory,
         alert_manager=alert_manager
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
     )
 
 # Wire dependencies for easy injection
