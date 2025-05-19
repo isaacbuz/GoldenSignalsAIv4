@@ -4,41 +4,78 @@ import './TradingDashboard.css';
 
 function TradingDashboard() {
   const [apiHealth, setApiHealth] = useState('');
+  const [apiHealthLoading, setApiHealthLoading] = useState(true);
+  const [apiHealthError, setApiHealthError] = useState(null);
   const [ohlcv, setOhlcv] = useState(null);
+  const [ohlcvLoading, setOhlcvLoading] = useState(true);
+  const [ohlcvError, setOhlcvError] = useState(null);
   const [wsStatus, setWsStatus] = useState('disconnected');
   const [wsMsg, setWsMsg] = useState('');
+  const [wsError, setWsError] = useState(null);
   const [symbol, setSymbol] = useState('AAPL');
   const [timeframe, setTimeframe] = useState('D');
   const [user, setUser] = useState(null); // Placeholder for auth
 
-  // API health check
+  // API health check with loading/error states
   useEffect(() => {
+    setApiHealthLoading(true);
+    setApiHealthError(null);
     fetch(`${API_URL}/health`)
-      .then(r => r.ok ? r.text() : r.statusText)
-      .then(setApiHealth)
-      .catch(() => setApiHealth('API not reachable'));
+      .then(r => r.ok ? r.text() : Promise.reject(r.statusText))
+      .then(data => {
+        setApiHealth(data);
+        setApiHealthLoading(false);
+      })
+      .catch(e => {
+        setApiHealth('API not reachable');
+        setApiHealthError(e.toString());
+        setApiHealthLoading(false);
+      });
   }, []);
 
-  // Fetch OHLCV data
+  // Fetch OHLCV data with loading/error/retry logic
   useEffect(() => {
-    fetch(`${API_URL}/api/ohlcv?symbol=${symbol}&timeframe=${timeframe}`)
-      .then(r => r.json())
-      .then(setOhlcv)
-      .catch(() => setOhlcv(null));
+    let retryCount = 0;
+    const fetchOhlcv = () => {
+      setOhlcvLoading(true);
+      setOhlcvError(null);
+      fetch(`${API_URL}/api/ohlcv?symbol=${symbol}&timeframe=${timeframe}`)
+        .then(r => r.ok ? r.json() : Promise.reject(r.statusText))
+        .then(data => {
+          setOhlcv(data);
+          setOhlcvLoading(false);
+        })
+        .catch(e => {
+          setOhlcv(null);
+          setOhlcvError(e.toString());
+          setOhlcvLoading(false);
+          if (retryCount < 2) {
+            retryCount++;
+            setTimeout(fetchOhlcv, 1000 * retryCount); // Exponential backoff
+          }
+        });
+    };
+    fetchOhlcv();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [symbol, timeframe]);
 
-  // WebSocket for live updates
+  // WebSocket for live updates with error handling
   useEffect(() => {
     let ws;
     setWsStatus('connecting');
+    setWsError(null);
     try {
       ws = new window.WebSocket(`${WS_URL}/ws/ohlcv?symbol=${symbol}&timeframe=${timeframe}`);
       ws.onopen = () => setWsStatus('connected');
       ws.onmessage = (e) => setWsMsg(e.data);
-      ws.onerror = () => setWsStatus('error');
+      ws.onerror = (e) => {
+        setWsStatus('error');
+        setWsError('WebSocket connection failed');
+      };
       ws.onclose = () => setWsStatus('closed');
-    } catch {
+    } catch (e) {
       setWsStatus('error');
+      setWsError(e.toString());
     }
     return () => ws && ws.close();
   }, [symbol, timeframe]);
@@ -78,10 +115,11 @@ function TradingDashboard() {
           <div className="market-ohlcv">
             <b>OHLCV Data:</b>
             <pre className="market-ohlcv-data">
-              {ohlcv ? JSON.stringify(ohlcv, null, 2) : 'Loading or failed.'}
+              {ohlcvLoading ? 'Loading...' : ohlcvError ? `Failed to load: ${ohlcvError}` : ohlcv ? JSON.stringify(ohlcv, null, 2) : 'No data.'}
             </pre>
             <div className="market-live-status">
               <b>WebSocket:</b> {wsStatus} <span className="market-ws-msg">{wsMsg}</span>
+              {wsError && <span className="market-error">WebSocket error: {wsError}</span>}
             </div>
           </div>
         </section>

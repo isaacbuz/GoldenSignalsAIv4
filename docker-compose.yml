@@ -1,54 +1,29 @@
 version: '3.8'
-<<<<<<< HEAD
 services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - api
-  api:
+  backend:
     build:
       context: .
-      dockerfile: presentation/api/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    depends_on:
-      - kafka
-      - redis
     environment:
-      - KAFKA_BROKER=kafka:9092
       - REDIS_HOST=redis
-  ai_service:
-    build:
-      context: .
-      dockerfile: application/ai_service/Dockerfile
+      - REDIS_PORT=6379
     depends_on:
-      - kafka
       - redis
-    environment:
-      - KAFKA_BROKER=kafka:9092
-      - REDIS_HOST=redis
-  signal_service:
-    build:
-      context: .
-      dockerfile: application/signal_service/Dockerfile
-    depends_on:
       - kafka
-      - redis
-    environment:
-      - KAFKA_BROKER=kafka:9092
-      - REDIS_HOST=redis
   frontend:
     build:
-      context: .
-      dockerfile: presentation/frontend/Dockerfile
+      context: ./presentation/frontend
+      dockerfile: Dockerfile
     ports:
-      - "8050:8050"
+      - "8080:8080"
     depends_on:
-      - api
+      - backend
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
   kafka:
     image: confluentinc/cp-kafka:latest
     environment:
@@ -63,50 +38,16 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./infrastructure/monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
-    volumes:
-      - ./infrastructure/monitoring/grafana_dashboard.json:/var/lib/grafana/dashboards/dashboard.json
-=======
-
-services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      - redis
-
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "8080:8080"
-
-  redis:
-    image: redis:6.2
-    ports:
-      - "6379:6379"
-
   dashboard:
     build:
       context: .
@@ -116,4 +57,3 @@ services:
     command: python -m monitoring.agent_dashboard
     depends_on:
       - backend
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b

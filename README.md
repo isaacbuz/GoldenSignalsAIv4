@@ -1,7 +1,114 @@
 
 # GoldenSignalsAI
 
+[![Build Status](https://github.com/isaacbuz/GoldenSignalsAI/actions/workflows/test.yml/badge.svg)](https://github.com/isaacbuz/GoldenSignalsAI/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 AI-powered, multi-agent options trading and arbitrage platform with advanced admin panel, real-time monitoring, and robust security.
+
+---
+
+## Screenshots & Demo
+
+![Dashboard Screenshot](docs/dashboard_placeholder.png)
+*Add GIFs or screenshots of the dashboard here!*
+
+---
+
+## Quickstart
+
+### 1. Clone & Install
+
+#### Using Poetry (Recommended)
+```bash
+git clone https://github.com/isaacbuz/GoldenSignalsAI.git
+cd GoldenSignalsAI
+pip install poetry
+poetry install
+```
+
+#### Using pip/requirements.txt
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Environment Setup
+- Copy `.env.example` to `.env` and fill in:
+  - All API keys (Alpha Vantage, Finnhub, etc.)
+  - Firebase Admin SDK path
+  - `FIREBASE_WEB_API_KEY` (from Firebase Console)
+  - Any other required secrets
+- Create and activate the conda environment (optional):
+  ```bash
+  conda create -n goldensignalsai python=3.10
+  conda activate goldensignalsai
+  pip install poetry
+  poetry install
+  ```
+
+### 3. Run the Platform
+```bash
+# Start FastAPI backend
+uvicorn GoldenSignalsAI.presentation.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Start React frontend (from presentation/frontend)
+npm install
+npm start
+```
+
+---
+
+## Docker & Compose
+
+To run the full stack with Docker Compose:
+```bash
+docker-compose up --build
+```
+- Backend: http://localhost:8000
+- Frontend: http://localhost:8080
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000
+
+---
+
+## Prometheus & Grafana Monitoring
+
+- Prometheus config: `prometheus/prometheus.yml`
+- Start via Docker Compose or run Prometheus manually
+- Add Grafana dashboards for real-time monitoring
+
+---
+
+## GitHub Actions CI
+
+Automated tests run on every push via [GitHub Actions](.github/workflows/test.yml).
+
+---
+
+## Testing
+
+Run backend tests with pytest:
+```bash
+poetry run pytest
+```
+Or using pip:
+```bash
+pytest
+```
+Sample test: `tests/test_health.py`
+
+---
+
+## Error Handling & Robustness
+- Backend endpoints use robust exception handling and logging
+- Frontend dashboard features loading indicators, error messages, and retry logic for API/WebSocket failures
+- FastAPI auto-generates OpenAPI/Swagger docs at `/docs`
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
