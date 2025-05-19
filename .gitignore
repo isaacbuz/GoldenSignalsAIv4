@@ -12,3 +12,10 @@ venv/
 *.zip
 *.tar.gz
 docs/_build/
+
+# Ignore node_modules and cache
+node_modules/
+.cache/
+
+# Ignore Miniconda installer and other large binaries
+Miniconda3-latest-MacOSX-arm64.sh
