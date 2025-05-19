@@ -70,7 +70,9 @@ class ReversionAgent(BaseAgent):
         """Detect positive momentum (last close > mean of window). Returns True if momentum is positive."""
         if len(df['Close']) < window + 1:
             return False
-        return df['Close'].iloc[-1] > df['Close'].iloc[-window-1:-1].mean()
+        if df['Close'].iloc[-1] > df['Close'].iloc[-window-1:-1].mean():
+            return True
+        return False
 
     @staticmethod
     def volume_spike_factor(df: pd.DataFrame, window: int = 20, spike_ratio: float = 2.0) -> bool:
@@ -78,7 +80,9 @@ class ReversionAgent(BaseAgent):
         if 'Volume' not in df or len(df['Volume']) < window + 1:
             return False
         mean_vol = df['Volume'].iloc[-window-1:-1].mean()
-        return df['Volume'].iloc[-1] > spike_ratio * mean_vol if mean_vol > 0 else False
+        if mean_vol > 0 and df['Volume'].iloc[-1] > spike_ratio * mean_vol:
+            return True
+        return False
 
     @staticmethod
     def macd_factor(df: pd.DataFrame, fast: int = 12, slow: int = 26, signal: int = 9) -> float:

@@ -1,7 +1,7 @@
-from GoldenSignalsAI.infrastructure.external_services.twilio_sms import TwilioSMSClient
-from GoldenSignalsAI.infrastructure.external_services.twilio_whatsapp import TwilioWhatsAppClient
-from GoldenSignalsAI.infrastructure.external_services.x_api import XClient
-from GoldenSignalsAI.application.services.alert_service import AlertService
+from infrastructure.external_services.twilio_sms import TwilioSMSClient
+from infrastructure.external_services.twilio_whatsapp import TwilioWhatsAppClient
+from infrastructure.external_services.x_api import XClient
+from application.services.alert_service import AlertService
 
 class AlertFactory:
     @staticmethod

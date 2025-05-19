@@ -29,13 +29,18 @@ class EnvironmentValidator:
         Returns:
             bool: True if environment is valid, False otherwise
         """
-        checks = [
-            self._validate_required_env_vars(),
-            self._validate_api_configurations(),
-            self._validate_system_resources(),
-            self._validate_deployment_prerequisites()
-        ]
+        print("[DEBUG] Running environment checks...")
+        required_env = self._validate_required_env_vars()
+        print(f"[DEBUG] Required env vars: {required_env}")
+        api_config = self._validate_api_configurations()
+        print(f"[DEBUG] API config: {api_config}")
+        sys_res = self._validate_system_resources()
+        print(f"[DEBUG] System resources: {sys_res}")
+        deploy_prereq = self._validate_deployment_prerequisites()
+        print(f"[DEBUG] Deployment prerequisites: {deploy_prereq}")
         
+        checks = [required_env, api_config, sys_res, deploy_prereq]
+        print(f"[DEBUG] All checks: {checks}")
         return all(checks)
     
     def _validate_required_env_vars(self) -> bool:
@@ -155,8 +160,8 @@ class EnvironmentValidator:
                 'cpu_frequency_mhz': psutil.cpu_freq().current
             },
             'configuration': {
-                'trading_strategies': self.config.get('trading.strategies', {}),
-                'risk_management': self.config.get('trading.risk_management', {}),
+                'trading_strategies': self.config.get('trading.strategies') if isinstance(self.config.get('trading.strategies'), dict) else {},
+                'risk_management': self.config.get('trading.risk_management') if isinstance(self.config.get('trading.risk_management'), dict) else {},
                 'feature_flags': {
                     flag: self.config.get_feature_flag(flag) 
                     for flag in ['machine_learning.sentiment_analysis', 'advanced_trading_strategies.pairs_trading']

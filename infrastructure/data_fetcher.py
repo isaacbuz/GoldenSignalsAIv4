@@ -21,8 +21,9 @@ logger = logging.getLogger(__name__)
 class MarketDataFetcher:
     """Fetches market data from external APIs."""
 
-    def __init__(self):
-        self.alpha_vantage_api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
+    def __init__(self, api_key=None):
+        # Accept api_key for DI compatibility, but fallback to env var if not provided
+        self.alpha_vantage_api_key = api_key or os.getenv("ALPHA_VANTAGE_API_KEY")
         self.news_api_key = os.getenv("NEWS_API_KEY")
         self.twitter_bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
         logger.info({"message": "DataFetcher initialized"})

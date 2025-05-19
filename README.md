@@ -32,10 +32,12 @@ AI-powered, multi-agent options trading and arbitrage platform with advanced adm
   - Queue/task status
   - Real-time logs
 - **Agent controls:** Restart, disable agents (admin only)
+- **Dynamic Ticker Search:** Users can enter any stock ticker in the dashboard, validated live against backend data sources (no more hardcoded dropdowns).
 - **User management:**
   - List users, change roles, enable/disable, invite, reset password, delete
   - All sensitive actions are audit-logged
 - **Alerts:** Visual alerts for unhealthy agents, high queue depth, errors
+- **Modular Admin Panel:** Admin panel is modularized into subcomponents for agents, users, queue, analytics, and alerts for maintainability and extensibility.
 - **Onboarding:** Built-in onboarding modal for new admins
 - **Accessibility:** Keyboard navigation, ARIA labels, color contrast
 
@@ -63,6 +65,13 @@ poetry install
   - Firebase Admin SDK path
   - `FIREBASE_WEB_API_KEY` (from Firebase Console)
   - Any other required secrets
+- Create and activate the conda environment:
+  ```bash
+  conda create -n goldensignalsai python=3.10
+  conda activate goldensignalsai
+  pip install poetry
+  poetry install
+  ```
 
 ### 3. Run the Platform
 ```bash
@@ -72,6 +81,8 @@ uvicorn GoldenSignalsAI.presentation.api.main:app --host 0.0.0.0 --port 8000 --r
 # Start React frontend (from presentation/frontend)
 npm install
 npm start
+
+# The frontend and backend are managed in a monorepo structure with centralized config (`config/` and `.env`).
 
 # (Optional) Start Dash analytics dashboard
 python GoldenSignalsAI/presentation/frontend/app/dashboard.py
@@ -115,13 +126,15 @@ python GoldenSignalsAI/presentation/frontend/app/dashboard.py
 - **API errors:** Check `.env` for missing/expired keys
 - **Frontend/backend not connecting:** Confirm CORS and port settings
 - **Audit log missing:** Ensure `logs/` directory exists and is writable
+- **Ticker validation errors:** If you see 'Invalid ticker symbol', ensure the backend is running and the symbol exists in supported data sources.
 
 ---
 
 ## Project Structure
-- `presentation/api/` — FastAPI backend (admin endpoints, trading logic)
-- `presentation/frontend/` — React frontend (dashboard, admin panel)
+- `presentation/api/` — FastAPI backend (admin endpoints, trading logic, ticker validation endpoint)
+- `presentation/frontend/` — React frontend (dashboard, admin panel, dynamic ticker search)
 - `infrastructure/` — Agent definitions, data sources
+- `config/` — Centralized configuration for API URLs and environment variables
 - `logs/` — System and audit logs
 - `.env` — Secrets and API keys (never commit!)
 

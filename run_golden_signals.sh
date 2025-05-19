@@ -5,10 +5,10 @@
 # It logs all actions and cleans up on exit.
 
 APP_PORT=8000
-FRONTEND_PORT=8050
+FRONTEND_PORT=3000
 API_PORT=8080
 LOGFILE="run_golden_signals.log"
-ENV_NAME="goldensignalsai-py310"
+ENV_NAME="goldensignalsai"
 REQUIREMENTS="requirements.txt"
 FRONTEND_DIR="presentation/frontend"
 API_DIR="presentation/api"
@@ -45,12 +45,24 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Set PYTHONPATH to project root for all subprocesses
+export PYTHONPATH="$(pwd):$PYTHONPATH"
+echo_log "PYTHONPATH set to: $PYTHONPATH"
+
 # Install backend dependencies if needed
 if [[ -f "$REQUIREMENTS" ]]; then
     echo_log "Installing/updating backend dependencies from $REQUIREMENTS"
     pip install -r "$REQUIREMENTS" | tee -a "$LOGFILE"
 else
     echo_log "No requirements.txt found. Skipping backend dependency installation."
+fi
+
+# Ensure memory_profiler is installed (for backend)
+if ! python -c 'import memory_profiler' 2>/dev/null; then
+    echo_log "Installing missing Python package: memory_profiler"
+    pip install memory_profiler | tee -a "$LOGFILE"
+else
+    echo_log "memory_profiler already installed."
 fi
 
 # Install frontend dependencies if needed
@@ -60,6 +72,76 @@ if [[ -d "$FRONTEND_DIR" ]]; then
         cd "$FRONTEND_DIR"
         npm install | tee -a "../../$LOGFILE"
         cd - >/dev/null
+        # Overwrite src/App.jsx with robust minimal version every run
+        echo_log "Ensuring robust minimal App.jsx for frontend."
+        cat > "$FRONTEND_DIR/src/App.jsx" <<'EOF'
+import React, { useEffect, useState } from 'react';
+import { API_URL, WS_URL } from './config';
+
+function App() {
+  const [apiHealth, setApiHealth] = useState('');
+  const [ohlcv, setOhlcv] = useState(null);
+  const [wsStatus, setWsStatus] = useState('disconnected');
+  const [wsMsg, setWsMsg] = useState('');
+
+  // Test API health
+  useEffect(() => {
+    fetch(`${API_URL}/health`)
+      .then(r => r.ok ? r.text() : r.statusText)
+      .then(setApiHealth)
+      .catch(() => setApiHealth('API not reachable'));
+  }, []);
+
+  // Test OHLCV endpoint
+  useEffect(() => {
+    fetch(`${API_URL}/api/ohlcv?symbol=AAPL&timeframe=D`)
+      .then(r => r.json())
+      .then(setOhlcv)
+      .catch(() => setOhlcv(null));
+  }, []);
+
+  // Test WebSocket
+  useEffect(() => {
+    let ws;
+    setWsStatus('connecting');
+    try {
+      ws = new window.WebSocket(`${WS_URL}/ws/ohlcv?symbol=AAPL&timeframe=D`);
+      ws.onopen = () => setWsStatus('connected');
+      ws.onmessage = (e) => setWsMsg(e.data);
+      ws.onerror = () => setWsStatus('error');
+      ws.onclose = () => setWsStatus('closed');
+    } catch {
+      setWsStatus('error');
+    }
+    return () => ws && ws.close();
+  }, []);
+
+  return (
+    <div style={{ maxWidth: 600, margin: '40px auto', fontFamily: 'sans-serif' }}>
+      <h2>GoldenSignalsAI Frontend (Vite+React18)</h2>
+      <div style={{marginBottom: 16}}>
+        <b>API Health:</b> {apiHealth || 'Loading...'}
+      </div>
+      <div style={{marginBottom: 16}}>
+        <b>OHLCV Test Data:</b><br/>
+        <pre style={{background: '#f4f4f4', padding: 8, borderRadius: 4, fontSize: 13}}>
+          {ohlcv ? JSON.stringify(ohlcv, null, 2) : 'Loading or failed.'}
+        </pre>
+      </div>
+      <div style={{marginBottom: 16}}>
+        <b>WebSocket Status:</b> {wsStatus}<br/>
+        <b>Latest WS Message:</b> <span style={{wordBreak: 'break-all'}}>{wsMsg}</span>
+      </div>
+      <div style={{marginTop: 32, color: '#888', fontSize: 13}}>
+        <b>Backend URL:</b> {API_URL}<br/>
+        <b>WS URL:</b> {WS_URL}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+EOF
     fi
     if [[ -f "$FRONTEND_DIR/requirements.txt" ]]; then
         echo_log "Installing/updating frontend Python dependencies."
@@ -105,14 +187,16 @@ $LOGCMD &
 SERVER_PID=$!
 echo_log "FastAPI backend running with PID $SERVER_PID on port $APP_PORT"
 
-# Spin up Dash frontend dashboard
-if [[ -f "$FRONTEND_DIR/app/dashboard.py" ]]; then
-    echo_log "Starting Dash frontend dashboard on port $FRONTEND_PORT"
-    python "$FRONTEND_DIR/app/dashboard.py" --port $FRONTEND_PORT &
+# Spin up Vite+React frontend
+if [[ -f "$FRONTEND_DIR/package.json" ]]; then
+    echo_log "Starting Vite+React frontend on port $FRONTEND_PORT"
+    cd "$FRONTEND_DIR"
+    npm run dev -- --port $FRONTEND_PORT &
     FRONTEND_PID=$!
-    echo_log "Dash frontend running with PID $FRONTEND_PID on port $FRONTEND_PORT"
+    cd - >/dev/null
+    echo_log "Vite+React frontend running with PID $FRONTEND_PID on port $FRONTEND_PORT"
 else
-    echo_log "No Dash frontend found at $FRONTEND_DIR/app/dashboard.py. Skipping frontend launch."
+    echo_log "No frontend found at $FRONTEND_DIR. Skipping frontend launch."
 fi
 
 # Spin up API microservice if present

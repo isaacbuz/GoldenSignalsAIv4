@@ -1,9 +1,9 @@
 import pandas as pd
-from GoldenSignalsAI.infrastructure.data.fetchers.database_fetcher import fetch_stock_data
-from GoldenSignalsAI.infrastructure.data.fetchers.news_fetcher import fetch_news_articles
-from GoldenSignalsAI.infrastructure.data.fetchers.realtime_fetcher import fetch_realtime_data
-from GoldenSignalsAI.infrastructure.data.preprocessors.stock_preprocessor import StockPreprocessor
-from GoldenSignalsAI.application.events.event_publisher import EventPublisher
+from infrastructure.data.fetchers.database_fetcher import fetch_stock_data
+from infrastructure.data.fetchers.news_fetcher import fetch_news_articles
+from infrastructure.data.fetchers.realtime_fetcher import fetch_realtime_data
+from infrastructure.data.preprocessors.stock_preprocessor import StockPreprocessor
+from application.events.event_publisher import EventPublisher
 
 class DataService:
     def __init__(self, use_numba=True):
@@ -21,7 +21,7 @@ class DataService:
                 "type": "PriceUpdateEvent",
                 "symbol": symbol,
                 "price": realtime_df['close'].iloc[-1],
-                "timestamp": pd.Timestamp.now()
+                "timestamp": pd.Timestamp.now().isoformat()
             }
             await self.event_publisher.publish("price_updates", event)
         

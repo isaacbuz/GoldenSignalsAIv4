@@ -1,8 +1,8 @@
 import pytest
 import pandas as pd
 from unittest.mock import patch
-from GoldenSignalsAI.domain.trading.strategies.trading_env import TradingEnv
-from GoldenSignalsAI.infrastructure.data.fetchers.database_fetcher import fetch_stock_data
+from domain.trading.strategies.trading_env import TradingEnv
+from infrastructure.data.fetchers.database_fetcher import fetch_stock_data
 
 @pytest.fixture
 def symbol():
@@ -10,7 +10,7 @@ def symbol():
 
 @pytest.fixture(autouse=True)
 def mock_fetch_stock_data():
-    with patch('GoldenSignalsAI.infrastructure.data.fetchers.database_fetcher.fetch_stock_data') as mocked_fetch:
+    with patch('infrastructure.data.fetchers.database_fetcher.fetch_stock_data') as mocked_fetch:
         mock_data = pd.DataFrame({
             'date': pd.date_range(start='2020-01-01', periods=100, freq='D'),
             'open': [100 + i for i in range(100)],

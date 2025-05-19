@@ -1,0 +1,141 @@
+.dashboard-root {
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 18px 36px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.brand {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.brand-ai {
+  color: #14b8a6;
+  font-weight: 900;
+}
+.dashboard-nav span {
+  margin: 0 18px;
+  font-size: 1rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.dashboard-nav span:hover {
+  color: #0ea5e9;
+}
+.dashboard-user {
+  font-size: 1rem;
+  color: #475569;
+}
+.dashboard-main {
+  max-width: 1100px;
+  margin: 32px auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+}
+.dashboard-market {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(20,184,166,0.07);
+  margin-bottom: 24px;
+}
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.market-symbol-picker input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-right: 8px;
+  font-size: 1rem;
+}
+.market-symbol-picker select {
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.market-ohlcv {
+  margin-top: 12px;
+}
+.market-ohlcv-data {
+  background: #f1f5f9;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.market-live-status {
+  font-size: 0.95rem;
+  color: #0ea5e9;
+}
+.dashboard-agents, .dashboard-analytics, .dashboard-alerts {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(100,116,139,0.06);
+}
+.agent-status-list {
+  display: flex;
+  gap: 20px;
+}
+.agent-status-card {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  color: #334155;
+}
+.agent-status-ok {
+  color: #22c55e;
+  font-weight: 700;
+}
+.agent-status-warning {
+  color: #f59e42;
+  font-weight: 700;
+}
+.analytics-chart-placeholder {
+  background: #e0e7ef;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.alert {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.alert-ok {
+  background: #e0fce7;
+  color: #22c55e;
+}
+.dashboard-footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.98rem;
+  margin: 48px 0 16px 0;
+}

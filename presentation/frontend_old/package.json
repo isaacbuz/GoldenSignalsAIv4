@@ -1,0 +1,45 @@
+{
+  "name": "goldensignalsai-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.0",
+    "@mui/material": "^5.14.0",
+    "eslint-config-react-app": "^7.0.1",
+    "firebase": "^11.7.3",
+    "lightweight-charts": "^5.0.7",
+    "lightweight-charts-react": "^0.0.2",
+    "lodash": "^4.17.21",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.15.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "cleanstart": "rm -rf node_modules package-lock.json yarn.lock && npm install --legacy-peer-deps && npm start"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "proxy": "http://localhost:8001",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

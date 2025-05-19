@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from GoldenSignalsAI.infrastructure.storage.s3_storage import S3Storage
+from infrastructure.storage.s3_storage import S3Storage
 
 class AuditLogger:
     def __init__(self):

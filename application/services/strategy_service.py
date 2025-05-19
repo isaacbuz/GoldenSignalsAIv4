@@ -1,4 +1,4 @@
-from GoldenSignalsAI.domain.trading.strategies.backtest_strategy import BacktestStrategy
+from domain.trading.strategies.backtest_strategy import BacktestStrategy
 
 class StrategyService:
     def __init__(self):

@@ -2,6 +2,7 @@
 # User and role management endpoints for admin panel (requires Firebase Admin SDK)
 from fastapi import APIRouter, Depends, HTTPException, status
 from .admin_auth import get_current_user, require_role
+from .rate_limit import limiter
 import firebase_admin
 from firebase_admin import auth as firebase_auth
 
@@ -24,7 +25,7 @@ async def list_users(user=Depends(require_role("admin"))):
 
 @router.post("/{uid}/set_role")
 @limiter.limit("10/minute")
-async def set_user_role(uid: str, role: str, user=Depends(require_role("admin"))):
+async def set_user_role(request, uid: str, role: str, user=Depends(require_role("admin"))):
     # Set custom claim for user role
     try:
         firebase_auth.set_custom_user_claims(uid, {"role": role})
@@ -34,7 +35,7 @@ async def set_user_role(uid: str, role: str, user=Depends(require_role("admin"))
 
 @router.post("/bulk_disable")
 @limiter.limit("5/minute")
-async def bulk_disable_users(uids: list[str], user=Depends(require_role("admin"))):
+async def bulk_disable_users(request, uids: list[str], user=Depends(require_role("admin"))):
     results = []
     for uid in uids:
         try:
@@ -48,7 +49,7 @@ async def bulk_disable_users(uids: list[str], user=Depends(require_role("admin")
 
 @router.post("/{uid}/disable")
 @limiter.limit("10/minute")
-async def disable_user(uid: str, user=Depends(require_role("admin"))):
+async def disable_user(request, uid: str, user=Depends(require_role("admin"))):
     try:
         firebase_auth.update_user(uid, disabled=True)
         log_admin_action(user, "disable_user", target=uid)
@@ -59,7 +60,7 @@ async def disable_user(uid: str, user=Depends(require_role("admin"))):
 
 @router.post("/bulk_enable")
 @limiter.limit("5/minute")
-async def bulk_enable_users(uids: list[str], user=Depends(require_role("admin"))):
+async def bulk_enable_users(request, uids: list[str], user=Depends(require_role("admin"))):
     results = []
     for uid in uids:
         try:
@@ -73,7 +74,7 @@ async def bulk_enable_users(uids: list[str], user=Depends(require_role("admin"))
 
 @router.post("/{uid}/enable")
 @limiter.limit("10/minute")
-async def enable_user(uid: str, user=Depends(require_role("admin"))):
+async def enable_user(request, uid: str, user=Depends(require_role("admin"))):
     try:
         firebase_auth.update_user(uid, disabled=False)
         log_admin_action(user, "enable_user", target=uid)
@@ -82,11 +83,11 @@ async def enable_user(uid: str, user=Depends(require_role("admin"))):
         log_admin_action(user, "enable_user", target=uid, outcome="error", details=str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
-from ..api.main import limiter
+from .rate_limit import limiter
 
 @router.post("/invite")
 @limiter.limit("10/minute")
-async def invite_user(email: str, user=Depends(require_role("admin"))):
+async def invite_user(request, email: str, user=Depends(require_role("admin"))):
     # Create user if not exists
     try:
         existing = None
@@ -105,7 +106,7 @@ async def invite_user(email: str, user=Depends(require_role("admin"))):
 
 @router.post("/{uid}/reset_password")
 @limiter.limit("10/minute")
-async def reset_password(uid: str, user=Depends(require_role("admin"))):
+async def reset_password(request, uid: str, user=Depends(require_role("admin"))):
     try:
         u = firebase_auth.get_user(uid)
         # Send password reset email via Firebase REST API
@@ -125,7 +126,7 @@ async def reset_password(uid: str, user=Depends(require_role("admin"))):
 
 @router.post("/bulk_delete")
 @limiter.limit("5/minute")
-async def bulk_delete_users(uids: list[str], user=Depends(require_role("admin"))):
+async def bulk_delete_users(request, uids: list[str], user=Depends(require_role("admin"))):
     results = []
     for uid in uids:
         try:
@@ -139,7 +140,7 @@ async def bulk_delete_users(uids: list[str], user=Depends(require_role("admin"))
 
 @router.post("/{uid}/delete")
 @limiter.limit("10/minute")
-async def delete_user(uid: str, user=Depends(require_role("admin"))):
+async def delete_user(request, uid: str, user=Depends(require_role("admin"))):
     try:
         firebase_auth.delete_user(uid)
         log_admin_action(user, "delete_user", target=uid)

@@ -36,6 +36,7 @@ class ArbitrageRequest(BaseModel):
     symbol: str
     min_spread: float = 0.01
 
+# NOTE: Auth relaxed for testing. Restore Depends(verify_jwt_token) for production.
 @router.post("/arbitrage/opportunities")
 async def get_arbitrage_opportunities(request: ArbitrageRequest):
     opps = arbitrage_agent.find_opportunities(request.symbol, request.min_spread)

@@ -4,10 +4,13 @@ from fastapi import APIRouter, Depends
 from .admin_auth import get_current_user, require_role
 from .admin_metrics import get_metric_history, get_agent_health, get_queue_status
 
+from .rate_limit import limiter
+
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 @router.get("/performance")
-async def performance(user=Depends(require_role("admin"))):
+@limiter.limit("10/minute")
+async def performance(request, user=Depends(require_role("admin"))):
     # Dummy data: Replace with actual system metrics
     return {
         "cpu": 38.2,
@@ -33,7 +36,8 @@ async def set_alert_thresholds(new_thresholds: dict, user=Depends(require_role("
     return alert_thresholds
 
 @router.get("/anomaly_check")
-async def anomaly_check(user=Depends(require_role("admin"))):
+@limiter.limit("10/minute")
+async def anomaly_check(request, user=Depends(require_role("admin"))):
     # Dummy anomaly detection logic
     anomalies = []
     # Example: Replace with real checks
@@ -53,11 +57,13 @@ async def agent_health(user=Depends(get_current_user)):
     return get_agent_health()
 
 @router.get("/queue")
-async def queue_status(user=Depends(get_current_user)):
+@limiter.limit("10/minute")
+async def queue_status(request, user=Depends(get_current_user)):
     return get_queue_status()
 
 @router.get("/logs")
-async def get_logs(user=Depends(get_current_user)):
+@limiter.limit("10/minute")
+async def get_logs(request, user=Depends(get_current_user)):
     # Example: Read from your log file
     try:
         with open("./logs/goldensignalsai.log", "r") as f:
@@ -77,7 +83,8 @@ async def list_agents(user=Depends(get_current_user)):
 from .admin_audit import log_admin_action
 
 @router.get("/agent_health")
-async def agent_health(user=Depends(require_role("admin"))):
+@limiter.limit("10/minute")
+async def agent_health(request, user=Depends(require_role("admin"))):
     # Dummy agent health data; replace with real agent status checks
     agents = [
         {
@@ -105,7 +112,8 @@ async def agent_health(user=Depends(require_role("admin"))):
     return {"agents": agents}
 
 @router.get("/agents/{agent_name}")
-async def agent_details(agent_name: str, user=Depends(get_current_user)):
+@limiter.limit("10/minute")
+async def agent_details(request, agent_name: str, user=Depends(get_current_user)):
     # Example: Replace with real agent details
     details = {
         "name": agent_name,
@@ -120,11 +128,11 @@ async def agent_details(agent_name: str, user=Depends(get_current_user)):
     log_admin_action(user, "read_agent_details", target=agent_name)
     return details
 
-from ..api.main import limiter
+from .rate_limit import limiter
 
 @router.post("/agents/{agent_name}/restart")
 @limiter.limit("10/minute")
-async def restart_agent(agent_name: str, user=Depends(require_role("admin"))):
+async def restart_agent(request, agent_name: str, user=Depends(require_role("admin"))):
     # Simulate agent restart with error handling and audit logging
     try:
         # Example: Check if agent exists (replace with real logic)
@@ -141,7 +149,7 @@ async def restart_agent(agent_name: str, user=Depends(require_role("admin"))):
 
 @router.post("/agents/{agent_name}/disable")
 @limiter.limit("10/minute")
-async def disable_agent(agent_name: str, user=Depends(require_role("admin"))):
+async def disable_agent(request, agent_name: str, user=Depends(require_role("admin"))):
     # Simulate agent disable with error handling and audit logging
     try:
         valid_agents = ["AlphaVantageAgent", "FinnhubAgent", "PolygonAgent"]

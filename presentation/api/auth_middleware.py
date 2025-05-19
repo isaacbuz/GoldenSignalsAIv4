@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from GoldenSignalsAI.infrastructure.auth.jwt_utils import verify_jwt_token
+from infrastructure.auth.jwt_utils import verify_jwt_token
 
 security = HTTPBearer()
 

@@ -231,6 +231,12 @@ class ConfigManager:
         """
         self._feature_flags[flag_name] = value
         self.logger.info(f"Feature flag '{flag_name}' set to {value}")
+
+    def is_feature_enabled(self, flag_name: str) -> bool:
+        """
+        Return True if the feature flag is enabled, False otherwise.
+        """
+        return self.get_feature_flag(flag_name, False)
     
     @property
     def machine_id(self) -> str:
