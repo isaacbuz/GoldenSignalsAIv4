@@ -17,10 +17,65 @@ GoldenSignalsAI is an AI-powered stock prediction and trade suggestion platform.
 - 🎯 **Trade Suggestions**: Recommends entry and exit points for calls or puts based on predictions and market context.
 - 🤖 **Multi-Agent, Multi-Source Data**: Integrates data from Financial Modeling Prep, Alpha Vantage, Polygon, Finnhub, and more for robust, reliable signals.
 - 📊 **Performance & Signal Dashboard**: Modern, responsive dashboard for viewing predictions, trade suggestions, and performance metrics.
+- 🔒 **Secure Admin API Layer**: All admin API requests use a JWT/session token, injected via a robust `authFetch` wrapper. 401 responses trigger auto-redirect to `/login`.
+- 📈 **Export to CSV/JSON**: Download any table (signals, agent stats, audit log) as Excel-ready CSV or JSON for audits, ML, or archiving.
+- 🤖 **Agent Health Monitor**: Live dashboard for agent online/offline status, uptime, ping, and error count. Auto-refreshes every 30s.
+- 📅 **Scheduled Reports System**: Schedule daily/weekly reports (signals, agent stats, audit log) as CSV/JSON. Fully managed via the admin UI, with all actions audit-logged.
+- 📝 **Audit Logging**: All critical admin actions (agent control, report scheduling, etc.) are tracked in a live audit log, visible in the dashboard and exportable.
 - ⚡ **Dynamic Ticker Search & Autocomplete**: Instantly search and select tickers with live validation and autocomplete.
 - 🔔 **Visual Alerts & Monitoring**: Alerts for prediction confidence, model health, and system status.
 - 🛡️ **Role-Based Admin Panel**: User management, access control, and audit logging.
 - 🔒 **Secure, Extensible Architecture**: Modular backend and frontend, with best practices for secrets and user authentication.
+
+---
+
+## Frontend Architecture & Features
+
+- **Modern UI/UX**: Built with React, Tailwind, shadcn/ui, and robust accessibility.
+- **Global Shell**: Planned persistent sidebar, header, and dynamic content area for all pages.
+- **Pages:**
+  - Dashboard: Real-time signals, equity curve, summary KPIs, alerts, heatmap, recent activity.
+  - Signals: Interactive price chart with buy/sell/hold markers, signal history, confidence bars.
+  - Watchlist: Ticker cards, sparklines, P/L, drag-and-drop reorder.
+  - Backtest: Equity curve, drawdown, performance metrics, correlation matrix.
+  - Agents: Toggle agent list, configuration panel.
+  - Settings: API keys, notification preferences, profile.
+- **Advanced Features:**
+  - Real-time WebSocket feeds for ticks and signals.
+  - Interactive chart overlays, drawing tools, multi-timeframe toggles.
+  - Guided tour, quick-action toolbar, session replay, notifications.
+  - Unified error handling: UI never crashes on missing env or API errors—shows warnings instead.
+- **Environment Sync:**
+  - Use `scripts/sync-env.sh` to keep frontend and backend envs in sync.
+  - All frontend env vars must start with `VITE_`.
+
+---
+
+## Admin Dashboard: Power Features
+
+### Secure API Layer
+- All admin API calls use `authFetch`, which injects the JWT/session token from localStorage and auto-redirects to `/login` on 401.
+- **Usage:** On login, store your token via `localStorage.setItem("token", "<your_token>")`.
+
+### Export to CSV/JSON
+- Download any table (signals, agent stats, audit log) as CSV or JSON with one click.
+- **Usage:** Click the Export CSV/JSON buttons above each table in the admin dashboard.
+
+### Agent Health Monitor
+- View all agent statuses (online/offline), uptime, ping, and error count in real time.
+- **Usage:** See the "Agent Health Monitor" panel in the admin dashboard. Data auto-refreshes every 30 seconds.
+
+### Scheduled Reports System
+- Schedule daily or weekly exports of signals, agent stats, or audit logs in CSV or JSON format.
+- **Usage:** Use the "Schedule Automated Reports" panel in the admin dashboard. All scheduling actions are tracked in the audit log.
+
+### Audit Logging
+- All admin actions (agent control, report scheduling, etc.) are tracked and visible in the live audit log panel.
+- **Usage:** See the "Admin Audit Log" section. Export logs for compliance or review.
+
+---
+- **Conda Environment:**
+  - Preferred environment: `goldensignalsai` (see memory notes).
 
 ---
 
@@ -47,11 +102,17 @@ pip install poetry
 poetry install
 ```
 
-### 2. Environment Setup
-- Copy `.env.example` to `.env` and fill in all required API keys and secrets.
-- Copy `secrets/secrets.yaml.example` and `secrets/firebase-adminsdk.json.example` as templates if needed.
+### 2. Environment Setup (Unified)
+- Use a single `.env` file at the project root for all secrets, API keys, and environment variables.
+- All frontend variables must be prefixed with `VITE_` (e.g. `VITE_API_URL`, `VITE_FMP_API_KEY`).
+- Backend variables are unprefixed and used by FastAPI and agents.
+- To sync frontend variables, run:
+  ```bash
+  bash scripts/sync-env.sh
+  ```
+- This will update `presentation/frontend/.env` with only the `VITE_` variables from the root `.env`.
 - **Never commit real secrets!** Use environment variables or vaults for production.
-- Create and activate the conda environment (optional):
+- Create and activate the conda environment (recommended):
   ```bash
   conda create -n goldensignalsai python=3.10
   conda activate goldensignalsai
@@ -76,12 +137,15 @@ poetry install
 
 ### 6. Run the Platform
 ```bash
-# Start FastAPI backend
+# Start FastAPI backend (in the goldensignalsai conda env)
 poetry run python main.py
+
+# Sync frontend .env (in project root)
+bash scripts/sync-env.sh
 
 # Start React frontend (from presentation/frontend)
 npm install
-npm start
+npm run dev
 ```
 
 ---
