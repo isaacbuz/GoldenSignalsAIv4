@@ -1,5 +1,5 @@
 import optuna
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 
 class StrategyTuner:
     def __init__(self, data, symbol, historical_returns):

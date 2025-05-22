@@ -1,14 +1,19 @@
-import logging
+import json
 from datetime import datetime
-from infrastructure.storage.s3_storage import S3Storage
+from pathlib import Path
 
 class AuditLogger:
-    def __init__(self):
-        self.s3_storage = S3Storage()
-        self.logger = logging.getLogger(__name__)
+    def __init__(self, log_path: str = "logs/admin_audit.log"):
+        self.log_file = Path(log_path)
+        self.log_file.parent.mkdir(parents=True, exist_ok=True)
 
-    def log_event(self, event_type, details):
-        timestamp = datetime.now().isoformat()
-        log_entry = {"timestamp": timestamp, "event_type": event_type, "details": details}
-        self.s3_storage.save_log(log_entry)
-        self.logger.info(f"Audit log: {log_entry}")
+    def log(self, actor: str, action: str, status: str = "success", metadata: dict = None):
+        entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "actor": actor,
+            "action": action,
+            "status": status,
+            "metadata": metadata or {}
+        }
+        with self.log_file.open("a") as f:
+            f.write(json.dumps(entry) + "\n")

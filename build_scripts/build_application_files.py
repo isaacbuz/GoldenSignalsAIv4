@@ -402,7 +402,7 @@ CMD ["python", "signal_engine.py"]
     "application/signal_service/signal_engine.py": """import logging
 import pandas as pd
 import asyncio
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 from GoldenSignalsAI.application.events.event_publisher import EventPublisher
 from GoldenSignalsAI.infrastructure.data.fetchers.realtime_fetcher import fetch_realtime_data
 
@@ -685,7 +685,7 @@ class StrategyService:
         }
 """,
     "application/strategies/strategy_tuner.py": """import optuna
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.ai_service.advanced_engine import AdvancedEngine
 
 class StrategyTuner:
     def __init__(self, data, symbol, historical_returns):
@@ -704,12 +704,12 @@ class StrategyTuner:
         }
         total = sum(weights.values())
         weights = {k: v / total for k, v in weights.items()}
-        signal_engine = SignalEngine(self.data, weights)
+        advanced_engine = AdvancedEngine(self.data, weights)
         signals = []
         for i in range(len(self.data) - 1):
             temp_df = self.data.iloc[:i+1]
-            signal_engine.data = temp_df
-            signal = signal_engine.generate_signal(self.symbol)
+            advanced_engine.data = temp_df
+            signal = advanced_engine.generate_signal(self.symbol)
             signals.append(signal)
         returns = []
         position = 0
@@ -750,7 +750,7 @@ if __name__ == "__main__":
 from GoldenSignalsAI.application.ai_service.orchestrator import Orchestrator
 from GoldenSignalsAI.application.ai_service.autonomous_engine import AutonomousEngine, Action
 from GoldenSignalsAI.application.services.auto_executor import AutoExecutor
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.ai_service.advanced_engine import AdvancedEngine
 from GoldenSignalsAI.application.strategies.strategy_tuner import StrategyTuner
 from datetime import datetime
 import pandas as pd

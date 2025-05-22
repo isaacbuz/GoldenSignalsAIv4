@@ -1,11 +1,11 @@
 .backtest-panel {
-  background: linear-gradient(120deg, #232323 80%, #181818 100%);
+  background: var(--card-bg);
   border-radius: 14px;
-  box-shadow: 0 2px 12px #FFD70022, 0 1.5px 12px #C9A10011;
+  box-shadow: var(--shadow);
   padding: 1.1em 1.5em 1em 1.5em;
   margin: 1em auto 1.5em auto;
   max-width: 380px;
-  color: #FFD700;
+  color: var(--gold-accent);
   display: flex;
   flex-direction: column;
   align-items: center;

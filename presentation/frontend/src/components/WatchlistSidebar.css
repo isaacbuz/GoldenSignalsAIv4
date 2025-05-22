@@ -1,10 +1,10 @@
 .watchlist-sidebar {
   width: 220px;
-  background: linear-gradient(120deg, #232323 80%, #181818 100%);
+  background: var(--sidebar-bg);
   border-radius: 18px;
-  box-shadow: 0 2px 12px #FFD70033, 0 1.5px 12px #C9A10011;
+  box-shadow: var(--shadow);
   padding: 1.5rem 1rem 1rem 1rem;
-  color: #FFD700;
+  color: var(--gold-accent);
   font-family: inherit;
   margin-right: 2rem;
   display: flex;
@@ -12,10 +12,12 @@
   align-items: center;
 }
 .watchlist-sidebar h3 {
+  color: var(--gold-accent);
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 0.05em;
+  margin-bottom: 1rem;
 }
 .watchlist-sidebar ul {
   list-style: none;
@@ -27,12 +29,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.55rem 0.38rem;
-  margin-bottom: 0.22rem;
-  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
-  font-size: 1.04em;
+  transition: background 0.3s ease;
+  background: var(--card-bg);
+  color: var(--text-color);
   opacity: 0;
   animation: fadeInWatchlist 0.5s ease forwards;
   position: relative;

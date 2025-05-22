@@ -3,7 +3,7 @@ from dependency_injector.wiring import inject, Provide
 
 from agents.factory import AgentFactory
 from notifications.alert_manager import AlertManager
-from application.services.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 from infrastructure.config_manager import config_manager
 from infrastructure.data_fetcher import MarketDataFetcher
 
@@ -51,5 +51,5 @@ container = Container()
 container.wire(modules=[
     'main',
     'orchestration.supervisor',
-    'application.services.signal_engine'
+    'goldensignalsai.application.services.signal_engine'
 ])

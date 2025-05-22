@@ -9,7 +9,7 @@ import yaml
 
 from agents.factory import AgentFactory
 from notifications.alert_manager import AlertManager
-from application.services.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 
 # Configure logging with JSON-like format
 logging.basicConfig(

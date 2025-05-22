@@ -27,6 +27,8 @@ const MOCK_ENTRIES = [
   },
 ];
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 export default function TradeJournal() {
   const [entries, setEntries] = useState(MOCK_ENTRIES);
   const [filter, setFilter] = useState('');
@@ -57,31 +59,41 @@ export default function TradeJournal() {
         />
       </div>
       <div className="journal-entries">
-        {filtered.map(e => (
-          <div key={e.id} className={`journal-entry${selectedId === e.id ? ' selected' : ''}`}
-               onClick={() => setSelectedId(e.id)}>
-            <div className="entry-main">
-              <span className="entry-symbol">{e.symbol}</span>
-              <span className="entry-date">{e.date}</span>
-              <span className={`entry-side ${e.side.toLowerCase()}`}>{e.side}</span>
-              <span className="entry-qty">{e.qty} @ ${e.price}</span>
-              <span className={`entry-result ${e.result.startsWith('+') ? 'profit' : 'loss'}`}>{e.result}</span>
-              <span className="entry-tags">{e.tags.map(t => <span key={t} className="tag">{t}</span>)}</span>
-            </div>
-            <div className="entry-notes">{e.notes}</div>
-            {selectedId === e.id && (
-              <div className="entry-add-note">
-                <textarea
-                  value={newNote}
-                  onChange={e => setNewNote(e.target.value)}
-                  placeholder="Add note..."
-                  rows={2}
-                />
-                <button onClick={handleAddNote}>Add Note</button>
+        <AnimatePresence>
+          {filtered.map((e, idx) => (
+            <motion.div
+              key={e.id}
+              className={`journal-entry${selectedId === e.id ? ' selected' : ''}`}
+              onClick={() => setSelectedId(e.id)}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 24 }}
+              transition={{ duration: 0.45, delay: idx * 0.07, type: 'spring', stiffness: 60 }}
+              layout
+            >
+              <div className="entry-main">
+                <span className="entry-symbol">{e.symbol}</span>
+                <span className="entry-date">{e.date}</span>
+                <span className={`entry-side ${e.side.toLowerCase()}`}>{e.side}</span>
+                <span className="entry-qty">{e.qty} @ ${e.price}</span>
+                <span className={`entry-result ${e.result.startsWith('+') ? 'profit' : 'loss'}`}>{e.result}</span>
+                <span className="entry-tags">{e.tags.map(t => <span key={t} className="tag">{t}</span>)}</span>
               </div>
-            )}
-          </div>
-        ))}
+              <div className="entry-notes">{e.notes}</div>
+              {selectedId === e.id && (
+                <div className="entry-add-note">
+                  <textarea
+                    value={newNote}
+                    onChange={e => setNewNote(e.target.value)}
+                    placeholder="Add note..."
+                    rows={2}
+                  />
+                  <button onClick={handleAddNote}>Add Note</button>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

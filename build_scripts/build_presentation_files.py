@@ -109,7 +109,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from datetime import datetime, timedelta
 from GoldenSignalsAI.domain.trading.indicators import TechnicalIndicators
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from GoldenSignalsAI.application.services.signal_engine import SignalEngine
 from GoldenSignalsAI.application.monitoring.health_monitor import AIMonitor
 from GoldenSignalsAI.application.services.decision_logger import DecisionLogger
 

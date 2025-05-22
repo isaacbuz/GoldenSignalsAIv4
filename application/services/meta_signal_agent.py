@@ -1,0 +1,30 @@
+from typing import List, Dict
+import numpy as np
+
+class MetaSignalAgent:
+    def __init__(self, weight_config: Dict[str, float] = None):
+        # Default weights for each agent type
+        self.weights = weight_config or {
+            "technical": 0.4,
+            "sentiment": 0.3,
+            "regime": 0.3
+        }
+
+    def predict(self, agent_signals: Dict[str, Dict]) -> Dict:
+        # agent_signals format:
+        # { "technical": {"signal": "buy", "confidence": 0.8}, ... }
+
+        vote_scores = {"buy": 0, "sell": 0, "hold": 0}
+
+        for agent, data in agent_signals.items():
+            signal = data["signal"]
+            confidence = data.get("confidence", 0.5)
+            weight = self.weights.get(agent, 0.0)
+            vote_scores[signal] += confidence * weight
+
+        final_signal = max(vote_scores, key=vote_scores.get)
+        return {
+            "signal": final_signal,
+            "score": vote_scores[final_signal],
+            "details": vote_scores
+        }

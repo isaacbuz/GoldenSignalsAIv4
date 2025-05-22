@@ -5,7 +5,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from datetime import datetime, timedelta
 from domain.trading.indicators import Indicators
-from domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 from application.monitoring.health_monitor import AIMonitor
 from application.services.decision_logger import DecisionLogger
 

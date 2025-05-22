@@ -6,7 +6,8 @@ from .rate_limit import limiter
 import firebase_admin
 from firebase_admin import auth as firebase_auth
 
-router = APIRouter(prefix="/api/admin/users", tags=["admin-users"])
+from infrastructure.auth.jwt_utils import verify_jwt_token
+router = APIRouter(prefix="/api/v1/admin/users", tags=["admin-users"])
 
 @router.get("/")
 async def list_users(user=Depends(require_role("admin"))):

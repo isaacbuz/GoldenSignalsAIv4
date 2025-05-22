@@ -9,13 +9,80 @@ from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
+
+# Sentry initialization (set SENTRY_DSN in your environment)
+sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), traces_sample_rate=1.0)
+
+# Rate limiter
+limiter = Limiter(key_func=get_remote_address)
+
+# Trusted frontend origins
+trusted_origins = [
+    "https://yourfrontend.com",
+    "http://localhost:3000"
+]
+
+app = FastAPI()
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=trusted_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Rate limiting middleware
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, lambda r, e: JSONResponse(status_code=429, content={"detail": "Rate limit exceeded"}))
+
+# Prometheus metrics
+Instrumentator().instrument(app).expose(app)
+
+# Sentry ASGI middleware
+app.add_middleware(SentryAsgiMiddleware)
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
+from fastapi.middleware.cors import CORSMiddleware
 from .admin_endpoints import router as admin_router
 from .admin_user_management import router as admin_user_router
 from .signal_endpoints import router as signal_router
+from presentation.api.gdpr_endpoints import router as gdpr_router
+from presentation.api.grok_feedback import router as grok_feedback_router
 from .ohlcv_endpoints import router as ohlcv_router
 from .ws_endpoints import router as ws_router
 from .arbitrage_endpoints import router as arbitrage_router
+# --- Feature Routers ---
+from .signal_explain import router as signal_explain_router
+from .regime_detector import router as regime_detector_router
+from .agent_performance import router as agent_performance_router
+from .news_agent import router as news_agent_router
+from .backtest_playground import router as backtest_playground_router
+from .alert_manager import router as alert_manager_router
+from .audit_trail import router as audit_trail_router
+from .watchlist import router as watchlist_router
 import redis.asyncio as redis
+
+# === New agent routers ===
+from presentation.api.meta_signal import router as meta_signal_router
+from presentation.api.gpt_model_copilot import router as gpt_model_copilot_router
+from presentation.api.forecasting import router as forecasting_router
+from presentation.api.strategy_selector import router as strategy_selector_router
+
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -86,8 +153,8 @@ from infrastructure.auth.jwt_utils import create_access_token, decode_refresh_to
 async def health():
     return {"status": "ok"}
 
-@app.post("/api/refresh")
-async def refresh_token(request: Request, refresh_token: str = Cookie(None)):
+@app.post("/api/v1/refresh")
+async def refresh_token(request: Request, refresh_token: str = Cookie(None), user=Depends(verify_jwt_token)):
     """
     Refresh the JWT access token using a valid refresh token (from cookie).
     Returns a new access token if the refresh token is valid and not expired.
@@ -107,8 +174,8 @@ async def refresh_token(request: Request, refresh_token: str = Cookie(None)):
 
 
 # --- Dashboard endpoint for frontend ---
-@app.get("/dashboard/{symbol}")
-async def dashboard(symbol: str = Path(...)):
+@app.get("/api/v1/dashboard/{symbol}")
+async def dashboard(symbol: str = Path(...), user=Depends(verify_jwt_token)):
     import traceback
     try:
         historical_df, news_articles, _ = await data_service.fetch_all_data(symbol)
@@ -130,12 +197,49 @@ async def dashboard(symbol: str = Path(...)):
         return {"symbol": symbol, "error": str(e), "traceback": tb}
 
 # Mount admin endpoints
-app.include_router(admin_router, prefix="/api/admin")
-app.include_router(admin_user_router)
-app.include_router(signal_router)
-app.include_router(ohlcv_router)
-app.include_router(ws_router)
-app.include_router(arbitrage_router, prefix="/api")
+# --- API Routers by Microservice Domain ---
+# Admin/Users
+app.include_router(gdpr_router, prefix="/gdpr")
+app.include_router(grok_feedback_router, prefix="/api")
+app.include_router(admin_router, prefix="/api/v1/admin")
+app.include_router(admin_user_router, prefix="/api/v1/admin/users")
+# Signals/Analytics
+app.include_router(signal_router, prefix="/api/v1/signal")
+app.include_router(signal_explain_router, prefix="/api/v1/signal_explain")
+app.include_router(regime_detector_router, prefix="/api/v1/regime")
+app.include_router(agent_performance_router, prefix="/api/v1/agent_performance")
+app.include_router(news_agent_router, prefix="/api/v1/news")
+app.include_router(ohlcv_router, prefix="/api/v1/ohlcv")
+app.include_router(backtest_playground_router, prefix="/api/v1/backtest_playground")
+app.include_router(alert_manager_router, prefix="/api/v1/alerts")
+app.include_router(audit_trail_router, prefix="/api/v1/audit")
+app.include_router(watchlist_router, prefix="/api/v1/watchlist")
+# Realtime/Websocket
+app.include_router(ws_router, prefix="/api/v1/ws")
+# Arbitrage
+app.include_router(arbitrage_router, prefix="/api/v1/arbitrage")
+
+# === New agent routers ===
+app.include_router(meta_signal_router)
+app.include_router(gpt_model_copilot_router)
+app.include_router(forecasting_router)
+app.include_router(strategy_selector_router)
+
+# === Advanced model agent routers ===
+from presentation.api.finbert_sentiment import router as finbert_sentiment_router
+from presentation.api.lstm_forecast import router as lstm_forecast_router
+from presentation.api.ml_classifier import router as ml_classifier_router
+from presentation.api.rsi_macd import router as rsi_macd_router
+from presentation.api.correlation import router as correlation_router
+
+router = APIRouter()
+router.include_router(finbert_sentiment_router)
+router.include_router(lstm_forecast_router)
+router.include_router(ml_classifier_router)
+router.include_router(rsi_macd_router)
+router.include_router(correlation_router)
+
+app.include_router(router)
 
 data_service = DataService()
 model_service = ModelService()
@@ -161,8 +265,8 @@ class TickerValidationRequest(BaseModel):
     symbol: str
 
 # NOTE: Auth relaxed for testing. Restore Depends(verify_jwt_token), Depends(RateLimiter(...)) for production.
-@app.post("/api/tickers/validate")
-async def validate_ticker(request: TickerValidationRequest):
+@app.post("/api/v1/tickers/validate")
+async def validate_ticker(request: TickerValidationRequest, user=Depends(verify_jwt_token)):
     symbol = request.symbol
     # Try to fetch data for the symbol
     historical_df, _, _ = data_service.fetch_all_data(symbol)
@@ -171,8 +275,8 @@ async def validate_ticker(request: TickerValidationRequest):
     return {"valid": False, "symbol": symbol}
 
 # NOTE: Auth relaxed for testing. Restore Depends(verify_jwt_token), Depends(RateLimiter(...)) for production.
-@app.post("/predict")
-async def predict(request: SymbolRequest):
+@app.post("/api/v1/predict")
+async def predict(request: SymbolRequest, user=Depends(verify_jwt_token)):
     symbol = request.symbol
     historical_df, news_articles, _ = data_service.fetch_all_data(symbol)
     if historical_df is None:
@@ -188,8 +292,8 @@ async def predict(request: SymbolRequest):
     return {"symbol": symbol, "predicted_change": avg_pred_change}
 
 # NOTE: Auth relaxed for testing. Restore Depends(verify_jwt_token), Depends(RateLimiter(...)) for production.
-@app.post("/backtest")
-async def backtest(request: SymbolRequest):
+@app.post("/api/v1/backtest")
+async def backtest(request: SymbolRequest, user=Depends(verify_jwt_token)):
     symbol = request.symbol
     historical_df, _, _ = data_service.fetch_all_data(symbol)
     if historical_df is None:

@@ -2,7 +2,7 @@ from prefect import flow, task
 from GoldenSignalsAI.application.ai_service.orchestrator import Orchestrator
 from GoldenSignalsAI.application.ai_service.autonomous_engine import AutonomousEngine, Action
 from GoldenSignalsAI.application.services.auto_executor import AutoExecutor
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 from GoldenSignalsAI.application.strategies.strategy_tuner import StrategyTuner
 from datetime import datetime
 import pandas as pd

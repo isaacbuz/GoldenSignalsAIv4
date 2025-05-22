@@ -4,7 +4,8 @@ from application.services.data_service import DataService
 from pydantic import BaseModel
 from typing import List
 
-router = APIRouter()
+from infrastructure.auth.jwt_utils import verify_jwt_token
+router = APIRouter(prefix="/api/v1/ohlcv", tags=["ohlcv"])
 data_service = DataService()
 
 class OHLCVBar(BaseModel):
@@ -19,8 +20,8 @@ import logging
 import traceback
 from fastapi.responses import JSONResponse
 
-@router.get("/api/ohlcv")
-async def get_ohlcv(symbol: str, timeframe: str = "D"):
+@router.get("")
+async def get_ohlcv(symbol: str, timeframe: str = "D", user=Depends(verify_jwt_token)):
     """Return OHLCV bars for a symbol and timeframe."""
     try:
         historical_df, _, _ = await data_service.fetch_all_data(symbol)
@@ -45,7 +46,7 @@ async def get_ohlcv(symbol: str, timeframe: str = "D"):
         logging.error(f"[get_ohlcv] Error for symbol={symbol}, timeframe={timeframe}: {e}\n{tb}")
         return JSONResponse(status_code=500, content={"error": str(e), "traceback": tb})
 
-@router.options("/api/ohlcv")
+@router.options("")
 def ohlcv_cors_options():
     """CORS preflight diagnostic endpoint."""
     return JSONResponse(status_code=200, content={"message": "CORS preflight OK"})

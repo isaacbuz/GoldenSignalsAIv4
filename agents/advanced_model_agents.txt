@@ -1,0 +1,140 @@
+===== finbert_sentiment_agent.py =====
+
+from transformers import pipeline
+
+class FinBERTSentimentAgent:
+    def __init__(self, model_name="yiyanghkust/finbert-tone"):
+        self.classifier = pipeline("sentiment-analysis", model=model_name)
+
+    def analyze_texts(self, texts):
+        results = self.classifier(texts)
+        sentiment_scores = []
+        for res in results:
+            label = res["label"]
+            if label == "positive":
+                score = 1
+            elif label == "negative":
+                score = -1
+            else:
+                score = 0
+            sentiment_scores.append(score)
+        avg_score = sum(sentiment_scores) / len(sentiment_scores)
+        return {
+            "average_score": avg_score,
+            "raw_results": results
+        }
+
+
+===== lstm_forecast_agent.py =====
+
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+from sklearn.preprocessing import MinMaxScaler
+
+class LSTMForecastModel(nn.Module):
+    def __init__(self, input_size=1, hidden_size=50, num_layers=2, output_size=1):
+        super(LSTMForecastModel, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.linear = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        out, _ = self.lstm(x)
+        return self.linear(out[:, -1, :])
+
+class LSTMForecastAgent:
+    def __init__(self, lookback=20, model_path=None):
+        self.lookback = lookback
+        self.scaler = MinMaxScaler()
+        self.model = LSTMForecastModel()
+        if model_path:
+            self.model.load_state_dict(torch.load(model_path))
+        self.model.eval()
+
+    def prepare_data(self, series: pd.Series):
+        data = self.scaler.fit_transform(series.values.reshape(-1, 1))
+        sequences = []
+        for i in range(len(data) - self.lookback):
+            seq = data[i:i+self.lookback]
+            sequences.append(seq)
+        return torch.tensor(np.array(sequences), dtype=torch.float32)
+
+    def predict(self, series: pd.Series):
+        X = self.prepare_data(series)
+        with torch.no_grad():
+            output = self.model(X[-1].unsqueeze(0))
+        prediction = self.scaler.inverse_transform(output.numpy())
+        return prediction[0][0]
+
+
+===== ml_classifier_agent.py =====
+
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
+class MLClassifierAgent:
+    def __init__(self, model_type='random_forest', model_path=None):
+        if model_type == 'xgboost':
+            self.model = XGBClassifier()
+        else:
+            self.model = RandomForestClassifier(n_estimators=100)
+        self.model_path = model_path
+
+        if model_path:
+            self.load_model(model_path)
+
+    def load_model(self, path):
+        self.model = joblib.load(path)
+
+    def train(self, features: pd.DataFrame, labels: pd.Series):
+        self.model.fit(features, labels)
+
+    def predict_signal(self, features: pd.DataFrame) -> str:
+        prob = self.model.predict_proba(features)[-1]
+        if prob[1] > 0.6:
+            return "buy"
+        elif prob[1] < 0.4:
+            return "sell"
+        return "hold"
+
+
+===== rsi_macd_agent.py =====
+
+import pandas as pd
+
+class RSIMACDAgent:
+    def __init__(self, rsi_period=14, macd_fast=12, macd_slow=26, macd_signal=9):
+        self.rsi_period = rsi_period
+        self.macd_fast = macd_fast
+        self.macd_slow = macd_slow
+        self.macd_signal = macd_signal
+
+    def compute_rsi(self, prices):
+        delta = prices.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(self.rsi_period).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(self.rsi_period).mean()
+        rs = gain / (loss + 1e-10)
+        return 100 - (100 / (1 + rs))
+
+    def compute_macd(self, prices):
+        ema_fast = prices.ewm(span=self.macd_fast, adjust=False).mean()
+        ema_slow = prices.ewm(span=self.macd_slow, adjust=False).mean()
+        macd_line = ema_fast - ema_slow
+        signal_line = macd_line.ewm(span=self.macd_signal, adjust=False).mean()
+        return macd_line, signal_line
+
+    def compute_signal(self, df: pd.DataFrame) -> str:
+        close = df["close"]
+        df["rsi"] = self.compute_rsi(close)
+        df["macd"], df["macd_signal"] = self.compute_macd(close)
+
+        latest = df.iloc[-1]
+
+        if latest["rsi"] < 30 and latest["macd"] > latest["macd_signal"]:
+            return "buy"
+        elif latest["rsi"] > 70 and latest["macd"] < latest["macd_signal"]:
+            return "sell"
+        return "hold"

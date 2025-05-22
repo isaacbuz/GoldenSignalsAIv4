@@ -1,9 +1,13 @@
 
 #root {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 0 2rem;
+  text-align: left;
+  background: var(--primary-bg);
+  color: var(--text-color);
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
 .logo {
@@ -40,19 +44,121 @@
 
 .read-the-docs {
   color: #888;
+}
 
-/* GoldenSignalsAI - Luxury Fintech Theme */
+.App {
+  padding-top: 80px; /* Space for sticky header */
+}
 
-body, #root {
-  background: linear-gradient(120deg, #181818 60%, #232323 100%);
-  color: #F2E9C9;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary-bg);
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  padding: 1rem 2rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.logo h1 {
   margin: 0;
-  min-height: 100vh;
-  width: 100vw;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+  color: var(--gold-accent);
+}
+
+.user-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 1rem;
+}
+
+.theme-toggle {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--gold-accent);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--gold-accent);
+  color: var(--primary-bg);
+}
+
+.user-profile {
+  position: relative;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.user-profile:hover .dropdown {
+  display: block;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.dropdown a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.dropdown a:hover {
+  background: var(--gold-accent);
+  color: var(--primary-bg);
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .dashboard-root {

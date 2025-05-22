@@ -1,0 +1,23 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+.tooltip-text {
+  visibility: visible;
+  width: 220px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  text-align: left;
+  border-radius: 6px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -110px;
+  opacity: 0.97;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  font-size: 0.85rem;
+  pointer-events: none;
+}

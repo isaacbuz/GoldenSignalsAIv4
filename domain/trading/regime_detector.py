@@ -16,29 +16,41 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class RegimeDetector:
-    """Detects market regimes based on price and volatility data."""
+import pandas as pd
+import numpy as np
 
-    def __init__(self, window: int = 20):
-        """Initialize with a lookback window.
+class MarketRegimeDetector:
+    def __init__(self, volatility_window: int = 14, threshold: float = 0.02):
+        self.volatility_window = volatility_window
+        self.threshold = threshold
 
-        Args:
-            window (int): Lookback period for regime detection (default: 20).
-        """
-        self.window = window
-        logger.info({"message": f"RegimeDetector initialized with window={window}"})
+    def detect_regime(self, prices: pd.Series) -> str:
+        if len(prices) < self.volatility_window:
+            return "unknown"
 
-    def detect(self, prices: pd.Series) -> str:
-        """Detect the market regime based on price data.
+        returns = prices.pct_change().dropna()
+        rolling_vol = returns.rolling(self.volatility_window).std().iloc[-1]
 
-        Args:
-            prices (pd.Series): Price series.
+        if rolling_vol > self.threshold * 2:
+            return "bear"
+        elif rolling_vol < self.threshold:
+            return "bull"
+        else:
+            return "sideways"
 
-        Returns:
-            str: Market regime ('trending', 'mean_reverting', 'volatile').
-        """
-        logger.info(
-            {"message": f"Detecting regime for price series with length={len(prices)}"}
+    def apply_to_series(self, df: pd.DataFrame, price_col: str = "close") -> pd.DataFrame:
+        df = df.copy()
+        df["regime"] = df[price_col].rolling(self.volatility_window).apply(
+            lambda x: self._map_vol_to_regime(np.std(np.diff(np.log(x)))), raw=False
+        )
+        return df
+
+    def _map_vol_to_regime(self, vol: float) -> str:
+        if vol > self.threshold * 2:
+            return 2  # bear
+        elif vol < self.threshold:
+            return 0  # bull
+        return 1  # sideways
         )
         try:
             if len(prices) < self.window:

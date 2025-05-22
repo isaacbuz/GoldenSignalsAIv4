@@ -102,7 +102,8 @@ class TechnicalIndicators:
         histogram = macd_line - signal_line
         return macd_line, signal_line, histogram
 """,
-    "domain/trading/strategies/signal_engine.py": """import pandas as pd
+    "domain/trading/strategies/signal_engine.py": """from goldensignalsai.application.services.signal_engine import SignalEngine
+import pandas as pd
 
 class SignalEngine:
     def __init__(self, data, weights=None):

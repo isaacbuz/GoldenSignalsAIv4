@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import asyncio
-from GoldenSignalsAI.domain.trading.strategies.signal_engine import SignalEngine
+from goldensignalsai.application.services.signal_engine import SignalEngine
 from GoldenSignalsAI.application.events.event_publisher import EventPublisher
 from GoldenSignalsAI.infrastructure.data.fetchers.realtime_fetcher import fetch_realtime_data
 

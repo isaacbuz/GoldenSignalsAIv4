@@ -4,22 +4,23 @@
 [![Build Status](https://github.com/isaacbuz/GoldenSignalsAI/actions/workflows/test.yml/badge.svg)](https://github.com/isaacbuz/GoldenSignalsAI/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-AI-powered, multi-agent options trading and arbitrage platform with advanced admin panel, real-time monitoring, and robust security.
+---
+
+## 🚀 Project Goal
+GoldenSignalsAI is an AI-powered stock prediction and trade suggestion platform. It predicts whether a stock will go **up or down** in a given timeframe and suggests actionable entry and exit points for **calls or puts**. The platform leverages advanced machine learning, real-time and historical market data from multiple sources (including Financial Modeling Prep, Alpha Vantage, Polygon, Finnhub, and more), and a modern dashboard UI to empower traders with intelligent, actionable insights.
 
 ---
 
 ## Features
 
-- 📈 **Real-Time Options Trading Signals**
-- 🤖 **Multi-Agent Architecture** (Alpha Vantage, Finnhub, Polygon, Benzinga, Bloomberg, StockTwits)
-- 🔄 **AI-Powered Arbitrage Detection & Execution**
-- 🛡️ **Role-Based Admin Panel** (user management, agent controls)
-- 📊 **Live Monitoring** (performance charts, agent health, queue, logs)
-- ⚡ **Dynamic Ticker Search**
-- 🔔 **Visual Alerts** for unhealthy agents, errors, and high queue depth
-- 🔑 **Multi-Provider Auth** (Firebase, Google, GitHub)
-- 🔒 **Audit Logging** for all sensitive actions
-- 🧩 **Modular Frontend & Backend** for easy extensibility
+- 📈 **Stock Direction Prediction**: Predicts up/down movement for any supported stock and timeframe using AI/ML models.
+- 🎯 **Trade Suggestions**: Recommends entry and exit points for calls or puts based on predictions and market context.
+- 🤖 **Multi-Agent, Multi-Source Data**: Integrates data from Financial Modeling Prep, Alpha Vantage, Polygon, Finnhub, and more for robust, reliable signals.
+- 📊 **Performance & Signal Dashboard**: Modern, responsive dashboard for viewing predictions, trade suggestions, and performance metrics.
+- ⚡ **Dynamic Ticker Search & Autocomplete**: Instantly search and select tickers with live validation and autocomplete.
+- 🔔 **Visual Alerts & Monitoring**: Alerts for prediction confidence, model health, and system status.
+- 🛡️ **Role-Based Admin Panel**: User management, access control, and audit logging.
+- 🔒 **Secure, Extensible Architecture**: Modular backend and frontend, with best practices for secrets and user authentication.
 
 ---
 
@@ -381,4 +382,45 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - Machine Learning Community
 - Open Source Contributors
 - Financial Technology Innovators
- b3d312fc9c631d3b59f644472ad576448be06c0b
+
+---
+
+## Robustness, Validation, and Error Handling (Advanced Agents)
+
+All advanced agent endpoints implement:
+
+- **Pydantic request/response models**: Strict input validation for all endpoints.
+- **Structured error responses**: All errors are returned as JSON with an `error` field.
+- **Logging**: All requests and errors are logged for debugging and monitoring.
+- **Edge case handling**: Endpoints handle empty/invalid input and return clear error messages.
+
+### Example Error Response
+
+```json
+{
+  "average_score": 0.0,
+  "raw_results": [{"error": "No texts provided."}]
+}
+```
+
+### Example Log Output
+
+```
+INFO:root:FinBERT /analyze called with 0 texts.
+ERROR:root:FinBERT error: No texts provided.
+```
+
+### Negative Test Coverage
+
+A dedicated test suite (`tests/test_api_endpoints_negative.py`) ensures endpoints handle invalid input gracefully and never crash. It covers scenarios such as:
+- Empty input lists
+- Insufficient data for time series models
+- Invalid or missing required fields
+- Model not trained/loaded
+
+Run all tests (including negative cases):
+```bash
+pytest tests/
+```
+
+For more details, see the `tests/` directory and API endpoint docstrings.
