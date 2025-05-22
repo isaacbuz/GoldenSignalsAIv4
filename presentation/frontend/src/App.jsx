@@ -7,6 +7,7 @@ import AgentPerformance from './pages/AgentPerformance';
 import SearchBar from './components/SearchBar';
 import SignalCard from './components/SignalCard';
 import { sendSignalNotification, requestNotificationPermission } from './utils/Notifications';
+import AdminPanel from './pages/Admin';
 
 function App() {
   const [signal, setSignal] = useState(null);
@@ -59,6 +60,7 @@ function App() {
         <Route path="/news" element={<NewsSentiment />} />
         <Route path="/watchlist" element={<Watchlist />} />
         <Route path="/agent-performance" element={<AgentPerformance />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </Router>
   );

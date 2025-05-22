@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function SearchBar({ onSearch }) {
-  const [symbol, setSymbol] = useState("");
+  const [symbol, setSymbol] = useState("AAPL");
 
   const handleSubmit = (e) => {
     e.preventDefault();
