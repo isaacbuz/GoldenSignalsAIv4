@@ -1,9 +1,0 @@
-name: goldensignalsai
-channels:
-  - defaults
-dependencies:
-  - python=3.11
-  - pip
-  - cmake
-  - pip:
-      - poetry

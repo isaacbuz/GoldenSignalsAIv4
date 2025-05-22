@@ -80,6 +80,15 @@ class CircuitBreaker:
         logging.warning("Circuit is OPEN. Returning fallback response.")
         return None
 
+# Custom Exceptions
+class ModelInferenceError(Exception):
+    """Raised when a model inference operation fails."""
+    pass
+
+class DataFetchError(Exception):
+    """Raised when data fetching fails."""
+    pass
+
 class ErrorHandler:
     """
     Comprehensive Error Handling and Recovery System
@@ -110,8 +119,16 @@ class ErrorHandler:
         Returns:
             Retry result or None
         """
-        # Log error details
-        system_monitoring.capture_error(error, context)
+        # Granular error handling
+        if isinstance(error, ModelInferenceError):
+            logging.error(f"ModelInferenceError: {error}")
+            system_monitoring.capture_error(error, context)
+        elif isinstance(error, DataFetchError):
+            logging.error(f"DataFetchError: {error}")
+            system_monitoring.capture_error(error, context)
+        else:
+            logging.error(f"Unhandled error: {error}")
+            system_monitoring.capture_error(error, context)
         
         # Optional retry mechanism
         if retry:
@@ -121,6 +138,12 @@ class ErrorHandler:
             )
         
         return None
+
+# Example usage:
+# try:
+#     ...
+# except Exception as e:
+#     ErrorHandler.handle_error(ModelInferenceError("Inference failed"), context={...})
     
     @staticmethod
     def _retry_operation(

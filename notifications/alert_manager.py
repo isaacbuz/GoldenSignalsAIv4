@@ -35,17 +35,56 @@ class AlertManager:
         Args:
             trading_decision (Dict[str, Any]): Details of the trading decision.
         """
+        import os
+        import json
+        from .notify_channels import send_slack, send_discord, send_email, send_push, send_sms
+        
         try:
-            # Log the trading decision
             logger.info({
                 "message": "Trading Decision Alert",
                 "action": trading_decision.get('action', 'N/A'),
                 "confidence": trading_decision.get('confidence', 0.0),
                 "metadata": trading_decision.get('metadata', {})
             })
-
-            # Placeholder for additional notification channels
-            # In a real implementation, this would send alerts via email, SMS, etc.
+            username = trading_decision.get('username', 'user1')
+            NOTIFICATION_FILE = os.getenv('NOTIFICATION_SETTINGS_FILE', 'user_notification_settings.json')
+            if os.path.exists(NOTIFICATION_FILE):
+                with open(NOTIFICATION_FILE, 'r') as f:
+                    user_settings = json.load(f).get(username, {})
+            else:
+                user_settings = {}
+            # Only notify if confidence is high enough
+            high_conf = user_settings.get('highConfidenceOnly', True)
+            if high_conf and trading_decision.get('confidence', 0.0) < 0.8:
+                logger.info({"message": "Not sending alert: confidence below threshold", "confidence": trading_decision.get('confidence', 0.0)})
+                return
+            msg = f"Trade Alert: {trading_decision.get('action')} @ {trading_decision.get('price', 'N/A')} | Confidence: {trading_decision.get('confidence', 0.0):.2f}"
+            # Slack
+            slack_url = user_settings.get('slack')
+            if slack_url:
+                ok = send_slack(slack_url, msg)
+                logger.info({"message": "Slack notification sent", "ok": ok})
+            # Discord
+            discord_url = user_settings.get('discord')
+            if discord_url:
+                ok = send_discord(discord_url, msg)
+                logger.info({"message": "Discord notification sent", "ok": ok})
+            # Email
+            email_addr = user_settings.get('email')
+            if email_addr:
+                ok = send_email(email_addr, "GoldenSignalsAI Trade Alert", msg)
+                logger.info({"message": "Email notification sent", "ok": ok})
+            # SMS
+            sms_number = user_settings.get('sms')
+            if sms_number:
+                ok = send_sms(sms_number, msg)
+                logger.info({"message": "SMS notification sent", "ok": ok})
+            # Push
+            if user_settings.get('push'):
+                device_token = user_settings.get('device_token', None)
+                if device_token:
+                    ok = send_push(device_token, msg)
+                    logger.info({"message": "Push notification sent", "ok": ok})
         except Exception as e:
             logger.error({"message": f"Failed to send trading alert: {str(e)}"})
 

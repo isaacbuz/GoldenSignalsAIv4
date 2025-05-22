@@ -66,6 +66,7 @@ from presentation.api.grok_feedback import router as grok_feedback_router
 from .ohlcv_endpoints import router as ohlcv_router
 from .ws_endpoints import router as ws_router
 from .arbitrage_endpoints import router as arbitrage_router
+from .notification_settings import router as notification_settings_router
 # --- Feature Routers ---
 from .signal_explain import router as signal_explain_router
 from .regime_detector import router as regime_detector_router
@@ -218,6 +219,8 @@ app.include_router(watchlist_router, prefix="/api/v1/watchlist")
 app.include_router(ws_router, prefix="/api/v1/ws")
 # Arbitrage
 app.include_router(arbitrage_router, prefix="/api/v1/arbitrage")
+# Notifications
+app.include_router(notification_settings_router, prefix="/api/v1/notifications")
 
 # === New agent routers ===
 app.include_router(meta_signal_router)

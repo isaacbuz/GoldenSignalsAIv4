@@ -13,6 +13,33 @@ venv/
 *.tar.gz
 docs/_build/
 
+# OS and editor cruft
+.DS_Store
+# Process ID files
+*.pid
+# Coverage and logs
+.coverage
+*.log
+# Secrets (don’t commit!)
+secrets.yaml
+firebase-adminsdk.json
+# Remove built artifacts
+build/
+dist/
+__pycache__/
+*.py[cod]
+# Docker
+Dockerfile*
+docker-compose.override.yml
+# Track docs/configs in docker/
+!docker/*.md
+!docker/*.yml
+!docker/*.env
+# Allow scripts/configs in scripts/
+!scripts/*.md
+!scripts/*.yml
+!scripts/*.env
+!scripts/*.sh
 # Ignore node_modules and cache
 node_modules/
 .cache/

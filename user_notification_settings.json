@@ -1,0 +1,10 @@
+{
+  "testuser": {
+    "slack": "",
+    "discord": "",
+    "email": "",
+    "sms": "",
+    "push": false,
+    "highConfidenceOnly": false
+  }
+}

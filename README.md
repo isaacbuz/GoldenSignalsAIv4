@@ -47,17 +47,10 @@ pip install poetry
 poetry install
 ```
 
-#### Using pip/requirements.txt
-```bash
-pip install -r requirements.txt
-```
-
 ### 2. Environment Setup
-- Copy `.env.example` to `.env` and fill in:
-  - All API keys (Alpha Vantage, Finnhub, etc.)
-  - Firebase Admin SDK path
-  - `FIREBASE_WEB_API_KEY` (from Firebase Console)
-  - Any other required secrets
+- Copy `.env.example` to `.env` and fill in all required API keys and secrets.
+- Copy `secrets/secrets.yaml.example` and `secrets/firebase-adminsdk.json.example` as templates if needed.
+- **Never commit real secrets!** Use environment variables or vaults for production.
 - Create and activate the conda environment (optional):
   ```bash
   conda create -n goldensignalsai python=3.10
@@ -66,10 +59,25 @@ pip install -r requirements.txt
   poetry install
   ```
 
-### 3. Run the Platform
+### 3. Logging Configuration
+- Logging is now centralized in `logging.yaml` for both console and file output. You can adjust log levels, formats, and destinations there.
+
+### 4. Pre-commit Hooks
+- Install pre-commit hooks to enforce code style and quality:
+  ```bash
+  pre-commit install
+  ```
+- This will run Black, isort, and flake8 on every commit.
+
+### 5. Docker & Infra Structure
+- All Dockerfiles are now grouped under `/docker`.
+- Infra scripts and deploy scripts are grouped under `/scripts`.
+- Update your `docker-compose.yml` and CI/CD scripts to reference these new paths.
+
+### 6. Run the Platform
 ```bash
 # Start FastAPI backend
-uvicorn GoldenSignalsAI.presentation.api.main:app --host 0.0.0.0 --port 8000 --reload
+poetry run python main.py
 
 # Start React frontend (from presentation/frontend)
 npm install

@@ -68,22 +68,21 @@ export default function WatchlistSidebar({ watchlist, selected, onSelect }) {
                           </span>
                         </div>
                         <div className="watchlist-sparkline">
-                          {/* Placeholder for mini-chart/sparkline */}
-                          <svg width="60" height="18">
-  <polyline 
-    points={(() => {
-      if (!symbolObj.sparkline) return '';
-      const values = symbolObj.sparkline.split(',').map(Number);
-      if (values.some(isNaN) || values.length === 0) return '';
-      const min = Math.min(...values), max = Math.max(...values);
-      const norm = v => 16 - ((v - min) / (max - min + 0.01)) * 14; // invert y for SVG, pad
-      return values.map((v, i) => `${i * (60/(values.length-1))},${norm(v).toFixed(2)}`).join(' ');
-    })()}
-    fill="none"
-    stroke="#FFD700"
-    strokeWidth="2"
-  />
-</svg>
+                          {symbolObj.sparkline && (
+                            <svg width="44" height="18" viewBox="0 0 44 18" style={{ marginLeft: 4 }} aria-label={`Mini chart for ${symbolObj.symbol}`}>
+                              <polyline
+                                fill="none"
+                                stroke="#FFD700"
+                                strokeWidth="2"
+                                points={(() => {
+                                  const values = symbolObj.sparkline.split(',').map(Number);
+                                  const min = Math.min(...values), max = Math.max(...values);
+                                  const norm = v => 16 - ((v - min) / (max - min + 0.01)) * 14;
+                                  return values.map((v, i) => `${i * (42/(values.length-1))},${norm(v).toFixed(2)}`).join(' ');
+                                })()}
+                              />
+                            </svg>
+                          )}
                         </div>
                       </motion.li>
                     )}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { API_URL, WS_URL } from '../config';
+import TickerAutocomplete from './TickerAutocomplete';
 import './TradingDashboard.css';
 import EChartsOptionTradeChart from './EChartsOptionTradeChart';
 import WatchlistSidebar from './WatchlistSidebar';
@@ -9,6 +10,13 @@ import PerformanceWidgets from './PerformanceWidgets';
 import BacktestPanel from './BacktestPanel';
 import TradeJournal from './TradeJournal';
 import SignalFilters from './SignalFilters';
+import GuidedTour from './GuidedTour';
+import QuickActionToolbar from './QuickActionToolbar';
+import ReplaySession from './ReplaySession';
+import HeatmapOverview from './HeatmapOverview';
+import EquityCurveChart from './EquityCurveChart';
+import CorrelationMatrix from './CorrelationMatrix';
+import NotificationSettings from './NotificationSettings';
 
 // Simple error boundary for dashboard
 class ErrorBoundary extends React.Component {
@@ -68,6 +76,9 @@ function TradingDashboard() {
   const [portfolio, setPortfolio] = useState([]); // Store user trades
   const [tradeSuggestion, setTradeSuggestion] = useState(null);
   const [suggestionLoading, setSuggestionLoading] = useState(false);
+  const [guidedTourCompleted, setGuidedTourCompleted] = useState(localStorage.getItem('guidedTourCompleted') === 'true');
+  const [quickActionToolbarVisible, setQuickActionToolbarVisible] = useState(false);
+  const [quickActionToolbarSignal, setQuickActionToolbarSignal] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +184,17 @@ function TradingDashboard() {
     setPortfolio((prev) => [...prev, trade]);
   };
 
+  const handleHoverSignal = (signal) => {
+    setHoveredSignal(signal);
+    setQuickActionToolbarVisible(true);
+    setQuickActionToolbarSignal(signal);
+  };
+
+  const handleHideQuickActionToolbar = () => {
+    setQuickActionToolbarVisible(false);
+    setQuickActionToolbarSignal(null);
+  };
+
   return (
     <ErrorBoundary>
       <div className="dashboard-root">
@@ -186,6 +208,14 @@ function TradingDashboard() {
               </button>
             </div>
           </div>
+        )}
+        {!guidedTourCompleted && (
+          <GuidedTour
+            onComplete={() => {
+              localStorage.setItem('guidedTourCompleted', 'true');
+              setGuidedTourCompleted(true);
+            }}
+          />
         )}
         <header className="dashboard-header redesigned-header">
           <div className="dashboard-app-brand">
@@ -250,7 +280,7 @@ function TradingDashboard() {
                 </div>
                 <div className="market-symbol-picker" style={{ display: 'flex', alignItems: 'center', gap: '1.2em', marginBottom: 16 }}>
                   <label htmlFor="symbol-input">Ticker Symbol: </label>
-                  <TickerAutocomplete
+                  <TickerAutocomplete 
                     id="symbol-input"
                     value={selectedSymbol}
                     onChange={setSelectedSymbol}
@@ -271,7 +301,7 @@ function TradingDashboard() {
                   </select>
                 </div>
                 <div className="analytics-charts">
-                  <EChartsOptionTradeChart ohlcv={ohlcvData} signals={signals} loading={loading} />
+                  <EChartsOptionTradeChart ohlcv={ohlcvData} signals={signals} loading={loading} onHoverSignal={handleHoverSignal} />
                 </div>
                 <ChartOverlayControls overlays={overlays} onChange={setOverlays} />
               </section>
@@ -279,17 +309,107 @@ function TradingDashboard() {
                 <PerformanceWidgets metrics={getPerformanceMetrics(historicalSignals)} />
                 <SignalFilters onFilterChange={handleFilterChange} />
               </section>
+              <section className="scalable-row" aria-label="Equity Curve Section">
+                <EquityCurveChart trades={portfolio} />
+              </section>
+              <section className="scalable-row" aria-label="Correlation Matrix Section">
+                <CorrelationMatrix 
+  symbols={watchlist.map(w => w.symbol)}
+  fetchCorrelation={async (symbols) => {
+    // Prevent duplicate requests
+    if (window.__correlationLoading) return;
+    window.__correlationLoading = true;
+    let error = null;
+    let warning = null;
+    let loadingToast;
+    try {
+      // Show loading toast or inline UI
+      if (window.toast) loadingToast = window.toast('Calculating correlation...', { type: 'info', autoClose: false });
+      // Helper to fetch close prices for a symbol
+      async function getCloses(symbol) {
+        try {
+          if (symbol === selectedSymbol && ohlcvData && ohlcvData.length > 0) {
+            return ohlcvData.map(row => row[4]);
+          }
+          const resp = await fetch(`${API_URL}/stock_data?symbol=${symbol}&timeframe=${timeframe}`);
+          if (!resp.ok) throw new Error('Failed to fetch data for ' + symbol);
+          const data = await resp.json();
+          return data.map(row => row[4]);
+        } catch (e) {
+          error = `Failed to fetch data for ${symbol}`;
+          return [];
+        }
+      }
+      // Fetch all in parallel
+      const priceData = {};
+      await Promise.all(symbols.map(async s => {
+        priceData[s] = await getCloses(s);
+      }));
+      // Align lengths
+      const minLen = Math.min(...Object.values(priceData).map(arr => arr.length).filter(len => len > 0));
+      if (minLen < 20) {
+        warning = 'Not enough data for correlation analysis.';
+      }
+      Object.keys(priceData).forEach(s => {
+        if (priceData[s].length > minLen) priceData[s] = priceData[s].slice(-minLen);
+        if (priceData[s].length < minLen) priceData[s] = Array(minLen - priceData[s].length).fill(null).concat(priceData[s]);
+      });
+      const resp = await fetch(`${API_URL}/correlation/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: priceData })
+      });
+      if (!resp.ok) throw new Error('Failed to fetch correlation');
+      const result = await resp.json();
+      if (loadingToast && window.toast) window.toast.dismiss(loadingToast);
+      if (warning && window.toast) window.toast(warning, { type: 'warning' });
+      if (error && window.toast) window.toast(error, { type: 'error' });
+      window.__correlationLoading = false;
+      return result;
+    } catch (e) {
+      if (loadingToast && window.toast) window.toast.dismiss(loadingToast);
+      if (window.toast) window.toast(e.message || 'Correlation calculation failed', { type: 'error' });
+      window.__correlationLoading = false;
+      throw e;
+    }
+  }}
+/>
+              </section>
+              <section className="scalable-row" aria-label="Notification Settings Section">
+                <NotificationSettings onSave={async (settings) => {
+                  try {
+                    const resp = await fetch(`${API_URL}/user/notifications`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(settings),
+                      credentials: 'include',
+                    });
+                    if (!resp.ok) throw new Error('Failed to save notification settings');
+                    if (window.toast) window.toast('Notification settings saved!', { type: 'success' });
+                  } catch (e) {
+                    if (window.toast) window.toast(e.message || 'Failed to save notification settings', { type: 'error' });
+                  }
+                }} />
+              </section>
               <section className="scalable-row">
                 <BacktestPanel 
-  onRunBacktest={(params) => { /* TODO: implement backtest logic */ }}
-  initialParams={{ lookback: 30, threshold: 0.5, stop: 10, tp: 20 }}
-  result={undefined}
-/>
-                <AlertsFeed alerts={filteredAlerts} onAddToPortfolio={handleAddToPortfolio} />
+                  onRunBacktest={(params) => { /* TODO: implement backtest logic */ }}
+                  initialParams={{ lookback: 30, threshold: 0.5, stop: 10, tp: 20 }}
+                  result={undefined}
+                />
+                <AlertsFeed alerts={filteredAlerts} onAddToPortfolio={handleAddToPortfolio} onHoverSignal={handleHoverSignal} />
               </section>
               <section className="scalable-row">
                 <TradeJournal />
               </section>
+              {quickActionToolbarVisible && (
+                <QuickActionToolbar
+                  signal={quickActionToolbarSignal}
+                  onHide={handleHideQuickActionToolbar}
+                />
+              )}
+              <ReplaySession />
+              <HeatmapOverview />
             </section>
           </div>
         </main>

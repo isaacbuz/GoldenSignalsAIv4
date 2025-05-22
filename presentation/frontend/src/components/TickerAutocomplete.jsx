@@ -3,7 +3,12 @@ import React, { useState, useRef, useEffect } from 'react';
 // Uses Financial Modeling Prep API for symbol search
 // Set REACT_APP_FMP_API_KEY in your .env file (see https://financialmodelingprep.com/developer/docs/)
 const API_URL = 'https://financialmodelingprep.com/api/v3/search';
-const API_KEY = process.env.REACT_APP_FMP_API_KEY || '';
+const API_KEY = import.meta.env.VITE_FMP_API_KEY || '';
+if (!API_KEY) {
+  // eslint-disable-next-line no-console
+  console.warn('VITE_FMP_API_KEY is not defined in your environment variables. Symbol autocomplete may not work.');
+}
+
 
 
 export default function TickerAutocomplete({ value, onChange, onSelect, ...props }) {

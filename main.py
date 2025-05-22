@@ -67,14 +67,18 @@ def health_check(
 container = Container()
 container.wire(modules=[__name__])
 
-def main():
-    """
-    Entry point for the GoldenSignalsAI application.
-    This function can be used to start the application or perform initialization tasks.
-    """
-    logging.info("Initializing GoldenSignalsAI")
-    # Add any startup logic here
-    print("GoldenSignalsAI is ready to run")
+def main() -> None:
+    """Bootstrap and run the GoldenSignalsAI FastAPI server."""
+    logging.info("🟢 Starting GoldenSignalsAI")
+    # TODO: preload ML models, warm caches, initialize DB connections
+    host = config_manager.get("HOST", "0.0.0.0")
+    port = int(config_manager.get("PORT", 8000))
+    logging.info(f"Serving on http://{host}:{port}")
+    try:
+        import uvicorn
+        uvicorn.run("main:app", host=host, port=port, log_level="info")
+    except ImportError:
+        logging.error("uvicorn not installed—please `pip install uvicorn`");
 
 if __name__ == "__main__":
     main()
