@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # GoldenSignalsAI
 
@@ -286,10 +287,101 @@ npm start
 
 # (Optional) Start Dash analytics dashboard
 python GoldenSignalsAI/presentation/frontend/app/dashboard.py
+=======
+# 🧠 GoldenSignalsAI
+
+GoldenSignalsAI is a modular, multi-agent AI signal platform for generating and evaluating real-time trading signals using data from TradingView, social sentiment (X, Reddit, LinkedIn), and machine learning strategies.
+
+---
+
+## 📦 Project Structure
+
+backend/
+├── agents/
+│ ├── base.py # Abstract base class for all signal agents
+│ ├── agent_manager.py # Runs all agents and aggregates/votes on their signals
+│ ├── signal_engine.py # Top-level orchestrator (entrypoint for signal engine)
+│ ├── ml/ # ML-driven agents and sentiment aggregator
+│ ├── tv/ # TradingView scraping and signal agents
+│ └── nlp/ # Text-based sentiment agents
+│
+├── api/
+│ └── routes/
+│ ├── sentiment.py # Crowd sentiment endpoint
+│
+├── db/
+│ └── signal_logger.py # Persists signals in PostgreSQL
+│
+├── core/
+│ └── websocket.py # WebSocket broadcasting to frontend
+│
+├── nlp/
+│ └── sentiment_engine.py # Core NLP sentiment scoring engine
+│
+frontend/
+├── components/
+│ └── signalPanel/
+│ ├── SignalCard.tsx # Realtime signal UI card
+│ └── TrendingSentimentBar.tsx # Top sentiment recommendations
+│
+└── pages/
+└── index.tsx # Dashboard entry point
+
+---
+
+## 🧠 How It Works
+
+1. Agents (e.g., TV, ML, NLP) are registered and executed by the `AgentManager`.
+2. Each agent returns a `signal = {"symbol", "action", "confidence", "agent"}`.
+3. AgentManager aggregates signals and votes on consensus.
+4. Signals are pushed to frontend via WebSocket and saved in PostgreSQL.
+5. Sentiment from multiple platforms influences signal confidence.
+
+---
+
+## 🚀 Quick Start
+
+Run backend server:
+```bash
+uvicorn main:app --reload
+```
+
+Run frontend:
+```bash
+cd frontend
+npm run dev
+```
+
+Run agents manually:
+```bash
+python backend/agents/signal_engine.py --symbol AAPL
 ```
 
 ---
 
+## ✅ Roadmap
+
+- [x] Multi-agent orchestration
+- [x] TradingView & ML agents
+- [x] Social sentiment enhancement
+- [x] Real-time signal pushing
+- [ ] Agent performance dashboard
+- [ ] CLI simulation tool
+- [ ] Automated backtester
+
+---
+
+## 🧪 Test Runner (coming soon)
+
+Simulate historical signals:
+```bash
+python test_agent_runner.py --symbol AAPL --date 2024-05-01
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)
+```
+
+---
+
+<<<<<<< HEAD
 ## Admin Panel Usage
 
 - Access the admin panel from the main dashboard UI (localhost:8080)
@@ -496,3 +588,56 @@ pytest tests/
 ```
 
 For more details, see the `tests/` directory and API endpoint docstrings.
+=======
+## 📎 License
+
+MIT — open-source and extensible.
+
+## Setup
+
+1. Clone repo
+2. Install dependencies (`npm install` in frontend and backend)
+3. Create `.env` file
+
+## Running
+
+- Frontend: `cd frontend && npm run dev`
+- Backend: `cd backend && npm run dev` (if applicable)
+
+## API Endpoints
+
+- `/api/signal/check`
+- `/api/signal/save`
+ldenSignalsAI v4
+
+Modular, AI-powered trading signal engine with live data, multiple agents, and full frontend/backend stack.
+
+## ✅ Quickstart
+
+### 1. Install dependencies
+```
+pip install -r requirements.txt
+```
+
+### 2. Start the backend
+```
+uvicorn main:app --reload
+```
+
+### 3. Access endpoints
+- `GET /api/analyze?ticker=TSLA`
+- `POST /api/train`
+- `GET /api/logs`
+
+### 4. Run tests
+```
+python test_analyze_pipeline.py
+```
+
+### 5. Frontend
+Integrate your `frontend/` directory with your preferred React + Tailwind build system (Next.js recommended).
+
+---
+
+GoldenSignalsAI is designed for modular AI research, options signals, and sentiment-enhanced technical analysis.
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3.8'
 
 services:
@@ -64,3 +65,19 @@ networks:
   gsnet:
     driver: bridge
 
+=======
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    env_file: .env
+    ports:
+      - "8000:8000"
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+  worker:
+    build: ./worker
+    env_file: .env
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)

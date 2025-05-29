@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import asyncio
 import logging
 from typing import Any, Dict, List
@@ -82,3 +83,41 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+=======
+import os
+import sys
+from fastapi import FastAPI
+from backend.api import analyze, train, logs
+from backend.api import agent_weights
+from backend.api import model_info
+from backend.api import agents
+from backend.log_config import setup_logging
+
+setup_logging()
+app = FastAPI()
+
+app.include_router(analyze.router)
+app.include_router(train.router)
+app.include_router(logs.router)
+app.include_router(agent_weights.router)
+app.include_router(model_info.router)
+app.include_router(agents.router, prefix="/api/agents")
+
+@app.get("/")
+def read_root():
+    return {"message": "GoldenSignalsAI v4 is live"}
+
+if __name__ == "__main__":
+    import uvicorn
+    # Priority: command-line arg > env var > default
+    port = 8000
+    for arg in sys.argv:
+        if arg.startswith("--port="):
+            try:
+                port = int(arg.split("=")[1])
+            except Exception:
+                pass
+    port = int(os.environ.get("PORT", port))
+    print(f"[GoldenSignalsAI] Launching on port {port}")
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)

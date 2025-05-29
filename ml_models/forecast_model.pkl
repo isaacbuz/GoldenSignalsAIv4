@@ -1,0 +1,1 @@
+# Placeholder for forecast_model.pkl

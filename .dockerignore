@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .env
 .git
 .gitignore
@@ -14,3 +15,11 @@ venv/
 *.zip
 *.tar.gz
 docs/_build/
+=======
+node_modules
+.next
+.swc
+.DS_Store
+.env
+.env.*
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)

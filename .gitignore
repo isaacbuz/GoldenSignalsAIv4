@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .env
 *.pyc
 __pycache__/
@@ -46,3 +47,25 @@ node_modules/
 
 # Ignore Miniconda installer and other large binaries
 Miniconda3-latest-MacOSX-arm64.sh
+=======
+# Next.js
+.next/
+
+# SWC
+.swc/
+
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac system files
+.DS_Store
+
+# Env
+.env
+.env.*
+>>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)
