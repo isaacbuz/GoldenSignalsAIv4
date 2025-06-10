@@ -1,0 +1,20 @@
+{
+  "day": {
+    "timeframe": "5m",
+    "min_confidence": 0.65,
+    "allowed_regimes": ["normal", "high_volatility"],
+    "agents": ["BreakoutAgent", "MACDAgent", "OBVAgent", "SmartMoneyAgent"]
+  },
+  "swing": {
+    "timeframe": "4h",
+    "min_confidence": 0.7,
+    "allowed_regimes": ["normal", "low_volatility"],
+    "agents": ["BreakoutAgent", "RSIAgent", "SentimentAgent", "SmartMoneyAgent"]
+  },
+  "leaps": {
+    "timeframe": "1d",
+    "min_confidence": 0.75,
+    "allowed_regimes": ["normal", "macro_uptrend"],
+    "agents": ["TrendAgent", "SmartMoneyAgent", "LEAPsSmartMoneyAgent", "MacroSentimentAgent"]
+  }
+}

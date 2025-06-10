@@ -1,0 +1,90 @@
+trigger:
+  - main
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'goldensignals-acr'
+  containerRegistry: 'goldensignalsacr.azurecr.io'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:  
+  - job: Build
+    displayName: Build job
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push backend image
+      inputs:
+        command: buildAndPush
+        repository: $(containerRegistry)/backend
+        dockerfile: $(Build.SourcesDirectory)/Dockerfile.backend
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
+
+    - task: Docker@2
+      displayName: Build and push frontend image
+      inputs:
+        command: buildAndPush
+        repository: $(containerRegistry)/frontend
+        dockerfile: $(Build.SourcesDirectory)/Dockerfile.frontend
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
+
+    - task: Docker@2
+      displayName: Build and push dashboard image
+      inputs:
+        command: buildAndPush
+        repository: $(containerRegistry)/dashboard
+        dockerfile: $(Build.SourcesDirectory)/dashboard/Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
+
+- stage: Deploy
+  displayName: Deploy to AKS
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy to AKS
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: Create secret for API keys
+            inputs:
+              action: createSecret
+              secretType: generic
+              secretName: api-secrets
+              secretArguments: --from-literal=alpha-vantage-api-key=$(ALPHA_VANTAGE_API_KEY) --from-literal=news-api-key=$(NEWS_API_KEY) --from-literal=twitter-bearer-token=$(TWITTER_BEARER_TOKEN)
+              kubernetesServiceConnection: goldensignals-aks
+
+          - task: KubernetesManifest@0
+            displayName: Deploy to AKS
+            inputs:
+              action: deploy
+              manifests: |
+                $(Build.SourcesDirectory)/k8s/deployment.yaml
+              containers: |
+                $(containerRegistry)/backend:$(tag)
+                $(containerRegistry)/frontend:$(tag)
+                $(containerRegistry)/dashboard:$(tag)
+              imagePullSecrets: |
+                acr-secret
+              kubernetesServiceConnection: goldensignals-aks 

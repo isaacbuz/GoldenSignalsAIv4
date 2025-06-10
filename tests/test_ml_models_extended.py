@@ -15,7 +15,7 @@ def test_dummy_predict_shape():
 # Example: Integration test for a model pipeline (replace with your actual model)
 def test_model_pipeline_integration():
     try:
-        from application.models.model_pipeline import ModelPipeline
+        from src.application.models.model_pipeline import ModelPipeline
         model = ModelPipeline()
         X = pd.DataFrame(np.random.rand(5, 4), columns=['f1', 'f2', 'f3', 'f4'])
         preds = model.predict(X)

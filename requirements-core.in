@@ -1,2 +1,0 @@
-# Historical dependency file, replaced by pyproject.toml
-redis>=4.0.0

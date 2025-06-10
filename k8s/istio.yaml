@@ -1,0 +1,54 @@
+# Commented out for future use
+# apiVersion: install.istio.io/v1alpha1
+# kind: IstioOperator
+# metadata:
+#   namespace: istio-system
+#   name: istio-control-plane
+# spec:
+#   profile: default
+#   components:
+#     egressGateways:
+#     - name: istio-egressgateway
+#       enabled: true
+#     ingressGateways:
+#     - name: istio-ingressgateway
+#       enabled: true
+#     pilot:
+#       enabled: true
+#   values:
+#     global:
+#       proxy:
+#         resources:
+#           requests:
+#             cpu: 100m
+#             memory: 128Mi
+#           limits:
+#             cpu: 200m
+#             memory: 256Mi
+#     pilot:
+#       resources:
+#         requests:
+#           cpu: 500m
+#           memory: 2048Mi
+#         limits:
+#           cpu: 1000m
+#           memory: 4096Mi
+#     gateways:
+#       istio-ingressgateway:
+#         autoscaleEnabled: true
+#         resources:
+#           requests:
+#             cpu: 100m
+#             memory: 128Mi
+#           limits:
+#             cpu: 2000m
+#             memory: 1024Mi
+#     mixer:
+#       telemetry:
+#         resources:
+#           requests:
+#             cpu: 100m
+#             memory: 1G
+#           limits:
+#             cpu: 4800m
+#             memory: 4G 

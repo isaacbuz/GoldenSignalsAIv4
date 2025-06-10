@@ -1,0 +1,16 @@
+{
+  "trades": [
+    {"timestamp": "2025-05-29T13:00:00Z", "type": "call", "price": 185.2, "size": 120, "sweep": true},
+    {"timestamp": "2025-05-29T13:01:00Z", "type": "put", "price": 184.8, "size": 90, "sweep": false},
+    {"timestamp": "2025-05-29T13:02:00Z", "type": "call", "price": 185.5, "size": 200, "sweep": true},
+    {"timestamp": "2025-05-29T13:03:00Z", "type": "put", "price": 184.5, "size": 150, "sweep": false},
+    {"timestamp": "2025-05-29T13:04:00Z", "type": "call", "price": 185.7, "size": 80, "sweep": false}
+  ],
+  "iv": [
+    {"timestamp": "2025-05-29T13:00:00Z", "iv": 0.32},
+    {"timestamp": "2025-05-29T13:01:00Z", "iv": 0.33},
+    {"timestamp": "2025-05-29T13:02:00Z", "iv": 0.34},
+    {"timestamp": "2025-05-29T13:03:00Z", "iv": 0.35},
+    {"timestamp": "2025-05-29T13:04:00Z", "iv": 0.36}
+  ]
+}

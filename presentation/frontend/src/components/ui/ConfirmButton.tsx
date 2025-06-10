@@ -1,1 +1,0 @@
-/* full ConfirmButton implementation */

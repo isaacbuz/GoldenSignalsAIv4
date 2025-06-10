@@ -1,0 +1,126 @@
+# Global settings
+global:
+  environment: production
+  imageRegistry: goldensignalsacr.azurecr.io
+
+# Backend configuration
+backend:
+  replicaCount: 3
+  image:
+    repository: backend
+    tag: latest
+  resources:
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+    requests:
+      cpu: "1"
+      memory: "1Gi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Frontend configuration
+frontend:
+  replicaCount: 2
+  image:
+    repository: frontend
+    tag: latest
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+
+# Dashboard configuration
+dashboard:
+  replicaCount: 1
+  image:
+    repository: dashboard
+    tag: latest
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+
+# Redis configuration
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    password: "${REDIS_PASSWORD}"
+  master:
+    persistence:
+      enabled: true
+      size: 10Gi
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+
+# Prometheus configuration
+prometheus:
+  enabled: true
+  server:
+    retention: "15d"
+    persistentVolume:
+      enabled: true
+      size: 50Gi
+
+# Grafana configuration
+grafana:
+  enabled: true
+  adminPassword: "${GRAFANA_ADMIN_PASSWORD}"
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+# Ingress configuration
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: azure
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: trading.goldensignals.ai
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: frontend-service
+              port:
+                number: 8080
+    - host: dashboard.goldensignals.ai
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: dashboard-service
+              port:
+                number: 8050
+  tls:
+    - secretName: goldensignals-tls
+      hosts:
+        - trading.goldensignals.ai
+        - dashboard.goldensignals.ai 

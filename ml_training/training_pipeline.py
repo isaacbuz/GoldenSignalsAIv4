@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from domain.models.ai_models import LSTMModel, TransformerModel
+from src.domain.models.ai_models import LSTMModel, TransformerModel
 from infrastructure.config_manager import config_manager
 
 logging.basicConfig(level=logging.INFO)

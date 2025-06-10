@@ -1,0 +1,20 @@
+apiVersion: v2
+name: goldensignals
+description: A Helm chart for GoldenSignalsAI trading platform
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: redis
+    version: "17.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+  - name: prometheus
+    version: "15.0.0"
+    repository: "https://prometheus-community.github.io/helm-charts"
+    condition: prometheus.enabled
+  - name: grafana
+    version: "6.0.0"
+    repository: "https://grafana.github.io/helm-charts"
+    condition: grafana.enabled 

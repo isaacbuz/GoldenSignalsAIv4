@@ -1,0 +1,12 @@
+pytest>=6.2.0
+pytest-cov>=2.12.0
+pytest-mock>=3.6.0
+pytest-xdist>=2.4.0  # For parallel test execution
+pytest-timeout>=2.1.0  # For test timeouts
+pytest-randomly>=3.10.0  # For randomized test ordering
+black>=21.5b2  # Code formatting
+flake8>=3.9.0  # Code linting
+mypy>=0.910  # Type checking
+coverage>=6.2  # Coverage reporting
+hypothesis>=6.75.3  # Property-based testing
+psutil>=5.8.0  # System and process monitoring 
