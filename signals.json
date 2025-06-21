@@ -1,0 +1,42 @@
+[
+  {
+    "symbol": "AAPL",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "SPY",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "TSLA",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "GOOGL",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "NVDA",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "AMZN",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "META",
+    "signal": "NO_DATA",
+    "confidence": 0
+  },
+  {
+    "symbol": "MSFT",
+    "signal": "NO_DATA",
+    "confidence": 0
+  }
+]

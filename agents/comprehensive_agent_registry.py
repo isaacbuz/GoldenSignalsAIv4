@@ -5,6 +5,7 @@ Implements the complete list of agents used by top quant funds, HFTs, and instit
 from typing import Dict, Any, List, Type
 import logging
 from .common.base.base_agent import BaseAgent
+from .ml.transformer_agent import TransformerAgent
 
 logger = logging.getLogger(__name__)
 
@@ -514,13 +515,13 @@ class CustomUserAgent(BaseAgent):
 # ============================================================================
 
 class MLAgent(BaseAgent):
-    """XGBoost, LSTM, CatBoost, etc."""
+    """Machine learning models."""
     
     def __init__(self, name: str = "ML"):
         super().__init__(name=name, agent_type="ml")
     
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
-        # Implementation for ML models
+        # Implementation for ML predictions
         return signal
 
 
@@ -576,6 +577,17 @@ class ExplainabilityAgent(BaseAgent):
     
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for signal explanations
+        return signal
+
+
+class TransformerAgent(TransformerAgent):
+    """Transformer-based predictions."""
+    
+    def __init__(self, name: str = "Transformer"):
+        super().__init__(name=name, agent_type="transformer")
+    
+    def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+        # Implementation for transformer predictions
         return signal
 
 
@@ -674,6 +686,7 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'MetaConsensusAgent': MetaConsensusAgent,
     'CustomLLMAgent': CustomLLMAgent,
     'ExplainabilityAgent': ExplainabilityAgent,
+    'TransformerAgent': TransformerAgent,
     
     # Other Real-World Agents
     'EarningsDriftAgent': EarningsDriftAgent,
@@ -741,7 +754,7 @@ AGENT_CATEGORIES = {
     ],
     'ML & AI': [
         'MLAgent', 'StackedEnsembleAgent', 'AnomalyDetectionAgent', 
-        'MetaConsensusAgent', 'CustomLLMAgent', 'ExplainabilityAgent'
+        'MetaConsensusAgent', 'CustomLLMAgent', 'ExplainabilityAgent', 'TransformerAgent'
     ],
     'Specialized': [
         'EarningsDriftAgent', 'WeatherAgent'

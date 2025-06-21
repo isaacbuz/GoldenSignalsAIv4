@@ -1,346 +1,247 @@
-import os
-import sys
+"""
+Pytest configuration and shared fixtures for GoldenSignalsAI tests
+"""
+
 import pytest
-import numpy as np
-import torch
-import pandas as pd
+import asyncio
+import os
 from datetime import datetime, timedelta
-from typing import List, Dict, Any
-from pathlib import Path
+from typing import AsyncGenerator, Generator
+import pandas as pd
+import numpy as np
 
-# Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Test environment setup
+os.environ['TESTING'] = 'true'
+os.environ['DATABASE_URL'] = 'postgresql://test:test@localhost:5432/test_goldensignals'
+os.environ['REDIS_URL'] = 'redis://localhost:6379/1'
 
-from agents.orchestration.orchestrator import AgentOrchestrator
-from agents.technical.rsi_agent import RSIAgent
-from agents.technical.macd_agent import MACDAgent
-from agents.sentiment.sentiment_agent import SentimentAgent
-from agents.backtesting.backtest_engine import BacktestEngine
+# FastAPI testing
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
 
-@pytest.fixture(scope='session')
-def sample_market_data():
-    """Generate synthetic market data for testing."""
-    np.random.seed(42)
-    return {
-        'stock_prices': np.random.normal(100, 20, (100, 5)),
-        'options_volume': np.random.poisson(500, (100, 3)),
-        'sentiment_scores': np.random.uniform(-1, 1, 100)
-    }
+# Database
+import asyncpg
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 
-@pytest.fixture(scope='session')
-def ml_model_fixtures():
-    """Provide fixtures for machine learning model testing."""
-    from src.domain.models.ai_models import LSTMModel, TransformerModel
-    
-    lstm_model = LSTMModel(input_dim=5, hidden_dim=32)
-    transformer_model = TransformerModel(input_dim=5, hidden_dim=32)
-    
-    return {
-        'lstm': lstm_model,
-        'transformer': transformer_model
-    }
+# Local imports
+from src.utils.timezone_utils import now_utc
 
-@pytest.fixture(scope='session')
-def torch_device():
-    """Determine and return the appropriate torch device."""
-    return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def pytest_configure(config):
-    """Configure pytest with custom markers."""
-    config.addinivalue_line(
-        "markers", 
-        "integration: mark test as an integration test"
+@pytest.fixture(scope="session")
+def event_loop():
+    """Create an instance of the default event loop for the test session."""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest.fixture(scope="session")
+async def db_pool():
+    """Create a test database connection pool"""
+    pool = await asyncpg.create_pool(
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', 5432)),
+        user=os.getenv('DB_USER', 'test'),
+        password=os.getenv('DB_PASSWORD', 'test'),
+        database=os.getenv('DB_NAME', 'test_goldensignals'),
+        min_size=1,
+        max_size=5
     )
-    config.addinivalue_line(
-        "markers", 
-        "performance: mark test related to performance metrics"
+    yield pool
+    await pool.close()
+
+
+@pytest.fixture
+async def db_session():
+    """Create a test database session"""
+    engine = create_async_engine(
+        os.getenv('DATABASE_URL', 'postgresql+asyncpg://test:test@localhost:5432/test_goldensignals'),
+        echo=False
     )
-
-@pytest.fixture
-def sample_price_data() -> List[float]:
-    """Generate sample price data for testing"""
-    np.random.seed(42)  # For reproducibility
-    prices = [100.0]  # Start price
-    for _ in range(99):  # Generate 100 points total
-        change = np.random.normal(0, 1)  # Random price change
-        prices.append(max(0.1, prices[-1] * (1 + change/100)))  # Ensure price > 0
-    return prices
-
-@pytest.fixture
-def sample_news_data() -> List[str]:
-    """Generate sample news data for testing"""
-    return [
-        "Company reports strong earnings, beating expectations",
-        "Market uncertainty leads to volatility",
-        "New product launch receives positive reviews",
-        "Industry faces regulatory challenges",
-        "Company announces strategic partnership"
-    ]
-
-@pytest.fixture
-def rsi_agent() -> RSIAgent:
-    """Create RSI agent for testing"""
-    return RSIAgent(
-        name="RSI_Test",
-        period=14,
-        overbought=70,
-        oversold=30
-    )
-
-@pytest.fixture
-def macd_agent() -> MACDAgent:
-    """Create MACD agent for testing"""
-    return MACDAgent(
-        name="MACD_Test",
-        fast_period=12,
-        slow_period=26,
-        signal_period=9
-    )
-
-@pytest.fixture
-def sentiment_agent() -> SentimentAgent:
-    """Create sentiment agent for testing"""
-    return SentimentAgent(name="Sentiment_Test")
-
-@pytest.fixture
-def orchestrator(rsi_agent, macd_agent, sentiment_agent) -> AgentOrchestrator:
-    """Create orchestrator with all agents for testing"""
-    orchestrator = AgentOrchestrator()
-    for agent in [rsi_agent, macd_agent, sentiment_agent]:
-        orchestrator.register_agent(agent)
-    return orchestrator
-
-@pytest.fixture
-def backtest_engine(orchestrator) -> BacktestEngine:
-    """Create backtest engine for testing"""
-    return BacktestEngine(
-        orchestrator=orchestrator,
-        initial_capital=100000.0,
-        commission=0.001
-    )
-
-@pytest.fixture
-def market_data(sample_price_data, sample_news_data) -> Dict[str, Any]:
-    """Create sample market data for testing"""
-    return {
-        "close_prices": sample_price_data,
-        "texts": sample_news_data,
-        "timestamp": datetime.now().isoformat()
-    }
-
-@pytest.fixture
-def historical_data() -> pd.DataFrame:
-    """Create historical market data for backtesting"""
-    dates = pd.date_range(start='2023-01-01', end='2023-12-31', freq='D')
-    np.random.seed(42)
     
-    prices = []
-    price = 100.0
-    for _ in range(len(dates)):
-        change = np.random.normal(0, 1)
-        price *= (1 + change/100)
-        prices.append(max(0.1, price))
+    async_session = sessionmaker(
+        engine, class_=AsyncSession, expire_on_commit=False
+    )
     
-    return pd.DataFrame({
-        'Close': prices,
-        'Open': [p * (1 - np.random.uniform(-0.01, 0.01)) for p in prices],
-        'High': [p * (1 + np.random.uniform(0, 0.02)) for p in prices],
-        'Low': [p * (1 - np.random.uniform(0, 0.02)) for p in prices],
-        'Volume': np.random.randint(1000000, 10000000, len(dates))
-    }, index=dates)
+    async with async_session() as session:
+        yield session
+        await session.rollback()
+        
+    await engine.dispose()
+
 
 @pytest.fixture
-def signal_weights() -> Dict[str, float]:
-    """Default signal weights for testing"""
-    return {
-        "technical": 0.6,
-        "sentiment": 0.4
-    }
+def test_client():
+    """Create a test client for the FastAPI app"""
+    from simple_backend import app
+    return TestClient(app)
+
 
 @pytest.fixture
-def sample_ohlcv_data():
-    """Generate sample OHLCV data for testing technical indicators."""
-    dates = pd.date_range(start='2023-01-01', end='2023-12-31', freq='D')
-    np.random.seed(42)
-    
-    return pd.DataFrame({
-        'date': dates,
-        'open': np.random.normal(100, 10, len(dates)),
-        'high': np.random.normal(105, 10, len(dates)),
-        'low': np.random.normal(95, 10, len(dates)),
-        'close': np.random.normal(100, 10, len(dates)),
-        'volume': np.random.normal(1000000, 200000, len(dates))
-    }).set_index('date')
+async def async_client():
+    """Create an async test client for the FastAPI app"""
+    from simple_backend import app
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
 
-@pytest.fixture
-def sample_news_data():
-    """Generate sample news data for sentiment analysis testing."""
-    return [
-        {
-            'timestamp': '2023-01-01T00:00:00Z',
-            'headline': 'Company XYZ Reports Strong Q4 Earnings',
-            'content': 'Company XYZ exceeded analyst expectations...',
-            'source': 'Financial Times'
-        },
-        {
-            'timestamp': '2023-01-02T00:00:00Z',
-            'headline': 'Market Volatility Increases Amid Global Concerns',
-            'content': 'Global markets experienced increased volatility...',
-            'source': 'Reuters'
-        }
-    ]
-
-@pytest.fixture
-def sample_social_data():
-    """Generate sample social media data for sentiment analysis testing."""
-    return [
-        {
-            'timestamp': '2023-01-01T00:00:00Z',
-            'platform': 'Twitter',
-            'text': 'Bullish on $XYZ after strong earnings report! #stocks',
-            'user': 'trader123',
-            'followers': 1000
-        },
-        {
-            'timestamp': '2023-01-02T00:00:00Z',
-            'platform': 'StockTwits',
-            'text': 'Market looking bearish today... $SPY',
-            'user': 'investor456',
-            'followers': 2000
-        }
-    ]
-
-@pytest.fixture
-def test_model_registry(tmp_path):
-    """Create a temporary model registry for testing."""
-    registry_path = tmp_path / "models"
-    registry_path.mkdir()
-    return str(registry_path)
 
 @pytest.fixture
 def sample_market_data():
-    """Generate sample market data for testing trading strategies."""
-    dates = pd.date_range(start='2023-01-01', end='2023-12-31', freq='D')
-    np.random.seed(42)
+    """Generate sample market data for testing"""
+    dates = pd.date_range(end=datetime.now(), periods=100, freq='5min')
     
-    # Generate price data with a trend and some noise
-    trend = np.linspace(100, 120, len(dates))
-    noise = np.random.normal(0, 2, len(dates))
-    prices = trend + noise
-    
-    return pd.DataFrame({
-        'date': dates,
-        'price': prices,
-        'volume': np.random.normal(1000000, 200000, len(dates)),
-        'sentiment': np.random.normal(0, 1, len(dates))
-    }).set_index('date')
-
-@pytest.fixture(scope="session")
-def market_calendar():
-    """Create a market calendar for testing."""
-    start_date = datetime(2023, 1, 1)
-    end_date = datetime(2023, 12, 31)
-    dates = pd.date_range(start=start_date, end=end_date, freq='B')
-    return dates
-
-@pytest.fixture(scope="session")
-def risk_free_rates():
-    """Create risk-free rates for testing."""
-    dates = pd.date_range(start='2023-01-01', end='2023-12-31', freq='B')
-    rates = pd.Series(
-        np.random.normal(0.02/252, 0.001, len(dates)),  # Daily rates
-        index=dates
-    )
-    return rates
-
-@pytest.fixture(scope="session")
-def market_factors():
-    """Create market factor returns for testing."""
-    dates = pd.date_range(start='2023-01-01', end='2023-12-31', freq='B')
-    factors = pd.DataFrame({
-        'market': np.random.normal(0.0001, 0.01, len(dates)),
-        'size': np.random.normal(0, 0.005, len(dates)),
-        'value': np.random.normal(0, 0.005, len(dates)),
-        'momentum': np.random.normal(0, 0.006, len(dates)),
-        'volatility': np.random.normal(0, 0.004, len(dates))
+    data = pd.DataFrame({
+        'open': 100 + np.random.randn(100).cumsum(),
+        'high': 102 + np.random.randn(100).cumsum(),
+        'low': 98 + np.random.randn(100).cumsum(),
+        'close': 100 + np.random.randn(100).cumsum(),
+        'volume': np.random.randint(1000000, 5000000, 100)
     }, index=dates)
-    return factors
+    
+    # Ensure high > low and contains open/close
+    data['high'] = data[['open', 'close', 'high']].max(axis=1)
+    data['low'] = data[['open', 'close', 'low']].min(axis=1)
+    
+    return data
 
-@pytest.fixture(scope="session")
-def sample_portfolio():
-    """Create a sample portfolio configuration for testing."""
+
+@pytest.fixture
+def sample_signal():
+    """Create a sample signal for testing"""
     return {
-        'assets': ['AAPL', 'GOOGL', 'MSFT', 'AMZN'],
-        'weights': [0.25, 0.25, 0.25, 0.25],
-        'risk_limits': {
-            'max_position': 0.3,
-            'max_sector_exposure': 0.4,
-            'var_limit': 0.02,
-            'tracking_error_limit': 0.03
-        },
-        'rebalancing': {
-            'frequency': 'monthly',
-            'threshold': 0.05
-        }
+        'id': 'test_signal_001',
+        'symbol': 'AAPL',
+        'type': 'CALL',
+        'strike': 150.0,
+        'expiry': (now_utc() + timedelta(days=30)).isoformat(),
+        'confidence': 0.85,
+        'entry_price': 145.50,
+        'target_price': 155.00,
+        'stop_loss': 142.00,
+        'timeframe': '15m',
+        'reasoning': 'Strong momentum with bullish pattern',
+        'patterns': ['MACD_BULLISH_CROSS', 'RSI_OVERSOLD_REVERSAL'],
+        'urgency': 'HIGH'
     }
 
-@pytest.fixture(scope="session")
-def technical_indicators():
-    """Create technical indicator configurations for testing."""
+
+@pytest.fixture
+def sample_backtest_signal():
+    """Create a sample backtest signal"""
+    from src.domain.backtesting.advanced_backtest_engine import BacktestSignal
+    
+    return BacktestSignal(
+        timestamp=now_utc(),
+        symbol='AAPL',
+        action='buy',
+        confidence=0.85,
+        entry_price=150.00,
+        stop_loss=147.00,
+        take_profit=156.00,
+        position_size=1000,
+        agent_scores={'momentum_agent': 0.9, 'sentiment_agent': 0.8},
+        agent_reasoning={
+            'momentum_agent': 'Strong upward momentum detected',
+            'sentiment_agent': 'Positive market sentiment'
+        },
+        indicators={'RSI': 65, 'MACD': 0.5, 'ATR': 2.5},
+        ml_predictions={'price_direction': 0.85, 'volatility': 0.3},
+        risk_score=0.2,
+        expected_return=0.04,
+        sharpe_ratio=1.5
+    )
+
+
+@pytest.fixture
+def sample_learning_feedback():
+    """Create sample learning feedback"""
+    from src.domain.backtesting.adaptive_learning_system import LearningFeedback
+    
+    return LearningFeedback(
+        trade_id='test_trade_001',
+        agent_id='momentum_agent',
+        signal_timestamp=now_utc(),
+        symbol='AAPL',
+        action='buy',
+        confidence=0.85,
+        predicted_return=0.04,
+        actual_return=0.03,
+        pnl=300.0,
+        holding_period=timedelta(hours=2),
+        exit_reason='take_profit',
+        market_regime='uptrend_normal_vol',
+        volatility_level=0.15,
+        volume_profile={'relative_volume': 1.2, 'volume_trend': 'increasing'},
+        features_at_signal={'momentum': 0.02, 'volume_ratio': 1.2},
+        indicators_at_signal={'RSI': 65, 'MACD': 0.5, 'ATR': 2.5},
+        accuracy_contribution=1.0,
+        sharpe_contribution=1.5,
+        reward=0.025,
+        regret=0.01,
+        surprise=0.01
+    )
+
+
+@pytest.fixture
+def mock_redis_client(mocker):
+    """Mock Redis client for testing"""
+    mock_redis = mocker.AsyncMock()
+    mock_redis.get.return_value = None
+    mock_redis.set.return_value = True
+    mock_redis.exists.return_value = False
+    mock_redis.expire.return_value = True
+    return mock_redis
+
+
+@pytest.fixture
+def mock_api_responses(mocker):
+    """Mock external API responses"""
+    # Mock yfinance
+    mock_yf = mocker.patch('yfinance.download')
+    mock_yf.return_value = pd.DataFrame({
+        'Open': [150, 151, 152],
+        'High': [152, 153, 154],
+        'Low': [149, 150, 151],
+        'Close': [151, 152, 153],
+        'Volume': [1000000, 1100000, 1200000]
+    })
+    
+    # Mock Alpha Vantage
+    mock_av = mocker.patch('alpha_vantage.timeseries.TimeSeries.get_daily')
+    mock_av.return_value = ({
+        '2024-01-01': {'1. open': '150', '2. high': '152', '3. low': '149', '4. close': '151'},
+        '2024-01-02': {'1. open': '151', '2. high': '153', '3. low': '150', '4. close': '152'}
+    }, {})
+    
     return {
-        'moving_averages': [5, 10, 20, 50, 200],
-        'rsi': {'period': 14},
-        'macd': {
-            'fast_period': 12,
-            'slow_period': 26,
-            'signal_period': 9
-        },
-        'bollinger_bands': {
-            'period': 20,
-            'std_dev': 2
-        }
+        'yfinance': mock_yf,
+        'alpha_vantage': mock_av
     }
 
-@pytest.fixture(scope="session")
-def model_configs():
-    """Create model configurations for testing."""
-    return {
-        'time_series': {
-            'lookback': 10,
-            'horizon': 5,
-            'batch_size': 32,
-            'epochs': 100
-        },
-        'factor': {
-            'estimation_window': 252,
-            'min_periods': 126
-        },
-        'ensemble': {
-            'n_models': 5,
-            'aggregation': 'weighted_average'
-        }
-    }
 
-@pytest.fixture(scope="session")
-def market_scenarios():
-    """Create market scenario data for stress testing."""
-    base_volatility = 0.15
-    scenarios = {
-        'normal': {
-            'returns': np.random.normal(0.0001, base_volatility/np.sqrt(252), 252),
-            'volatility': base_volatility
-        },
-        'high_volatility': {
-            'returns': np.random.normal(0.0001, base_volatility*2/np.sqrt(252), 252),
-            'volatility': base_volatility * 2
-        },
-        'market_crash': {
-            'returns': np.random.normal(-0.002, base_volatility*3/np.sqrt(252), 252),
-            'volatility': base_volatility * 3
-        },
-        'bull_market': {
-            'returns': np.random.normal(0.001, base_volatility/np.sqrt(252), 252),
-            'volatility': base_volatility * 0.8
-        }
-    }
-    return scenarios
+@pytest.fixture(autouse=True)
+def reset_singletons():
+    """Reset singleton instances between tests"""
+    # Add any singleton resets here
+    yield
+
+
+@pytest.fixture
+def performance_timer():
+    """Simple performance timer for tests"""
+    import time
+    
+    class Timer:
+        def __init__(self):
+            self.start_time = None
+            self.elapsed = None
+            
+        def __enter__(self):
+            self.start_time = time.time()
+            return self
+            
+        def __exit__(self, *args):
+            self.elapsed = time.time() - self.start_time
+            
+    return Timer

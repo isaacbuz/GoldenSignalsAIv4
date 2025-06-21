@@ -1,0 +1,104 @@
+{
+  "training_date": "2025-06-10T23:02:31.479859",
+  "models_trained": [
+    "forecast",
+    "signal_classifier",
+    "risk",
+    "direction"
+  ],
+  "metrics": {
+    "forecast": {
+      "train_mse": 0.0002886751011281102,
+      "test_mse": 0.0010728377804284418,
+      "train_r2": 0.7774823765047881,
+      "test_r2": -0.1462048259545039
+    },
+    "signal_classifier": {
+      "accuracy": 0.5185185185185185,
+      "classification_report": {
+        "0": {
+          "precision": 0.3188405797101449,
+          "recall": 0.23404255319148937,
+          "f1-score": 0.26993865030674846,
+          "support": 94.0
+        },
+        "1": {
+          "precision": 0.5993485342019544,
+          "recall": 0.7896995708154506,
+          "f1-score": 0.6814814814814815,
+          "support": 233.0
+        },
+        "2": {
+          "precision": 0.3855421686746988,
+          "recall": 0.24242424242424243,
+          "f1-score": 0.29767441860465116,
+          "support": 132.0
+        },
+        "accuracy": 0.5185185185185185,
+        "macro avg": {
+          "precision": 0.43457709419559937,
+          "recall": 0.4220554554770608,
+          "f1-score": 0.4163648501309603,
+          "support": 459.0
+        },
+        "weighted avg": {
+          "precision": 0.48041566280363673,
+          "recall": 0.5185185185185185,
+          "f1-score": 0.48682449143754575,
+          "support": 459.0
+        }
+      }
+    },
+    "risk": {
+      "mse": 0.013443679490506679,
+      "r2": -0.0012592749641484602
+    },
+    "direction": {
+      "accuracy": 0.6034858387799564
+    }
+  },
+  "feature_importance": {
+    "forecast": {
+      "feature": {
+        "24": "OBV",
+        "25": "Volatility_20",
+        "16": "MACD_Signal",
+        "21": "BB_Width",
+        "26": "ATR",
+        "15": "MACD",
+        "10": "SMA_50",
+        "17": "MACD_Histogram",
+        "29": "SR_Position",
+        "20": "BB_Lower"
+      },
+      "importance": {
+        "24": 0.11401505393942012,
+        "25": 0.09710250815705972,
+        "16": 0.08143166189300334,
+        "21": 0.07005557291840371,
+        "26": 0.06027578992963738,
+        "15": 0.05915315849758422,
+        "10": 0.054278435801162796,
+        "17": 0.042262301258450596,
+        "29": 0.039775761619445654,
+        "20": 0.03488640846926478
+      }
+    }
+  },
+  "model_files": [
+    "models/risk_scaler.pkl",
+    "models/signal_classifier.pkl",
+    "models/forecast_model.pkl",
+    "models/forecast_scaler.pkl",
+    "models/direction_scaler.pkl",
+    "models/direction_model.pkl",
+    "models/risk_model.pkl",
+    "models/volatility_model_info.pkl",
+    "models/sentiment_vectorizer.pkl",
+    "models/volatility_scaler.pkl",
+    "models/sentiment_model.pkl",
+    "models/signal_classifier_model.pkl",
+    "models/model_registry.pkl",
+    "models/signal_classifier_scaler.pkl"
+  ]
+}

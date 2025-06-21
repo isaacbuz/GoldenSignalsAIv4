@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import './styles/darkPro.css';
 
 // Ensure the root element exists
 const rootElement = document.getElementById('root');

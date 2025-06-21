@@ -5,7 +5,7 @@ from src.agents.base import BaseAgent, AgentConfig
 from src.utils.legacy_mapper import legacy_output_to_signal
 from src.models.signals import Signal
 
-from agents.core.technical.momentum.macd_agent import MACDAgent as LegacyMACDAgent
+from src.agents.core.technical.momentum.macd_agent import MACDAgent as LegacyMACDAgent
 
 
 class MACDLegacyAdapter(BaseAgent):

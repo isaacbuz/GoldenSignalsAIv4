@@ -1,6 +1,24 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 WORKDIR /app
-COPY pyproject.toml poetry.lock ./
+
+# Install build dependencies and TA-Lib
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends wget build-essential && \
+    wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
+    tar -xzf ta-lib-0.4.0-src.tar.gz && \
+    cd ta-lib/ && \
+    wget -O config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && \
+    wget -O config.sub 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD' && \
+    ./configure --prefix=/usr && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf ta-lib-0.4.0-src.tar.gz ta-lib/ && \
+    apt-get remove -y build-essential wget && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml poetry.lock* ./
 RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
 COPY . .
 EXPOSE 8000

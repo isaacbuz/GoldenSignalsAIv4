@@ -1,9 +1,0 @@
-# Dockerfile for Orchestrator Microservice
-FROM continuumio/miniconda3
-WORKDIR /app
-COPY . .
-RUN conda env create -f environment.yml
-SHELL ["/bin/bash", "-c"]
-RUN echo "source activate goldensignalsai" > ~/.bashrc
-ENV PATH /opt/conda/envs/goldensignalsai/bin:$PATH
-CMD ["conda", "run", "-n", "goldensignalsai", "uvicorn", "presentation.api.main:app", "--host", "0.0.0.0", "--port", "8001"]

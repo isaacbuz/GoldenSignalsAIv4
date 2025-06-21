@@ -28,8 +28,10 @@ import {
   Speed as AccuracyIcon,
   Timeline as SignalsIcon,
   Psychology as AIIcon,
+  Assessment as DashboardIcon,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../../services/api';
 
 // Agent Card Component
@@ -229,6 +231,7 @@ function AgentCard({ agent }: AgentCardProps) {
 
 // Main Page Component
 export default function AgentsPage() {
+  const navigate = useNavigate();
   const { data: agents, isLoading, error } = useQuery({
     queryKey: ['agents'],
     queryFn: () => apiClient.getAgents(),
@@ -264,12 +267,29 @@ export default function AgentsPage() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack spacing={2} sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700}>
-          AI Trading Agents
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Monitor and manage the fleet of autonomous agents driving the trading strategy.
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="h4" fontWeight={700}>
+              AI Trading Agents
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Monitor and manage the fleet of autonomous agents driving the trading strategy.
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<DashboardIcon />}
+            onClick={() => navigate('/agents/performance')}
+            sx={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+              },
+            }}
+          >
+            Performance Dashboard
+          </Button>
+        </Box>
       </Stack>
 
       <Grid container spacing={4}>

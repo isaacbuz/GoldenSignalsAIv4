@@ -1,0 +1,117 @@
+2025-06-10 22:53:06,714 - INFO - 🔄 Loading 20 years of market data for 31 symbols...
+2025-06-10 22:53:06,724 - INFO - Fetching 20 years of data for AAPL...
+2025-06-10 22:53:07,275 - ERROR - $AAPL: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:07,276 - WARNING - No data found for AAPL
+2025-06-10 22:53:07,276 - INFO - Fetching 20 years of data for GOOGL...
+2025-06-10 22:53:07,567 - ERROR - $GOOGL: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:07,567 - WARNING - No data found for GOOGL
+2025-06-10 22:53:07,568 - INFO - Fetching 20 years of data for MSFT...
+2025-06-10 22:53:07,868 - ERROR - $MSFT: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:07,868 - WARNING - No data found for MSFT
+2025-06-10 22:53:07,869 - INFO - Fetching 20 years of data for AMZN...
+2025-06-10 22:53:08,227 - ERROR - $AMZN: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:08,228 - WARNING - No data found for AMZN
+2025-06-10 22:53:08,228 - INFO - Fetching 20 years of data for META...
+2025-06-10 22:53:08,527 - ERROR - $META: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:08,527 - WARNING - No data found for META
+2025-06-10 22:53:08,528 - INFO - Fetching 20 years of data for NVDA...
+2025-06-10 22:53:08,840 - ERROR - $NVDA: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:08,840 - WARNING - No data found for NVDA
+2025-06-10 22:53:08,841 - INFO - Fetching 20 years of data for TSLA...
+2025-06-10 22:53:09,118 - ERROR - $TSLA: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:09,118 - WARNING - No data found for TSLA
+2025-06-10 22:53:09,119 - INFO - Fetching 20 years of data for JPM...
+2025-06-10 22:53:09,417 - ERROR - Failed to get ticker 'JPM' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:09,417 - ERROR - $JPM: possibly delisted; No timezone found
+2025-06-10 22:53:09,417 - WARNING - No data found for JPM
+2025-06-10 22:53:09,417 - INFO - Fetching 20 years of data for BAC...
+2025-06-10 22:53:09,894 - ERROR - Failed to get ticker 'BAC' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:09,895 - ERROR - $BAC: possibly delisted; No timezone found
+2025-06-10 22:53:09,895 - WARNING - No data found for BAC
+2025-06-10 22:53:09,895 - INFO - Fetching 20 years of data for GS...
+2025-06-10 22:53:10,195 - ERROR - Failed to get ticker 'GS' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:10,195 - ERROR - $GS: possibly delisted; No timezone found
+2025-06-10 22:53:10,195 - WARNING - No data found for GS
+2025-06-10 22:53:10,196 - INFO - Fetching 20 years of data for MS...
+2025-06-10 22:53:10,479 - ERROR - Failed to get ticker 'MS' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:10,479 - ERROR - $MS: possibly delisted; No timezone found
+2025-06-10 22:53:10,479 - WARNING - No data found for MS
+2025-06-10 22:53:10,480 - INFO - Fetching 20 years of data for WFC...
+2025-06-10 22:53:10,757 - ERROR - Failed to get ticker 'WFC' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:10,757 - ERROR - $WFC: possibly delisted; No timezone found
+2025-06-10 22:53:10,757 - WARNING - No data found for WFC
+2025-06-10 22:53:10,757 - INFO - Fetching 20 years of data for JNJ...
+2025-06-10 22:53:11,096 - ERROR - Failed to get ticker 'JNJ' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:11,096 - ERROR - $JNJ: possibly delisted; No timezone found
+2025-06-10 22:53:11,096 - WARNING - No data found for JNJ
+2025-06-10 22:53:11,097 - INFO - Fetching 20 years of data for PFE...
+2025-06-10 22:53:11,407 - ERROR - Failed to get ticker 'PFE' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:11,408 - ERROR - $PFE: possibly delisted; No timezone found
+2025-06-10 22:53:11,408 - WARNING - No data found for PFE
+2025-06-10 22:53:11,408 - INFO - Fetching 20 years of data for UNH...
+2025-06-10 22:53:11,709 - ERROR - Failed to get ticker 'UNH' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:11,709 - ERROR - $UNH: possibly delisted; No timezone found
+2025-06-10 22:53:11,709 - WARNING - No data found for UNH
+2025-06-10 22:53:11,709 - INFO - Fetching 20 years of data for CVS...
+2025-06-10 22:53:11,970 - ERROR - Failed to get ticker 'CVS' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:11,970 - ERROR - $CVS: possibly delisted; No timezone found
+2025-06-10 22:53:11,970 - WARNING - No data found for CVS
+2025-06-10 22:53:11,970 - INFO - Fetching 20 years of data for XOM...
+2025-06-10 22:53:12,957 - ERROR - Failed to get ticker 'XOM' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:12,957 - ERROR - $XOM: possibly delisted; No timezone found
+2025-06-10 22:53:12,957 - WARNING - No data found for XOM
+2025-06-10 22:53:12,957 - INFO - Fetching 20 years of data for CVX...
+2025-06-10 22:53:13,223 - ERROR - Failed to get ticker 'CVX' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:13,223 - ERROR - $CVX: possibly delisted; No timezone found
+2025-06-10 22:53:13,223 - WARNING - No data found for CVX
+2025-06-10 22:53:13,223 - INFO - Fetching 20 years of data for WMT...
+2025-06-10 22:53:13,487 - ERROR - Failed to get ticker 'WMT' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:13,487 - ERROR - $WMT: possibly delisted; No timezone found
+2025-06-10 22:53:13,488 - WARNING - No data found for WMT
+2025-06-10 22:53:13,488 - INFO - Fetching 20 years of data for KO...
+2025-06-10 22:53:13,765 - ERROR - Failed to get ticker 'KO' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:13,765 - ERROR - $KO: possibly delisted; No timezone found
+2025-06-10 22:53:13,765 - WARNING - No data found for KO
+2025-06-10 22:53:13,765 - INFO - Fetching 20 years of data for PG...
+2025-06-10 22:53:14,196 - ERROR - Failed to get ticker 'PG' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:14,196 - ERROR - $PG: possibly delisted; No timezone found
+2025-06-10 22:53:14,196 - WARNING - No data found for PG
+2025-06-10 22:53:14,197 - INFO - Fetching 20 years of data for SPY...
+2025-06-10 22:53:14,476 - ERROR - $SPY: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:14,477 - WARNING - No data found for SPY
+2025-06-10 22:53:14,477 - INFO - Fetching 20 years of data for QQQ...
+2025-06-10 22:53:14,737 - ERROR - $QQQ: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:14,737 - WARNING - No data found for QQQ
+2025-06-10 22:53:14,738 - INFO - Fetching 20 years of data for IWM...
+2025-06-10 22:53:14,999 - ERROR - $IWM: possibly delisted; No price data found  (1d 2005-06-15 22:53:06.714876 -> 2025-06-10 22:53:06.714888)
+2025-06-10 22:53:15,000 - WARNING - No data found for IWM
+2025-06-10 22:53:15,000 - INFO - Fetching 20 years of data for DIA...
+2025-06-10 22:53:15,273 - ERROR - Failed to get ticker 'DIA' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:15,274 - ERROR - $DIA: possibly delisted; No timezone found
+2025-06-10 22:53:15,274 - WARNING - No data found for DIA
+2025-06-10 22:53:15,274 - INFO - Fetching 20 years of data for VTI...
+2025-06-10 22:53:15,558 - ERROR - Failed to get ticker 'VTI' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:15,558 - ERROR - $VTI: possibly delisted; No timezone found
+2025-06-10 22:53:15,558 - WARNING - No data found for VTI
+2025-06-10 22:53:15,558 - INFO - Fetching 20 years of data for XLF...
+2025-06-10 22:53:15,819 - ERROR - Failed to get ticker 'XLF' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:15,820 - ERROR - $XLF: possibly delisted; No timezone found
+2025-06-10 22:53:15,820 - WARNING - No data found for XLF
+2025-06-10 22:53:15,820 - INFO - Fetching 20 years of data for XLK...
+2025-06-10 22:53:16,087 - ERROR - Failed to get ticker 'XLK' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:16,088 - ERROR - $XLK: possibly delisted; No timezone found
+2025-06-10 22:53:16,089 - WARNING - No data found for XLK
+2025-06-10 22:53:16,091 - INFO - Fetching 20 years of data for XLE...
+2025-06-10 22:53:16,375 - ERROR - Failed to get ticker 'XLE' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:16,376 - ERROR - $XLE: possibly delisted; No timezone found
+2025-06-10 22:53:16,376 - WARNING - No data found for XLE
+2025-06-10 22:53:16,376 - INFO - Fetching 20 years of data for XLV...
+2025-06-10 22:53:16,644 - ERROR - Failed to get ticker 'XLV' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:16,645 - ERROR - $XLV: possibly delisted; No timezone found
+2025-06-10 22:53:16,645 - WARNING - No data found for XLV
+2025-06-10 22:53:16,645 - INFO - Fetching 20 years of data for XLI...
+2025-06-10 22:53:16,947 - ERROR - Failed to get ticker 'XLI' reason: Expecting value: line 1 column 1 (char 0)
+2025-06-10 22:53:16,947 - ERROR - $XLI: possibly delisted; No timezone found
+2025-06-10 22:53:16,947 - WARNING - No data found for XLI
+2025-06-10 22:53:16,947 - ERROR - ❌ No data loaded
+2025-06-10 22:53:16,948 - ERROR - ❌ No data available for training

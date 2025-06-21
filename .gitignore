@@ -1,5 +1,5 @@
 # Environment Variables
-.env
+# .env  # Temporarily removed for testing
 .env.*
 !.env.example
 

@@ -1,0 +1,122 @@
+[
+  {
+    "symbol": "AAPL",
+    "timestamp": "2025-06-10T23:14:35.531093",
+    "signal": "BUY_CALL",
+    "confidence": 0.75,
+    "timeframe": "1-5 days",
+    "current_price": 182.46,
+    "entry_zone": [
+      181.64,
+      183.29
+    ],
+    "exit_target": 187.94,
+    "stop_loss": 179.73,
+    "risk_reward_ratio": 2.0,
+    "indicators": {
+      "rsi": 28.5,
+      "macd": -0.3192,
+      "bb_position": 0.49,
+      "volume_ratio": 1.01,
+      "volatility": 0.233
+    },
+    "reasoning": "RSI oversold (<30) + Support level bounce + MACD bullish divergence",
+    "signal_strength": "HIGH"
+  },
+  {
+    "symbol": "SPY",
+    "timestamp": "2025-06-10T23:14:35.531133",
+    "signal": "BUY_PUT",
+    "confidence": 0.7,
+    "timeframe": "1-5 days",
+    "current_price": 454.02,
+    "entry_zone": [
+      451.97,
+      456.06
+    ],
+    "exit_target": 440.4,
+    "stop_loss": 460.83,
+    "risk_reward_ratio": 2.0,
+    "indicators": {
+      "rsi": 45.8,
+      "macd": 0.4675,
+      "bb_position": 0.55,
+      "volume_ratio": 1.96,
+      "volatility": 0.178
+    },
+    "reasoning": "Support breakdown + Below moving averages + MACD bearish",
+    "signal_strength": "MEDIUM"
+  },
+  {
+    "symbol": "TSLA",
+    "timestamp": "2025-06-10T23:14:35.531163",
+    "signal": "BUY_PUT",
+    "confidence": 0.72,
+    "timeframe": "1-5 days",
+    "current_price": 242.57,
+    "entry_zone": [
+      241.48,
+      243.66
+    ],
+    "exit_target": 235.29,
+    "stop_loss": 246.21,
+    "risk_reward_ratio": 2.0,
+    "indicators": {
+      "rsi": 73.2,
+      "macd": -0.3986,
+      "bb_position": 0.61,
+      "volume_ratio": 1.05,
+      "volatility": 0.252
+    },
+    "reasoning": "RSI overbought (>70) + Resistance rejection + Volume declining",
+    "signal_strength": "HIGH"
+  },
+  {
+    "symbol": "GOOGL",
+    "timestamp": "2025-06-10T23:14:35.531196",
+    "signal": "BUY_PUT",
+    "confidence": 0.72,
+    "timeframe": "1-5 days",
+    "current_price": 140.52,
+    "entry_zone": [
+      139.89,
+      141.16
+    ],
+    "exit_target": 136.31,
+    "stop_loss": 142.63,
+    "risk_reward_ratio": 2.0,
+    "indicators": {
+      "rsi": 73.2,
+      "macd": 0.1037,
+      "bb_position": 0.15,
+      "volume_ratio": 1.49,
+      "volatility": 0.155
+    },
+    "reasoning": "RSI overbought (>70) + Resistance rejection + Volume declining",
+    "signal_strength": "HIGH"
+  },
+  {
+    "symbol": "NVDA",
+    "timestamp": "2025-06-10T23:14:35.531222",
+    "signal": "BUY_CALL",
+    "confidence": 0.68,
+    "timeframe": "1-5 days",
+    "current_price": 472.32,
+    "entry_zone": [
+      470.19,
+      474.44
+    ],
+    "exit_target": 486.48,
+    "stop_loss": 465.23,
+    "risk_reward_ratio": 2.0,
+    "indicators": {
+      "rsi": 55.3,
+      "macd": -0.2788,
+      "bb_position": 0.09,
+      "volume_ratio": 0.94,
+      "volatility": 0.281
+    },
+    "reasoning": "MACD bullish crossover + Breaking above SMA 20 + Volume spike",
+    "signal_strength": "MEDIUM"
+  }
+]

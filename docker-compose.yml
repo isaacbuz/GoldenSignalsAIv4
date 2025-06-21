@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: '3.8'
 
 services:
@@ -11,6 +10,7 @@ services:
       - PROMETHEUS_MULTIPROC_DIR=/tmp
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+    env_file: .env
     ports:
       - "8000:8000"
     depends_on:
@@ -22,10 +22,10 @@ services:
 
   frontend:
     build:
-      context: ./presentation/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:3000"
     depends_on:
       - backend
     networks:
@@ -61,23 +61,17 @@ services:
     networks:
       - gsnet
 
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    env_file: .env
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - gsnet
+
 networks:
   gsnet:
     driver: bridge
-
-=======
-version: "3.8"
-services:
-  backend:
-    build: ./backend
-    env_file: .env
-    ports:
-      - "8000:8000"
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:80"
-  worker:
-    build: ./worker
-    env_file: .env
->>>>>>> a9235431 (Initial commit: Add GoldenSignalsAI_Merged_Final with ML agents, retraining automation, and advanced frontend visualization)

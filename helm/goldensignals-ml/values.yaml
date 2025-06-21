@@ -1,0 +1,207 @@
+# Default values for goldensignals-ml
+replicaCount:
+  mlService: 3
+  mlWorker: 2
+
+image:
+  repository: ghcr.io/goldensignals
+  mlService: ml-service
+  mlWorker: ml-worker
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9090"
+  prometheus.io/path: "/metrics"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  capabilities:
+    drop:
+    - ALL
+
+service:
+  type: ClusterIP
+  port: 8001
+  targetPort: 8001
+  annotations: {}
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  hosts:
+    - host: api.goldensignals.ai
+      paths:
+        - path: /ml
+          pathType: Prefix
+  tls:
+    - secretName: goldensignals-tls
+      hosts:
+        - api.goldensignals.ai
+
+resources:
+  mlService:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+  mlWorker:
+    limits:
+      cpu: 4000m
+      memory: 6Gi
+    requests:
+      cpu: 2000m
+      memory: 3Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+persistence:
+  enabled: true
+  storageClass: "gp3"
+  accessMode: ReadWriteMany
+  size: 100Gi
+  annotations: {}
+
+env:
+  - name: ENV
+    value: "production"
+  - name: LOG_LEVEL
+    value: "INFO"
+  - name: WORKERS
+    value: "4"
+  - name: MODEL_PATH
+    value: "/app/models"
+  - name: CACHE_PATH
+    value: "/app/cache"
+
+secrets:
+  create: true
+  databaseUrl: ""
+  redisUrl: ""
+  secretKey: ""
+  mlEncryptionKey: ""
+
+configMaps:
+  mlConfig: |
+    service:
+      name: ml-service
+      version: 1.0.0
+    models:
+      ensemble:
+        models:
+          - type: random_forest
+            weight: 0.3
+          - type: xgboost
+            weight: 0.3
+          - type: lightgbm
+            weight: 0.2
+          - type: neural_network
+            weight: 0.2
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - goldensignals-ml
+        topologyKey: kubernetes.io/hostname
+
+# PostgreSQL subchart configuration
+postgresql:
+  enabled: true
+  auth:
+    username: goldensignals
+    password: changeme
+    database: goldensignals
+  primary:
+    persistence:
+      enabled: true
+      size: 500Gi
+      storageClass: gp3
+  metrics:
+    enabled: true
+
+# Redis subchart configuration
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: changeme
+  master:
+    persistence:
+      enabled: true
+      size: 50Gi
+      storageClass: gp3
+  metrics:
+    enabled: true
+
+# Prometheus subchart configuration
+prometheus:
+  enabled: true
+  prometheus:
+    prometheusSpec:
+      retention: 30d
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 100Gi
+
+# Grafana subchart configuration
+grafana:
+  enabled: true
+  adminPassword: changeme
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClassName: gp3
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server
+        access: proxy
+        isDefault: true 

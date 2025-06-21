@@ -1,3 +1,63 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    // Live Server Extension Settings
+    "liveServer.settings.port": 5500,
+    "liveServer.settings.root": "/frontend",
+    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.donotShowInfoMsg": true,
+    // Browser Preview Extension Settings
+    "browser-preview.startUrl": "http://localhost:3000",
+    "browser-preview.verbose": false,
+    // Auto Save for instant updates
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    // Format on save for consistent code
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    // TypeScript settings
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    // Terminal settings for development
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.env.osx": {
+        "NODE_ENV": "development"
+    },
+    // Recommended extensions for live preview
+    "recommendations": [
+        "ritwickdey.liveserver",
+        "auchenberg.vscode-browser-preview",
+        "msjsdiag.debugger-for-chrome",
+        "firefox-devtools.vscode-firefox-debug",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+    ],
+    // Custom tasks for development
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Start Live Preview",
+                "type": "shell",
+                "command": "./start-live-preview.sh",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                },
+                "presentation": {
+                    "reveal": "always",
+                    "panel": "new"
+                }
+            },
+            {
+                "label": "Start Frontend Dev",
+                "type": "npm",
+                "script": "dev",
+                "path": "frontend/",
+                "group": "build",
+                "problemMatcher": []
+            }
+        ]
+    }
 }

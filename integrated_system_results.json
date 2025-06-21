@@ -1,0 +1,73 @@
+{
+  "scan_timestamp": "2025-06-11T00:00:54.529342",
+  "symbols_scanned": [
+    "TSLA",
+    "AAPL",
+    "NVDA",
+    "SPY",
+    "AMD",
+    "GOOGL",
+    "BTC-USD",
+    "ETH-USD"
+  ],
+  "signals_found": {
+    "options": 1,
+    "arbitrage": 10,
+    "combined": 2
+  },
+  "tsla_example": {
+    "spatial_arbitrage": {
+      "symbol": "TSLA",
+      "type": "Cross-Exchange",
+      "NYSE": "$295.00",
+      "NASDAQ": "$295.50",
+      "spread": "0.17%",
+      "action": "Buy NYSE, Sell NASDAQ",
+      "profit_per_100_shares": "$50"
+    },
+    "statistical_arbitrage": {
+      "pair": "TSLA/RIVN",
+      "z_score": 2.5,
+      "action": "Short TSLA, Long RIVN",
+      "expected_reversion": "2-5 days",
+      "target_profit": "5-8%"
+    },
+    "risk_arbitrage": {
+      "event": "Robotaxi Launch June 12",
+      "current_IV": "45%",
+      "historical_IV": "35%",
+      "strategy": "Sell volatility pre-event",
+      "protection": "Buy OTM calls for upside"
+    }
+  },
+  "combined_strategy": {
+    "symbol": "TSLA",
+    "total_capital": 25000,
+    "allocation": {
+      "options_trade": 10000,
+      "spatial_arb": 10000,
+      "vol_arb": 5000
+    },
+    "execution": [
+      "1. Execute spatial arbitrage for immediate $500 profit",
+      "2. Use profit to fund additional options contracts",
+      "3. Buy TSLA $300 calls for robotaxi event",
+      "4. Sell volatility to reduce cost basis",
+      "5. Net position: Long TSLA with reduced cost"
+    ],
+    "expected_return": {
+      "best_case": "25% ($6,250)",
+      "base_case": "12% ($3,000)",
+      "worst_case": "-8% (-$2,000)"
+    }
+  },
+  "execution_timeline": {
+    "9:30 AM": "Market open - Check for spatial arbitrage",
+    "9:35 AM": "Execute arbitrage trades if spread > 0.1%",
+    "10:00 AM": "Enter options positions after morning volatility",
+    "10:30 AM": "Set all stop losses and profit targets",
+    "2:00 PM": "Check for additional arbitrage opportunities",
+    "3:30 PM": "Final adjustments before close",
+    "3:55 PM": "Exit any intraday arbitrage positions"
+  }
+}

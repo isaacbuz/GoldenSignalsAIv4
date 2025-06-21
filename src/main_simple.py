@@ -42,6 +42,24 @@ except Exception as e:
     print(f"⚠️ Could not import MarketDataService: {e}")
     MarketDataService = None
 
+# Import the hybrid signals router
+try:
+    from api.v1.hybrid_signals import router as hybrid_router
+    hybrid_available = True
+except Exception as e:
+    print(f"⚠️ Could not import hybrid router: {e}")
+    hybrid_router = None
+    hybrid_available = False
+
+# Import the new signals router
+from api.v1.signals import router as signals_router_v1
+from api.v1.analytics import router as analytics_router_v1
+from api.v1.agents import router as agents_router_v1
+from api.v1.backtesting import router as backtesting_router_v1
+from api.v1.strategies import router as strategies_router_v1
+from api.v1.portfolio import router as portfolio_router_v1
+from api.v1.integrated_signals import router as integrated_signals_router
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -53,7 +71,7 @@ connected_websockets: set = set()
 # Create FastAPI application
 app = FastAPI(
     title="GoldenSignalsAI V3",
-    description="Next-Generation AI Trading Platform",
+    description="Next-Generation AI Trading Platform with Hybrid Sentiment System",
     version="3.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -67,6 +85,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include the hybrid router if available
+if hybrid_router:
+    app.include_router(hybrid_router)
+    logger.info("✅ Hybrid sentiment system router included")
+
+# API Routes
+app.include_router(signals_router_v1)
+app.include_router(analytics_router_v1)
+app.include_router(agents_router_v1)
+app.include_router(backtesting_router_v1)
+app.include_router(strategies_router_v1)
+app.include_router(portfolio_router_v1)
+app.include_router(integrated_signals_router)
 
 @app.on_event("startup")
 async def startup_event():
@@ -137,6 +169,9 @@ async def get_signal(symbol: str):
         )
     
     try:
+        # Check market hours first
+        market_hours = market_data_service.check_market_hours()
+        
         # Generate signal
         signal = market_data_service.generate_signal(symbol.upper())
         
@@ -146,7 +181,12 @@ async def get_signal(symbol: str):
                 "signal": "HOLD",
                 "confidence": 0.5,
                 "message": "Insufficient data for signal generation",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
+                "market_status": {
+                    "is_open": market_hours.is_open,
+                    "reason": market_hours.reason,
+                    "next_open": market_hours.next_open.isoformat() if market_hours.next_open else None
+                }
             }
         
         return {
@@ -157,7 +197,13 @@ async def get_signal(symbol: str):
             "stop_loss": signal.stop_loss,
             "risk_score": signal.risk_score,
             "indicators": signal.indicators,
-            "timestamp": signal.timestamp
+            "timestamp": signal.timestamp,
+            "is_after_hours": signal.is_after_hours,
+            "market_status": {
+                "is_open": market_hours.is_open,
+                "reason": market_hours.reason,
+                "next_open": market_hours.next_open.isoformat() if market_hours.next_open else None
+            }
         }
         
     except Exception as e:
@@ -177,16 +223,40 @@ async def get_market_data(symbol: str):
         )
     
     try:
-        # Get market tick
-        tick = market_data_service.fetch_real_time_data(symbol.upper())
+        # Get market tick with error handling
+        tick, error = market_data_service.fetch_real_time_data(symbol.upper())
         
         if not tick:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"No data available for symbol {symbol}"
-            )
+            # Check if we have error information
+            if error:
+                # Return appropriate status based on error type
+                # Import the enum from the module
+                from services.market_data_service import DataUnavailableReason
+                
+                if error.reason == DataUnavailableReason.INVALID_SYMBOL:
+                    status_code = status.HTTP_404_NOT_FOUND
+                elif error.reason == DataUnavailableReason.API_LIMIT:
+                    status_code = status.HTTP_429_TOO_MANY_REQUESTS
+                else:
+                    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+                
+                raise HTTPException(
+                    status_code=status_code,
+                    detail={
+                        "message": error.message,
+                        "reason": error.reason.value,
+                        "is_recoverable": error.is_recoverable,
+                        "suggested_action": error.suggested_action,
+                        "timestamp": error.timestamp
+                    }
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"No data available for symbol {symbol}"
+                )
         
-        return {
+        response_data = {
             "symbol": tick.symbol,
             "price": tick.price,
             "volume": tick.volume,
@@ -197,6 +267,15 @@ async def get_market_data(symbol: str):
             "change_percent": tick.change_percent,
             "timestamp": tick.timestamp
         }
+        
+        # Add error warning if data is from cache
+        if error:
+            response_data["data_source"] = "cache"
+            response_data["warning"] = error.message
+        else:
+            response_data["data_source"] = "live"
+        
+        return response_data
         
     except HTTPException:
         raise
@@ -248,7 +327,7 @@ async def get_historical_data(symbol: str, period: str = "1d", interval: str = "
     
     try:
         # Get current market data for base price
-        current_data = market_data_service.fetch_real_time_data(symbol.upper())
+        current_data, _ = market_data_service.fetch_real_time_data(symbol.upper())
         base_price = current_data.price if current_data else 150.0
         
         # Generate mock historical data

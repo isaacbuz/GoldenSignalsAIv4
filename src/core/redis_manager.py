@@ -392,6 +392,35 @@ class RedisManager:
         redis_key = self._make_key("temp_data", f"flag:{key}")
         await self.redis_client.delete(redis_key)
     
+    # Subscription Management
+    async def get_subscribed_symbols(self) -> List[str]:
+        """Get list of subscribed symbols"""
+        try:
+            # Get all WebSocket client keys
+            ws_pattern = self._make_key("websocket_state", "*:clients")
+            ws_keys = await self.redis_client.keys(ws_pattern)
+            
+            # Extract unique symbols from keys
+            symbols = set()
+            for key in ws_keys:
+                key_str = key.decode('utf-8')
+                # Extract symbol from key pattern "ws:SYMBOL:clients"
+                parts = key_str.split(':')
+                if len(parts) >= 3:
+                    symbol = parts[1]
+                    symbols.add(symbol)
+            
+            # If no subscriptions, return default watchlist
+            if not symbols:
+                return ["AAPL", "TSLA", "GOOGL", "AMZN", "MSFT", "NVDA", "SPY", "QQQ"]
+            
+            return list(symbols)
+            
+        except Exception as e:
+            logger.error(f"Failed to get subscribed symbols: {str(e)}")
+            # Return default watchlist on error
+            return ["AAPL", "TSLA", "GOOGL", "AMZN", "MSFT", "NVDA", "SPY", "QQQ"]
+    
     # Cleanup and Maintenance
     async def cleanup_expired_data(self) -> Dict[str, int]:
         """Clean up expired data and return statistics"""

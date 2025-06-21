@@ -26,9 +26,13 @@ import {
   Avatar,
   useTheme,
   alpha,
+  Popover,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import {
   Notifications,
+  NotificationsActive,
   Close,
   TrendingUp,
   TrendingDown,
@@ -45,11 +49,7 @@ import {
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications, Notification } from '../../store';
-
-interface NotificationCenterProps {
-  open: boolean;
-  onClose: () => void;
-}
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,11 +72,21 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export default function NotificationCenter({ open, onClose }: NotificationCenterProps) {
+export default function NotificationCenter() {
   const theme = useTheme();
   const { notifications, removeNotification } = useNotifications();
   const [tabValue, setTabValue] = useState(0);
   const [filter, setFilter] = useState<'all' | 'unread' | 'signals' | 'system'>('all');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [notificationSettings, setNotificationSettings] = useState({
+    signals: true,
+    alerts: true,
+    trades: true,
+    news: true,
+    sound: true,
+    desktop: false,
+  });
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -130,8 +140,8 @@ export default function NotificationCenter({ open, onClose }: NotificationCenter
         filtered = notifications.filter(n => n.title.toLowerCase().includes('signal'));
         break;
       case 'system':
-        filtered = notifications.filter(n => 
-          n.title.toLowerCase().includes('system') || 
+        filtered = notifications.filter(n =>
+          n.title.toLowerCase().includes('system') ||
           n.title.toLowerCase().includes('connection') ||
           n.title.toLowerCase().includes('error')
         );
@@ -145,7 +155,7 @@ export default function NotificationCenter({ open, onClose }: NotificationCenter
 
   const groupNotificationsByDate = (notifications: Notification[]) => {
     const groups: Record<string, Notification[]> = {};
-    
+
     notifications.forEach(notification => {
       const date = new Date(notification.timestamp);
       const today = new Date();
@@ -181,257 +191,303 @@ export default function NotificationCenter({ open, onClose }: NotificationCenter
     });
   };
 
-  const filteredNotifications = filterNotifications(notifications);
-  const groupedNotifications = groupNotificationsByDate(filteredNotifications);
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setShowSettings(false);
+  };
+
+  const handleMarkAsRead = (id: string) => {
+    // Implementation would mark a specific notification as read
+    console.log(`Marking notification ${id} as read`);
+  };
+
+  const handleMarkAllAsRead = () => {
+    // Implementation would mark all notifications as read
+    console.log('Mark all as read');
+  };
+
+  const handleDelete = (id: string) => {
+    removeNotification(id);
+  };
+
+  const filteredNotifications = filterNotifications(notifications);
+  const groupedNotifications = groupNotificationsByDate(filteredNotifications);
+
   return (
-    <Drawer
-      anchor="right"
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: {
-          width: 400,
-          maxWidth: '90vw',
-        },
-      }}
-    >
-      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        {/* Header */}
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" component="div">
-              Notifications
-              {unreadCount > 0 && (
-                <Badge badgeContent={unreadCount} color="error" sx={{ ml: 1 }}>
-                  <Box />
-                </Badge>
-              )}
-            </Typography>
-            <IconButton onClick={onClose} size="small">
-              <Close />
-            </IconButton>
-          </Box>
+    <>
+      <IconButton
+        onClick={handleClick}
+        sx={{
+          animation: unreadCount > 0 ? 'pulse 2s infinite' : 'none',
+          '@keyframes pulse': {
+            '0%': { transform: 'scale(1)' },
+            '50%': { transform: 'scale(1.1)' },
+            '100%': { transform: 'scale(1)' },
+          },
+        }}
+      >
+        <Badge badgeContent={unreadCount} color="error">
+          {unreadCount > 0 ? (
+            <NotificationsActive />
+          ) : (
+            <Notifications />
+          )}
+        </Badge>
+      </IconButton>
 
-          {/* Action Buttons */}
-          <Stack direction="row" spacing={1}>
-            <Button
-              size="small"
-              startIcon={<MarkEmailRead />}
-              onClick={handleMarkAllRead}
-              disabled={unreadCount === 0}
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        PaperProps={{
+          sx: {
+            width: 420,
+            maxHeight: 600,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
+      >
+        <AnimatePresence mode="wait">
+          {showSettings ? (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
             >
-              Mark All Read
-            </Button>
-            <Button
-              size="small"
-              startIcon={<Delete />}
-              onClick={handleClearAll}
-              disabled={notifications.length === 0}
-              color="error"
-            >
-              Clear All
-            </Button>
-          </Stack>
-        </Box>
+              <Box sx={{ p: 2 }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+                  <Typography variant="h6">Notification Settings</Typography>
+                  <IconButton size="small" onClick={() => setShowSettings(false)}>
+                    <Close />
+                  </IconButton>
+                </Stack>
 
-        {/* Filter Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            variant="scrollable"
-            scrollButtons="auto"
-          >
-            <Tab label="All" />
-            <Tab label={`Unread (${unreadCount})`} />
-            <Tab label="Signals" />
-            <Tab label="System" />
-          </Tabs>
-        </Box>
-
-        {/* Notifications List */}
-        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-          <TabPanel value={tabValue} index={0}>
-            {Object.keys(groupedNotifications).length === 0 ? (
-              <Box sx={{ p: 3, textAlign: 'center' }}>
-                <Notifications sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
-                  No notifications
-                </Typography>
-              </Box>
-            ) : (
-              Object.entries(groupedNotifications).map(([date, dateNotifications]) => (
-                <Box key={date}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      p: 2,
-                      pb: 1,
-                      color: 'text.secondary',
-                      fontWeight: 600,
-                      fontSize: '0.75rem',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {date}
+                <Stack spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                    Notification Types
                   </Typography>
-                  <List disablePadding>
-                    {dateNotifications.map((notification) => (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.signals}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, signals: e.target.checked }))}
+                      />
+                    }
+                    label="Trading Signals"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.alerts}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, alerts: e.target.checked }))}
+                      />
+                    }
+                    label="Risk Alerts"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.trades}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, trades: e.target.checked }))}
+                      />
+                    }
+                    label="Trade Executions"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.news}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, news: e.target.checked }))}
+                      />
+                    }
+                    label="Market News"
+                  />
+
+                  <Divider sx={{ my: 2 }} />
+
+                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                    Delivery Methods
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.sound}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, sound: e.target.checked }))}
+                      />
+                    }
+                    label="Sound Notifications"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={notificationSettings.desktop}
+                        onChange={(e) => setNotificationSettings(prev => ({ ...prev, desktop: e.target.checked }))}
+                      />
+                    }
+                    label="Desktop Notifications"
+                  />
+                </Stack>
+              </Box>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="notifications"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+            >
+              <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  <Typography variant="h6">Notifications</Typography>
+                  <Stack direction="row" spacing={1}>
+                    <IconButton size="small" onClick={() => setShowSettings(true)}>
+                      <Settings fontSize="small" />
+                    </IconButton>
+                    {unreadCount > 0 && (
+                      <Button
+                        size="small"
+                        startIcon={<MarkEmailRead />}
+                        onClick={handleMarkAllAsRead}
+                      >
+                        Mark all read
+                      </Button>
+                    )}
+                  </Stack>
+                </Stack>
+              </Box>
+
+              <Tabs
+                value={tabValue}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
+              >
+                <Tab label={`All (${notifications.length})`} />
+                <Tab label={`Unread (${unreadCount})`} />
+                <Tab label="Signals" />
+                <Tab label="System" />
+              </Tabs>
+
+              <List sx={{ flexGrow: 1, overflow: 'auto', p: 0 }}>
+                {filteredNotifications.length === 0 ? (
+                  <Box sx={{ p: 4, textAlign: 'center' }}>
+                    <Typography variant="body2" color="text.secondary">
+                      No notifications
+                    </Typography>
+                  </Box>
+                ) : (
+                  filteredNotifications.map((notification, index) => (
+                    <motion.div
+                      key={notification.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
                       <ListItem
-                        key={notification.id}
                         sx={{
-                          borderLeft: 4,
-                          borderLeftColor: getNotificationColor(notification.type),
-                          bgcolor: notification.read ? 'transparent' : alpha(getNotificationColor(notification.type), 0.05),
-                          '&:hover': {
-                            bgcolor: alpha(theme.palette.action.hover, 0.5),
-                          },
+                          backgroundColor: notification.read ? 'transparent' : 'action.hover',
+                          '&:hover': { backgroundColor: 'action.hover' },
                         }}
                       >
-                        <ListItemIcon>
-                          <Avatar
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              bgcolor: alpha(getNotificationColor(notification.type), 0.1),
-                              color: getNotificationColor(notification.type),
-                            }}
-                          >
-                            {getCategoryIcon(notification.title)}
-                          </Avatar>
-                        </ListItemIcon>
+                        <ListItemIcon>{getNotificationIcon(notification.type)}</ListItemIcon>
                         <ListItemText
                           primary={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  fontWeight: notification.read ? 400 : 600,
-                                  flexGrow: 1,
-                                }}
-                              >
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                              <Typography variant="subtitle2">
                                 {notification.title}
                               </Typography>
-                              {!notification.read && (
-                                <Box
-                                  sx={{
-                                    width: 8,
-                                    height: 8,
-                                    borderRadius: '50%',
-                                    bgcolor: getNotificationColor(notification.type),
-                                  }}
-                                />
-                              )}
-                            </Box>
+                              <Chip
+                                label={notification.priority || 'normal'}
+                                size="small"
+                                color={getNotificationColor(notification.type) as any}
+                                sx={{ height: 20, fontSize: '0.7rem' }}
+                              />
+                            </Stack>
                           }
                           secondary={
-                            <Box>
-                              <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                            <>
+                              <Typography variant="body2" color="text.secondary">
                                 {notification.message}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
                                 {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
                               </Typography>
-                            </Box>
+                            </>
                           }
                         />
                         <ListItemSecondaryAction>
-                          <Stack direction="column" spacing={1} alignItems="flex-end">
+                          <Stack direction="row" spacing={0.5}>
+                            {!notification.read && (
+                              <IconButton
+                                size="small"
+                                onClick={() => handleMarkAsRead(notification.id)}
+                              >
+                                <CheckCircle fontSize="small" />
+                              </IconButton>
+                            )}
                             <IconButton
                               size="small"
-                              onClick={() => removeNotification(notification.id)}
+                              onClick={() => handleDelete(notification.id)}
                             >
-                              <Close fontSize="small" />
+                              <Delete fontSize="small" />
                             </IconButton>
-                            {notification.action && (
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={notification.action.callback}
-                                sx={{ fontSize: '0.75rem' }}
-                              >
-                                {notification.action.label}
-                              </Button>
-                            )}
                           </Stack>
                         </ListItemSecondaryAction>
                       </ListItem>
-                    ))}
-                  </List>
-                  <Divider />
+                      {notification.action && (
+                        <Box sx={{ px: 2, pb: 1 }}>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={notification.action.callback}
+                            fullWidth
+                          >
+                            {notification.action.label || 'View Details'}
+                          </Button>
+                        </Box>
+                      )}
+                      {index < filteredNotifications.length - 1 && <Divider />}
+                    </motion.div>
+                  ))
+                )}
+              </List>
+
+              {notifications.length > 0 && (
+                <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+                  <Button
+                    fullWidth
+                    color="error"
+                    startIcon={<Delete />}
+                    onClick={handleClearAll}
+                  >
+                    Clear All Notifications
+                  </Button>
                 </Box>
-              ))
-            )}
-          </TabPanel>
-
-          <TabPanel value={tabValue} index={1}>
-            {filterNotifications(notifications.filter(n => !n.read)).length === 0 ? (
-              <Box sx={{ p: 3, textAlign: 'center' }}>
-                <CheckCircle sx={{ fontSize: 48, color: 'success.main', mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
-                  All caught up!
-                </Typography>
-              </Box>
-            ) : (
-              <List>
-                {filterNotifications(notifications.filter(n => !n.read)).map((notification) => (
-                  <ListItem key={notification.id}>
-                    {/* Similar structure as above */}
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </TabPanel>
-
-          <TabPanel value={tabValue} index={2}>
-            {filterNotifications(notifications.filter(n => n.title.toLowerCase().includes('signal'))).length === 0 ? (
-              <Box sx={{ p: 3, textAlign: 'center' }}>
-                <TrendingUp sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
-                  No signal notifications
-                </Typography>
-              </Box>
-            ) : (
-              <List>
-                {filterNotifications(notifications.filter(n => n.title.toLowerCase().includes('signal'))).map((notification) => (
-                  <ListItem key={notification.id}>
-                    {/* Similar structure as above */}
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </TabPanel>
-
-          <TabPanel value={tabValue} index={3}>
-            {filterNotifications(notifications.filter(n => 
-              n.title.toLowerCase().includes('system') || 
-              n.title.toLowerCase().includes('connection') ||
-              n.title.toLowerCase().includes('error')
-            )).length === 0 ? (
-              <Box sx={{ p: 3, textAlign: 'center' }}>
-                <Settings sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
-                  No system notifications
-                </Typography>
-              </Box>
-            ) : (
-              <List>
-                {filterNotifications(notifications.filter(n => 
-                  n.title.toLowerCase().includes('system') || 
-                  n.title.toLowerCase().includes('connection') ||
-                  n.title.toLowerCase().includes('error')
-                )).map((notification) => (
-                  <ListItem key={notification.id}>
-                    {/* Similar structure as above */}
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </TabPanel>
-        </Box>
-      </Box>
-    </Drawer>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Popover>
+    </>
   );
 } 
