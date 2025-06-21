@@ -39,6 +39,8 @@
 - **Python 3.8+** with pip
 - **Node.js 16+** with npm
 - **Git** for version control
+- **PostgreSQL 12+** (optional, for persistence)
+- **Redis 6+** (optional, for caching)
 
 ### 🛠️ Installation
 
@@ -48,23 +50,38 @@
    cd GoldenSignalsAI_V2
    ```
 
-2. **Automated Setup** (Recommended)
+2. **Start Everything** (Recommended)
    ```bash
-   ./dev-utils.sh setup
-   ./dev-utils.sh start
+   ./start.sh
    ```
+   This single command will:
+   - Check all prerequisites
+   - Create virtual environment if needed
+   - Install all dependencies
+   - Start databases (if available)
+   - Launch backend API
+   - Launch frontend UI
 
-3. **Manual Setup** (Alternative)
+3. **Alternative Commands**
    ```bash
-   # Backend setup
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   cd src && python main_simple.py &
+   # Check service status
+   ./start.sh status
    
-   # Frontend setup (in new terminal)
-   cd frontend
-   npm install
-   npx vite --port 3000
+   # Start only backend
+   ./start.sh start --services backend
+   
+   # Start only frontend
+   ./start.sh start --services frontend
+   
+   # View logs
+   ./start.sh logs backend
+   ./start.sh logs frontend
+   
+   # Stop all services
+   ./start.sh stop
+   
+   # Get help
+   ./start.sh help
    ```
 
 4. **Access the application**
@@ -74,38 +91,40 @@
 
 ## 🔧 Development Tools
 
-### **Dev Utils Script**
-We've included a comprehensive development utility script for easy project management:
+### **Master Startup Script**
+All services are now managed through a single master script:
 
 ```bash
-# Setup everything
-./dev-utils.sh setup
-
 # Start all services
-./dev-utils.sh start
+./start.sh
 
-# Check service status
-./dev-utils.sh status
+# Start with options
+./start.sh start --mode dev        # Development mode (default)
+./start.sh start --mode docker     # Docker mode
+./start.sh start --detached        # Run in background
 
-# View logs
-./dev-utils.sh logs backend
-./dev-utils.sh logs frontend
+# Service management
+./start.sh stop                    # Stop all services
+./start.sh restart                 # Restart all services
+./start.sh status                  # Check service status
 
-# Test API endpoints
-./dev-utils.sh test
+# Logs and debugging
+./start.sh logs backend            # View backend logs
+./start.sh logs frontend           # View frontend logs
 
-# Clean environment
-./dev-utils.sh clean
-
-# Stop all services
-./dev-utils.sh stop
+# Maintenance
+./start.sh install                 # Install/update dependencies
+./start.sh help                    # Show all options
 ```
 
-### **Status Monitoring**
-Use the comprehensive status checker:
-```bash
-./status-check.sh
-```
+### **Legacy Scripts (Removed)**
+The following scripts have been consolidated into `start.sh`:
+- All `start_*.sh` scripts
+- All `run_*.sh` scripts
+- `restart-frontend.sh`
+- `start-ui.sh`
+
+For legacy compatibility, `dev-utils.sh` and `status-check.sh` remain available.
 
 ## 📁 Project Structure
 

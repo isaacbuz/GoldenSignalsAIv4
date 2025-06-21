@@ -1,0 +1,56 @@
+{
+  "tests_passed": 8,
+  "tests_failed": 1,
+  "api_tests": {
+    "Backend Health": {
+      "status": "PASS",
+      "latency_ms": 5.01,
+      "response_size": 67
+    },
+    "Signals List": {
+      "status": "PASS",
+      "latency_ms": 1063.34,
+      "response_size": 925
+    },
+    "Market Data": {
+      "status": "PASS",
+      "latency_ms": 165.9,
+      "response_size": 248
+    },
+    "Historical Data": {
+      "status": "PASS",
+      "latency_ms": 63.58,
+      "response_size": 7050
+    },
+    "Signal Insights": {
+      "status": "PASS",
+      "latency_ms": 31.03,
+      "response_size": 205
+    },
+    "Market Opportunities": {
+      "status": "PASS",
+      "latency_ms": 0.48,
+      "response_size": 253
+    },
+    "Options Signals": {
+      "status": "PASS",
+      "latency_ms": 730.65,
+      "response_size": 2
+    }
+  },
+  "data_accuracy": {
+    "GOOGL": {
+      "api_price": 169.26,
+      "yf_price": 169.25999450683594,
+      "difference_pct": 0.0,
+      "accurate": true
+    }
+  },
+  "signal_validation": [],
+  "performance_metrics": {
+    "avg_latency_ms": 1671.28,
+    "max_latency_ms": 1788.86,
+    "min_latency_ms": 614.77,
+    "p95_latency_ms": 1788.8
+  }
+}

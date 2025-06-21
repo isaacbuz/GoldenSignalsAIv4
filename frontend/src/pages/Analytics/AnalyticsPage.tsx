@@ -30,6 +30,7 @@ import {
   Alert,
   LinearProgress,
   Tooltip,
+  Divider,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -49,6 +50,11 @@ import { LineChart, Line, AreaChart, Area, BarChart as RechartsBarChart, Bar, Pi
 import { apiClient } from '../../services/api';
 import { useAppStore } from '../../store';
 import { formatPrice, formatPercentage } from '../../services/api';
+import { AIBrainDashboard } from '../../components/AI/AIBrainDashboard';
+import QuickStats from '../../components/Signals/QuickStats';
+import MarketHeatMap from '../../components/Market/MarketHeatMap';
+import ExplodedHeatMap from '../../components/Market/ExplodedHeatMap';
+import { useNavigate } from 'react-router-dom';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -109,16 +115,33 @@ const sectorAllocation = [
   { name: 'Other', value: 5.9, color: '#607d8b' },
 ];
 
+// Mock AI metrics for demonstration (replace with real data as needed)
+const aiMetrics = {
+  activeAgents: 19,
+  signalsProcessing: 47,
+  patternsDetected: 234,
+  confidenceThreshold: 85,
+  winRate: 87,
+};
+
 export default function AnalyticsPage() {
   const [tabValue, setTabValue] = useState(0);
   const [timeRange, setTimeRange] = useState('6M');
   const [selectedMetric, setSelectedMetric] = useState('returns');
   const { agentPerformance } = useAppStore();
+  const navigate = useNavigate();
 
   // Fetch analytics data
   const { data: analyticsData, isLoading, error, refetch } = useQuery({
     queryKey: ['analytics', timeRange],
     queryFn: () => apiClient.getAnalytics({ timeRange }),
+    refetchInterval: 30000,
+  });
+
+  // Fetch signals data for QuickStats
+  const { data: signals = [] } = useQuery({
+    queryKey: ['signals'],
+    queryFn: () => apiClient.getPreciseOptionsSignals(),
     refetchInterval: 30000,
   });
 
@@ -180,6 +203,17 @@ export default function AnalyticsPage() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      {/* AI Brain Status - moved from Dashboard */}
+      <Box sx={{ mb: 4 }}>
+        <AIBrainDashboard
+          activeAgents={aiMetrics.activeAgents}
+          signalsProcessing={aiMetrics.signalsProcessing}
+          patternsDetected={aiMetrics.patternsDetected}
+          confidenceThreshold={aiMetrics.confidenceThreshold}
+          winRate={aiMetrics.winRate}
+        />
+      </Box>
+
       {/* Header */}
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box>
@@ -224,45 +258,13 @@ export default function AnalyticsPage() {
 
       {isLoading && <LinearProgress sx={{ mb: 3 }} />}
 
-      {/* Key Metrics Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Total Return"
-            value="24.8%"
-            change={5.2}
-            icon={<TrendingUp />}
-            color="success"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Sharpe Ratio"
-            value="2.14"
-            change={8.1}
-            icon={<Assessment />}
-            color="info"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Active Signals"
-            value="47"
-            change={-3.2}
-            icon={<ShowChart />}
-            color="warning"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Win Rate"
-            value="72.5%"
-            change={2.8}
-            icon={<PieChart />}
-            color="primary"
-          />
-        </Grid>
-      </Grid>
+      {/* Signal Statistics - moved from SignalsDashboard */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+          Signal Statistics
+        </Typography>
+        <QuickStats signals={signals} />
+      </Box>
 
       {/* Tabs */}
       <Paper sx={{ mb: 3 }}>
@@ -277,6 +279,7 @@ export default function AnalyticsPage() {
           <Tab label="Risk Analysis" icon={<Assessment />} />
           <Tab label="Agent Performance" icon={<AnalyticsIcon />} />
           <Tab label="Portfolio Analysis" icon={<PieChart />} />
+          <Tab label="Market Overview" icon={<BarChart />} />
         </Tabs>
 
         {/* Performance Tab */}
@@ -391,20 +394,20 @@ export default function AnalyticsPage() {
                                 color: metric.value > metric.benchmark ? 'success.main' : 'text.primary'
                               }}
                             >
-                              {typeof metric.value === 'number' && metric.value < 0 
-                                ? `${metric.value}%` 
+                              {typeof metric.value === 'number' && metric.value < 0
+                                ? `${metric.value}%`
                                 : typeof metric.value === 'number' && metric.metric.includes('Ratio')
-                                ? metric.value.toFixed(2)
-                                : `${metric.value}%`
+                                  ? metric.value.toFixed(2)
+                                  : `${metric.value}%`
                               }
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
-                            {typeof metric.benchmark === 'number' && metric.benchmark < 0 
-                              ? `${metric.benchmark}%` 
+                            {typeof metric.benchmark === 'number' && metric.benchmark < 0
+                              ? `${metric.benchmark}%`
                               : typeof metric.benchmark === 'number' && metric.metric.includes('Ratio')
-                              ? metric.benchmark.toFixed(2)
-                              : `${metric.benchmark}%`
+                                ? metric.benchmark.toFixed(2)
+                                : `${metric.benchmark}%`
                             }
                           </TableCell>
                           <TableCell align="center">
@@ -485,8 +488,8 @@ export default function AnalyticsPage() {
                       <TableCell align="right">
                         <Typography
                           sx={{
-                            color: agent.accuracy > 70 ? 'success.main' : 
-                                   agent.accuracy > 60 ? 'warning.main' : 'error.main',
+                            color: agent.accuracy > 70 ? 'success.main' :
+                              agent.accuracy > 60 ? 'warning.main' : 'error.main',
                             fontWeight: 600,
                           }}
                         >
@@ -509,13 +512,13 @@ export default function AnalyticsPage() {
                         <Chip
                           label={
                             agent.accuracy > 75 ? 'Excellent' :
-                            agent.accuracy > 70 ? 'Good' :
-                            agent.accuracy > 60 ? 'Average' : 'Poor'
+                              agent.accuracy > 70 ? 'Good' :
+                                agent.accuracy > 60 ? 'Average' : 'Poor'
                           }
                           color={
                             agent.accuracy > 75 ? 'success' :
-                            agent.accuracy > 70 ? 'info' :
-                            agent.accuracy > 60 ? 'warning' : 'error'
+                              agent.accuracy > 70 ? 'info' :
+                                agent.accuracy > 60 ? 'warning' : 'error'
                           }
                           size="small"
                         />
@@ -575,6 +578,110 @@ export default function AnalyticsPage() {
                     <Bar dataKey="count" fill="#00e676" name="Signal Count" />
                   </RechartsBarChart>
                 </ResponsiveContainer>
+              </Card>
+            </Grid>
+          </Grid>
+        </TabPanel>
+
+        {/* Market Overview Tab */}
+        <TabPanel value={tabValue} index={4}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <ExplodedHeatMap
+                height={600}
+                onSymbolClick={(symbol) => {
+                  navigate(`/signals?symbol=${symbol}`);
+                }}
+              />
+            </Grid>
+
+            {/* Additional market metrics */}
+            <Grid item xs={12} md={4}>
+              <Card sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Market Breadth
+                </Typography>
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Advance/Decline Ratio
+                    </Typography>
+                    <Typography variant="h4" color="success.main">
+                      2.3:1
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      New 52W Highs/Lows
+                    </Typography>
+                    <Typography variant="h6">
+                      142 / 38
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Card sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Market Sentiment
+                </Typography>
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      VIX (Fear Index)
+                    </Typography>
+                    <Typography variant="h4">
+                      16.42
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label="Low Volatility"
+                      color="success"
+                      sx={{ mt: 1 }}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Put/Call Ratio
+                    </Typography>
+                    <Typography variant="h6">
+                      0.82
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Card sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Top Movers
+                </Typography>
+                <Stack spacing={1}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">NVDA</Typography>
+                    <Typography variant="body2" color="success.main">+5.2%</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">LLY</Typography>
+                    <Typography variant="body2" color="success.main">+3.8%</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">BA</Typography>
+                    <Typography variant="body2" color="success.main">+3.2%</Typography>
+                  </Box>
+                  <Divider sx={{ my: 1 }} />
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">TSLA</Typography>
+                    <Typography variant="body2" color="error.main">-2.3%</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">COP</Typography>
+                    <Typography variant="body2" color="error.main">-2.1%</Typography>
+                  </Box>
+                </Stack>
               </Card>
             </Grid>
           </Grid>

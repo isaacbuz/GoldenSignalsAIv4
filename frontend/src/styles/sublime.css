@@ -1,0 +1,215 @@
+/* Sublime Text Theme - Custom Styles */
+
+/* Global Styles */
+body {
+    background-color: #272822;
+    color: #F8F8F2;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Sublime Syntax Highlighting Classes */
+.sublime-keyword {
+    color: #F92672;
+    font-weight: 500;
+}
+
+.sublime-string {
+    color: #E6DB74;
+}
+
+.sublime-function {
+    color: #66D9EF;
+}
+
+.sublime-variable {
+    color: #FD971F;
+}
+
+.sublime-comment {
+    color: #75715E;
+    font-style: italic;
+}
+
+.sublime-constant {
+    color: #AE81FF;
+}
+
+/* Card Styles */
+.sublime-card {
+    background-color: #3E3D32;
+    border: 1px solid rgba(248, 248, 242, 0.08);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.sublime-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: rgba(248, 248, 242, 0.12);
+}
+
+/* Code Block Styles */
+.sublime-code {
+    background-color: #272822;
+    color: #F8F8F2;
+    padding: 16px;
+    border-radius: 6px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: auto;
+    border: 1px solid rgba(248, 248, 242, 0.08);
+}
+
+/* Button Hover Effects */
+.sublime-button {
+    transition: all 0.2s ease;
+}
+
+.sublime-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Glow Effects */
+.sublime-glow-cyan {
+    box-shadow: 0 0 20px rgba(102, 217, 239, 0.5);
+}
+
+.sublime-glow-green {
+    box-shadow: 0 0 20px rgba(166, 226, 46, 0.5);
+}
+
+.sublime-glow-pink {
+    box-shadow: 0 0 20px rgba(249, 38, 114, 0.5);
+}
+
+/* Status Indicators */
+.sublime-status-success {
+    width: 8px;
+    height: 8px;
+    background: #A6E22E;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(166, 226, 46, 0.3);
+}
+
+.sublime-status-error {
+    width: 8px;
+    height: 8px;
+    background: #F92672;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(249, 38, 114, 0.3);
+}
+
+.sublime-status-warning {
+    width: 8px;
+    height: 8px;
+    background: #FD971F;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(253, 151, 31, 0.3);
+}
+
+/* Gradient Backgrounds */
+.sublime-gradient-cyan {
+    background: linear-gradient(135deg, #66D9EF 0%, #4FA5C7 100%);
+}
+
+.sublime-gradient-green {
+    background: linear-gradient(135deg, #A6E22E 0%, #7CB342 100%);
+}
+
+.sublime-gradient-pink {
+    background: linear-gradient(135deg, #F92672 0%, #C74E39 100%);
+}
+
+.sublime-gradient-orange {
+    background: linear-gradient(135deg, #FD971F 0%, #F57C00 100%);
+}
+
+.sublime-gradient-purple {
+    background: linear-gradient(135deg, #AE81FF 0%, #9966FF 100%);
+}
+
+/* Subtle Background Pattern */
+.sublime-pattern {
+    background-color: #272822;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(248, 248, 242, 0.02) 35px, rgba(248, 248, 242, 0.02) 70px);
+}
+
+/* Custom Scrollbar */
+.sublime-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #75715E #3E3D32;
+}
+
+.sublime-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.sublime-scrollbar::-webkit-scrollbar-track {
+    background: #3E3D32;
+    border-radius: 5px;
+}
+
+.sublime-scrollbar::-webkit-scrollbar-thumb {
+    background: #75715E;
+    border-radius: 5px;
+}
+
+.sublime-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #8F8A7A;
+}
+
+/* Focus Styles */
+.sublime-focus:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #66D9EF;
+}
+
+/* Hover Effects */
+.sublime-hover-lift {
+    transition: all 0.2s ease;
+}
+
+.sublime-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading Animation */
+@keyframes sublimePulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.sublime-pulse {
+    animation: sublimePulse 2s ease-in-out infinite;
+}
+
+/* Fade In Animation */
+@keyframes sublimeFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sublime-fade-in {
+    animation: sublimeFadeIn 0.3s ease-out;
+}

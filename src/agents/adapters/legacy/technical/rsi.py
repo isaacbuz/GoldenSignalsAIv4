@@ -6,7 +6,7 @@ from src.models.signals import Signal
 from src.utils.legacy_mapper import legacy_output_to_signal
 
 # Import the original legacy RSI agent from the old code tree
-from agents.core.technical.momentum.rsi_agent import RSIAgent as LegacyRSIAgent
+from src.agents.core.technical.momentum.rsi_agent import RSIAgent as LegacyRSIAgent
 
 
 class RSILegacyAdapter(BaseAgent):

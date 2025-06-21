@@ -1,154 +1,174 @@
 #!/bin/bash
 
-# Ensure conda environment exists and activate
-env_name="goldensignalsai"
-env_file="environment.yaml"
-if ! conda info --envs | grep -q "$env_name"; then
-  echo "Conda environment $env_name not found. Creating from $env_file..."
-  conda env create -f "$env_file"
-fi
-echo "Activating conda environment: $env_name"
-source $(conda info --base)/etc/profile.d/conda.sh
-conda activate $env_name
+# GoldenSignalsAI Complete System Startup Script
+# This script starts all components of the system
 
-LOGDIR="logs"
-mkdir -p "$LOGDIR"
+echo "🚀 Starting GoldenSignalsAI Complete System..."
 
-# Ensure backend dependencies are installed
-if [ -f pyproject.toml ]; then
-  if ! command -v poetry >/dev/null; then
-    echo "Poetry not found. Installing poetry..."
-    pip install poetry
-  fi
-  echo "Installing backend dependencies with poetry..."
-  poetry install || { echo "Poetry install failed!"; exit 1; }
-elif [ -f requirements.txt ]; then
-  echo "Installing backend dependencies with pip..."
-  pip install -r requirements.txt || { echo "pip install failed!"; exit 1; }
-fi
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Ensure .env exists
-if [ ! -f .env ] && [ -f .env.example ]; then
-  echo ".env not found. Copying from .env.example. Please update secrets if needed."
-  cp .env.example .env
-fi
-
-# Configurable backend port
-DEFAULT_BACKEND_PORT=8001
-MAX_PORT=8100
-BACKEND_PORT=$DEFAULT_BACKEND_PORT
-
-# Function to check and free port
-free_port() {
-  local port=$1
-  local pid
-  pid=$(lsof -ti tcp:$port)
-  if [ ! -z "$pid" ]; then
-    echo "Port $port is in use by PID $pid. Killing..."
-    kill -9 $pid
-    sleep 1
-  fi
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
 }
 
-# Try to find a free port for backend
-while [ $BACKEND_PORT -le $MAX_PORT ]; do
-  if lsof -i :$BACKEND_PORT -sTCP:LISTEN >/dev/null; then
-    echo "Port $BACKEND_PORT is in use. Attempting to free it."
-    free_port $BACKEND_PORT
-    if lsof -i :$BACKEND_PORT -sTCP:LISTEN >/dev/null; then
-      echo "Failed to free port $BACKEND_PORT. Trying next port."
-      BACKEND_PORT=$((BACKEND_PORT+1))
-      continue
+# Function to check if a port is in use
+port_in_use() {
+    lsof -i :$1 >/dev/null 2>&1
+}
+
+# Function to wait for a service to be ready
+wait_for_service() {
+    local url=$1
+    local name=$2
+    local max_attempts=30
+    local attempt=0
+    
+    echo "⏳ Waiting for $name to be ready..."
+    while [ $attempt -lt $max_attempts ]; do
+        if curl -s "$url" > /dev/null; then
+            echo -e "${GREEN}✅ $name is ready!${NC}"
+            return 0
+        fi
+        sleep 1
+        attempt=$((attempt + 1))
+    done
+    echo -e "${RED}❌ $name failed to start${NC}"
+    return 1
+}
+
+# Check prerequisites
+echo "📋 Checking prerequisites..."
+
+if ! command_exists python3; then
+    echo -e "${RED}❌ Python 3 is not installed${NC}"
+    exit 1
+fi
+
+if ! command_exists node; then
+    echo -e "${RED}❌ Node.js is not installed${NC}"
+    exit 1
+fi
+
+if ! command_exists redis-cli; then
+    echo -e "${RED}❌ Redis is not installed${NC}"
+    exit 1
+fi
+
+if ! command_exists psql; then
+    echo -e "${YELLOW}⚠️  PostgreSQL client is not installed (optional)${NC}"
+fi
+
+# Check if .env exists
+if [ ! -f .env ]; then
+    echo "📝 Creating .env from env.example..."
+    cp env.example .env
+    echo -e "${YELLOW}⚠️  Please edit .env and add your API keys${NC}"
+fi
+
+# Start Redis if not running
+if ! pgrep -x "redis-server" > /dev/null; then
+    echo "🔴 Starting Redis..."
+    redis-server --daemonize yes
+    sleep 2
+else
+    echo -e "${GREEN}✅ Redis is already running${NC}"
+fi
+
+# Check if PostgreSQL is running (optional)
+if command_exists pg_isready; then
+    if pg_isready -q; then
+        echo -e "${GREEN}✅ PostgreSQL is running${NC}"
+    else
+        echo -e "${YELLOW}⚠️  PostgreSQL is not running (using SQLite fallback)${NC}"
     fi
-  fi
-  break
+fi
+
+# Kill any existing processes on our ports
+echo "🧹 Cleaning up existing processes..."
+for port in 3000 8000 8001 8002 8003 8004 8005; do
+    if port_in_use $port; then
+        echo "   Killing process on port $port..."
+        lsof -ti :$port | xargs kill -9 2>/dev/null
+    fi
 done
 
-if [ $BACKEND_PORT -gt $MAX_PORT ]; then
-  echo "ERROR: Could not find a free port for backend in range $DEFAULT_BACKEND_PORT-$MAX_PORT. Exiting."
-  exit 1
-fi
+sleep 2
 
-# Kill any orphaned uvicorn/python backend processes
-echo "Killing any orphaned uvicorn/python processes..."
-pkill -f "uvicorn presentation.api.main:app" 2>/dev/null
-pkill -f uvicorn 2>/dev/null
-pkill -f python 2>/dev/null
-sleep 1
+# Create necessary directories
+mkdir -p logs data/market_cache data/rate_limit_cache
 
-# Kill any existing frontend (react-scripts) processes and free port 3000
-echo "Killing any existing frontend (react-scripts) processes..."
-pkill -f "react-scripts start" 2>/dev/null
-sleep 1
-if lsof -i :3000 -sTCP:LISTEN >/dev/null; then
-  echo "Port 3000 is in use. Attempting to free it."
-  pid=$(lsof -ti tcp:3000)
-  kill -9 $pid
-  sleep 1
-fi
+# Start Backend Services
+echo ""
+echo "🔧 Starting Backend Services..."
 
-# Check and install frontend dependencies if needed
-cd presentation/frontend
-if [ ! -d node_modules ]; then
-  echo "Installing frontend dependencies (npm install)..."
-  npm install || { echo "npm install failed!"; exit 1; }
-fi
-cd ../..
-
-# Start backend (FastAPI) and log output
-echo "Starting backend (FastAPI) on port $BACKEND_PORT..."
-conda run -n goldensignalsai uvicorn presentation.api.main:app --host 0.0.0.0 --port $BACKEND_PORT --reload > "$LOGDIR/backend.log" 2>&1 &
+# Start Simple Backend (main API)
+echo "   Starting Simple Backend (port 8000)..."
+python3 simple_backend.py > logs/simple_backend.log 2>&1 &
 BACKEND_PID=$!
-echo "Backend PID: $BACKEND_PID"
+echo "   PID: $BACKEND_PID"
 
-# Wait for backend to be ready (check port)
-for i in {1..30}; do
-  if lsof -i :$BACKEND_PORT -sTCP:LISTEN >/dev/null; then
-    echo "Backend is up on port $BACKEND_PORT!"
-    break
-  fi
-  echo "Waiting for backend to start on port $BACKEND_PORT... ($i)"
-  sleep 1
-done
+# Wait for backend to be ready
+wait_for_service "http://localhost:8000" "Simple Backend"
 
-# Start frontend (React) and log output
-cd presentation/frontend
-if [ -f node_modules/.bin/react-scripts ]; then
-  echo "Starting frontend (React) on port 3000..."
-  npm run start > "../../$LOGDIR/frontend.log" 2>&1 &
-  FRONTEND_PID=$!
-  echo "Frontend PID: $FRONTEND_PID"
-else
-  echo "node_modules not found, please run 'npm install' in presentation/frontend first."
-fi
-cd ../..
+# Optional: Start MCP Gateway (uncomment when ready)
+# echo "   Starting MCP Gateway (port 8000)..."
+# python3 mcp_servers/mcp_gateway.py > logs/mcp_gateway.log 2>&1 &
+# GATEWAY_PID=$!
+# echo "   PID: $GATEWAY_PID"
 
-# Health check for backend and frontend
+# Optional: Start individual MCP servers (uncomment when ready)
+# echo "   Starting Trading Signals MCP Server (port 8001)..."
+# python3 mcp_servers/trading_signals_server.py > logs/trading_signals.log 2>&1 &
+
+# echo "   Starting Market Data MCP Server (port 8002)..."
+# python3 mcp_servers/market_data_server.py > logs/market_data.log 2>&1 &
+
+# Start Frontend
+echo ""
+echo "🎨 Starting Frontend..."
+cd frontend
+npm run dev > ../logs/frontend.log 2>&1 &
+FRONTEND_PID=$!
+cd ..
+echo "   PID: $FRONTEND_PID"
+
+# Wait for frontend to be ready
 sleep 5
-backend_ok=0
-frontend_ok=0
-if curl -s "http://localhost:$BACKEND_PORT/docs" | grep -qi "swagger"; then
-  backend_ok=1
-fi
-if curl -s "http://localhost:3000" | grep -qi "<!DOCTYPE html>"; then
-  frontend_ok=1
-fi
+wait_for_service "http://localhost:3000" "Frontend"
 
-# Print summary
-if [ $backend_ok -eq 1 ]; then
-  echo "[OK] Backend is running on port $BACKEND_PORT."
-else
-  echo "[ERROR] Backend did not start correctly. Check $LOGDIR/backend.log."
-fi
-if [ $frontend_ok -eq 1 ]; then
-  echo "[OK] Frontend is running on port 3000."
-else
-  echo "[ERROR] Frontend did not start correctly. Check $LOGDIR/frontend.log."
-fi
+# Summary
+echo ""
+echo "========================================="
+echo -e "${GREEN}🎉 GoldenSignalsAI is running!${NC}"
+echo "========================================="
+echo ""
+echo "📊 Access Points:"
+echo "   • Frontend: http://localhost:3000"
+echo "   • Backend API: http://localhost:8000"
+echo "   • API Docs: http://localhost:8000/docs"
+echo ""
+echo "📝 Logs:"
+echo "   • Backend: logs/simple_backend.log"
+echo "   • Frontend: logs/frontend.log"
+echo ""
+echo "🛑 To stop all services, run: ./stop_all.sh"
+echo ""
+echo "💡 Tips:"
+echo "   • Check .env for API key configuration"
+echo "   • Monitor logs for any errors"
+echo "   • Use 'redis-cli' to inspect cache"
+echo ""
 
-echo "--- Process Info ---"
-echo "Backend log:   $LOGDIR/backend.log"
-echo "Frontend log:  $LOGDIR/frontend.log"
-echo "Backend running on port: $BACKEND_PORT"
-echo "To view logs: tail -f $LOGDIR/backend.log $LOGDIR/frontend.log"
-echo "To stop: kill $BACKEND_PID $FRONTEND_PID"
+# Save PIDs for stop script
+echo "BACKEND_PID=$BACKEND_PID" > .pids
+echo "FRONTEND_PID=$FRONTEND_PID" >> .pids
+
+# Keep script running and show logs
+echo "📜 Showing combined logs (Ctrl+C to exit)..."
+echo "========================================="
+tail -f logs/*.log 

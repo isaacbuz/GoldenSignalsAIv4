@@ -17,7 +17,8 @@ import os
 import json
 from functools import lru_cache
 
-from pydantic import BaseSettings, Field, validator, SecretStr
+from pydantic_settings import BaseSettings
+from pydantic import Field, validator, SecretStr
 from pydantic.env_settings import SettingsSourceCallable
 
 

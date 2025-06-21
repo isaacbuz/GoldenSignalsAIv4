@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: parseInt(process.env.VITE_PORT || '3000'),
     host: true,
     strictPort: true,
     proxy: {
@@ -58,6 +58,7 @@ export default defineConfig({
     ],
   },
   define: {
+    'process.env': process.env,
     __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   },
   test: {

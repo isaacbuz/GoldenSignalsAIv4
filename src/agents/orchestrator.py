@@ -13,6 +13,9 @@ import uuid
 import yaml
 import importlib
 from pathlib import Path
+import logging
+import json
+from abc import ABC, abstractmethod
 
 from .base import BaseAgent
 from .technical_analysis import TechnicalAnalysisAgent
@@ -20,12 +23,12 @@ from .sentiment_analysis import SentimentAnalysisAgent
 from .momentum import MomentumAgent
 from .mean_reversion import MeanReversionAgent
 from .volume_analysis import VolumeAnalysisAgent
-from ..services.signal_service import SignalService
-from ..services.market_data_service import MarketDataService
-from ..websocket.manager import WebSocketManager
-from ..models.signals import Signal, SignalType, SignalStrength
-from ..utils.explain import ExplanationEngine
-from ..utils.gatekeeper import SignalGatekeeper
+from src.services.signal_service import SignalService
+from src.services.market_data_service import MarketDataService
+from src.websocket.manager import WebSocketManager
+from src.models.signals import Signal, SignalType, SignalStrength
+from src.utils.explain import ExplanationEngine
+from src.utils.gatekeeper import SignalGatekeeper
 
 
 class AgentOrchestrator:
@@ -60,6 +63,11 @@ class AgentOrchestrator:
         self._initialized = False
         
         self.signal_gate = SignalGatekeeper(min_confidence=0.6, max_risk_score=0.8)
+    
+    @property
+    def is_running(self) -> bool:
+        """Check if orchestrator is running"""
+        return self._running
     
     async def initialize(self) -> None:
         """Initialize the agent orchestrator and all agents"""

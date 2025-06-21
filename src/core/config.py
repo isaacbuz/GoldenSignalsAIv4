@@ -7,6 +7,10 @@ from typing import Dict, List, Optional, Union
 
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class DatabaseConfig(BaseSettings):
@@ -119,6 +123,27 @@ class MonitoringConfig(BaseSettings):
 class Settings(BaseSettings):
     """Main application settings"""
     
+    PROJECT_NAME: str = "GoldenSignals AI"
+    VERSION: str = "3.0.0"
+    API_V1_STR: str = "/api/v1"
+    
+    # CORS Settings
+    BACKEND_CORS_ORIGINS: list = ["*"]
+    
+    # Security
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+    
+    # Database
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT: int = int(os.getenv("REDIS_PORT", 6379))
+    
+    # External Services
+    SENTRY_DSN: Optional[str] = os.getenv("SENTRY_DSN")
+    
+    # Rate Limiting
+    RATE_LIMIT_PER_SECOND: int = 10
+    
     # App metadata
     app_name: str = Field(default="GoldenSignalsAI V3", env="APP_NAME")
     version: str = Field(default="3.0.0", env="APP_VERSION")
@@ -147,7 +172,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        case_sensitive = False
+        case_sensitive = True
         extra = "ignore"  # Ignore extra environment variables
         
     @validator("cors_origins", pre=True)

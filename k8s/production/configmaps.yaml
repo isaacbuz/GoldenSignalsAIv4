@@ -1,0 +1,219 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-service-config
+  namespace: goldensignals
+  labels:
+    app: ml-service
+    component: config
+data:
+  ml_config.yaml: |
+    service:
+      name: ml-service
+      version: 1.0.0
+      environment: production
+    
+    models:
+      base_path: /app/models
+      cache_path: /app/cache
+      
+      ensemble:
+        models:
+          - type: random_forest
+            weight: 0.3
+            params:
+              n_estimators: 200
+              max_depth: 20
+              min_samples_split: 5
+          - type: xgboost
+            weight: 0.3
+            params:
+              n_estimators: 200
+              max_depth: 10
+              learning_rate: 0.01
+          - type: lightgbm
+            weight: 0.2
+            params:
+              num_leaves: 31
+              learning_rate: 0.05
+              n_estimators: 200
+          - type: neural_network
+            weight: 0.2
+            params:
+              hidden_layers: [128, 64, 32]
+              dropout_rate: 0.2
+              learning_rate: 0.001
+    
+    backtesting:
+      default_period: 252  # 1 year
+      walk_forward_window: 63  # 3 months
+      validation_split: 0.2
+      transaction_costs:
+        commission: 0.001
+        slippage: 0.0005
+    
+    features:
+      technical_indicators:
+        - rsi
+        - macd
+        - bollinger_bands
+        - atr
+        - obv
+        - vwap
+      
+      lookback_periods: [5, 10, 20, 50, 100, 200]
+      
+      microstructure:
+        - bid_ask_spread
+        - order_imbalance
+        - trade_intensity
+    
+    monitoring:
+      metrics_port: 9090
+      log_level: INFO
+      performance_tracking: true
+      model_drift_detection: true
+      
+  logging_config.yaml: |
+    version: 1
+    disable_existing_loggers: false
+    
+    formatters:
+      default:
+        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+      json:
+        class: pythonjsonlogger.jsonlogger.JsonFormatter
+        format: '%(asctime)s %(name)s %(levelname)s %(message)s'
+    
+    handlers:
+      console:
+        class: logging.StreamHandler
+        level: INFO
+        formatter: default
+        stream: ext://sys.stdout
+      
+      file:
+        class: logging.handlers.RotatingFileHandler
+        level: INFO
+        formatter: json
+        filename: /app/logs/ml-service.log
+        maxBytes: 104857600  # 100MB
+        backupCount: 10
+    
+    loggers:
+      ml_service:
+        level: INFO
+        handlers: [console, file]
+        propagate: false
+      
+      uvicorn:
+        level: INFO
+        handlers: [console]
+        propagate: false
+      
+      sqlalchemy:
+        level: WARNING
+        handlers: [console]
+        propagate: false
+    
+    root:
+      level: INFO
+      handlers: [console, file]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-worker-config
+  namespace: goldensignals
+  labels:
+    app: ml-worker
+    component: config
+data:
+  celery_config.py: |
+    from celery import Celery
+    from kombu import Queue
+    import os
+    
+    # Broker settings
+    broker_url = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
+    result_backend = os.getenv('CELERY_RESULT_BACKEND', 'redis://redis:6379/0')
+    
+    # Task settings
+    task_serializer = 'json'
+    result_serializer = 'json'
+    accept_content = ['json']
+    timezone = 'UTC'
+    enable_utc = True
+    
+    # Worker settings
+    worker_prefetch_multiplier = 1
+    worker_max_tasks_per_child = 1000
+    worker_disable_rate_limits = False
+    
+    # Queue configuration
+    task_routes = {
+        'ml.tasks.train_model': {'queue': 'ml_training'},
+        'ml.tasks.backtest': {'queue': 'ml_backtest'},
+        'ml.tasks.predict': {'queue': 'ml_predict'},
+        'ml.tasks.retrain': {'queue': 'ml_retrain'},
+    }
+    
+    task_queues = (
+        Queue('ml_training', routing_key='ml.training'),
+        Queue('ml_backtest', routing_key='ml.backtest'),
+        Queue('ml_predict', routing_key='ml.predict'),
+        Queue('ml_retrain', routing_key='ml.retrain'),
+    )
+    
+    # Task time limits
+    task_time_limit = 3600  # 1 hour
+    task_soft_time_limit = 3300  # 55 minutes
+    
+    # Result expiration
+    result_expires = 86400  # 24 hours
+    
+    # Beat schedule for periodic tasks
+    beat_schedule = {
+        'retrain-models': {
+            'task': 'ml.tasks.retrain_all_models',
+            'schedule': 86400.0,  # Daily
+            'options': {'queue': 'ml_retrain'}
+        },
+        'cleanup-old-predictions': {
+            'task': 'ml.tasks.cleanup_old_predictions',
+            'schedule': 3600.0,  # Hourly
+            'options': {'queue': 'ml_predict'}
+        },
+        'monitor-model-performance': {
+            'task': 'ml.tasks.monitor_model_performance',
+            'schedule': 1800.0,  # Every 30 minutes
+            'options': {'queue': 'ml_predict'}
+        },
+    }
+  
+  retrain_config.yaml: |
+    retraining:
+      schedule: "0 2 * * *"  # Daily at 2 AM
+      
+      data_requirements:
+        min_samples: 10000
+        min_days: 30
+        validation_split: 0.2
+      
+      model_selection:
+        cv_folds: 5
+        scoring_metric: sharpe_ratio
+        optimization_trials: 100
+      
+      performance_thresholds:
+        min_sharpe_ratio: 0.5
+        max_drawdown: 0.2
+        min_win_rate: 0.45
+      
+      rollback_on_failure: true
+      notify_on_completion: true
+      
+      resource_limits:
+        max_memory_gb: 8
+        max_cpu_cores: 6
+        timeout_hours: 4 

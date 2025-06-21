@@ -13,12 +13,12 @@ import numpy as np
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from ..core.config import settings
-from ..core.database import DatabaseManager
-from ..core.redis_manager import RedisManager
-from ..models.signals import Signal, SignalStrength, SignalType
-from ..models.market_data import MarketData
-from ..utils.metrics import MetricsCollector
+from src.core.config import settings
+from src.core.database import DatabaseManager
+from src.core.redis_manager import RedisManager
+from src.models.signals import Signal, SignalStrength, SignalType
+from src.models.market_data import MarketData
+from src.utils.metrics import MetricsCollector
 
 
 class AgentConfig(BaseModel):
@@ -284,6 +284,13 @@ class BaseAgent(ABC):
         self._is_running = False
         self._stop_event.set()
         logger.info(f"Agent {self.config.name} stopped")
+    
+    async def shutdown(self) -> None:
+        """Gracefully shutdown the agent"""
+        await self.stop()
+        # Save current state before shutdown
+        await self.save_state()
+        logger.info(f"Agent {self.config.name} shutdown complete")
     
     @property
     def is_running(self) -> bool:

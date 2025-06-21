@@ -6,17 +6,21 @@ Handles all database operations for agents, signals, and market data.
 
 import asyncio
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Generator
 from contextlib import asynccontextmanager
+import os
 
 import asyncpg
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import (
     String, Integer, Float, DateTime, Boolean, JSON, Text,
-    Index, ForeignKey, select, update, delete, and_, or_
+    Index, ForeignKey, select, update, delete, and_, or_, create_engine
 )
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 from loguru import logger
+from redis import Redis
 
 from .config import settings
 
@@ -198,324 +202,77 @@ class AgentStateRecord(Base):
     )
 
 
+# Change database URL to SQLite
+DATABASE_URL = "sqlite:///./goldensignals.db"
+
+# Create engine
+engine = create_engine(DATABASE_URL)
+
+# Create sessionmaker
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db() -> Generator[Session, None, None]:
+    """Get database session"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Create all tables
+Base.metadata.create_all(bind=engine)
+
 class DatabaseManager:
-    """
-    Centralized database manager for all agent data operations
-    """
+    """Database connection manager"""
     
     def __init__(self):
-        self.engine = None
-        self.async_session_factory = None
-        self._initialized = False
+        self.engine = engine
+        self.SessionLocal = SessionLocal
     
-    async def initialize(self) -> None:
-        """Initialize database connections and create tables"""
-        database_url = settings.database.url
-        
-        # Auto-fallback logic: try PostgreSQL first, then SQLite
-        if settings.database.db_type == "auto":
-            try:
-                logger.info("Attempting to connect to PostgreSQL...")
-                await self._initialize_with_url(database_url)
-                logger.info("✅ Connected to PostgreSQL database")
-                return
-            except Exception as pg_error:
-                logger.warning(f"PostgreSQL connection failed: {str(pg_error)}")
-                logger.info("Falling back to SQLite for development...")
-                database_url = f"sqlite+aiosqlite:///{settings.database.sqlite_path}"
-        
-        # Direct initialization (either explicit type or fallback)
-        try:
-            await self._initialize_with_url(database_url)
-            db_type = "SQLite" if "sqlite" in database_url else "PostgreSQL"
-            logger.info(f"✅ Database manager initialized successfully with {db_type}")
-        except Exception as e:
-            logger.error(f"❌ Failed to initialize database: {str(e)}")
-            raise
+    async def initialize(self):
+        """Initialize database connection"""
+        self.create_all()
+        return self
     
-    async def _initialize_with_url(self, database_url: str) -> None:
-        """Initialize database with a specific URL"""
-        # Configure engine based on database type
-        if "sqlite" in database_url:
-            # SQLite: no connection pooling arguments allowed
-            self.engine = create_async_engine(
-                database_url,
-                echo=settings.database.echo,
-                poolclass=None
-            )
-        else:
-            # PostgreSQL with connection pooling
-            self.engine = create_async_engine(
-                database_url,
-                pool_size=settings.database.pool_size,
-                max_overflow=settings.database.max_overflow,
-                echo=settings.database.echo,
-                pool_pre_ping=True,
-                pool_recycle=3600,
-            )
-        
-        # Create session factory
-        self.async_session_factory = async_sessionmaker(
-            self.engine,
-            class_=AsyncSession,
-            expire_on_commit=False
-        )
-        
-        # Create all tables
-        async with self.engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        self._initialized = True
+    def get_session(self) -> Session:
+        """Get a new database session"""
+        return self.SessionLocal()
     
-    @asynccontextmanager
-    async def get_session(self):
-        """Get database session with automatic cleanup"""
-        if not self._initialized:
-            raise RuntimeError("Database manager not initialized")
-        
-        async with self.async_session_factory() as session:
-            try:
-                yield session
-                await session.commit()
-            except Exception:
-                await session.rollback()
-                raise
-            finally:
-                await session.close()
+    def create_all(self):
+        """Create all database tables"""
+        Base.metadata.create_all(bind=self.engine)
     
+    def drop_all(self):
+        """Drop all database tables"""
+        Base.metadata.drop_all(bind=self.engine)
+    
+    async def close(self):
+        """Close the database connection"""
+        if hasattr(self, 'engine') and self.engine:
+            self.engine.dispose()
+
     async def health_check(self) -> bool:
-        """Check database connectivity"""
+        """Check the health of the database connection."""
+        session = self.get_session()
         try:
-            async with self.get_session() as session:
-                result = await session.execute(select(1))
-                return result.scalar() == 1
+            session.execute(select(1))
+            return True
         except Exception as e:
             logger.error(f"Database health check failed: {str(e)}")
             return False
-    
-    # Signal operations
-    async def store_signal(self, signal_data: Dict[str, Any]) -> str:
-        """Store a signal in the database"""
-        async with self.get_session() as session:
-            signal_record = SignalRecord(**signal_data)
-            session.add(signal_record)
-            await session.flush()
-            return signal_record.signal_id
-    
-    async def get_signals(
-        self, 
-        symbol: Optional[str] = None,
-        source: Optional[str] = None,
-        limit: int = 100,
-        since: Optional[datetime] = None
-    ) -> List[SignalRecord]:
-        """Retrieve signals with optional filtering"""
-        async with self.get_session() as session:
-            query = select(SignalRecord)
-            
-            conditions = []
-            if symbol:
-                conditions.append(SignalRecord.symbol == symbol)
-            if source:
-                conditions.append(SignalRecord.source == source)
-            if since:
-                conditions.append(SignalRecord.created_at >= since)
-            
-            if conditions:
-                query = query.where(and_(*conditions))
-            
-            query = query.order_by(SignalRecord.created_at.desc()).limit(limit)
-            
-            result = await session.execute(query)
-            return result.scalars().all()
-    
-    async def update_signal_performance(
-        self, 
-        signal_id: str, 
-        performance_data: Dict[str, Any]
-    ) -> bool:
-        """Update signal performance metrics"""
-        async with self.get_session() as session:
-            query = (
-                update(SignalRecord)
-                .where(SignalRecord.signal_id == signal_id)
-                .values(**performance_data)
-            )
-            result = await session.execute(query)
-            return result.rowcount > 0
-    
-    # Meta-signal operations
-    async def store_meta_signal(self, meta_signal_data: Dict[str, Any]) -> str:
-        """Store a meta-signal in the database"""
-        async with self.get_session() as session:
-            meta_signal_record = MetaSignalRecord(**meta_signal_data)
-            session.add(meta_signal_record)
-            await session.flush()
-            return meta_signal_record.meta_signal_id
-    
-    # Agent performance operations
-    async def update_agent_performance(
-        self, 
-        agent_id: str, 
-        performance_data: Dict[str, Any]
-    ) -> None:
-        """Update agent performance metrics"""
-        async with self.get_session() as session:
-            # Try to update existing record
-            query = (
-                update(AgentPerformanceRecord)
-                .where(AgentPerformanceRecord.agent_id == agent_id)
-                .values(**performance_data, last_updated=datetime.utcnow())
-            )
-            result = await session.execute(query)
-            
-            # If no record exists, create one
-            if result.rowcount == 0:
-                performance_record = AgentPerformanceRecord(
-                    agent_id=agent_id,
-                    **performance_data
-                )
-                session.add(performance_record)
-    
-    async def get_agent_performance(self, agent_id: str) -> Optional[AgentPerformanceRecord]:
-        """Get agent performance metrics"""
-        async with self.get_session() as session:
-            query = select(AgentPerformanceRecord).where(
-                AgentPerformanceRecord.agent_id == agent_id
-            )
-            result = await session.execute(query)
-            return result.scalar_one_or_none()
-    
-    # Agent state operations
-    async def save_agent_state(
-        self, 
-        agent_id: str, 
-        agent_name: str, 
-        state_data: Dict[str, Any]
-    ) -> None:
-        """Save agent internal state"""
-        async with self.get_session() as session:
-            # Try to update existing state
-            query = (
-                update(AgentStateRecord)
-                .where(AgentStateRecord.agent_id == agent_id)
-                .values(
-                    state_data=state_data,
-                    last_updated=datetime.utcnow()
-                )
-            )
-            result = await session.execute(query)
-            
-            # If no record exists, create one
-            if result.rowcount == 0:
-                state_record = AgentStateRecord(
-                    agent_id=agent_id,
-                    agent_name=agent_name,
-                    state_data=state_data
-                )
-                session.add(state_record)
-    
-    async def load_agent_state(self, agent_id: str) -> Optional[Dict[str, Any]]:
-        """Load agent internal state"""
-        async with self.get_session() as session:
-            query = select(AgentStateRecord.state_data).where(
-                AgentStateRecord.agent_id == agent_id
-            )
-            result = await session.execute(query)
-            state_data = result.scalar_one_or_none()
-            return state_data
-    
-    # Market data operations
-    async def store_market_data(self, market_data_list: List[Dict[str, Any]]) -> None:
-        """Store market data snapshots"""
-        async with self.get_session() as session:
-            records = [MarketDataRecord(**data) for data in market_data_list]
-            session.add_all(records)
-    
-    async def get_market_data(
-        self, 
-        symbol: str,
-        since: Optional[datetime] = None,
-        limit: int = 1000
-    ) -> List[MarketDataRecord]:
-        """Retrieve market data for a symbol"""
-        async with self.get_session() as session:
-            query = select(MarketDataRecord).where(MarketDataRecord.symbol == symbol)
-            
-            if since:
-                query = query.where(MarketDataRecord.timestamp >= since)
-            
-            query = query.order_by(MarketDataRecord.timestamp.desc()).limit(limit)
-            
-            result = await session.execute(query)
-            return result.scalars().all()
-    
-    # Analytics and reporting
-    async def get_signal_analytics(
-        self, 
-        symbol: Optional[str] = None,
-        days: int = 30
-    ) -> Dict[str, Any]:
-        """Get signal analytics for the past N days"""
-        since = datetime.utcnow() - timedelta(days=days)
-        
-        async with self.get_session() as session:
-            # Base query
-            query = select(SignalRecord).where(SignalRecord.created_at >= since)
-            if symbol:
-                query = query.where(SignalRecord.symbol == symbol)
-            
-            result = await session.execute(query)
-            signals = result.scalars().all()
-            
-            # Calculate analytics
-            total_signals = len(signals)
-            executed_signals = [s for s in signals if s.executed]
-            profitable_signals = [s for s in executed_signals if s.was_profitable]
-            
-            analytics = {
-                "total_signals": total_signals,
-                "executed_signals": len(executed_signals),
-                "profitable_signals": len(profitable_signals),
-                "win_rate": len(profitable_signals) / len(executed_signals) if executed_signals else 0,
-                "avg_confidence": sum(s.confidence for s in signals) / total_signals if signals else 0,
-                "avg_return": sum(s.actual_return for s in executed_signals if s.actual_return) / len(executed_signals) if executed_signals else 0,
-                "signals_by_source": {},
-                "signals_by_type": {}
-            }
-            
-            # Group by source and type
-            for signal in signals:
-                analytics["signals_by_source"][signal.source] = analytics["signals_by_source"].get(signal.source, 0) + 1
-                analytics["signals_by_type"][signal.signal_type] = analytics["signals_by_type"].get(signal.signal_type, 0) + 1
-            
-            return analytics
-    
-    async def cleanup_old_data(self, days_to_keep: int = 90) -> None:
-        """Clean up old data to prevent database bloat"""
-        cutoff_date = datetime.utcnow() - timedelta(days=days_to_keep)
-        
-        async with self.get_session() as session:
-            # Clean up old market data
-            await session.execute(
-                delete(MarketDataRecord).where(MarketDataRecord.timestamp < cutoff_date)
-            )
-            
-            # Clean up old executed signals (keep unexecuted ones)
-            await session.execute(
-                delete(SignalRecord).where(
-                    and_(
-                        SignalRecord.created_at < cutoff_date,
-                        SignalRecord.executed == True
-                    )
-                )
-            )
-            
-            logger.info(f"Cleaned up data older than {days_to_keep} days")
-    
-    async def close(self) -> None:
-        """Close database connections"""
-        if self.engine:
-            await self.engine.dispose()
-            self._initialized = False
-            logger.info("Database connections closed") 
+        finally:
+            session.close()
+
+def get_redis() -> Redis:
+    return Redis(
+        host=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        decode_responses=True
+    )
+
+def get_db() -> Generator[Redis, None, None]:
+    db = get_redis()
+    try:
+        yield db
+    finally:
+        db.close() 

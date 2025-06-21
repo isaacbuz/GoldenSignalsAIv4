@@ -6,7 +6,7 @@ from src.models.signals import Signal
 from src.utils.legacy_mapper import legacy_output_to_signal
 
 # Legacy implementation path
-from agents.research.ml.options_flow import OptionsFlowAgent as LegacyOptionsFlowAgent
+from src.agents.research.ml.options_flow import OptionsFlowAgent as LegacyOptionsFlowAgent
 
 
 class OptionsFlowLegacyAdapter(BaseAgent):

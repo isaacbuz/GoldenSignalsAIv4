@@ -1,0 +1,232 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-worker
+  namespace: goldensignals
+  labels:
+    app: ml-worker
+    component: worker
+    tier: ml
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ml-worker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: ml-worker
+        component: worker
+        tier: ml
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: goldensignals-worker
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: worker
+        image: goldensignals/ml-worker:latest
+        imagePullPolicy: Always
+        command: ["celery"]
+        args: ["-A", "src.workers.ml_worker", "worker", "--loglevel=info", "--concurrency=4"]
+        env:
+        - name: ENV
+          value: "production"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: goldensignals-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: goldensignals-secrets
+              key: redis-url
+        - name: CELERY_BROKER_URL
+          valueFrom:
+            secretKeyRef:
+              name: goldensignals-secrets
+              key: redis-url
+        - name: CELERY_RESULT_BACKEND
+          valueFrom:
+            secretKeyRef:
+              name: goldensignals-secrets
+              key: redis-url
+        - name: MODEL_PATH
+          value: "/app/models"
+        - name: CACHE_PATH
+          value: "/app/cache"
+        resources:
+          requests:
+            memory: "3Gi"
+            cpu: "2000m"
+          limits:
+            memory: "6Gi"
+            cpu: "4000m"
+        livenessProbe:
+          exec:
+            command:
+            - celery
+            - -A
+            - src.workers.ml_worker
+            - inspect
+            - ping
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 30
+          failureThreshold: 3
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: cache
+          mountPath: /app/cache
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: ml-models-pvc
+      - name: cache
+        emptyDir:
+          sizeLimit: 20Gi
+      - name: config
+        configMap:
+          name: ml-worker-config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - ml-worker
+              topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: goldensignals-worker
+  namespace: goldensignals
+  labels:
+    app: ml-worker
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ml-worker-pdb
+  namespace: goldensignals
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ml-worker
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ml-worker-hpa
+  namespace: goldensignals
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-worker
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 85
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Pods
+        value: 1
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ml-model-retrain
+  namespace: goldensignals
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ml-retrain
+            component: job
+        spec:
+          serviceAccountName: goldensignals-worker
+          restartPolicy: OnFailure
+          containers:
+          - name: retrain
+            image: goldensignals/ml-worker:latest
+            command: ["python"]
+            args: ["-m", "src.workers.retrain_models"]
+            env:
+            - name: ENV
+              value: "production"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: goldensignals-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: goldensignals-secrets
+                  key: redis-url
+            - name: MODEL_PATH
+              value: "/app/models"
+            resources:
+              requests:
+                memory: "4Gi"
+                cpu: "3000m"
+              limits:
+                memory: "8Gi"
+                cpu: "6000m"
+            volumeMounts:
+            - name: models
+              mountPath: /app/models
+          volumes:
+          - name: models
+            persistentVolumeClaim:
+              claimName: ml-models-pvc 

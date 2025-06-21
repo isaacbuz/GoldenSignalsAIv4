@@ -11,12 +11,14 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 from loguru import logger
+import logging
+import json
 
 from .config import settings
 from .database import DatabaseManager
 from .redis_manager import RedisManager
-from ..services.signal_service import SignalService
-from ..services.market_data_service import MarketDataService
+from src.services.signal_service import SignalService
+from src.services.market_data_service import MarketDataService
 
 # Global service instances (initialized in main.py lifespan)
 _db_manager: Optional[DatabaseManager] = None

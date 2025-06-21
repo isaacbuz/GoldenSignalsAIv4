@@ -8,7 +8,8 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
-import { Signal, MarketData, AgentPerformance } from '../services/api';
+import { MarketData, AgentPerformance } from '../services/api';
+import { PreciseOptionsSignal } from '../types/signals';
 
 // Types
 export interface User {
@@ -44,27 +45,27 @@ export interface AppState {
   // Auth
   user: User | null;
   isAuthenticated: boolean;
-  
+
   // Market Data
   marketData: Record<string, MarketData>;
   isMarketOpen: boolean;
-  
+
   // Signals
-  signals: Signal[];
+  signals: PreciseOptionsSignal[];
   activeSignalsCount: number;
-  
+
   // Agents
   agents: any[];
   agentPerformance: Record<string, AgentPerformance>;
-  
+
   // UI State
   isLoading: boolean;
   selectedSymbols: string[];
   notifications: Notification[];
-  
+
   // WebSocket
   wsConnected: boolean;
-  
+
   // Settings
   settings: {
     apiEndpoint: string;
@@ -77,29 +78,29 @@ export interface AppActions {
   // Auth Actions
   setUser: (user: User | null) => void;
   logout: () => void;
-  
+
   // Market Data Actions
   setMarketData: (symbol: string, data: MarketData) => void;
   setMarketOpen: (isOpen: boolean) => void;
-  
+
   // Signal Actions
-  setSignals: (signals: Signal[]) => void;
-  addSignal: (signal: Signal) => void;
+  setSignals: (signals: PreciseOptionsSignal[]) => void;
+  addSignal: (signal: PreciseOptionsSignal) => void;
   removeSignal: (signalId: string) => void;
-  
+
   // Agent Actions
   setAgents: (agents: any[]) => void;
   setAgentPerformance: (performance: Record<string, AgentPerformance>) => void;
-  
+
   // UI Actions
   setLoading: (loading: boolean) => void;
   setSelectedSymbols: (symbols: string[]) => void;
   addNotification: (notification: Notification) => void;
   removeNotification: (id: string) => void;
-  
+
   // WebSocket Actions
   setWsConnected: (connected: boolean) => void;
-  
+
   // Settings Actions
   updateSettings: (settings: Partial<AppState['settings']>) => void;
   updateUserPreferences: (preferences: Partial<UserPreferences>) => void;
@@ -153,58 +154,8 @@ export const useAppStore = create<Store>()(
           isAuthenticated: false,
           marketData: {},
           isMarketOpen: false,
-          signals: [
-            // Sample signals for immediate display
-            {
-              signal_id: 'sample-1',
-              symbol: 'AAPL',
-              signal_type: 'BUY' as const,
-              confidence: 0.85,
-              strength: 'STRONG' as const,
-              source: 'ai_agent',
-              current_price: 203.93,
-              entry_price: 203.93,
-              exit_price: 215.00,
-              stop_loss: 195.00,
-              take_profit: 215.00,
-              reasoning: 'Strong technical indicators with bullish momentum. RSI oversold and showing reversal patterns.',
-              features: {},
-              created_at: new Date().toISOString(),
-            },
-            {
-              signal_id: 'sample-2',
-              symbol: 'TSLA',
-              signal_type: 'SELL' as const,
-              confidence: 0.78,
-              strength: 'MODERATE' as const,
-              source: 'ai_agent',
-              current_price: 248.50,
-              entry_price: 248.50,
-              exit_price: 230.00,
-              stop_loss: 255.00,
-              take_profit: 230.00,
-              reasoning: 'Overbought conditions detected. Technical analysis suggests potential downward correction.',
-              features: {},
-              created_at: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
-            },
-            {
-              signal_id: 'sample-3',
-              symbol: 'GOOGL',
-              signal_type: 'BUY' as const,
-              confidence: 0.72,
-              strength: 'MODERATE' as const,
-              source: 'ai_agent',
-              current_price: 138.21,
-              entry_price: 138.21,
-              exit_price: 145.00,
-              stop_loss: 132.00,
-              take_profit: 145.00,
-              reasoning: 'Earnings momentum and positive market sentiment. Key support levels holding strong.',
-              features: {},
-              created_at: new Date(Date.now() - 600000).toISOString(), // 10 minutes ago
-            },
-          ],
-          activeSignalsCount: 3,
+          signals: [],
+          activeSignalsCount: 0,
           agents: [],
           agentPerformance: {},
           isLoading: false,
@@ -246,9 +197,7 @@ export const useAppStore = create<Store>()(
           setSignals: (signals) =>
             set((state) => {
               state.signals = signals;
-              state.activeSignalsCount = signals.filter(
-                (s) => s.signal_type !== 'HOLD'
-              ).length;
+              state.activeSignalsCount = signals.length;
             }),
 
           addSignal: (signal) =>
@@ -261,9 +210,7 @@ export const useAppStore = create<Store>()(
               } else {
                 state.signals.unshift(signal);
               }
-              state.activeSignalsCount = state.signals.filter(
-                (s) => s.signal_type !== 'HOLD'
-              ).length;
+              state.activeSignalsCount = state.signals.length;
             }),
 
           removeSignal: (signalId) =>

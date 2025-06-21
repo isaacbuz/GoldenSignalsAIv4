@@ -1,0 +1,93 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: goldensignals-ssd
+  namespace: goldensignals
+provisioner: kubernetes.io/aws-ebs  # Change based on cloud provider
+parameters:
+  type: gp3
+  fsType: ext4
+  encrypted: "true"
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ml-models-pvc
+  namespace: goldensignals
+  labels:
+    app: ml-service
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: goldensignals-ssd
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: goldensignals
+  labels:
+    app: postgres
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: goldensignals-ssd
+  resources:
+    requests:
+      storage: 500Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: goldensignals
+  labels:
+    app: redis
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: goldensignals-ssd
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: goldensignals
+  labels:
+    app: prometheus
+    component: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: goldensignals-ssd
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: goldensignals
+  labels:
+    app: grafana
+    component: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: goldensignals-ssd
+  resources:
+    requests:
+      storage: 20Gi 

@@ -1,0 +1,34 @@
+apiVersion: v2
+name: goldensignals-ml
+description: GoldenSignals ML Service Helm Chart
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - ml
+  - trading
+  - backtesting
+  - goldensignals
+home: https://github.com/goldensignals/goldensignalsai
+sources:
+  - https://github.com/goldensignals/goldensignalsai
+maintainers:
+  - name: GoldenSignals Team
+    email: devops@goldensignals.ai
+dependencies:
+  - name: postgresql
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: "17.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: prometheus
+    version: "19.x.x"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+  - name: grafana
+    version: "6.x.x"
+    repository: https://grafana.github.io/helm-charts
+    condition: grafana.enabled 

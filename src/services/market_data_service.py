@@ -10,6 +10,8 @@ Features:
 - Signal generation pipeline
 - Risk assessment integration
 - Performance monitoring
+- After-hours data handling
+- Smart error detection
 """
 
 import asyncio
@@ -18,19 +20,63 @@ import websockets
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
+from datetime import datetime, timedelta, time
+from typing import Dict, List, Any, Optional, Tuple, Callable
 import logging
 from dataclasses import dataclass, asdict
 import threading
-import time
+import time as time_module
 from concurrent.futures import ThreadPoolExecutor
 import pickle
 import os
+import pytz
+from enum import Enum
+from cachetools import TTLCache
+import aiohttp
+
+from src.core.database import DatabaseManager
+from src.core.redis_manager import RedisManager
+from src.models.market_data import MarketData
+from src.services.rate_limit_handler import get_rate_limit_handler, RequestPriority
+from src.services.websocket_service import get_websocket_service, MarketUpdate
+from src.services.cache_service import get_cache_service, DataType
+from src.services.monitoring_service import get_monitoring_service
+# from src.utils.cache import cache_decorator
+# from src.utils.rate_limiter import RateLimiter
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+class DataUnavailableReason(Enum):
+    """Reasons why market data might be unavailable"""
+    MARKET_CLOSED = "market_closed"
+    INVALID_SYMBOL = "invalid_symbol"
+    NETWORK_ERROR = "network_error"
+    API_LIMIT = "api_limit"
+    NO_DATA = "no_data"
+    UNKNOWN = "unknown"
+
+@dataclass
+class MarketHours:
+    """Market hours information"""
+    is_open: bool
+    current_time: datetime
+    market_open: time
+    market_close: time
+    next_open: datetime
+    reason: str
+    timezone: str = "US/Eastern"
+
+@dataclass 
+class MarketDataError:
+    """Market data error information"""
+    symbol: str
+    reason: DataUnavailableReason
+    message: str
+    is_recoverable: bool
+    suggested_action: str
+    timestamp: str
 
 @dataclass
 class MarketTick:
@@ -56,6 +102,7 @@ class SignalData:
     risk_score: float
     indicators: Dict[str, float]
     timestamp: str
+    is_after_hours: bool = False  # New field
 
 class TechnicalIndicators:
     """Real-time technical indicator calculations"""
@@ -224,285 +271,461 @@ class MLModelLoader:
             logger.error(f"Risk assessment error: {e}")
             return 0.5
 
-class MarketDataService:
-    """Main market data service"""
+class MarketDataCache:
+    """Cache for market data during off-hours"""
     
-    def __init__(self):
-        self.symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META', 'SPY', 'QQQ', 'IWM']
-        self.data_cache = {}
-        self.indicators = TechnicalIndicators()
-        self.ml_models = MLModelLoader()
-        self.connected_clients = set()
-        self.running = False
-        self.executor = ThreadPoolExecutor(max_workers=4)
+    def __init__(self, cache_dir: str = "data/market_cache"):
+        self.cache_dir = cache_dir
+        os.makedirs(cache_dir, exist_ok=True)
+        self.memory_cache: Dict[str, Dict] = {}
+        self.cache_ttl = 3600 * 24  # 24 hours
         
-        # Feature columns (must match training data)
-        self.feature_columns = [
-            'Open', 'High', 'Low', 'Close', 'Volume',
-            'SMA_10', 'SMA_20', 'SMA_50', 'EMA_12', 'EMA_26',
-            'RSI', 'BB_Upper', 'BB_Middle', 'BB_Lower', 'BB_Width',
-            'MACD', 'MACD_Signal', 'MACD_Histogram',
-            'Price_Change', 'High_Low_Pct', 'Volume_Ratio',
-            'Volatility', 'ATR'
-        ]
-    
-    def fetch_real_time_data(self, symbol: str) -> Optional[MarketTick]:
-        """Fetch real-time market data"""
-        try:
-            ticker = yf.Ticker(symbol)
-            info = ticker.info
-            hist = ticker.history(period="1d", interval="1m")
-            
-            if hist.empty:
-                return None
-            
-            current = hist.iloc[-1]
-            previous = hist.iloc[-2] if len(hist) > 1 else hist.iloc[-1]
-            
-            change = current['Close'] - previous['Close']
-            change_percent = (change / previous['Close']) * 100
-            
-            # Get bid/ask from info (may not always be available)
-            bid = info.get('bid', current['Close'] * 0.999)
-            ask = info.get('ask', current['Close'] * 1.001)
-            
-            return MarketTick(
-                symbol=symbol,
-                price=float(current['Close']),
-                volume=int(current['Volume']),
-                bid=float(bid),
-                ask=float(ask),
-                spread=float(ask - bid),
-                timestamp=datetime.now().isoformat(),
-                change=float(change),
-                change_percent=float(change_percent)
-            )
-            
-        except Exception as e:
-            logger.error(f"Error fetching data for {symbol}: {e}")
-            return None
-    
-    def get_historical_data(self, symbol: str, period: str = "3mo") -> pd.DataFrame:
-        """Get historical data for analysis"""
-        try:
-            ticker = yf.Ticker(symbol)
-            data = ticker.history(period=period)
-            
-            if data.empty:
-                return pd.DataFrame()
-            
-            # Calculate all technical indicators
-            data['SMA_10'] = data['Close'].rolling(10).mean()
-            data['SMA_20'] = data['Close'].rolling(20).mean()
-            data['SMA_50'] = data['Close'].rolling(50).mean()
-            data['EMA_12'] = data['Close'].ewm(span=12).mean()
-            data['EMA_26'] = data['Close'].ewm(span=26).mean()
-            
-            # RSI
-            delta = data['Close'].diff()
-            gain = (delta.where(delta > 0, 0)).rolling(14).mean()
-            loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-            rs = gain / loss
-            data['RSI'] = 100 - (100 / (1 + rs))
-            
-            # Bollinger Bands
-            data['BB_Middle'] = data['Close'].rolling(20).mean()
-            bb_std = data['Close'].rolling(20).std()
-            data['BB_Upper'] = data['BB_Middle'] + (2 * bb_std)
-            data['BB_Lower'] = data['BB_Middle'] - (2 * bb_std)
-            data['BB_Width'] = (data['BB_Upper'] - data['BB_Lower']) / data['BB_Middle']
-            
-            # MACD
-            data['MACD'] = data['EMA_12'] - data['EMA_26']
-            data['MACD_Signal'] = data['MACD'].ewm(span=9).mean()
-            data['MACD_Histogram'] = data['MACD'] - data['MACD_Signal']
-            
-            # Additional features
-            data['Price_Change'] = data['Close'].pct_change()
-            data['High_Low_Pct'] = (data['High'] - data['Low']) / data['Close']
-            data['Volume_SMA'] = data['Volume'].rolling(20).mean()
-            data['Volume_Ratio'] = data['Volume'] / data['Volume_SMA']
-            data['Volatility'] = data['Price_Change'].rolling(20).std()
-            data['ATR'] = (data['High'] - data['Low']).rolling(14).mean()
-            
-            return data.dropna()
-            
-        except Exception as e:
-            logger.error(f"Error getting historical data for {symbol}: {e}")
-            return pd.DataFrame()
-    
-    def generate_signal(self, symbol: str) -> Optional[SignalData]:
-        """Generate trading signal using ML models"""
-        try:
-            # Get historical data
-            hist_data = self.get_historical_data(symbol)
-            if hist_data.empty or len(hist_data) < 10:  # Reduced from 50 to 10
-                return None
-            
-            # Extract features from latest data
-            latest = hist_data.iloc[-1]
-            features = []
-            
-            for col in self.feature_columns:
-                if col in hist_data.columns:
-                    features.append(latest[col])
-                else:
-                    features.append(0.0)  # Default value for missing features
-            
-            features = np.array(features)
-            
-            # Get ML predictions
-            price_prediction = self.ml_models.predict_price_movement(features)
-            signal_proba = self.ml_models.classify_signal(features)
-            risk_score = self.ml_models.assess_risk(features)
-            
-            # Determine signal type
-            current_price = latest['Close']
-            
-            if signal_proba['bull'] > 0.6:
-                signal_type = 'BUY'
-                confidence = signal_proba['bull']
-                price_target = current_price * (1 + abs(price_prediction))
-                stop_loss = current_price * 0.95
-            elif signal_proba['bear'] > 0.6:
-                signal_type = 'SELL'
-                confidence = signal_proba['bear']
-                price_target = current_price * (1 - abs(price_prediction))
-                stop_loss = current_price * 1.05
-            else:
-                signal_type = 'HOLD'
-                confidence = signal_proba['neutral']
-                price_target = current_price
-                stop_loss = current_price
-            
-            # Calculate technical indicators for display
-            indicators = self.indicators.calculate_indicators(hist_data)
-            
-            return SignalData(
-                symbol=symbol,
-                signal_type=signal_type,
-                confidence=float(confidence),
-                price_target=float(price_target),
-                stop_loss=float(stop_loss),
-                risk_score=float(risk_score),
-                indicators=indicators,
-                timestamp=datetime.now().isoformat()
-            )
-            
-        except Exception as e:
-            logger.error(f"Error generating signal for {symbol}: {e}")
-            return None
-    
-    async def websocket_handler(self, websocket, path):
-        """Handle WebSocket connections"""
-        logger.info(f"🔌 New WebSocket connection: {websocket.remote_address}")
-        self.connected_clients.add(websocket)
-        
-        try:
-            await websocket.wait_closed()
-        finally:
-            self.connected_clients.remove(websocket)
-            logger.info(f"🔌 WebSocket disconnected: {websocket.remote_address}")
-    
-    async def broadcast_data(self, data: Dict[str, Any]):
-        """Broadcast data to all connected clients"""
-        if not self.connected_clients:
-            return
-        
-        message = json.dumps(data)
-        disconnected = []
-        
-        for client in self.connected_clients:
-            try:
-                await client.send(message)
-            except websockets.exceptions.ConnectionClosed:
-                disconnected.append(client)
-            except Exception as e:
-                logger.error(f"Error broadcasting to client: {e}")
-                disconnected.append(client)
-        
-        # Remove disconnected clients
-        for client in disconnected:
-            self.connected_clients.discard(client)
-    
-    def data_collection_loop(self):
-        """Main data collection loop"""
-        logger.info("🔄 Starting market data collection...")
-        
-        while self.running:
-            try:
-                # Collect market ticks
-                ticks = []
-                signals = []
-                
-                for symbol in self.symbols:
-                    # Get real-time tick
-                    tick = self.fetch_real_time_data(symbol)
-                    if tick:
-                        ticks.append(asdict(tick))
-                    
-                    # Generate signal (less frequently)
-                    if len(self.data_cache.get(symbol, [])) % 10 == 0:  # Every 10th iteration
-                        signal = self.generate_signal(symbol)
-                        if signal:
-                            signals.append(asdict(signal))
-                
-                # Broadcast data
-                if ticks or signals:
-                    asyncio.run(self.broadcast_data({
-                        'type': 'market_update',
-                        'ticks': ticks,
-                        'signals': signals,
-                        'timestamp': datetime.now().isoformat()
-                    }))
-                
-                # Wait before next update
-                time.sleep(10)  # 10-second intervals
-                
-            except Exception as e:
-                logger.error(f"Error in data collection loop: {e}")
-                time.sleep(5)
-    
-    def start_service(self, host: str = "localhost", port: int = 8765):
-        """Start the market data service"""
-        logger.info("🚀 Starting Market Data Service...")
-        self.running = True
-        
-        # Start data collection in background thread
-        data_thread = threading.Thread(target=self.data_collection_loop, daemon=True)
-        data_thread.start()
-        
-        # Start WebSocket server
-        logger.info(f"🌐 WebSocket server starting on ws://{host}:{port}")
-        start_server = websockets.serve(self.websocket_handler, host, port)
-        
-        try:
-            asyncio.get_event_loop().run_until_complete(start_server)
-            asyncio.get_event_loop().run_forever()
-        except KeyboardInterrupt:
-            logger.info("🛑 Shutting down market data service...")
-            self.running = False
-    
-    def get_market_summary(self) -> Dict[str, Any]:
-        """Get current market summary"""
-        summary = {
-            'timestamp': datetime.now().isoformat(),
-            'symbols': {},
-            'market_status': 'OPEN',  # Simplified
-            'total_symbols': len(self.symbols)
+    def save_tick(self, symbol: str, tick: MarketTick):
+        """Save market tick to cache"""
+        self.memory_cache[f"tick_{symbol}"] = {
+            "data": asdict(tick),
+            "timestamp": datetime.now().timestamp()
         }
         
-        for symbol in self.symbols:
-            tick = self.fetch_real_time_data(symbol)
-            if tick:
-                summary['symbols'][symbol] = {
-                    'price': tick.price,
-                    'change': tick.change,
-                    'change_percent': tick.change_percent,
-                    'volume': tick.volume
-                }
+        # Also persist to disk
+        try:
+            cache_file = os.path.join(self.cache_dir, f"{symbol}_tick.json")
+            with open(cache_file, 'w') as f:
+                json.dump(asdict(tick), f)
+        except Exception as e:
+            logger.error(f"Failed to persist tick cache for {symbol}: {e}")
+    
+    def get_tick(self, symbol: str) -> Optional[MarketTick]:
+        """Get cached tick if available"""
+        # Try memory cache first
+        cache_key = f"tick_{symbol}"
+        if cache_key in self.memory_cache:
+            cached = self.memory_cache[cache_key]
+            age = datetime.now().timestamp() - cached["timestamp"]
+            if age < self.cache_ttl:
+                data = cached["data"]
+                return MarketTick(**data)
         
-        return summary
+        # Try disk cache
+        try:
+            cache_file = os.path.join(self.cache_dir, f"{symbol}_tick.json")
+            if os.path.exists(cache_file):
+                mtime = os.path.getmtime(cache_file)
+                age = datetime.now().timestamp() - mtime
+                if age < self.cache_ttl:
+                    with open(cache_file, 'r') as f:
+                        data = json.load(f)
+                    return MarketTick(**data)
+        except Exception as e:
+            logger.error(f"Failed to load tick cache for {symbol}: {e}")
+        
+        return None
+    
+    def save_historical(self, symbol: str, data: pd.DataFrame):
+        """Save historical data to cache"""
+        try:
+            cache_file = os.path.join(self.cache_dir, f"{symbol}_historical.pkl")
+            data.to_pickle(cache_file)
+            self.memory_cache[f"hist_{symbol}"] = {
+                "timestamp": datetime.now().timestamp()
+            }
+        except Exception as e:
+            logger.error(f"Failed to save historical cache for {symbol}: {e}")
+    
+    def get_historical(self, symbol: str) -> Optional[pd.DataFrame]:
+        """Get cached historical data if available"""
+        cache_key = f"hist_{symbol}"
+        cache_file = os.path.join(self.cache_dir, f"{symbol}_historical.pkl")
+        
+        if os.path.exists(cache_file):
+            mtime = os.path.getmtime(cache_file)
+            age = datetime.now().timestamp() - mtime
+            if age < self.cache_ttl:
+                try:
+                    return pd.read_pickle(cache_file)
+                except Exception as e:
+                    logger.error(f"Failed to load historical cache for {symbol}: {e}")
+        
+        return None
+
+class MarketDataService:
+    """Service for fetching live market data from various sources"""
+    
+    def __init__(self):
+        # Initialize all services
+        self.rate_limit_handler = get_rate_limit_handler()
+        self.websocket_service = get_websocket_service()
+        self.cache_service = get_cache_service()
+        self.monitoring_service = get_monitoring_service()
+        
+        # Cache for market data (5 minute TTL)
+        self.quote_cache = TTLCache(maxsize=1000, ttl=300)
+        self.historical_cache = TTLCache(maxsize=500, ttl=600)
+        
+        # Rate limiting
+        self.last_request_time = {}
+        self.min_request_interval = 0.1  # 100ms between requests
+        
+        # WebSocket will be initialized when needed
+        self._websocket_initialized = False
+    
+    async def _ensure_websocket(self):
+        """Ensure WebSocket is initialized"""
+        if not self._websocket_initialized:
+            self._websocket_initialized = True
+            await self.websocket_service.connect()
+    
+    async def get_quote(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """
+        Get real-time quote for a symbol using all services
+        
+        Args:
+            symbol: Stock symbol
+            
+        Returns:
+            Quote data dictionary or None
+        """
+        # Ensure WebSocket is initialized
+        await self._ensure_websocket()
+        
+        start_time = time.time()
+        
+        try:
+            # Try cache first
+            quote_data = await self.cache_service.get(
+                DataType.QUOTE,
+                symbol,
+                fetch_func=lambda: self._fetch_quote(symbol)
+            )
+            
+            # Record metrics
+            latency_ms = (time.time() - start_time) * 1000
+            self.monitoring_service.record_latency("get_quote", latency_ms, {"symbol": symbol})
+            
+            if quote_data:
+                self.monitoring_service.record_cache_hit("total", True)
+                logger.debug(f"Fetched quote for {symbol}: ${quote_data.get('price', 0)}")
+            else:
+                self.monitoring_service.record_cache_hit("total", False)
+            
+            return quote_data
+            
+        except Exception as e:
+            self.monitoring_service.record_error("quote_fetch", {"symbol": symbol})
+            logger.error(f"Failed to fetch quote for {symbol}: {str(e)}")
+            return None
+    
+    async def _fetch_quote(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Fetch quote from rate limit handler"""
+        self.monitoring_service.record_api_call("quote", "rate_limit_handler")
+        
+        quote_data = await self.rate_limit_handler.get_quote(
+            symbol, 
+            priority=RequestPriority.NORMAL
+        )
+        
+        return quote_data
+    
+    async def subscribe_to_symbol(self, symbol: str, callback: Callable):
+        """Subscribe to real-time updates for a symbol"""
+        # Ensure WebSocket is initialized
+        await self._ensure_websocket()
+        
+        # Subscribe via WebSocket
+        sub_id = await self.websocket_service.subscribe(
+            [symbol],
+            callback=callback
+        )
+        
+        logger.info(f"Subscribed to {symbol} with ID: {sub_id}")
+        return sub_id
+    
+    async def get_quotes(self, symbols: List[str]) -> Dict[str, Dict[str, Any]]:
+        """
+        Get quotes for multiple symbols using batch processing
+        
+        Args:
+            symbols: List of stock symbols
+            
+        Returns:
+            Dictionary of symbol -> quote data
+        """
+        start_time = time.time()
+        
+        try:
+            # Use rate limit handler's batch processing
+            quotes = await self.rate_limit_handler.batch_get_quotes(
+                symbols,
+                priority=RequestPriority.NORMAL
+            )
+            
+            # Cache results
+            for symbol, quote in quotes.items():
+                if quote:
+                    await self.cache_service.set(DataType.QUOTE, symbol, quote)
+            
+            # Record metrics
+            latency_ms = (time.time() - start_time) * 1000
+            self.monitoring_service.record_latency("batch_quotes", latency_ms, {"count": str(len(symbols))})
+            self.monitoring_service.record_api_call("batch_quotes", "rate_limit_handler")
+            
+            return quotes
+            
+        except Exception as e:
+            self.monitoring_service.record_error("batch_quotes", {"count": str(len(symbols))})
+            logger.error(f"Failed to fetch multiple quotes: {str(e)}")
+            return {}
+    
+    async def get_historical_data(
+        self,
+        symbol: str,
+        period: str = "1d",
+        interval: str = "1m"
+    ) -> Optional[pd.DataFrame]:
+        """
+        Get historical price data for a symbol using caching
+        
+        Args:
+            symbol: Stock symbol
+            period: Time period (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)
+            interval: Data interval (1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo)
+            
+        Returns:
+            DataFrame with historical data or None
+        """
+        start_time = time.time()
+        cache_key = f"{symbol}_{period}_{interval}"
+        
+        try:
+            # Try cache first
+            hist_data = await self.cache_service.get(
+                DataType.HISTORICAL,
+                cache_key,
+                fetch_func=lambda: self._fetch_historical(symbol, period, interval)
+            )
+            
+            if hist_data is not None and not hist_data.empty:
+                # Add technical indicators
+                hist_data = self._add_technical_indicators(hist_data)
+                
+                # Record metrics
+                latency_ms = (time.time() - start_time) * 1000
+                self.monitoring_service.record_latency("historical_data", latency_ms, {
+                    "symbol": symbol,
+                    "period": period,
+                    "interval": interval
+                })
+                
+                logger.debug(f"Fetched {len(hist_data)} historical records for {symbol}")
+            
+            return hist_data
+            
+        except Exception as e:
+            self.monitoring_service.record_error("historical_data", {"symbol": symbol})
+            logger.error(f"Failed to fetch historical data for {symbol}: {str(e)}")
+            return None
+    
+    async def _fetch_historical(self, symbol: str, period: str, interval: str) -> Optional[pd.DataFrame]:
+        """Fetch historical data from rate limit handler"""
+        self.monitoring_service.record_api_call("historical", "rate_limit_handler")
+        
+        hist_data = await self.rate_limit_handler.get_historical_data(
+            symbol,
+            period=period,
+            interval=interval,
+            priority=RequestPriority.NORMAL
+        )
+        
+        return hist_data
+    
+    def get_monitoring_stats(self) -> Dict[str, Any]:
+        """Get monitoring statistics"""
+        return self.monitoring_service.get_dashboard_data()
+    
+    def get_cache_stats(self) -> Dict[str, Any]:
+        """Get cache statistics"""
+        return self.cache_service.get_stats()
+    
+    def _add_technical_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Add common technical indicators to the dataframe"""
+        try:
+            # Simple Moving Averages
+            df['SMA_20'] = df['Close'].rolling(window=20).mean()
+            df['SMA_50'] = df['Close'].rolling(window=50).mean()
+            df['SMA_200'] = df['Close'].rolling(window=200).mean()
+            
+            # Exponential Moving Averages
+            df['EMA_12'] = df['Close'].ewm(span=12, adjust=False).mean()
+            df['EMA_26'] = df['Close'].ewm(span=26, adjust=False).mean()
+            
+            # MACD
+            df['MACD'] = df['EMA_12'] - df['EMA_26']
+            df['MACD_Signal'] = df['MACD'].ewm(span=9, adjust=False).mean()
+            df['MACD_Histogram'] = df['MACD'] - df['MACD_Signal']
+            
+            # RSI
+            delta = df['Close'].diff()
+            gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+            loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+            rs = gain / loss
+            df['RSI'] = 100 - (100 / (1 + rs))
+            
+            # Bollinger Bands
+            df['BB_Middle'] = df['Close'].rolling(window=20).mean()
+            bb_std = df['Close'].rolling(window=20).std()
+            df['BB_Upper'] = df['BB_Middle'] + (bb_std * 2)
+            df['BB_Lower'] = df['BB_Middle'] - (bb_std * 2)
+            
+            # Volume indicators
+            df['Volume_SMA'] = df['Volume'].rolling(window=20).mean()
+            df['Volume_Ratio'] = df['Volume'] / df['Volume_SMA']
+            
+            return df
+            
+        except Exception as e:
+            logger.error(f"Failed to add technical indicators: {str(e)}")
+            return df
+    
+    async def get_market_status(self) -> Dict[str, Any]:
+        """Get current market status"""
+        try:
+            # Check if market is open
+            now = datetime.now()
+            
+            # Simple market hours check (NYSE)
+            market_open = now.replace(hour=9, minute=30, second=0, microsecond=0)
+            market_close = now.replace(hour=16, minute=0, second=0, microsecond=0)
+            
+            is_weekday = now.weekday() < 5  # Monday = 0, Friday = 4
+            is_market_hours = market_open <= now <= market_close
+            
+            is_open = is_weekday and is_market_hours
+            
+            # Get major indices
+            indices = await self.get_quotes(['SPY', 'QQQ', 'DIA', 'IWM'])
+            
+            return {
+                "is_open": is_open,
+                "current_time": now.isoformat(),
+                "market_open": market_open.isoformat(),
+                "market_close": market_close.isoformat(),
+                "indices": indices,
+                "status": "open" if is_open else "closed"
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to get market status: {str(e)}")
+            return {
+                "is_open": False,
+                "status": "unknown",
+                "error": str(e)
+            }
+    
+    async def search_symbols(self, query: str) -> List[Dict[str, str]]:
+        """Search for symbols matching the query"""
+        try:
+            # Use yfinance search functionality
+            # Note: This is a simplified implementation
+            # In production, you might want to use a proper symbol search API
+            
+            # Common symbols for demo
+            all_symbols = [
+                {"symbol": "AAPL", "name": "Apple Inc."},
+                {"symbol": "GOOGL", "name": "Alphabet Inc."},
+                {"symbol": "MSFT", "name": "Microsoft Corporation"},
+                {"symbol": "AMZN", "name": "Amazon.com Inc."},
+                {"symbol": "TSLA", "name": "Tesla Inc."},
+                {"symbol": "META", "name": "Meta Platforms Inc."},
+                {"symbol": "NVDA", "name": "NVIDIA Corporation"},
+                {"symbol": "JPM", "name": "JPMorgan Chase & Co."},
+                {"symbol": "V", "name": "Visa Inc."},
+                {"symbol": "JNJ", "name": "Johnson & Johnson"},
+                {"symbol": "WMT", "name": "Walmart Inc."},
+                {"symbol": "PG", "name": "Procter & Gamble Co."},
+                {"symbol": "MA", "name": "Mastercard Inc."},
+                {"symbol": "UNH", "name": "UnitedHealth Group Inc."},
+                {"symbol": "HD", "name": "The Home Depot Inc."},
+                {"symbol": "DIS", "name": "The Walt Disney Company"},
+                {"symbol": "BAC", "name": "Bank of America Corp."},
+                {"symbol": "ADBE", "name": "Adobe Inc."},
+                {"symbol": "CRM", "name": "Salesforce Inc."},
+                {"symbol": "NFLX", "name": "Netflix Inc."},
+                {"symbol": "SPY", "name": "SPDR S&P 500 ETF"},
+                {"symbol": "QQQ", "name": "Invesco QQQ Trust"},
+                {"symbol": "IWM", "name": "iShares Russell 2000 ETF"},
+                {"symbol": "DIA", "name": "SPDR Dow Jones Industrial Average ETF"}
+            ]
+            
+            # Filter based on query
+            query_lower = query.lower()
+            results = [
+                s for s in all_symbols
+                if query_lower in s["symbol"].lower() or query_lower in s["name"].lower()
+            ]
+            
+            return results[:10]  # Limit to 10 results
+            
+        except Exception as e:
+            logger.error(f"Failed to search symbols: {str(e)}")
+            return []
+    
+    async def get_options_chain(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Get options chain data for a symbol"""
+        try:
+            # Rate limiting
+            await self._rate_limit(symbol)
+            
+            ticker = yf.Ticker(symbol)
+            
+            # Get available expiration dates
+            expirations = ticker.options
+            if not expirations:
+                return None
+            
+            # Get options for the nearest expiration
+            nearest_expiry = expirations[0]
+            
+            # Get calls and puts
+            opt = ticker.option_chain(nearest_expiry)
+            calls = opt.calls.to_dict('records')
+            puts = opt.puts.to_dict('records')
+            
+            return {
+                "symbol": symbol,
+                "expirations": list(expirations),
+                "selected_expiry": nearest_expiry,
+                "calls": calls[:20],  # Limit to 20 strikes
+                "puts": puts[:20],
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to fetch options chain for {symbol}: {str(e)}")
+            return None
+    
+    async def get_news(self, symbol: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get latest news for a symbol"""
+        try:
+            ticker = yf.Ticker(symbol)
+            news = ticker.news
+            
+            # Format news items
+            formatted_news = []
+            for item in news[:limit]:
+                formatted_news.append({
+                    "title": item.get("title", ""),
+                    "publisher": item.get("publisher", ""),
+                    "link": item.get("link", ""),
+                    "published": datetime.fromtimestamp(item.get("providerPublishTime", 0)).isoformat(),
+                    "type": item.get("type", ""),
+                    "thumbnail": item.get("thumbnail", {}).get("resolutions", [{}])[0].get("url", "") if item.get("thumbnail") else ""
+                })
+            
+            return formatted_news
+            
+        except Exception as e:
+            logger.error(f"Failed to fetch news for {symbol}: {str(e)}")
+            return []
 
 def main():
     """Main function for testing"""
@@ -512,8 +735,8 @@ def main():
     service = MarketDataService()
     
     # Test market summary
-    summary = service.get_market_summary()
-    print(f"📊 Market Summary: {len(summary['symbols'])} symbols")
+    summary = service.get_market_status()
+    print(f"📊 Market Summary: {summary['status']}")
     
     # Start service
     try:
