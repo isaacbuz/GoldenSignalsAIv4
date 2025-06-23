@@ -6,7 +6,7 @@ A sophisticated AI analyst that provides comprehensive market analysis
 import asyncio
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime, timedelta
-import pandas as pd
+import pa, timezonendas as pd
 import numpy as np
 import json
 from dataclasses import dataclass
@@ -187,7 +187,7 @@ The convergence of technical indicators, market sentiment, and pattern recogniti
 ### Trading Strategy
 {self._suggest_trading_strategy(technical, sentiment, risk)}
 
-*Analysis generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} with {self._describe_confidence()} confidence*
+*Analysis generated at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} with {self._describe_confidence()} confidence*
 """
         return analysis
     

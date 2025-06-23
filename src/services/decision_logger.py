@@ -1,5 +1,5 @@
 from datetime import datetime
-import json
+import jso, timezonen
 
 class DecisionLogger:
     def __init__(self):
@@ -8,7 +8,7 @@ class DecisionLogger:
 
     async def log_decision_process(self, symbol, decision):
         entry = {
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'symbol': symbol,
             'action': decision.action.name,
             'confidence': decision.confidence,

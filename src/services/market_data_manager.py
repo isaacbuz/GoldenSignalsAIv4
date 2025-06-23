@@ -9,7 +9,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any, List
 from datetime import datetime, timedelta
-import pandas as pd
+import pa, timezonendas as pd
 import yfinance as yf
 import aiohttp
 from cachetools import TTLCache
@@ -25,7 +25,7 @@ class RateLimiter:
         self.call_times = []
         
     async def acquire(self):
-        now = datetime.now()
+        now = datetime.now(tz=timezone.utc)
         # Remove old calls outside the period
         self.call_times = [t for t in self.call_times if now - t < timedelta(seconds=self.period)]
         
@@ -50,7 +50,7 @@ class CircuitBreaker:
         if self.state == "CLOSED":
             return True
         elif self.state == "OPEN":
-            if self.last_failure_time and datetime.now() - self.last_failure_time > timedelta(seconds=self.timeout):
+            if self.last_failure_time and datetime.now(tz=timezone.utc) - self.last_failure_time > timedelta(seconds=self.timeout):
                 self.state = "HALF_OPEN"
                 return True
             return False
@@ -63,7 +63,7 @@ class CircuitBreaker:
         
     def record_failure(self):
         self.failure_count += 1
-        self.last_failure_time = datetime.now()
+        self.last_failure_time = datetime.now(tz=timezone.utc)
         if self.failure_count >= self.failure_threshold:
             self.state = "OPEN"
             logger.warning(f"Circuit breaker opened after {self.failure_count} failures")
@@ -117,7 +117,7 @@ class YFinanceProvider(DataProvider):
                     'price': float(fast_info.get('lastPrice', 0)),
                     'volume': int(fast_info.get('lastVolume', 0)),
                     'market_cap': float(fast_info.get('marketCap', 0)),
-                    'timestamp': datetime.now(),
+                    'timestamp': datetime.now(tz=timezone.utc),
                     'provider': 'yfinance_fast'
                 }
             except:
@@ -134,7 +134,7 @@ class YFinanceProvider(DataProvider):
                         'volume': int(latest['Volume']),
                         'high': float(latest['High']),
                         'low': float(latest['Low']),
-                        'timestamp': datetime.now(),
+                        'timestamp': datetime.now(tz=timezone.utc),
                         'provider': 'yfinance_history'
                     }
                     
@@ -198,7 +198,7 @@ class AlphaVantageProvider(DataProvider):
                                 'volume': int(quote.get('06. volume', 0)),
                                 'high': float(quote.get('03. high', 0)),
                                 'low': float(quote.get('04. low', 0)),
-                                'timestamp': datetime.now(),
+                                'timestamp': datetime.now(tz=timezone.utc),
                                 'provider': 'alpha_vantage'
                             }
                             
@@ -237,7 +237,7 @@ class MockDataProvider(DataProvider):
             'volume': random.randint(1000000, 10000000),
             'high': round(base_price * (1 + random.uniform(0, volatility)), 2),
             'low': round(base_price * (1 - random.uniform(0, volatility)), 2),
-            'timestamp': datetime.now(),
+            'timestamp': datetime.now(tz=timezone.utc),
             'provider': 'mock'
         }
         
@@ -252,7 +252,7 @@ class MockDataProvider(DataProvider):
         else:
             periods = 100
             
-        dates = pd.date_range(end=pd.Timestamp.now(), periods=periods, freq='D')
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=periods, freq='D')
         
         # Generate realistic price movement
         base_price = 100.0

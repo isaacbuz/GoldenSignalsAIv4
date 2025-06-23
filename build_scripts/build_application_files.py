@@ -315,7 +315,7 @@ class PriceAlertEvent:
     symbol: str
     threshold: float
     price: float
-    timestamp: datetime = datetime.now()
+    timestamp: datetime = datetime.now(tz=timezone.utc)
 
 @dataclass
 class SignalEvent:
@@ -323,7 +323,7 @@ class SignalEvent:
     symbol: str
     action: str
     price: float
-    timestamp: datetime = datetime.now()
+    timestamp: datetime = datetime.now(tz=timezone.utc)
 """,
     "application/events/event_handlers.py": """import logging
 from GoldenSignalsAI.application.services.alert_service import AlertService
@@ -377,7 +377,7 @@ class PriceAlertEvent:
     symbol: str
     threshold: float
     price: float
-    timestamp: datetime = datetime.now()
+    timestamp: datetime = datetime.now(tz=timezone.utc)
 """,
     "application/events/signal_event.py": """from dataclasses import dataclass
 from datetime import datetime
@@ -388,7 +388,7 @@ class SignalEvent:
     symbol: str
     action: str
     price: float
-    timestamp: datetime = datetime.now()
+    timestamp: datetime = datetime.now(tz=timezone.utc)
 """,
     "application/signal_service/Dockerfile": """FROM python:3.10-slim
 WORKDIR /app
@@ -477,7 +477,7 @@ class AuditLogger:
         self.logger = logging.getLogger(__name__)
 
     def log_event(self, event_type, details):
-        timestamp = datetime.now().isoformat()
+        timestamp = datetime.now(tz=timezone.utc).isoformat()
         log_entry = {"timestamp": timestamp, "event_type": event_type, "details": details}
         self.s3_storage.save_log(log_entry)
         self.logger.info(f"Audit log: {log_entry}")
@@ -492,7 +492,7 @@ class DecisionLogger:
 
     async def log_decision_process(self, symbol, decision):
         entry = {
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(tz=timezone.utc).isoformat(),
             'symbol': symbol,
             'action': decision.action.name,
             'confidence': decision.confidence,
@@ -583,7 +583,7 @@ class DataService:
                 "type": "PriceUpdateEvent",
                 "symbol": symbol,
                 "price": realtime_df['close'].iloc[-1],
-                "timestamp": pd.Timestamp.now()
+                "timestamp": pd.Timestamp.now(tz='UTC')
             }
             await self.event_publisher.publish("price_updates", event)
         
@@ -828,7 +828,7 @@ class AIMonitor:
         self.logger = logging.getLogger(__name__)
 
     async def update_metrics(self):
-        current_time = datetime.now()
+        current_time = datetime.now(tz=timezone.utc)
         self.metrics_history["model_accuracy"].append({
             "timestamp": current_time.isoformat(),
             "value": np.random.uniform(0.7, 0.95)

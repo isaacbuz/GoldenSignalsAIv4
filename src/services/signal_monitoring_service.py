@@ -7,7 +7,7 @@ import logging
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
-from collections import defaultdict
+from collectio, timezonens import defaultdict
 import json
 import sqlite3
 import pandas as pd
@@ -239,7 +239,7 @@ class SignalMonitoringService:
             action=signal_data.get('action'),
             entry_price=signal_data.get('entry_price', signal_data.get('price')),
             exit_price=None,
-            entry_time=datetime.now(),
+            entry_time=datetime.now(timezone.utc),
             exit_time=None,
             outcome='pending',
             profit_loss=None,
@@ -270,7 +270,7 @@ class SignalMonitoringService:
             
         signal_outcome = self.active_signals[signal_id]
         signal_outcome.exit_price = exit_price
-        signal_outcome.exit_time = datetime.now()
+        signal_outcome.exit_time = datetime.now(timezone.utc)
         signal_outcome.outcome = outcome
         signal_outcome.notes = notes
         
@@ -309,7 +309,7 @@ class SignalMonitoringService:
         cursor.execute("""
             INSERT INTO signal_feedback (signal_id, feedback_type, feedback_value, timestamp)
             VALUES (?, ?, ?, ?)
-        """, (signal_id, feedback_type, json.dumps(feedback_value), datetime.now().isoformat()))
+        """, (signal_id, feedback_type, json.dumps(feedback_value), datetime.now(timezone.utc).isoformat()))
         
         conn.commit()
         conn.close()
@@ -323,7 +323,7 @@ class SignalMonitoringService:
         # Check cache
         if (self.performance_cache and 
             self.cache_timestamp and 
-            (datetime.now() - self.cache_timestamp).seconds < self.cache_ttl and
+            (datetime.now(timezone.utc) - self.cache_timestamp).seconds < self.cache_ttl and
             not timeframe and not symbol):
             return self.performance_cache
             
@@ -331,7 +331,7 @@ class SignalMonitoringService:
         signals = self.completed_signals
         
         if timeframe:
-            cutoff_time = datetime.now() - timeframe
+            cutoff_time = datetime.now(timezone.utc) - timeframe
             signals = [s for s in signals if s.entry_time >= cutoff_time]
             
         if symbol:
@@ -434,7 +434,7 @@ class SignalMonitoringService:
         # Cache results
         if not timeframe and not symbol:
             self.performance_cache = metrics
-            self.cache_timestamp = datetime.now()
+            self.cache_timestamp = datetime.now(timezone.utc)
             
         return metrics
         
@@ -568,7 +568,7 @@ class SignalMonitoringService:
         cursor.execute("""
             INSERT INTO performance_snapshots (timestamp, metrics)
             VALUES (?, ?)
-        """, (datetime.now().isoformat(), json.dumps(metrics.to_dict())))
+        """, (datetime.now(timezone.utc).isoformat(), json.dumps(metrics.to_dict())))
         
         conn.commit()
         conn.close()

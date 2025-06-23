@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime, timedelta
 import os
 from dataclasses import dataclass, asdict
-import json
+import jso, timezonen
 
 import yfinance as yf
 import pandas as pd
@@ -103,7 +103,7 @@ class LiveDataService:
         # Initialize Redis connection
         await self.redis_manager.initialize()
         
-        self.stats["uptime_start"] = datetime.utcnow()
+        self.stats["uptime_start"] = datetime.now(timezone.utc)
         logger.info("✅ Live Data Service initialized")
         
     async def start(self):
@@ -171,7 +171,7 @@ class LiveDataService:
                         self.stats["errors"] += 1
                         logger.error(f"Quote fetch error: {quote}")
                         
-                self.stats["last_update"] = datetime.utcnow()
+                self.stats["last_update"] = datetime.now(timezone.utc)
                 
             except Exception as e:
                 logger.error(f"Quote update loop error: {e}")
@@ -221,7 +221,7 @@ class LiveDataService:
                     await self.ws_manager.broadcast({
                         "type": "market_summary",
                         "data": summary,
-                        "timestamp": datetime.utcnow().isoformat()
+                        "timestamp": datetime.now(timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -240,7 +240,7 @@ class LiveDataService:
                         await source.connect()
                         
                 # Log statistics
-                uptime = datetime.utcnow() - self.stats["uptime_start"]
+                uptime = datetime.now(timezone.utc) - self.stats["uptime_start"]
                 logger.info(
                     f"📊 Live Data Stats - Uptime: {uptime}, "
                     f"Quotes: {self.stats['quotes_fetched']}, "
@@ -253,7 +253,7 @@ class LiveDataService:
                     "service": "live_data",
                     "status": "healthy",
                     "stats": self.stats,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.now(timezone.utc).isoformat()
                 })
                 
             except Exception as e:
@@ -266,7 +266,7 @@ class LiveDataService:
         while self.running:
             try:
                 # Clean up old cache entries
-                cutoff_time = datetime.utcnow() - timedelta(seconds=self.config.cache_ttl)
+                cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=self.config.cache_ttl)
                 
                 # This would clean up Redis cache
                 # Implementation depends on specific caching strategy
@@ -327,7 +327,7 @@ class LiveDataService:
                 await self.redis_manager.publish_signal(symbol, {
                     "type": "unusual_options",
                     "data": unusual,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.now(timezone.utc).isoformat()
                 })
                 
         except Exception as e:
@@ -346,7 +346,7 @@ class LiveDataService:
     async def _prepare_market_summary(self) -> Dict[str, Any]:
         """Prepare market summary for broadcast"""
         summary = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "symbols": {},
             "indices": {},
             "stats": self.stats
@@ -391,7 +391,7 @@ class LiveDataService:
         """Get latest quote for symbol"""
         # Try cache first
         cached = await self.redis_manager.get_cached_market_data(symbol)
-        if cached and (datetime.utcnow() - datetime.fromisoformat(cached.get("timestamp", "")) < timedelta(seconds=10)):
+        if cached and (datetime.now(timezone.utc) - datetime.fromisoformat(cached.get("timestamp", "")) < timedelta(seconds=10)):
             return MarketData(**cached)
             
         # Fetch fresh data
@@ -411,7 +411,7 @@ class LiveDataService:
         """Get service statistics"""
         return {
             **self.stats,
-            "uptime": str(datetime.utcnow() - self.stats["uptime_start"]) if self.stats["uptime_start"] else "0:00:00",
+            "uptime": str(datetime.now(timezone.utc) - self.stats["uptime_start"]) if self.stats["uptime_start"] else "0:00:00",
             "data_sources": list(self.data_feed.sources.keys()),
             "active_symbols": self.config.symbols
         }

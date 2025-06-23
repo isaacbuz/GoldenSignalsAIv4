@@ -6,7 +6,7 @@ Implements multi-stage filtering to ensure only high-quality signals
 import logging
 from typing import List, Dict, Optional, Callable, Any
 from datetime import datetime, timedelta
-from collections import defaultdict
+from collectio, timezonens import defaultdict
 import numpy as np
 import pandas as pd
 
@@ -174,7 +174,7 @@ class DuplicateSignalFilter(SignalFilter):
         self.stats['total_signals'] += 1
         
         # Clean old signals
-        cutoff_time = datetime.now() - self.time_window
+        cutoff_time = datetime.now(timezone.utc) - self.time_window
         for symbol in list(self.recent_signals.keys()):
             self.recent_signals[symbol] = [
                 s for s in self.recent_signals[symbol] 

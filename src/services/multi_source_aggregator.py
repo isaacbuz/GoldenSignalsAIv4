@@ -7,7 +7,7 @@ import asyncio
 import aiohttp
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
-import numpy as np
+import , timezonenumpy as np
 from dataclasses import dataclass
 import logging
 import os
@@ -67,11 +67,11 @@ class DataSource(ABC):
     async def rate_limit_check(self):
         """Ensure we don't exceed rate limits"""
         if self.last_request_time:
-            elapsed = (datetime.now() - self.last_request_time).total_seconds()
+            elapsed = (datetime.now(timezone.utc) - self.last_request_time).total_seconds()
             min_interval = 60 / self.config.rate_limit
             if elapsed < min_interval:
                 await asyncio.sleep(min_interval - elapsed)
-        self.last_request_time = datetime.now()
+        self.last_request_time = datetime.now(timezone.utc)
 
 
 class IEXCloudSource(DataSource):
@@ -321,7 +321,7 @@ class MultiSourceAggregator:
         """Get aggregated sentiment from all sources"""
         
         # Check cache
-        cache_key = f"{symbol}_{datetime.now().strftime('%Y%m%d%H%M')}"
+        cache_key = f"{symbol}_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M')}"
         if cache_key in self.cache:
             return self.cache[cache_key]
         
@@ -372,7 +372,7 @@ class MultiSourceAggregator:
         
         sentiment = MarketSentiment(
             symbol=symbol,
-            timestamp=datetime.now(),
+            timestamp=datetime.now(timezone.utc),
             composite_score=composite_score,
             confidence=confidence,
             source_scores=source_scores,

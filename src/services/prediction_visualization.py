@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, List, Tuple, Optional, Any
 from datetime import datetime, timedelta
-import logging
+import loggi, timezoneng
 from dataclasses import dataclass
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -139,7 +139,7 @@ class PredictionVisualizationService:
                     'models_used': list(predictions.keys()),
                     'indicators': list(indicators.keys()),
                     'data_points': len(df),
-                    'prediction_timestamp': datetime.now().isoformat()
+                    'prediction_timestamp': datetime.now(timezone.utc).isoformat()
                 }
             )
             
@@ -555,7 +555,7 @@ class PredictionVisualizationService:
     ) -> List[PredictionPoint]:
         """Build prediction points with timestamps"""
         points = []
-        current_time = datetime.now()
+        current_time = datetime.now(timezone.utc)
         
         for i in range(len(predictions)):
             # Calculate timestamp

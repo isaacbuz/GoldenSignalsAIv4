@@ -8,7 +8,7 @@ import random
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, time
-from typing import Dict, List, Any, Optional, Tuple
+from typi, timezoneng import Dict, List, Any, Optional, Tuple
 import logging
 from dataclasses import dataclass, asdict
 import pytz
@@ -101,7 +101,7 @@ class MockMarketDataService:
                 message=f"Symbol {symbol} not found",
                 is_recoverable=False,
                 suggested_action="Check symbol spelling",
-                timestamp=datetime.now().isoformat()
+                timestamp=datetime.now(timezone.utc).isoformat()
             )
             return None, error
         
@@ -119,7 +119,7 @@ class MockMarketDataService:
                 message=f"Market is closed. {market_hours.reason}. Next open: {market_hours.next_open}",
                 is_recoverable=True,
                 suggested_action="Use cached data or wait for market open",
-                timestamp=datetime.now().isoformat()
+                timestamp=datetime.now(timezone.utc).isoformat()
             )
             return None, error
         
@@ -137,7 +137,7 @@ class MockMarketDataService:
             bid=float(price * 0.999),
             ask=float(price * 1.001),
             spread=float(price * 0.002),
-            timestamp=datetime.now().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             change=float(price - base_price),
             change_percent=float(change_percent)
         )
@@ -164,7 +164,7 @@ class MockMarketDataService:
                 message=f"Symbol {symbol} not found",
                 is_recoverable=False,
                 suggested_action="Check symbol spelling",
-                timestamp=datetime.now().isoformat()
+                timestamp=datetime.now(timezone.utc).isoformat()
             )
             return pd.DataFrame(), error
         
@@ -172,7 +172,7 @@ class MockMarketDataService:
         base_price = self.mock_prices.get(symbol, 100.0)
         days = 90  # 3 months of data
         
-        dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
+        dates = pd.date_range(end=datetime.now(timezone.utc), periods=days, freq='D')
         
         # Generate price series with trend and volatility
         trend = random.uniform(-0.001, 0.002)  # Daily trend
@@ -264,7 +264,7 @@ class MockMarketDataService:
                     stop_loss=0.0,
                     risk_score=0.5,
                     indicators={},
-                    timestamp=datetime.now().isoformat(),
+                    timestamp=datetime.now(timezone.utc).isoformat(),
                     is_after_hours=True
                 )
             return None
@@ -317,14 +317,14 @@ class MockMarketDataService:
             stop_loss=float(stop_loss),
             risk_score=float(risk_score),
             indicators=indicators,
-            timestamp=datetime.now().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             is_after_hours=is_after_hours
         )
     
     def get_market_summary(self) -> Dict[str, Any]:
         """Get mock market summary"""
         summary = {
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'symbols': {},
             'market_status': 'OPEN' if self.check_market_hours().is_open else 'CLOSED',
             'total_symbols': len(self.symbols)

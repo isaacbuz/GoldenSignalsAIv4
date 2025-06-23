@@ -6,7 +6,7 @@ Analyzes trading chart screenshots using computer vision and AI
 import base64
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
-import numpy as np
+import , timezonenumpy as np
 from PIL import Image
 import io
 import cv2
@@ -591,5 +591,5 @@ async def analyze_chart_screenshot(image_data: str, context: Optional[str] = Non
         'visual_data': result['visual_data'],
         'trading_signals': result['trading_signals'],
         'confidence': result['confidence'],
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now(timezone.utc).isoformat()
     } 

@@ -11,7 +11,7 @@ class PerformanceTracker:
             "symbol": symbol,
             "signal": signal,
             "price": price,
-            "timestamp": pd.Timestamp.utcnow().isoformat()
+            "timestamp": pd.Timestamp.now(tz='UTC').isoformat()
         }
         if mode == "live":
             self.live_log.append(entry)

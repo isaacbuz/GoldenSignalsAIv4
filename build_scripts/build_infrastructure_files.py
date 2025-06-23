@@ -41,7 +41,7 @@ async def fetch_stock_data(symbol, timeframe="1d"):
 async def fetch_realtime_data(symbol):
     return pd.DataFrame({
         "close": [280.0],
-        "timestamp": [pd.Timestamp.now()]
+        "timestamp": [pd.Timestamp.now(tz='UTC')]
     })
 """,
     "infrastructure/data/preprocessors/__init__.py": "# infrastructure/data/preprocessors/__init__.py\n",

@@ -136,7 +136,7 @@ class EnsembleClassifierAgent(BaseAgent):
                 "signal": signal,
                 "confidence": float(avg_probability),
                 "model_predictions": predictions,
-                "timestamp": pd.Timestamp.now().isoformat()
+                "timestamp": pd.Timestamp.now(tz='UTC').isoformat()
             }
             
         except Exception as e:

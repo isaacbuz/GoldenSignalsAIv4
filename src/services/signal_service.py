@@ -7,7 +7,7 @@ analytics, and performance tracking.
 
 import asyncio
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple
+from typi, timezoneng import Any, Dict, List, Optional, Tuple
 import logging
 
 logger = logging.getLogger(__name__)
@@ -273,7 +273,7 @@ class SignalService:
                 "executed": True,
                 "was_profitable": was_profitable,
                 "actual_return": actual_return,
-                "execution_time": datetime.utcnow(),
+                "execution_time": datetime.now(timezone.utc),
                 "feedback_notes": notes,
                 "feedback_user": user_id
             }
@@ -346,7 +346,7 @@ class SignalService:
             return {
                 "total_signals_24h": len([
                     s for s in recent_signals 
-                    if s.created_at > datetime.utcnow() - timedelta(hours=24)
+                    if s.created_at > datetime.now(timezone.utc) - timedelta(hours=24)
                 ]),
                 "cache_hit_rate": cache_stats.get("cache_hit_rate", 0),
                 "avg_signal_confidence": sum(s.confidence for s in recent_signals) / len(recent_signals) if recent_signals else 0,

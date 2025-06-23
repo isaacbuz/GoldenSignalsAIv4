@@ -152,7 +152,7 @@ class RealTimeRiskMonitor:
         
         if high_risk_prob > self.alert_threshold:
             alert = {
-                'timestamp': pd.Timestamp.now(),
+                'timestamp': pd.Timestamp.now(tz='UTC'),
                 'risk_level': 'HIGH',
                 'message': f"High Risk Alert: {high_risk_prob * 100:.2f}% chance of significant market risk",
                 'recommendation': risk_assessment['options_risk']['risk_recommendation']

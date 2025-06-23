@@ -21,7 +21,7 @@ class DataService:
                 "type": "PriceUpdateEvent",
                 "symbol": symbol,
                 "price": realtime_df['close'].iloc[-1],
-                "timestamp": pd.Timestamp.now().isoformat()
+                "timestamp": pd.Timestamp.now(tz='UTC').isoformat()
             }
             await self.event_publisher.publish("price_updates", event)
         

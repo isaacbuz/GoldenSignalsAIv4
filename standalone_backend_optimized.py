@@ -301,7 +301,7 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
         
         # Generate mock historical data if all else fails
         logger.warning(f"Using mock historical data for {symbol}")
-        dates = pd.date_range(end=pd.Timestamp.now(), periods=30, freq='D')
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=30, freq='D')
         mock_data = pd.DataFrame({
             'Open': np.random.uniform(100, 500, len(dates)),
             'High': np.random.uniform(102, 505, len(dates)),
@@ -318,7 +318,7 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
     except Exception as e:
         logger.error(f"Error fetching historical data for {symbol}: {e}")
         # Return mock data
-        dates = pd.date_range(end=pd.Timestamp.now(), periods=30, freq='D')
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=30, freq='D')
         mock_data = pd.DataFrame({
             'Open': np.random.uniform(100, 500, len(dates)),
             'High': np.random.uniform(102, 505, len(dates)),
@@ -981,11 +981,11 @@ async def run_backtest(
         
         # Use default dates if not provided
         if not end_date:
-            end_date = datetime.now().strftime('%Y-%m-%d')
+            end_date = datetime.now(tz=timezone.utc).strftime('%Y-%m-%d')
         if not start_date:
             # Quick mode: 3 months, normal: 1 year
             days_back = 90 if quick_mode else 365
-            start_date = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
+            start_date = (datetime.now(tz=timezone.utc) - timedelta(days=days_back)).strftime('%Y-%m-%d')
         
         # Run backtest
         results = await engine.run_comprehensive_backtest(

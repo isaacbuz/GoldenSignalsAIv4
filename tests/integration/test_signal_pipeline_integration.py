@@ -133,7 +133,7 @@ class TestSignalPipelineIntegration:
     async def test_ml_model_integration(self, signal_engine):
         """Test ML model training and prediction integration"""
         # Create training data
-        dates = pd.date_range(end=pd.Timestamp.now(), periods=100, freq='D')
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=100, freq='D')
         training_data = pd.DataFrame({
             'Open': np.random.uniform(100, 110, 100),
             'High': np.random.uniform(110, 120, 100),
@@ -204,18 +204,18 @@ class TestSignalPipelineIntegration:
         symbols = ["AAPL", "GOOGL", "MSFT", "AMZN", "TSLA"]
         
         # Generate signals for all symbols
-        start_time = datetime.now()
+        start_time = datetime.now(tz=timezone.utc)
         all_signals = await signal_engine.generate_signals(symbols)
-        generation_time = (datetime.now() - start_time).total_seconds()
+        generation_time = (datetime.now(tz=timezone.utc) - start_time).total_seconds()
         
         # Should generate signals for multiple symbols efficiently
         assert len(all_signals) >= len(symbols)  # At least one signal per symbol
         assert generation_time < 10  # Should complete within 10 seconds
         
         # Filter all signals at once
-        start_time = datetime.now()
+        start_time = datetime.now(tz=timezone.utc)
         filtered_signals = filter_pipeline.filter_signals(all_signals)
-        filter_time = (datetime.now() - start_time).total_seconds()
+        filter_time = (datetime.now(tz=timezone.utc) - start_time).total_seconds()
         
         assert filter_time < 1  # Filtering should be fast
         

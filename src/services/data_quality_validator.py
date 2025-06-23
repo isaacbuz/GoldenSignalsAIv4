@@ -7,7 +7,7 @@ import os
 import logging
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
-import asyncio
+import asy, timezonencio
 from dataclasses import dataclass
 import pandas as pd
 import numpy as np
@@ -148,7 +148,7 @@ class DataQualityValidator:
             logger.warning("Polygon API key not configured")
             return None
             
-        end_date = datetime.now()
+        end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=30)
         
         url = f"https://api.polygon.io/v2/aggs/ticker/{symbol}/range/1/day/{start_date.strftime('%Y-%m-%d')}/{end_date.strftime('%Y-%m-%d')}"
