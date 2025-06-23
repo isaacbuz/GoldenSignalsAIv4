@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from src.services.data_quality_validator import DataQualityValidator, DataQualityReport
 from src.utils.timezone_utils import now_utc, make_aware
+from src.utils.performance import measure_performance, AsyncBatchProcessor, performance_cache
 
 logger = logging.getLogger(__name__)
 
@@ -76,17 +77,27 @@ class SignalGenerationEngine:
         
     async def generate_signals(self, symbols: List[str]) -> List[TradingSignal]:
         """Generate high-quality signals for multiple symbols"""
-        tasks = [self._generate_signal_for_symbol(symbol) for symbol in symbols]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        
-        signals = []
-        for result in results:
-            if isinstance(result, TradingSignal):
-                signals.append(result)
-            elif isinstance(result, Exception):
-                logger.error(f"Signal generation error: {result}")
-                
-        return signals
+        with measure_performance("signal_generation_total"):
+            # Use batch processor for better performance
+            batch_processor = AsyncBatchProcessor(
+                batch_size=10,
+                max_concurrent=self.executor._max_workers
+            )
+            
+            results = await batch_processor.process_all(
+                symbols,
+                self._generate_signal_for_symbol
+            )
+            
+            signals = []
+            for result in results:
+                if isinstance(result, TradingSignal):
+                    signals.append(result)
+                elif isinstance(result, Exception):
+                    logger.error(f"Signal generation error: {result}")
+                    
+            logger.info(f"Generated {len(signals)} signals from {len(symbols)} symbols")
+            return signals
         
     async def _generate_signal_for_symbol(self, symbol: str) -> Optional[TradingSignal]:
         """Generate signal for a single symbol"""
@@ -94,15 +105,17 @@ class SignalGenerationEngine:
         if symbol in self.signal_cache:
             cached_signal, cache_time = self.signal_cache[symbol]
             if (now_utc() - cache_time).seconds < self.cache_ttl:
+                logger.debug(f"Using cached signal for {symbol}")
                 return cached_signal
         
         try:
-            # Get high-quality data
-            data, source = await self.data_validator.get_market_data_with_fallback(symbol)
-            
-            if data is None or data.empty:
-                logger.warning(f"No data available for {symbol}")
-                return None
+            with measure_performance(f"signal_generation_{symbol}"):
+                # Get high-quality data
+                data, source = await self.data_validator.get_market_data_with_fallback(symbol)
+                
+                if data is None or data.empty:
+                    logger.warning(f"No data available for {symbol}")
+                    return None
                 
             # Validate data quality
             quality_report = self.data_validator.validate_market_data(data, symbol)
