@@ -1,0 +1,45 @@
+{
+  "execution_time": {
+    "start": "2025-06-21T00:17:59.372672",
+    "end": "2025-06-21T00:18:00.262182",
+    "duration": 0.34318089485168457
+  },
+  "summary": {
+    "total_passed": 2,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_errors": 0,
+    "success_rate": 100.0
+  },
+  "results": [
+    {
+      "module": "Infrastructure",
+      "test_type": "Config Validation",
+      "status": "PASSED",
+      "duration": 0.0484919548034668,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('config.yaml')); print('Config is valid')"
+      ]
+    },
+    {
+      "module": "Infrastructure",
+      "test_type": "Database Connection Test",
+      "status": "PASSED",
+      "duration": 0.2946889400482178,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "check_databases.py"
+      ]
+    }
+  ]
+}

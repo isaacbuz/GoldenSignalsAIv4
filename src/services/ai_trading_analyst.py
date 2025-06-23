@@ -12,8 +12,8 @@ import json
 from dataclasses import dataclass
 from enum import Enum
 
-from src.agents.core.agent_factory import get_agent_factory
-from src.agents.orchestration.meta_orchestrator import MetaOrchestrator, MetaStrategy
+from agents.core.agent_factory import get_agent_factory
+from agents.orchestration.meta_orchestrator import MetaOrchestrator, MetaStrategy
 from src.services.chart_generator_service import ChartGeneratorService
 from src.services.nlp_service import NLPService
 

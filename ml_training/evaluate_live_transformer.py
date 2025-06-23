@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_squared_error, r2_score, accuracy_score
 
-from src.agents.ml.transformer_agent import TransformerAgent
-from src.models.market_data import MarketData
-from infrastructure.data.fetchers.live_data_fetcher import (
+from agents.ml.transformer_agent import TransformerAgent
+from src.ml.models.market_data import MarketData
+from src.data.fetchers.live_data_fetcher import (
     UnifiedDataFeed,
     YahooFinanceSource,
     PolygonIOSource,

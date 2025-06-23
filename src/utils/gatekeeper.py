@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.models.signals import Signal
+from src.ml.models.signals import Signal
 
 
 class SignalGatekeeper:

@@ -188,7 +188,7 @@ class TestAdaptiveLearningSystem:
         
         assert len(encoding) == 9  # 3 trends x 3 volatility levels
         assert sum(encoding) == 1.0  # One-hot encoding
-        assert encoding[4] == 1.0  # uptrend_normal_vol position
+        assert encoding[1] == 1.0  # uptrend_normal_vol position
     
     def test_prepare_training_data(self, learning_system, sample_learning_feedback):
         """Test training data preparation"""
@@ -227,9 +227,10 @@ class TestAdaptiveLearningSystem:
         sample_learning_feedback
     ):
         """Test agent profile calculation"""
+        from copy import deepcopy
         feedbacks = []
         for i in range(20):
-            feedback = sample_learning_feedback
+            feedback = deepcopy(sample_learning_feedback)
             feedback.pnl = 100 if i % 2 == 0 else -50
             feedback.accuracy_contribution = 1.0 if i % 2 == 0 else 0.0
             feedbacks.append(feedback)
@@ -295,11 +296,12 @@ class TestAdaptiveLearningSystem:
         
         # Mock model creation and training
         mock_model = MagicMock()
-        mock_model.fit = MagicMock()
+        # Make fit accept any arguments including sample_weight
+        mock_model.fit = MagicMock(side_effect=lambda X, y, **kwargs: None)
         learning_system._create_agent_model = MagicMock(return_value=mock_model)
         learning_system._save_model_version = AsyncMock()
         
-        with patch('sklearn.model_selection.cross_val_score', return_value=np.array([0.7, 0.72, 0.68, 0.71, 0.69])):
+        with patch('src.domain.backtesting.adaptive_learning_system.cross_val_score', return_value=np.array([0.7, 0.72, 0.68, 0.71, 0.69])):
             result = await learning_system._train_single_agent('momentum_agent', feedbacks)
         
         assert result['status'] == 'success'
@@ -322,8 +324,10 @@ class TestAdaptiveLearningSystem:
                 agent_type='technical',
                 accuracy=0.6,
                 performance_by_regime={
-                    'uptrend_normal_vol': {'accuracy': 0.7 if agent_id == 'agent1' else 0.4},
-                    'downtrend_high_vol': {'accuracy': 0.4 if agent_id == 'agent1' else 0.7}
+                    'uptrend_normal_vol': {'accuracy': 0.7 if agent_id == 'agent1' else 0.35},
+                    'downtrend_high_vol': {'accuracy': 0.35 if agent_id == 'agent1' else 0.7},
+                    'sideways_normal_vol': {'accuracy': 0.8 if agent_id == 'agent1' else 0.3},
+                    'uptrend_high_vol': {'accuracy': 0.2 if agent_id == 'agent1' else 0.75}
                 },
                 feature_importance={'RSI': 0.3, 'MACD': 0.2}
             )

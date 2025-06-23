@@ -8,7 +8,7 @@ Migrated from /backtesting for unified access by agents and research modules.
 import logging
 import numpy as np
 import pandas as pd
-from src.domain.models.options import OptionsData
+from src.ml.models.options import OptionsData
 
 logging.basicConfig(
     level=logging.INFO,

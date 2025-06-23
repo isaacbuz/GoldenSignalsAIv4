@@ -12,9 +12,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services.signal_service import SignalService
 from src.core.dependencies import get_signal_service, get_current_user
-from src.models.signals import Signal, SignalType, SignalStrength
+from src.ml.models.signals import Signal, SignalType, SignalStrength
 from src.core.database import get_db
-from src.models.schemas import SignalCreate
+from src.ml.models.schemas import SignalCreate
 
 router = APIRouter()
 

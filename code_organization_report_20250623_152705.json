@@ -1,0 +1,151 @@
+{
+  "timestamp": "2025-06-23T15:27:05.230203",
+  "dry_run": true,
+  "total_changes": 24,
+  "changes": [
+    {
+      "action": "create_dir",
+      "source": "src/repositories",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229022"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/repositories/market",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229049"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/repositories/signals",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229058"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/signals",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229173"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/market",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229192"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/portfolio",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229230"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/risk",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229240"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/core/di",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229493"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/core/exceptions",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229508"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/models/domain",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229567"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/models/dto",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229576"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/interfaces",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.229585"
+    },
+    {
+      "action": "move",
+      "source": "signal_generator_simple.py",
+      "destination": "archive/legacy_signal_generators/signal_generator_simple.py",
+      "timestamp": "2025-06-23T15:27:05.229607"
+    },
+    {
+      "action": "move",
+      "source": "integrated_signal_generator.py",
+      "destination": "archive/legacy_signal_generators/integrated_signal_generator.py",
+      "timestamp": "2025-06-23T15:27:05.229620"
+    },
+    {
+      "action": "move",
+      "source": "precise_signal_demo.py",
+      "destination": "archive/legacy_signal_generators/precise_signal_demo.py",
+      "timestamp": "2025-06-23T15:27:05.229630"
+    },
+    {
+      "action": "move",
+      "source": "ml_signal_blender.py",
+      "destination": "archive/legacy_signal_generators/ml_signal_blender.py",
+      "timestamp": "2025-06-23T15:27:05.229638"
+    },
+    {
+      "action": "move",
+      "source": "precise_options_signal_generator.py",
+      "destination": "archive/legacy_signal_generators/precise_options_signal_generator.py",
+      "timestamp": "2025-06-23T15:27:05.229648"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/signal_generation_engine.py",
+      "destination": "src/services/signals/signal_service.py",
+      "timestamp": "2025-06-23T15:27:05.229766"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/signal_filtering_pipeline.py",
+      "destination": "src/services/signals/signal_filter.py",
+      "timestamp": "2025-06-23T15:27:05.229784"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/market_data_service.py",
+      "destination": "src/services/market/data_service.py",
+      "timestamp": "2025-06-23T15:27:05.230050"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/data_quality_validator.py",
+      "destination": "src/services/market/quality_validator.py",
+      "timestamp": "2025-06-23T15:27:05.230065"
+    },
+    {
+      "action": "create",
+      "source": "src/core/di/container.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.230190"
+    },
+    {
+      "action": "create",
+      "source": "src/interfaces/repository.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.230197"
+    },
+    {
+      "action": "create",
+      "source": "src/interfaces/service.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:05.230201"
+    }
+  ]
+}

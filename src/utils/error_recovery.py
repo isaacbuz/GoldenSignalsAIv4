@@ -426,4 +426,30 @@ def with_circuit_breaker(
             recovery_timeout=timedelta(seconds=recovery_timeout),
             expected_exception=expected_exception
         )
-    ) 
+    )
+
+
+# Convenience functions for testing
+def retry(max_attempts: int = 3, delay: float = 1.0):
+    """Simple retry decorator"""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    if attempt < max_attempts - 1:
+                        import time
+                        time.sleep(delay)
+            raise last_exception
+        return wrapper
+    return decorator
+
+
+def exponential_backoff(attempt: int, base: float = 2.0, max_delay: float = 60.0) -> float:
+    """Calculate exponential backoff delay"""
+    delay = min(base ** attempt, max_delay)
+    return delay 

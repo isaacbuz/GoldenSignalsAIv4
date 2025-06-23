@@ -1,0 +1,332 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run security scans daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  # CodeQL Analysis
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'javascript' ]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-and-quality
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
+
+  # Dependency Security Scanning
+  dependency-scan:
+    name: Dependency Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Python Safety check
+      run: |
+        pip install safety
+        safety check -r requirements.txt --json > safety-report.json || true
+        
+        # Parse and display results
+        python -c "
+        import json
+        with open('safety-report.json') as f:
+            data = json.load(f)
+            if data:
+                print('⚠️ Security vulnerabilities found:')
+                for vuln in data:
+                    print(f'  - {vuln[0]} {vuln[2]}: {vuln[3]}')
+            else:
+                print('✅ No known security vulnerabilities')
+        "
+        
+    - name: npm audit
+      working-directory: frontend
+      run: |
+        npm audit --json > npm-audit.json || true
+        
+        # Check for high/critical vulnerabilities
+        CRITICAL=$(jq '.metadata.vulnerabilities.critical' npm-audit.json)
+        HIGH=$(jq '.metadata.vulnerabilities.high' npm-audit.json)
+        
+        if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+          echo "⚠️ Found $CRITICAL critical and $HIGH high vulnerabilities"
+          npm audit
+          exit 1
+        fi
+
+  # Container Security Scanning
+  container-scan:
+    name: Container Security
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build backend image
+      run: docker build -t goldensignals-backend:scan .
+      
+    - name: Build frontend image
+      run: docker build -t goldensignals-frontend:scan ./frontend
+      
+    - name: Run Trivy on backend image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'goldensignals-backend:scan'
+        format: 'sarif'
+        output: 'backend-trivy.sarif'
+        
+    - name: Run Trivy on frontend image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'goldensignals-frontend:scan'
+        format: 'sarif'
+        output: 'frontend-trivy.sarif'
+        
+    - name: Upload backend scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'backend-trivy.sarif'
+        category: 'container-backend'
+        
+    - name: Upload frontend scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'frontend-trivy.sarif'
+        category: 'container-frontend'
+
+  # Secret Scanning
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for secret scanning
+        
+    - name: TruffleHog scan
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: ${{ github.event.repository.default_branch }}
+        head: HEAD
+        extra_args: --debug --only-verified
+        
+    - name: GitLeaks scan
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # License Compliance
+  license-check:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Python license check
+      run: |
+        pip install pip-licenses
+        pip-licenses --format=json --output-file=python-licenses.json
+        
+        # Check for problematic licenses
+        python -c "
+        import json
+        
+        ALLOWED_LICENSES = [
+            'MIT', 'Apache-2.0', 'BSD-3-Clause', 'BSD-2-Clause',
+            'ISC', 'Python-2.0', 'LGPL-2.1+', 'LGPL-3.0+'
+        ]
+        
+        with open('python-licenses.json') as f:
+            licenses = json.load(f)
+            
+        problems = []
+        for pkg in licenses:
+            if pkg['License'] not in ALLOWED_LICENSES:
+                problems.append(f\"{pkg['Name']}: {pkg['License']}\")
+                
+        if problems:
+            print('⚠️ Packages with license issues:')
+            for p in problems:
+                print(f'  - {p}')
+            exit(1)
+        else:
+            print('✅ All package licenses are compliant')
+        "
+        
+    - name: Frontend license check
+      working-directory: frontend
+      run: |
+        npx license-checker --json > licenses.json
+        
+        # Check for problematic licenses
+        node -e "
+        const licenses = require('./licenses.json');
+        const allowed = ['MIT', 'Apache-2.0', 'BSD-3-Clause', 'BSD-2-Clause', 'ISC'];
+        
+        const problems = [];
+        for (const [pkg, info] of Object.entries(licenses)) {
+          if (info.licenses && !allowed.includes(info.licenses)) {
+            problems.push(\`\${pkg}: \${info.licenses}\`);
+          }
+        }
+        
+        if (problems.length > 0) {
+          console.log('⚠️ Packages with license issues:');
+          problems.forEach(p => console.log(\`  - \${p}\`));
+          process.exit(1);
+        } else {
+          console.log('✅ All package licenses are compliant');
+        }
+        "
+
+  # OWASP Dependency Check
+  owasp-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'GoldenSignalsAI'
+        path: '.'
+        format: 'ALL'
+        args: >
+          --enableRetired
+          --enableExperimental
+        
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: owasp-dependency-check
+        path: reports/
+
+  # Security Report Summary
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [codeql, dependency-scan, container-scan, secret-scan, license-check, owasp-check]
+    if: always()
+    
+    steps:
+    - name: Generate security report
+      run: |
+        echo "# Security Scan Summary" > security-report.md
+        echo "" >> security-report.md
+        echo "## Scan Results" >> security-report.md
+        echo "" >> security-report.md
+        
+        # Check job statuses
+        if [ "${{ needs.codeql.result }}" == "success" ]; then
+          echo "✅ CodeQL Analysis: Passed" >> security-report.md
+        else
+          echo "❌ CodeQL Analysis: Failed" >> security-report.md
+        fi
+        
+        if [ "${{ needs.dependency-scan.result }}" == "success" ]; then
+          echo "✅ Dependency Scanning: Passed" >> security-report.md
+        else
+          echo "❌ Dependency Scanning: Failed" >> security-report.md
+        fi
+        
+        if [ "${{ needs.container-scan.result }}" == "success" ]; then
+          echo "✅ Container Security: Passed" >> security-report.md
+        else
+          echo "❌ Container Security: Failed" >> security-report.md
+        fi
+        
+        if [ "${{ needs.secret-scan.result }}" == "success" ]; then
+          echo "✅ Secret Scanning: Passed" >> security-report.md
+        else
+          echo "❌ Secret Scanning: Failed" >> security-report.md
+        fi
+        
+        if [ "${{ needs.license-check.result }}" == "success" ]; then
+          echo "✅ License Compliance: Passed" >> security-report.md
+        else
+          echo "❌ License Compliance: Failed" >> security-report.md
+        fi
+        
+        if [ "${{ needs.owasp-check.result }}" == "success" ]; then
+          echo "✅ OWASP Check: Passed" >> security-report.md
+        else
+          echo "❌ OWASP Check: Failed" >> security-report.md
+        fi
+        
+        echo "" >> security-report.md
+        echo "Generated at: $(date)" >> security-report.md
+        
+        cat security-report.md
+        
+    - name: Upload security report
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-report
+        path: security-report.md
+        
+    - name: Comment on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const report = fs.readFileSync('security-report.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: report
+          }); 

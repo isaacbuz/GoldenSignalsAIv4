@@ -17,7 +17,7 @@ logging.basicConfig(
 # Import our components
 from src.domain.backtesting.advanced_backtest_engine import AdvancedBacktestEngine
 from src.domain.backtesting.adaptive_learning_system import AdaptiveLearningSystem
-from src.agents.common.adaptive_agent_interface import (
+from agents.common.adaptive_agent_interface import (
     AdaptiveAgentInterface,
     AdaptiveMomentumAgent,
     AdaptiveAgentFactory

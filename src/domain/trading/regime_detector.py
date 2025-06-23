@@ -45,48 +45,9 @@ class MarketRegimeDetector:
         )
         return df
 
-    def _map_vol_to_regime(self, vol: float) -> str:
+    def _map_vol_to_regime(self, vol: float) -> int:
         if vol > self.threshold * 2:
             return 2  # bear
         elif vol < self.threshold:
             return 0  # bull
         return 1  # sideways
-        )
-        try:
-            if len(prices) < self.window:
-                logger.warning(
-                    {
-                        "message": f"Insufficient data for regime detection: {len(prices)} < {self.window}"
-                    }
-                )
-                return "mean_reverting"
-
-            # Calculate returns and volatility
-            returns = prices.pct_change().dropna()
-            volatility = returns[-self.window :].std() * np.sqrt(252)
-            # Calculate trend strength
-            trend = (prices.iloc[-1] - prices.iloc[-self.window]) / prices.iloc[
-                -self.window
-            ]
-
-            # Determine regime for options trading
-            if volatility > 0.3:
-                regime = "volatile"  # Suitable for volatility-based options strategies
-            elif abs(trend) > 0.05:
-                regime = "trending"  # Suitable for directional options plays
-            else:
-                regime = (
-                    "mean_reverting"  # Suitable for mean-reversion options strategies
-                )
-
-            logger.info(
-                {
-                    "message": f"Detected regime: {regime}",
-                    "volatility": volatility,
-                    "trend": trend,
-                }
-            )
-            return regime
-        except Exception as e:
-            logger.error({"message": f"Failed to detect regime: {str(e)}"})
-            return "mean_reverting"

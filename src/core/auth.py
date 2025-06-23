@@ -12,7 +12,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
 
-from src.core.config import settings
+from src.config.settings import settings
 from src.core.database import DatabaseManager
 
 logger = logging.getLogger(__name__)

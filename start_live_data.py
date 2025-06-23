@@ -15,7 +15,7 @@ from typing import Dict, Any
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import data components
-from infrastructure.data.fetchers.live_data_fetcher import (
+from src.data.fetchers.live_data_fetcher import (
     UnifiedDataFeed, 
     YahooFinanceSource, 
     PolygonIOSource,

@@ -71,19 +71,28 @@ class TestGammaExposureAgent:
             }
         ]
     
-    def test_agent_initialization(self):
+    def test_agent_initialization(self, agent):
         """Test agent initializes with correct parameters"""
-        agent = GammaExposureAgent(
+        # Test default initialization via fixture
+        assert agent.name == "TestGammaAgent"
+        assert agent.agent_type == "options"
+        assert agent.gamma_threshold == 100000
+        assert agent.pin_proximity_threshold == 0.02
+        assert agent.min_open_interest == 100
+        
+        # Test custom initialization
+        custom_agent = GammaExposureAgent(
+            name="CustomGamma",
             gamma_threshold=50000,
             pin_proximity_threshold=0.01,
             min_open_interest=50
         )
         
-        assert agent.name == "GammaExposure"
-        assert agent.agent_type == "options"
-        assert agent.gamma_threshold == 50000
-        assert agent.pin_proximity_threshold == 0.01
-        assert agent.min_open_interest == 50
+        assert custom_agent.name == "CustomGamma"
+        assert custom_agent.agent_type == "options"
+        assert custom_agent.gamma_threshold == 50000
+        assert custom_agent.pin_proximity_threshold == 0.01
+        assert custom_agent.min_open_interest == 50
     
     def test_black_scholes_gamma_calculation(self, agent):
         """Test Black-Scholes gamma calculation"""

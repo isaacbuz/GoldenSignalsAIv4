@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import logging
 
 from src.core.dependencies import get_db_manager as get_db, get_current_user
-from src.models.users import User
+from src.ml.models.users import User
 from src.services.notifications.alert_manager import AlertManager
 from pydantic import BaseModel, Field
 from enum import Enum

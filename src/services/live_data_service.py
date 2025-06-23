@@ -17,7 +17,7 @@ import numpy as np
 from aiohttp import ClientSession
 import websockets
 
-from infrastructure.data.fetchers.live_data_fetcher import (
+from src.data.fetchers.live_data_fetcher import (
     UnifiedDataFeed, 
     YahooFinanceSource, 
     PolygonIOSource,

@@ -646,7 +646,7 @@ IB_GATEWAY_PORT=7497
 ```python
 # start_live_data.py
 import asyncio
-from infrastructure.data.live_data_service import LiveDataService
+from src.data.live_data_service import LiveDataService
 from config.data_sources import DATA_SOURCES
 
 async def main():
