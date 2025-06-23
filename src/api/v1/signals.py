@@ -9,14 +9,22 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
+import logging
 
 from src.services.signal_service import SignalService
 from src.core.dependencies import get_signal_service, get_current_user
 from src.ml.models.signals import Signal, SignalType, SignalStrength
 from src.core.database import get_db
 from src.ml.models.schemas import SignalCreate
+from src.application.services import get_services
+from src.models.dto.signal_dto import SignalsResponse
 
-router = APIRouter()
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/signals", tags=["signals"])
+
+# Get services instance
+services = get_services()
 
 
 class SignalResponse(BaseModel):
@@ -358,4 +366,112 @@ async def create_signal(
     signal_service: SignalService = Depends(get_signal_service)
 ):
     """Create a new trading signal"""
-    return await signal_service.create_signal(signal) 
+    return await signal_service.create_signal(signal)
+
+
+@router.get("/generate", response_model=SignalsResponse)
+async def generate_signals(
+    symbols: List[str] = Query(
+        default=["AAPL", "GOOGL", "MSFT"],
+        description="List of stock symbols to analyze"
+    )
+):
+    """
+    Generate trading signals for given symbols
+    
+    Args:
+        symbols: List of stock symbols to analyze
+        
+    Returns:
+        SignalsResponse with generated signals
+    """
+    try:
+        signals = await services.generate_signals(symbols)
+        
+        return SignalsResponse(
+            signals=signals,
+            count=len(signals),
+            status="success"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error generating signals: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{signal_id}/performance")
+async def get_signal_performance(signal_id: str):
+    """
+    Get performance metrics for a specific signal
+    
+    Args:
+        signal_id: Signal identifier
+        
+    Returns:
+        Performance metrics dictionary
+    """
+    try:
+        performance = await services.get_signal_performance(signal_id)
+        
+        if "error" in performance:
+            raise HTTPException(status_code=404, detail=performance["error"])
+            
+        return performance
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting signal performance: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/analyze-risk")
+async def analyze_signal_risk(signals: List[dict]):
+    """
+    Analyze risk for given signals
+    
+    Args:
+        signals: List of signal dictionaries
+        
+    Returns:
+        Risk analysis results
+    """
+    try:
+        risk_analysis = await services.analyze_risk(signals)
+        
+        if "error" in risk_analysis:
+            raise HTTPException(status_code=400, detail=risk_analysis["error"])
+            
+        return risk_analysis
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error analyzing risk: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/validate/{symbol}")
+async def validate_data_quality(symbol: str):
+    """
+    Validate data quality for a symbol
+    
+    Args:
+        symbol: Stock symbol
+        
+    Returns:
+        Data quality validation report
+    """
+    try:
+        validation = await services.validate_data_quality(symbol)
+        
+        if "error" in validation:
+            raise HTTPException(status_code=400, detail=validation["error"])
+            
+        return validation
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error validating data quality: {e}")
+        raise HTTPException(status_code=500, detail=str(e)) 
