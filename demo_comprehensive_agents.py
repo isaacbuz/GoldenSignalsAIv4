@@ -11,14 +11,14 @@ import json
 from typing import Dict, Any, List
 
 # Import agent components
-from src.agents.core.agent_factory import get_agent_factory
-from src.agents.orchestration.agent_orchestrator import (
+from agents.core.agent_factory import get_agent_factory
+from agents.orchestration.agent_orchestrator import (
     AgentOrchestrator, OrchestrationStrategy, WorkflowDefinition, AgentTask
 )
-from src.agents.orchestration.meta_orchestrator import (
+from agents.orchestration.meta_orchestrator import (
     MetaOrchestrator, MetaStrategy, MetaWorkflow
 )
-from src.agents.core.unified_base_agent import MessagePriority
+from agents.core.unified_base_agent import MessagePriority
 
 
 def generate_sample_market_data(symbol: str, days: int = 30) -> pd.DataFrame:
@@ -263,7 +263,7 @@ async def demo_complete_system():
     print(f"Total available agent types: {len(available)}")
     
     # Show agents by type
-    from src.agents.core.unified_base_agent import AgentType
+    from agents.core.unified_base_agent import AgentType
     for agent_type in AgentType:
         agents = factory.get_agents_by_type(agent_type)
         print(f"  {agent_type.value}: {len(agents)} agents")

@@ -214,4 +214,70 @@ class MetricsCollector:
 
 
 # Global metrics collector instance
-metrics = MetricsCollector() 
+metrics = MetricsCollector()
+
+
+# Metric calculation functions
+def calculate_win_rate(wins: int, losses: int) -> float:
+    """
+    Calculate win rate from wins and losses
+    
+    Args:
+        wins: Number of winning trades
+        losses: Number of losing trades
+        
+    Returns:
+        Win rate as a decimal (0-1)
+    """
+    total_trades = wins + losses
+    if total_trades == 0:
+        return 0.0
+    return wins / total_trades
+
+
+def calculate_profit_factor(profits: list, losses: list) -> float:
+    """
+    Calculate profit factor (sum of profits / sum of losses)
+    
+    Args:
+        profits: List of profit amounts
+        losses: List of loss amounts (as positive values)
+        
+    Returns:
+        Profit factor ratio
+    """
+    total_profits = sum(profits) if profits else 0
+    total_losses = sum(losses) if losses else 0
+    
+    if total_losses == 0:
+        return float('inf') if total_profits > 0 else 0.0
+    
+    return total_profits / total_losses
+
+
+def calculate_sharpe_ratio(returns: list, risk_free_rate: float = 0.0) -> float:
+    """
+    Calculate Sharpe ratio from returns
+    
+    Args:
+        returns: List of period returns
+        risk_free_rate: Risk-free rate (default 0)
+        
+    Returns:
+        Sharpe ratio
+    """
+    if not returns or len(returns) < 2:
+        return 0.0
+    
+    import numpy as np
+    
+    returns_array = np.array(returns)
+    excess_returns = returns_array - risk_free_rate
+    
+    mean_excess = np.mean(excess_returns)
+    std_excess = np.std(excess_returns)
+    
+    if std_excess == 0:
+        return float('inf') if mean_excess > 0 else float('-inf') if mean_excess < 0 else 0.0
+    
+    return mean_excess / std_excess * np.sqrt(252)  # Annualized 

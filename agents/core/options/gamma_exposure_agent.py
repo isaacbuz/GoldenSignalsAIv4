@@ -36,7 +36,9 @@ class GammaExposureAgent(BaseAgent):
             days_to_expiry_weight: Weight for time decay in gamma calculation
             min_open_interest: Minimum open interest to consider
         """
-        super().__init__(name=name, agent_type="options")
+        super().__init__()
+        self.name = name
+        self.agent_type = "options"
         self.gamma_threshold = gamma_threshold
         self.pin_proximity_threshold = pin_proximity_threshold
         self.large_gamma_multiplier = large_gamma_multiplier
@@ -166,7 +168,7 @@ class GammaExposureAgent(BaseAgent):
             # Find the flip point closest to current spot
             if flip_candidates:
                 closest_flip = min(flip_candidates, key=lambda x: abs(x[0] - spot_price))
-                return closest_flip[0]
+                return float(closest_flip[0])
             
             return None
             
@@ -412,4 +414,18 @@ class GammaExposureAgent(BaseAgent):
                 "action": "hold",
                 "confidence": 0.0,
                 "metadata": {"error": str(e)}
-            } 
+            }
+    
+    async def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Process and potentially modify a trading signal.
+        
+        Args:
+            signal (Dict[str, Any]): Trading signal to process.
+        
+        Returns:
+            Dict[str, Any]: Processed trading signal with potential modifications.
+        """
+        # Default implementation: return signal as-is
+        logger.info(f"Processing signal: {signal}")
+        return signal 

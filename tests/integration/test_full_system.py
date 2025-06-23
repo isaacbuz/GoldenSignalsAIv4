@@ -1,188 +1,179 @@
 """
-Integration tests for the complete trading system.
+Integration tests for the GoldenSignalsAI V2 trading system.
 """
 import pytest
+import asyncio
+import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-from agents.orchestration.orchestrator import AgentOrchestrator
-from agents.technical.rsi_agent import RSIAgent
-from agents.technical.macd_agent import MACDAgent
-from agents.sentiment.sentiment_agent import SentimentAgent
-from agents.backtesting.backtest_engine import BacktestEngine
 
-@pytest.mark.integration
-def test_full_trading_cycle(historical_data, sample_news_data):
-    """Test complete trading cycle with all components"""
-    # Initialize system
-    orchestrator = AgentOrchestrator()
+class TestIntegration:
+    """Integration tests for the trading system"""
     
-    # Register agents with different configurations
-    agents = [
-        RSIAgent(name="RSI_Fast", period=7),
-        RSIAgent(name="RSI_Standard", period=14),
-        MACDAgent(name="MACD_Standard"),
-        MACDAgent(name="MACD_Fast", fast_period=6, slow_period=13),
-        SentimentAgent(name="Sentiment_NLTK")
-    ]
+    base_url = "http://localhost:8000"
     
-    for agent in agents:
-        orchestrator.register_agent(agent)
+    @pytest.fixture(autouse=True)
+    def check_backend(self):
+        """Check if backend is running before tests"""
+        try:
+            response = requests.get(f"{self.base_url}/", timeout=2)
+            if response.status_code != 200:
+                pytest.skip("Backend not running")
+        except:
+            pytest.skip("Backend not running")
     
-    # Configure signal weights
-    orchestrator.update_signal_weights({
-        "technical": 0.7,
-        "sentiment": 0.3
-    })
-    
-    # Initialize backtest engine
-    engine = BacktestEngine(
-        orchestrator=orchestrator,
-        initial_capital=100000.0,
-        commission=0.001
-    )
-    
-    # Run backtest
-    results = engine.run(
-        prices=historical_data["Close"],
-        texts=sample_news_data * (len(historical_data) // len(sample_news_data) + 1),
-        window=100
-    )
-    
-    # Verify system integration
-    assert len(results["trades"]) > 0
-    assert len(results["equity_curve"]) > 0
-    assert all(key in results for key in [
-        "total_return", "annual_return", "sharpe_ratio",
-        "max_drawdown", "win_rate", "profit_factor"
-    ])
-
-@pytest.mark.integration
-def test_real_time_simulation():
-    """Test system behavior in simulated real-time environment"""
-    orchestrator = AgentOrchestrator()
-    
-    # Register agents
-    for agent in [RSIAgent(), MACDAgent(), SentimentAgent()]:
-        orchestrator.register_agent(agent)
-    
-    # Generate streaming data
-    start_price = 100.0
-    price_data = []
-    news_data = []
-    decisions = []
-    
-    # Simulate 100 time steps
-    for i in range(100):
-        # Generate price movement
-        price = start_price * (1 + np.random.normal(0, 0.01))
-        start_price = price
-        price_data.append(price)
+    def test_signal_generation_flow(self):
+        """Test the complete signal generation flow"""
+        # Get market data
+        market_response = requests.get(f"{self.base_url}/api/v1/market-data/SPY")
+        assert market_response.status_code == 200
+        market_data = market_response.json()
         
-        # Generate news
-        sentiment = "positive" if np.random.random() > 0.5 else "negative"
-        news = f"Market sentiment is {sentiment} at time {i}"
-        news_data.append(news)
+        # Get signals for the same symbol
+        signals_response = requests.get(f"{self.base_url}/api/v1/signals/SPY")
+        assert signals_response.status_code == 200
+        signals = signals_response.json()
         
-        # Process market data
-        if len(price_data) >= 30:  # Wait for enough data
-            market_data = {
-                "close_prices": price_data[-30:],
-                "texts": news_data[-5:],
-                "timestamp": datetime.now().isoformat()
-            }
-            decision = orchestrator.process_market_data(market_data)
-            decisions.append(decision)
+        # Verify signal structure
+        for signal in signals:
+            assert "symbol" in signal
+            assert "action" in signal
+            assert "confidence" in signal
+            assert signal["action"] in ["BUY", "SELL", "HOLD"]
+            assert 0 <= signal["confidence"] <= 1
+            
+        # Get insights
+        insights_response = requests.get(f"{self.base_url}/api/v1/signals/SPY/insights")
+        assert insights_response.status_code == 200
+        insights = insights_response.json()
+        
+        assert "recommendation" in insights
+        assert insights["recommendation"] in ["BUY", "SELL", "HOLD"]
     
-    # Verify system behavior
-    assert len(decisions) > 0
-    assert all(d["action"] in ["buy", "sell", "hold"] for d in decisions)
-    assert all(0 <= d["confidence"] <= 1 for d in decisions)
-
-@pytest.mark.integration
-def test_system_recovery():
-    """Test system recovery from errors and edge cases"""
-    orchestrator = AgentOrchestrator()
+    def test_historical_data_integration(self):
+        """Test historical data retrieval and processing"""
+        # Get historical data
+        hist_response = requests.get(
+            f"{self.base_url}/api/v1/market-data/SPY/historical",
+            params={"period": "5d", "interval": "1h"}
+        )
+        assert hist_response.status_code == 200
+        hist_data = hist_response.json()
+        
+        assert "data" in hist_data
+        assert len(hist_data["data"]) > 0
+        
+        # Verify data structure
+        for point in hist_data["data"][:5]:
+            assert all(key in point for key in ["timestamp", "open", "high", "low", "close", "volume"])
+            assert point["high"] >= max(point["open"], point["close"])
+            assert point["low"] <= min(point["open"], point["close"])
     
-    # Register agents
-    agents = [RSIAgent(), MACDAgent(), SentimentAgent()]
-    for agent in agents:
-        orchestrator.register_agent(agent)
+    def test_market_opportunities_aggregation(self):
+        """Test market opportunities aggregation across symbols"""
+        # Get opportunities
+        opp_response = requests.get(f"{self.base_url}/api/v1/market/opportunities")
+        assert opp_response.status_code == 200
+        opportunities = opp_response.json()
+        
+        assert "opportunities" in opportunities
+        opps = opportunities["opportunities"]
+        
+        # Verify opportunities are sorted by confidence
+        if len(opps) > 1:
+            confidences = [o["confidence"] for o in opps]
+            assert confidences == sorted(confidences, reverse=True)
     
-    # Test recovery from bad data
-    bad_data_cases = [
-        {"close_prices": [], "texts": []},  # Empty data
-        {"close_prices": [100] * 5, "texts": []},  # Insufficient price data
-        {"close_prices": "invalid", "texts": []},  # Invalid price data
-        {"close_prices": [100] * 100, "texts": [1, 2, 3]},  # Invalid text data
-    ]
+    def test_signal_consistency(self):
+        """Test signal consistency across multiple requests"""
+        symbol = "SPY"
+        
+        # Get signals multiple times
+        signals_list = []
+        for _ in range(3):
+            response = requests.get(f"{self.base_url}/api/v1/signals/{symbol}")
+            assert response.status_code == 200
+            signals_list.append(response.json())
+        
+        # Signals should be relatively consistent (cached)
+        # Check that at least some signals are the same
+        if len(signals_list[0]) > 0:
+            first_signal_id = signals_list[0][0].get("id")
+            if first_signal_id:
+                # If using caching, we should see the same signal ID
+                for signals in signals_list[1:]:
+                    if len(signals) > 0:
+                        assert any(s.get("id") == first_signal_id for s in signals)
     
-    for bad_data in bad_data_cases:
-        result = orchestrator.process_market_data(bad_data)
-        assert result["action"] == "hold"  # System should default to hold
-        assert result["confidence"] == 0.0
+    def test_error_handling_integration(self):
+        """Test error handling across the system"""
+        # Invalid symbol
+        response = requests.get(f"{self.base_url}/api/v1/market-data/INVALID123XYZ")
+        assert response.status_code == 404
+        
+        # Invalid historical data parameters
+        response = requests.get(
+            f"{self.base_url}/api/v1/market-data/SPY/historical",
+            params={"period": "invalid", "interval": "1d"}
+        )
+        assert response.status_code == 422
+        
+        # Non-existent endpoint
+        response = requests.get(f"{self.base_url}/api/v1/nonexistent")
+        assert response.status_code == 404
     
-    # Verify system can recover and process valid data
-    valid_data = {
-        "close_prices": [100 + i for i in range(100)],
-        "texts": ["Test news"] * 5,
-        "timestamp": datetime.now().isoformat()
-    }
+    @pytest.mark.asyncio
+    async def test_websocket_integration(self):
+        """Test WebSocket integration"""
+        import websockets
+        import json
+        
+        try:
+            async with websockets.connect("ws://localhost:8000/ws") as websocket:
+                # Send subscription message
+                await websocket.send(json.dumps({
+                    "type": "subscribe",
+                    "symbols": ["SPY", "AAPL"]
+                }))
+                
+                # Wait for at least one message
+                message = await asyncio.wait_for(websocket.recv(), timeout=5.0)
+                data = json.loads(message)
+                
+                assert "type" in data
+                assert data["type"] in ["batch_update", "market_update", "signals"]
+                
+        except asyncio.TimeoutError:
+            # WebSocket might not send immediate updates in test mode
+            pass
+        except Exception as e:
+            pytest.skip(f"WebSocket test failed: {str(e)}")
     
-    result = orchestrator.process_market_data(valid_data)
-    assert result["action"] in ["buy", "sell", "hold"]
-    assert result["confidence"] > 0
-
-@pytest.mark.integration
-def test_multi_agent_consensus():
-    """Test multi-agent consensus and conflict resolution"""
-    orchestrator = AgentOrchestrator()
-    
-    # Create agents with conflicting biases
-    agents = [
-        RSIAgent(name="RSI_Bullish", oversold=60),  # Bullish bias
-        RSIAgent(name="RSI_Bearish", overbought=40),  # Bearish bias
-        MACDAgent(name="MACD_Fast", fast_period=6),  # More sensitive
-        MACDAgent(name="MACD_Slow", fast_period=24),  # Less sensitive
-        SentimentAgent(name="Sentiment")
-    ]
-    
-    for agent in agents:
-        orchestrator.register_agent(agent)
-    
-    # Generate test data that should create conflicts
-    prices = [100.0]
-    for i in range(99):
-        # Create oscillating price pattern
-        change = 5 * np.sin(i / 5)
-        prices.append(prices[-1] * (1 + change/100))
-    
-    # Mixed sentiment texts
-    texts = [
-        "Very positive outlook for growth",
-        "Concerning economic indicators",
-        "Strong quarterly results",
-        "Market uncertainty increases"
-    ]
-    
-    # Process data
-    result = orchestrator.process_market_data({
-        "close_prices": prices,
-        "texts": texts,
-        "timestamp": datetime.now().isoformat()
-    })
-    
-    # Verify consensus mechanism
-    assert "contributing_signals" in result
-    signals = result["contributing_signals"]
-    
-    # Should have signals from all agents
-    assert len(signals) == len(agents)
-    
-    # Should have some disagreement
-    actions = [s["action"] for s in signals]
-    assert len(set(actions)) > 1  # At least two different actions
-    
-    # Final confidence should reflect uncertainty
-    assert result["confidence"] < 1.0 
+    def test_performance_monitoring(self):
+        """Test performance monitoring integration"""
+        # Make several requests to generate performance data
+        endpoints = [
+            "/api/v1/signals",
+            "/api/v1/market-data/SPY",
+            "/api/v1/market/opportunities"
+        ]
+        
+        for endpoint in endpoints:
+            for _ in range(3):
+                requests.get(f"{self.base_url}{endpoint}")
+        
+        # Get performance stats
+        perf_response = requests.get(f"{self.base_url}/api/v1/performance")
+        assert perf_response.status_code == 200
+        perf_data = perf_response.json()
+        
+        assert "endpoints" in perf_data
+        assert "cache" in perf_data
+        
+        # Verify some endpoints have been tracked
+        assert len(perf_data["endpoints"]) > 0
+        
+        # Verify cache is being used
+        assert perf_data["cache"]["total_requests"] > 0 

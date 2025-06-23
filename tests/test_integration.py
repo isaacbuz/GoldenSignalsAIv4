@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from src.domain.trading.data_manager import DataManager
-from src.domain.models.model_manager import ModelManager
+from src.ml.models.model_manager import ModelManager
 from src.domain.portfolio.portfolio_manager import PortfolioManager
 from src.domain.analytics.analytics_manager import AnalyticsManager
 

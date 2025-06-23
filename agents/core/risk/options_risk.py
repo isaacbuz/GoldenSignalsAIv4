@@ -7,10 +7,10 @@ import logging
 
 import pandas as pd
 
-from src.application.services.risk_manager import RiskManager
+from src.services.risk_manager import RiskManager
 
 from ..base_agent import BaseAgent
-from src.application.services.risk_manager import RiskManager
+from src.services.risk_manager import RiskManager
 
 # Configure logging with JSON-like format
 logging.basicConfig(

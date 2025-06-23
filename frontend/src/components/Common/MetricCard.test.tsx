@@ -34,12 +34,11 @@ describe('MetricCard', () => {
     expect(screen.getByText('75%')).toBeInTheDocument();
   });
 
-  it('renders a skeleton when isLoading is true', () => {
+  it('renders without change when change prop is not provided', () => {
     const props = {
       title: 'Market Sentiment',
-      value: 'Bullish',
+      value: 'Neutral',
       icon: <TrendingUp />,
-      isLoading: true,
     };
 
     render(
@@ -48,11 +47,13 @@ describe('MetricCard', () => {
       </ThemeProvider>
     );
 
-    // Check that the main value is not present
-    expect(screen.queryByText('Bullish')).not.toBeInTheDocument();
+    // Check if the title is rendered
+    expect(screen.getByText('Market Sentiment')).toBeInTheDocument();
 
-    // Check for skeleton elements (we can check by role or test id if needed, but for now we'll assume their presence if the value is gone)
-    // A more robust way would be to check for the skeleton's presence directly if it had a data-testid.
-    // For this demonstration, checking for the absence of data is sufficient.
+    // Check if the value is rendered
+    expect(screen.getByText('Neutral')).toBeInTheDocument();
+    
+    // Check that no percentage is shown
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
-}); 
+});

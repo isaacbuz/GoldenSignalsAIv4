@@ -9,12 +9,12 @@ from datetime import datetime, timedelta
 import logging
 import numpy as np
 
-from src.agents.orchestrator import AgentOrchestrator
-from src.agents.momentum import MomentumAgent
-from src.agents.mean_reversion import MeanReversionAgent
-from src.agents.technical_analysis import TechnicalAnalysisAgent
-from src.agents.sentiment_analysis import SentimentAnalysisAgent
-from src.agents.volume_analysis import VolumeAnalysisAgent
+from agents.orchestrator import AgentOrchestrator
+from agents.momentum import MomentumAgent
+from agents.mean_reversion import MeanReversionAgent
+from agents.technical_analysis import TechnicalAnalysisAgent
+from agents.sentiment_analysis import SentimentAnalysisAgent
+from agents.volume_analysis import VolumeAnalysisAgent
 from src.utils.technical_indicators import TechnicalIndicators
 from src.utils.timezone_utils import now_utc
 

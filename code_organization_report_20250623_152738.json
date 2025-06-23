@@ -1,0 +1,139 @@
+{
+  "timestamp": "2025-06-23T15:27:38.167697",
+  "dry_run": false,
+  "total_changes": 22,
+  "changes": [
+    {
+      "action": "create_dir",
+      "source": "src/repositories",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.162901"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/repositories/market",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.162967"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/repositories/signals",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163011"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/portfolio",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163074"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/services/risk",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163114"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/core/di",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163256"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/core/exceptions",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163332"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/models/domain",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163580"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/models/dto",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163678"
+    },
+    {
+      "action": "create_dir",
+      "source": "src/interfaces",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.163902"
+    },
+    {
+      "action": "move",
+      "source": "signal_generator_simple.py",
+      "destination": "archive/legacy_signal_generators/signal_generator_simple.py",
+      "timestamp": "2025-06-23T15:27:38.164497"
+    },
+    {
+      "action": "move",
+      "source": "integrated_signal_generator.py",
+      "destination": "archive/legacy_signal_generators/integrated_signal_generator.py",
+      "timestamp": "2025-06-23T15:27:38.164652"
+    },
+    {
+      "action": "move",
+      "source": "precise_signal_demo.py",
+      "destination": "archive/legacy_signal_generators/precise_signal_demo.py",
+      "timestamp": "2025-06-23T15:27:38.164757"
+    },
+    {
+      "action": "move",
+      "source": "ml_signal_blender.py",
+      "destination": "archive/legacy_signal_generators/ml_signal_blender.py",
+      "timestamp": "2025-06-23T15:27:38.164830"
+    },
+    {
+      "action": "move",
+      "source": "precise_options_signal_generator.py",
+      "destination": "archive/legacy_signal_generators/precise_options_signal_generator.py",
+      "timestamp": "2025-06-23T15:27:38.164900"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/signal_generation_engine.py",
+      "destination": "src/services/signals/signal_service.py",
+      "timestamp": "2025-06-23T15:27:38.165422"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/signal_filtering_pipeline.py",
+      "destination": "src/services/signals/signal_filter.py",
+      "timestamp": "2025-06-23T15:27:38.165745"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/market_data_service.py",
+      "destination": "src/services/market/data_service.py",
+      "timestamp": "2025-06-23T15:27:38.166092"
+    },
+    {
+      "action": "reorganize",
+      "source": "src/services/data_quality_validator.py",
+      "destination": "src/services/market/quality_validator.py",
+      "timestamp": "2025-06-23T15:27:38.166901"
+    },
+    {
+      "action": "create",
+      "source": "src/core/di/container.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.167338"
+    },
+    {
+      "action": "create",
+      "source": "src/interfaces/repository.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.167536"
+    },
+    {
+      "action": "create",
+      "source": "src/interfaces/service.py",
+      "destination": null,
+      "timestamp": "2025-06-23T15:27:38.167683"
+    }
+  ]
+}

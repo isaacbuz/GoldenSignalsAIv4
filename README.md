@@ -302,6 +302,25 @@ GoldenSignalsAI_V2/
 - **Comprehensive error handling**
 - **Responsive design principles**
 
+## 📚 Documentation
+
+### **Core Documentation**
+- [API Documentation](API_DOCUMENTATION.md) - Complete REST API reference
+- [Deployment Guide](DEPLOYMENT_GUIDE.md) - Local, Docker, Kubernetes, Cloud deployments
+- [Troubleshooting Guide](TROUBLESHOOTING_GUIDE.md) - Common issues and solutions
+
+### **Development Guides**
+- [Architecture Overview](ARCHITECTURE.md) - System design and components
+- [Phase 2 Implementation](PHASE_2_COMPLETE.md) - Signal generation & filtering
+- [Phase 3 Testing](PHASE_3_DAY_11_TESTING_SUMMARY.md) - Testing coverage roadmap
+- [Execution Tracker](EXECUTION_TRACKER.md) - Project progress tracking
+
+### **Feature Documentation**
+- [Signal Generation Engine](src/services/signal_generation_engine.py) - 15+ technical indicators
+- [Signal Filtering Pipeline](src/services/signal_filtering_pipeline.py) - 7-stage filtering
+- [Signal Monitoring Service](src/services/signal_monitoring_service.py) - Performance tracking
+- [Data Quality Validator](src/services/data_quality_validator.py) - Multi-source validation
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

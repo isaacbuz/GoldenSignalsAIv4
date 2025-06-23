@@ -6,7 +6,7 @@ import logging
 import numpy as np
 import pandas as pd
 from typing import Dict, Any, Optional
-from src.domain.models.options import OptionsData
+from src.ml.models.options import OptionsData
 
 logging.basicConfig(
     level=logging.INFO,

@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 """
 agent_network.py
 Purpose: Implements agent-to-agent communication infrastructure for GoldenSignalsAI, enabling agents to exchange messages, share insights, and collaboratively improve decision-making. Uses NetworkX for communication graphs.
 """
 
-=======
->>>>>>> b3d312fc9c631d3b59f644472ad576448be06c0b
 import logging
 import time
 import uuid

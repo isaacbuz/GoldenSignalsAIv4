@@ -38,7 +38,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import PyPDFLoader, CSVLoader, UnstructuredExcelLoader
 
 # Local imports
-from src.agents.common.models import MarketData, Signal
+from agents.common.models import MarketData, Signal
 from src.utils.logger import get_logger
 
 # For now, we'll use mock implementations

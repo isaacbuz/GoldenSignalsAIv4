@@ -8,7 +8,7 @@ Includes BacktestResearchAgent for strategy optimization via backtesting.
 import logging
 import pandas as pd
 from typing import Dict, Any
-from src.application.services.backtest import Backtester
+from src.services.backtest import Backtester
 from .base_agent import BaseAgent
 
 # Configure logging with JSON-like format

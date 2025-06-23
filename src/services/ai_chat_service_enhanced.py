@@ -62,7 +62,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 
 # Local imports
-from src.agents.common.models import MarketData, Signal
+from agents.common.models import MarketData, Signal
 from src.utils.logger import get_logger
 from src.services.market_data_service import MarketDataService
 from src.services.backtesting_service import BacktestingService

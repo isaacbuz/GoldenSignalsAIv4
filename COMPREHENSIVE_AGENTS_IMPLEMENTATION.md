@@ -148,7 +148,7 @@ class MomentumAgent(UnifiedBaseAgent):
 
 ### Creating Individual Agents
 ```python
-from src.agents.core.agent_factory import get_agent_factory
+from agents.core.agent_factory import get_agent_factory
 
 factory = get_agent_factory()
 

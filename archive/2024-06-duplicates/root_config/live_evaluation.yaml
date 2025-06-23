@@ -1,0 +1,40 @@
+# Live Evaluation Configuration
+
+# Data Sources
+data_sources:
+  primary: "yahoo"  # Primary data source (yahoo or polygon)
+  backup: "polygon"  # Backup data source
+  update_interval: 5  # Update interval in seconds
+
+# Symbols to track
+symbols:
+  - AAPL
+  - GOOGL
+  - TSLA
+  - SPY
+  - QQQ
+
+# Model Settings
+model:
+  path: "models/transformer"
+  checkpoint: "transformer_model.pth"
+  device: "auto"  # auto, cuda, or cpu
+  sequence_length: 60
+  batch_size: 32
+
+# Evaluation Settings
+evaluation:
+  window_size: 100  # Number of predictions to keep for evaluation
+  plot_interval: 10  # Generate plots every N predictions
+  metrics_dir: "ml_training/metrics"
+  save_interval: 60  # Save metrics every N seconds
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/live_evaluation.log"
+
+# API Keys (to be loaded from environment variables)
+api_keys:
+  polygon: "${POLYGON_API_KEY}" 

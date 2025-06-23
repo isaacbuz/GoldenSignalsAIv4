@@ -2,6 +2,7 @@
 """
 ML-Enhanced Backtesting System for GoldenSignalsAI
 Incorporates best practices from QuantConnect, Backtrader, and industry standards
+Enhanced with Phase 2 Signal Generation and Monitoring Integration
 """
 
 import asyncio
@@ -23,6 +24,18 @@ import ta  # Technical Analysis library
 import warnings
 warnings.filterwarnings('ignore')
 
+# Import our Phase 2 services
+try:
+    from src.services.signal_generation_engine import SignalGenerationEngine, TradingSignal
+    from src.services.signal_filtering_pipeline import SignalFilteringPipeline, ConfidenceFilter, QualityScoreFilter
+    from src.services.signal_monitoring_service import SignalMonitoringService, SignalOutcome
+    from src.services.data_quality_validator import DataQualityValidator
+    PHASE2_AVAILABLE = True
+except ImportError:
+    PHASE2_AVAILABLE = False
+    logger = logging.getLogger(__name__)
+    logger.warning("Phase 2 services not available. Running in standalone mode.")
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -34,6 +47,7 @@ logger = logging.getLogger(__name__)
 class MLBacktestEngine:
     """
     Professional-grade ML backtesting engine inspired by QuantConnect and Backtrader
+    Enhanced with Phase 2 signal generation and monitoring integration
     """
     
     def __init__(self):
@@ -41,6 +55,27 @@ class MLBacktestEngine:
         self.scaler = StandardScaler()
         self.feature_importance = {}
         self.backtest_results = {}
+        
+        # Initialize Phase 2 services if available
+        if PHASE2_AVAILABLE:
+            self.signal_engine = SignalGenerationEngine()
+            self.filter_pipeline = SignalFilteringPipeline()
+            self.monitor_service = SignalMonitoringService()
+            self.quality_validator = DataQualityValidator()
+            logger.info("✅ Phase 2 services integrated")
+        else:
+            self.signal_engine = None
+            self.filter_pipeline = None
+            self.monitor_service = None
+            self.quality_validator = None
+        
+        # Track signal quality metrics
+        self.signal_quality_metrics = {
+            'confidence_scores': [],
+            'quality_scores': [],
+            'filtered_ratio': 0,
+            'signal_accuracy': []
+        }
         
     def fetch_historical_data(self, symbol: str, start_date: str, end_date: str) -> pd.DataFrame:
         """Fetch historical data with corporate actions adjustment"""
@@ -312,7 +347,7 @@ class MLBacktestEngine:
                                        start_date: str = "2020-01-01",
                                        end_date: str = None) -> Dict:
         """
-        Run comprehensive ML-enhanced backtest
+        Run comprehensive ML-enhanced backtest with Phase 2 integration
         """
         if end_date is None:
             end_date = datetime.now().strftime('%Y-%m-%d')
@@ -369,6 +404,14 @@ class MLBacktestEngine:
             # Calculate metrics
             metrics = self.calculate_backtest_metrics(trading_df['net_returns'])
             
+            # Phase 2 Integration: Generate and evaluate signals
+            signal_quality_results = {}
+            if self.signal_engine and len(test_df) > 0:
+                signal_quality_results = await self._evaluate_signal_quality(
+                    symbol, test_df, ensemble_pred
+                )
+                metrics.update(signal_quality_results)
+            
             # Feature importance (from Random Forest)
             feature_names = [col for col in df.columns if col not in [
                 'target', 'Symbol', 'Dividends', 'Stock Splits'
@@ -396,7 +439,8 @@ class MLBacktestEngine:
                     'recall': precision_recall_fscore_support(
                         y_test, ensemble_pred, average='binary'
                     )[1]
-                }
+                },
+                'signal_quality': signal_quality_results
             }
             
             # Log results
@@ -405,8 +449,126 @@ class MLBacktestEngine:
             logger.info(f"Sharpe Ratio: {metrics['sharpe_ratio']:.2f}")
             logger.info(f"Max Drawdown: {metrics['max_drawdown']:.2%}")
             logger.info(f"Annual Return: {metrics['annual_return']:.2%}")
+            
+            if signal_quality_results:
+                logger.info(f"Signal Quality Score: {signal_quality_results.get('avg_signal_quality', 0):.2f}")
+                logger.info(f"Signal Filter Pass Rate: {signal_quality_results.get('filter_pass_rate', 0):.2%}")
         
         return all_results
+    
+    async def _evaluate_signal_quality(self, symbol: str, df: pd.DataFrame, 
+                                     predictions: np.ndarray) -> Dict:
+        """
+        Evaluate signal quality using Phase 2 services
+        """
+        results = {
+            'signal_confidence_scores': [],
+            'signal_quality_scores': [],
+            'filtered_signals': 0,
+            'total_signals': 0,
+            'signal_performance': []
+        }
+        
+        try:
+            # Generate signals for each prediction
+            signals = []
+            for i, (idx, row) in enumerate(df.iterrows()):
+                if i >= len(predictions):
+                    break
+                
+                # Generate signal using our engine
+                signal_data = await self.signal_engine.generate_signal(
+                    symbol=symbol,
+                    current_price=row['Close'],
+                    volume=row['Volume'],
+                    prediction=predictions[i]
+                )
+                
+                if signal_data:
+                    signals.append(signal_data)
+                    results['signal_confidence_scores'].append(signal_data.confidence)
+                    
+                    # Track quality if validator available
+                    if self.quality_validator:
+                        quality_report = await self.quality_validator.validate_data(
+                            pd.DataFrame([row]), symbol
+                        )
+                        results['signal_quality_scores'].append(
+                            quality_report.accuracy
+                        )
+            
+            results['total_signals'] = len(signals)
+            
+            # Filter signals through pipeline
+            if self.filter_pipeline and signals:
+                filtered_signals = await self.filter_pipeline.filter_signals(signals)
+                results['filtered_signals'] = len(filtered_signals)
+                
+                # Track filtered signal performance
+                if self.monitor_service:
+                    for signal in filtered_signals:
+                        # Simulate entry
+                        await self.monitor_service.track_signal_entry(
+                            signal_id=signal.id,
+                            actual_entry_price=signal.entry_price
+                        )
+                        
+                        # Simulate exit (using next day's price)
+                        exit_idx = df.index.get_loc(signal.timestamp) + 1
+                        if exit_idx < len(df):
+                            exit_price = df.iloc[exit_idx]['Close']
+                            outcome = await self.monitor_service.track_signal_exit(
+                                signal_id=signal.id,
+                                exit_price=exit_price,
+                                exit_reason="backtest_simulation"
+                            )
+                            
+                            if outcome:
+                                results['signal_performance'].append({
+                                    'signal_id': signal.id,
+                                    'profit_loss': outcome.profit_loss,
+                                    'profit_loss_pct': outcome.profit_loss_pct,
+                                    'holding_period': outcome.holding_period
+                                })
+            
+            # Calculate aggregate metrics
+            if results['signal_confidence_scores']:
+                results['avg_signal_confidence'] = np.mean(results['signal_confidence_scores'])
+            if results['signal_quality_scores']:
+                results['avg_signal_quality'] = np.mean(results['signal_quality_scores'])
+            if results['total_signals'] > 0:
+                results['filter_pass_rate'] = results['filtered_signals'] / results['total_signals']
+            
+            # Calculate signal performance metrics
+            if results['signal_performance']:
+                pl_values = [p['profit_loss_pct'] for p in results['signal_performance']]
+                results['signal_win_rate'] = sum(1 for pl in pl_values if pl > 0) / len(pl_values)
+                results['signal_avg_return'] = np.mean(pl_values)
+                results['signal_sharpe'] = np.mean(pl_values) / np.std(pl_values) * np.sqrt(252) if np.std(pl_values) > 0 else 0
+            
+        except Exception as e:
+            logger.error(f"Error evaluating signal quality: {e}")
+        
+        return results
+    
+    def get_signal_quality_summary(self) -> Dict:
+        """
+        Get summary of signal quality metrics across all backtests
+        """
+        if not self.signal_quality_metrics['confidence_scores']:
+            return {}
+        
+        return {
+            'avg_confidence': np.mean(self.signal_quality_metrics['confidence_scores']),
+            'avg_quality': np.mean(self.signal_quality_metrics['quality_scores']),
+            'overall_filter_ratio': self.signal_quality_metrics['filtered_ratio'],
+            'signal_accuracy_history': self.signal_quality_metrics['signal_accuracy'],
+            'confidence_distribution': {
+                'min': np.min(self.signal_quality_metrics['confidence_scores']),
+                'max': np.max(self.signal_quality_metrics['confidence_scores']),
+                'std': np.std(self.signal_quality_metrics['confidence_scores'])
+            }
+        }
 
 
 class SignalAccuracyImprover:

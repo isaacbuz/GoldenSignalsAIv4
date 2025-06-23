@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import yaml
 from strategies.advanced_strategies import AdvancedStrategies
-from src.domain.models.factory import ModelFactory
+from src.ml.models.factory import ModelFactory
 from infrastructure.error_handler import ErrorHandler, ModelInferenceError, DataFetchError
 
 class BacktestResult:

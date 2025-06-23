@@ -1,0 +1,317 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  KUBERNETES_VERSION: '1.26'
+  HELM_VERSION: '3.12.0'
+
+jobs:
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging' ||
+      github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: staging
+      url: https://staging.goldensignals.ai
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+        
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: v${{ env.KUBERNETES_VERSION }}
+        
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v${{ env.HELM_VERSION }}
+        
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name goldensignals-staging --region us-east-1
+        
+    - name: Deploy to Kubernetes
+      run: |
+        # Update Helm dependencies
+        helm dependency update helm/goldensignals
+        
+        # Deploy with Helm
+        helm upgrade --install goldensignals-staging ./helm/goldensignals \
+          --namespace staging \
+          --create-namespace \
+          --values helm/goldensignals/values.staging.yaml \
+          --set image.backend.tag=${{ github.sha }} \
+          --set image.frontend.tag=${{ github.sha }} \
+          --wait \
+          --timeout 10m
+          
+    - name: Run smoke tests
+      run: |
+        # Wait for deployment to be ready
+        kubectl wait --for=condition=ready pod -l app=goldensignals -n staging --timeout=300s
+        
+        # Get staging URL
+        STAGING_URL=$(kubectl get ingress goldensignals -n staging -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        
+        # Run smoke tests
+        ./scripts/smoke-tests.sh https://$STAGING_URL
+        
+    - name: Slack notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: |
+          Staging deployment ${{ job.status }}
+          Commit: ${{ github.sha }}
+          Author: ${{ github.actor }}
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # End-to-End Tests
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
+        
+    - name: Install Cypress
+      working-directory: frontend
+      run: |
+        npm ci
+        npx cypress install
+        
+    - name: Run E2E tests
+      working-directory: frontend
+      env:
+        CYPRESS_BASE_URL: https://staging.goldensignals.ai
+      run: |
+        npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+        
+    - name: Upload test videos
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-videos
+        path: frontend/cypress/videos/
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [e2e-tests]
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production' ||
+      github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: production
+      url: https://goldensignals.ai
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+        
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: v${{ env.KUBERNETES_VERSION }}
+        
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v${{ env.HELM_VERSION }}
+        
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name goldensignals-prod --region us-east-1
+        
+    - name: Create database backup
+      run: |
+        # Backup production database before deployment
+        kubectl exec -n production deploy/goldensignals-backend -- \
+          pg_dump $DATABASE_URL > backup-$(date +%Y%m%d-%H%M%S).sql
+          
+        # Upload backup to S3
+        aws s3 cp backup-*.sql s3://goldensignals-backups/pre-deploy/
+        
+    - name: Deploy to Kubernetes (Canary)
+      run: |
+        # Deploy canary version (10% traffic)
+        helm upgrade --install goldensignals-canary ./helm/goldensignals \
+          --namespace production \
+          --values helm/goldensignals/values.production.yaml \
+          --values helm/goldensignals/values.canary.yaml \
+          --set image.backend.tag=${{ github.sha }} \
+          --set image.frontend.tag=${{ github.sha }} \
+          --set canary.enabled=true \
+          --set canary.weight=10 \
+          --wait \
+          --timeout 10m
+          
+    - name: Monitor canary metrics
+      run: |
+        # Monitor canary deployment for 15 minutes
+        ./scripts/monitor-canary.sh 15m
+        
+        # Check error rate
+        ERROR_RATE=$(./scripts/get-error-rate.sh canary)
+        if (( $(echo "$ERROR_RATE > 0.05" | bc -l) )); then
+          echo "Canary error rate too high: $ERROR_RATE"
+          exit 1
+        fi
+        
+    - name: Promote to full production
+      run: |
+        # Update main deployment
+        helm upgrade --install goldensignals ./helm/goldensignals \
+          --namespace production \
+          --values helm/goldensignals/values.production.yaml \
+          --set image.backend.tag=${{ github.sha }} \
+          --set image.frontend.tag=${{ github.sha }} \
+          --wait \
+          --timeout 10m
+          
+        # Remove canary deployment
+        helm uninstall goldensignals-canary --namespace production
+        
+    - name: Run production tests
+      run: |
+        # Run production smoke tests
+        ./scripts/smoke-tests.sh https://goldensignals.ai
+        
+        # Verify critical endpoints
+        ./scripts/verify-production.sh
+        
+    - name: Update DNS
+      run: |
+        # Update Route53 records if needed
+        ./scripts/update-dns.sh production
+        
+    - name: Invalidate CDN cache
+      run: |
+        # Invalidate CloudFront cache
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+          --paths "/*"
+          
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          ## Changes in this release
+          - Commit: ${{ github.sha }}
+          - Author: ${{ github.actor }}
+          
+          ## Deployment info
+          - Environment: Production
+          - Status: Success
+          
+          [View deployment](https://goldensignals.ai)
+        draft: false
+        prerelease: false
+        
+    - name: Notify team
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: |
+          Production deployment ${{ job.status }}
+          Version: v${{ github.run_number }}
+          URL: https://goldensignals.ai
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # Rollback Job
+  rollback:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    if: failure() && needs.deploy-production.result == 'failure'
+    needs: [deploy-production]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+        
+    - name: Rollback deployment
+      run: |
+        # Get previous release
+        PREVIOUS_RELEASE=$(helm history goldensignals -n production -o json | jq -r '.[1].revision')
+        
+        # Rollback to previous release
+        helm rollback goldensignals $PREVIOUS_RELEASE -n production
+        
+    - name: Notify rollback
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        custom_payload: |
+          {
+            "text": "⚠️ Production deployment rolled back",
+            "color": "warning",
+            "fields": [
+              {
+                "title": "Environment",
+                "value": "Production",
+                "short": true
+              },
+              {
+                "title": "Action",
+                "value": "Automatic rollback initiated",
+                "short": true
+              }
+            ]
+          }
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }} 

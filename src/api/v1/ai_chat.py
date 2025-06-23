@@ -14,7 +14,7 @@ from src.services.ai_chat_service import (
     ChatSession,
     AIResponse
 )
-from src.core.config import settings
+from src.config.settings import settings
 
 logger = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ import logging
 import uuid
 
 from src.core.dependencies import get_db_manager as get_db, get_current_user
-from src.models.users import User
+from src.ml.models.users import User
 from src.domain.backtesting.backtest_data import BacktestDataManager
 from src.domain.backtesting.backtest_metrics import MetricsCalculator
 from src.domain.backtesting.backtest_reporting import BacktestReporter

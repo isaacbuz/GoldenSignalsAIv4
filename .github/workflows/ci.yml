@@ -1,74 +1,321 @@
-name: GoldenSignalsAI CI
+name: Continuous Integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+
+env:
+  PYTHON_VERSION: '3.9'
+  NODE_VERSION: '16'
+  CACHE_DEPENDENCY_PATH: |
+    requirements.txt
+    requirements-test.txt
+    frontend/package-lock.json
 
 jobs:
-  test:
+  # Python Backend Tests
+  backend-tests:
+    name: Backend Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.11']
-
+    
+    services:
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
-    
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install poetry
-        poetry install --no-root --no-interaction --sync --with=dev
-    
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+        
     - name: Run linting
       run: |
-        poetry run flake8 .
-        poetry run black --check .
-        poetry run mypy src
-    
-    - name: Run tests
+        # Black formatting check
+        black --check src/ tests/
+        
+        # Flake8 linting
+        flake8 src/ tests/ --max-line-length=100 --extend-ignore=E203,W503
+        
+        # Type checking with mypy
+        mypy src/ --ignore-missing-imports
+        
+    - name: Run unit tests
+      env:
+        PYTHONPATH: ${{ github.workspace }}
+        DATABASE_URL: sqlite:///test.db
+        REDIS_URL: redis://localhost:6379/0
       run: |
-        poetry run pytest --cov=src --cov-report=xml
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
+        pytest tests/unit/ -v --cov=src --cov-report=xml --cov-report=html
+        
+    - name: Run integration tests
+      env:
+        PYTHONPATH: ${{ github.workspace }}
+        DATABASE_URL: sqlite:///test.db
+        REDIS_URL: redis://localhost:6379/0
+      run: |
+        pytest tests/integration/ -v --cov=src --cov-append --cov-report=xml --cov-report=html
+        
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
-        fail_ci_if_error: true
+        flags: backend
+        name: backend-coverage
+        
+    - name: Archive test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-test-results
+        path: |
+          htmlcov/
+          .coverage
+          coverage.xml
 
-  build:
-    needs: test
+  # Frontend Tests
+  frontend-tests:
+    name: Frontend Tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
       with:
-        python-version: '3.11'
-    
-    - name: Install build dependencies
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm ci
+      
+    - name: Run linting
+      working-directory: frontend
       run: |
-        python -m pip install --upgrade pip
-        pip install build twine
-    
-    - name: Build package
-      run: python -m build
-    
-    - name: Check package
-      run: twine check dist/*
-    
-    - name: Store package artifact
-      uses: actions/upload-artifact@v2
+        npm run lint
+        npm run type-check
+        
+    - name: Run unit tests
+      working-directory: frontend
+      run: npm run test:ci
+      
+    - name: Build frontend
+      working-directory: frontend
+      run: npm run build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
       with:
-        name: dist
-        path: dist/
+        name: frontend-build
+        path: frontend/build/
+
+  # Security Scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Python dependency check
+      run: |
+        pip install safety
+        safety check -r requirements.txt
+        
+    - name: Frontend dependency audit
+      working-directory: frontend
+      run: npm audit --audit-level=moderate
+
+  # Code Quality Analysis
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for SonarCloud
+        
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+    - name: Check test coverage
+      run: |
+        # Download coverage report
+        curl -s https://codecov.io/api/gh/${{ github.repository }}/branch/${{ github.head_ref || github.ref_name }}/graphs/badge.svg -o coverage.svg
+        
+        # Extract coverage percentage
+        COVERAGE=$(grep -oP '\d+(?=%)' coverage.svg | head -1)
+        
+        echo "Current coverage: $COVERAGE%"
+        
+        # Fail if coverage is below 60%
+        if [ "$COVERAGE" -lt 60 ]; then
+          echo "Coverage is below 60% threshold"
+          exit 1
+        fi
+
+  # Performance Benchmarks
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install locust pytest-benchmark
+        
+    - name: Run API benchmarks
+      run: |
+        # Start backend in background
+        python standalone_backend_optimized.py &
+        SERVER_PID=$!
+        
+        # Wait for server to start
+        sleep 10
+        
+        # Run performance tests
+        pytest tests/performance/ -v --benchmark-only
+        
+        # Stop server
+        kill $SERVER_PID
+        
+    - name: Run load tests
+      run: |
+        # Start backend in background
+        python standalone_backend_optimized.py &
+        SERVER_PID=$!
+        
+        # Wait for server to start
+        sleep 10
+        
+        # Run Locust tests
+        locust -f tests/performance/locustfile.py \
+          --headless \
+          --users 100 \
+          --spawn-rate 10 \
+          --run-time 60s \
+          --host http://localhost:8000 \
+          --html performance-report.html
+          
+        # Stop server
+        kill $SERVER_PID
+        
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: |
+          performance-report.html
+          .benchmarks/
+
+  # Build Docker Images
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [security-scan, code-quality]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Build and push backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:latest
+          ${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:${{ github.sha }}
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:buildcache,mode=max
+        
+    - name: Build and push frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/goldensignals-frontend:latest
+          ${{ secrets.DOCKER_USERNAME }}/goldensignals-frontend:${{ github.sha }}
+
+  # Final Status Check
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, security-scan, code-quality, performance-tests, docker-build]
+    if: always()
+    
+    steps:
+    - name: Check CI Status
+      run: |
+        if [ "${{ needs.backend-tests.result }}" != "success" ] || \
+           [ "${{ needs.frontend-tests.result }}" != "success" ] || \
+           [ "${{ needs.security-scan.result }}" != "success" ] || \
+           [ "${{ needs.code-quality.result }}" != "success" ]; then
+          echo "CI pipeline failed"
+          exit 1
+        fi
+        echo "CI pipeline passed successfully"

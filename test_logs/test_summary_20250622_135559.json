@@ -1,0 +1,219 @@
+{
+  "execution_time": {
+    "start": "2025-06-22T13:55:59.351831",
+    "end": "2025-06-22T13:56:56.435337",
+    "duration": 56.65830659866333
+  },
+  "summary": {
+    "total_passed": 82,
+    "total_failed": 0,
+    "total_skipped": 3,
+    "total_errors": 20,
+    "success_rate": 100.0
+  },
+  "results": [
+    {
+      "module": "Backend",
+      "test_type": "Unit Tests",
+      "status": "FAILED",
+      "duration": 8.558088779449463,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/unit",
+        "-v",
+        "--tb=short"
+      ]
+    },
+    {
+      "module": "Backend",
+      "test_type": "Integration Tests",
+      "status": "FAILED",
+      "duration": 9.096922874450684,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/integration",
+        "-v",
+        "--tb=short"
+      ]
+    },
+    {
+      "module": "Backend",
+      "test_type": "Agent Tests",
+      "status": "FAILED",
+      "duration": 8.291023254394531,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 19,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/agents",
+        "-v",
+        "--tb=short"
+      ]
+    },
+    {
+      "module": "Backend",
+      "test_type": "Performance Tests",
+      "status": "FAILED",
+      "duration": 3.7994680404663086,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 1,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/performance",
+        "-v",
+        "--tb=short",
+        "-m",
+        "not slow"
+      ]
+    },
+    {
+      "module": "Backend",
+      "test_type": "Comprehensive System Test",
+      "status": "PASSED",
+      "duration": 8.9049232006073,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "tests/test_comprehensive_system.py"
+      ]
+    },
+    {
+      "module": "Frontend",
+      "test_type": "Unit & Integration Tests",
+      "status": "FAILED",
+      "duration": 7.20309591293335,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ]
+    },
+    {
+      "module": "Frontend",
+      "test_type": "Component Tests",
+      "status": "FAILED",
+      "duration": 3.1085002422332764,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "src/components"
+      ]
+    },
+    {
+      "module": "Frontend",
+      "test_type": "E2E Tests",
+      "status": "FAILED",
+      "duration": 0.07331013679504395,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "npm",
+        "run",
+        "test:e2e:headless"
+      ]
+    },
+    {
+      "module": "ML",
+      "test_type": "ML Model Tests",
+      "status": "FAILED",
+      "duration": 3.9138131141662598,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 2,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "ml_models/tests",
+        "-v",
+        "--tb=short"
+      ]
+    },
+    {
+      "module": "ML",
+      "test_type": "ML Training Tests",
+      "status": "FAILED",
+      "duration": 3.48659610748291,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 1,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-m",
+        "pytest",
+        "ml_training",
+        "-v",
+        "--tb=short",
+        "-k",
+        "test"
+      ]
+    },
+    {
+      "module": "Infrastructure",
+      "test_type": "Config Validation",
+      "status": "PASSED",
+      "duration": 0.02828192710876465,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('config.yaml')); print('Config is valid')"
+      ]
+    },
+    {
+      "module": "Infrastructure",
+      "test_type": "Database Connection Test",
+      "status": "PASSED",
+      "duration": 0.19428300857543945,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "command": [
+        "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+        "check_databases.py"
+      ]
+    }
+  ]
+}

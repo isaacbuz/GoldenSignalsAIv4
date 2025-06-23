@@ -5,7 +5,7 @@ from agents.factory import AgentFactory
 from notifications.alert_manager import AlertManager
 from goldensignalsai.application.services.signal_engine import SignalEngine
 from infrastructure.config_manager import config_manager
-from infrastructure.data_fetcher import MarketDataFetcher
+from src.data.data_fetcher import MarketDataFetcher
 
 class Container(containers.DeclarativeContainer):
     """

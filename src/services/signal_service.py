@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 from src.core.database import DatabaseManager
 from src.core.redis_manager import RedisManager
-from src.models.signals import Signal, SignalType, SignalStrength
+from src.ml.models.signals import Signal, SignalType, SignalStrength
 
 
 class SignalService:

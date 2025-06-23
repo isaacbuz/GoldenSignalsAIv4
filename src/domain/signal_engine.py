@@ -11,12 +11,12 @@ from enum import Enum
 from loguru import logger
 from collections import deque
 
-from infrastructure.data_fetcher import MarketDataFetcher
-from src.domain.models.factory import ModelFactory
+from src.data.data_fetcher import MarketDataFetcher
+from src.ml.models.factory import ModelFactory
 from src.domain.risk_management.position_sizer import PositionSizer
 from src.domain.analytics.performance_tracker import PerformanceTracker
 from src.domain.trading.indicators import Indicators
-from src.domain.models.signal import TradingSignal
+from src.ml.models.signal import TradingSignal
 from src.domain.trading.options_analysis import OptionsAnalysis
 from src.domain.volatility_agent import VolatilityAgent
 
