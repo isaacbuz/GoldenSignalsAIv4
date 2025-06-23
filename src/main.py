@@ -189,15 +189,38 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Graceful shutdown completed")
 
 
+# Import API documentation configuration
+from src.api.docs import API_TITLE, API_DESCRIPTION, API_VERSION, TAGS_METADATA, custom_openapi_schema
+
 # Create FastAPI application
 app = FastAPI(
-    title="GoldenSignalsAI V3",
-    description="Next-Generation AI Trading Platform with Advanced Agentic Architecture",
-    version="3.0.0",
-    docs_url="/docs" if settings.debug else None,
-    redoc_url="/redoc" if settings.debug else None,
+    title=API_TITLE,
+    description=API_DESCRIPTION,
+    version=API_VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_tags=TAGS_METADATA,
     lifespan=lifespan
 )
+
+# Custom OpenAPI schema
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+        tags=app.openapi_tags,
+    )
+    # Merge with custom schema
+    custom_schema = custom_openapi_schema()
+    openapi_schema.update(custom_schema)
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 # Add security middleware
 app.add_middleware(SecurityMiddleware)
@@ -239,7 +262,7 @@ app.include_router(api_router, prefix="/api/v1")
 app.include_router(websocket_router)  # WebSocket routes
 
 
-@app.get("/", tags=["Root"])
+@app.get("/", tags=["health"])
 async def root():
     """Root endpoint with system information"""
     return {
@@ -258,7 +281,7 @@ async def root():
     }
 
 
-@app.get("/health", tags=["Monitoring"])
+@app.get("/health", tags=["health"])
 async def health_check(request: Request):
     """Comprehensive health check endpoint"""
     health_status = {
