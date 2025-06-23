@@ -8,7 +8,7 @@ import pandas as pd
 from datetime import datetime, timezone
 
 from src.services.signal_generation_engine import SignalGenerationEngine
-from src.utils.timezone import now_utc
+from src.utils.timezone_utils import now_utc
 
 class TestSignalGenerationEngine:
     """Test signal generation engine"""
