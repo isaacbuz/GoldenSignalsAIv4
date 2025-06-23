@@ -24,7 +24,7 @@ class RiskManager:
         self, 
         max_portfolio_risk: float = 0.02,  # 2% default max portfolio risk
         max_single_trade_risk: float = 0.01  # 1% default max single trade risk
-    ):
+    ) -> None:
         """
         Initialize the RiskManager with risk parameters.
 

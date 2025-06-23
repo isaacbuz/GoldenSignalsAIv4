@@ -66,7 +66,7 @@ class SignalGenerationEngine:
     - Risk management
     """
     
-    def __init__(self):
+    def __init__(self) -> None:
         self.data_validator = DataQualityValidator()
         self.scaler = StandardScaler()
         self.ml_model = None
@@ -455,7 +455,7 @@ class SignalGenerationEngine:
         
         return signal
         
-    def train_ml_model(self, historical_data: pd.DataFrame, labels: pd.Series):
+    def train_ml_model(self, historical_data: pd.DataFrame, labels: pd.Series) -> None:
         """Train the ML model on historical data"""
         try:
             # Prepare features
