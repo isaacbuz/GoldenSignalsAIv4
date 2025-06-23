@@ -304,22 +304,13 @@ GoldenSignalsAI_V2/
 
 ## 📚 Documentation
 
-### **Core Documentation**
-- [API Documentation](API_DOCUMENTATION.md) - Complete REST API reference
-- [Deployment Guide](DEPLOYMENT_GUIDE.md) - Local, Docker, Kubernetes, Cloud deployments
+Visit our comprehensive [**Documentation Hub**](docs/README.md) for organized access to all documentation.
+
+### **Quick Links**
+- [API Documentation](API_DOCUMENTATION.md) - REST API reference
+- [Deployment Guide](DEPLOYMENT_GUIDE.md) - Local, Docker, Kubernetes, Cloud
 - [Troubleshooting Guide](TROUBLESHOOTING_GUIDE.md) - Common issues and solutions
-
-### **Development Guides**
-- [Architecture Overview](ARCHITECTURE.md) - System design and components
-- [Phase 2 Implementation](PHASE_2_COMPLETE.md) - Signal generation & filtering
-- [Phase 3 Testing](PHASE_3_DAY_11_TESTING_SUMMARY.md) - Testing coverage roadmap
-- [Execution Tracker](EXECUTION_TRACKER.md) - Project progress tracking
-
-### **Feature Documentation**
-- [Signal Generation Engine](src/services/signal_generation_engine.py) - 15+ technical indicators
-- [Signal Filtering Pipeline](src/services/signal_filtering_pipeline.py) - 7-stage filtering
-- [Signal Monitoring Service](src/services/signal_monitoring_service.py) - Performance tracking
-- [Data Quality Validator](src/services/data_quality_validator.py) - Multi-source validation
+- [Contributing](CONTRIBUTING.md) - How to contribute
 
 ## 📄 License
 
