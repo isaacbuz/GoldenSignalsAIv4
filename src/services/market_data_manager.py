@@ -19,12 +19,12 @@ logger = logging.getLogger(__name__)
 
 class RateLimiter:
     """Simple rate limiter for API calls"""
-    def __init__(self, calls: int, period: int):
+    def __init__(self, calls: int, period: int) -> None:
         self.calls = calls
         self.period = period
         self.call_times = []
         
-    async def acquire(self):
+    async def acquire(self) -> bool:
         now = datetime.now(tz=timezone.utc)
         # Remove old calls outside the period
         self.call_times = [t for t in self.call_times if now - t < timedelta(seconds=self.period)]
@@ -39,7 +39,7 @@ class RateLimiter:
 
 class CircuitBreaker:
     """Circuit breaker pattern for fault tolerance"""
-    def __init__(self, failure_threshold: int = 5, timeout: int = 60):
+    def __init__(self, failure_threshold: int = 5, timeout: int = 60) -> None:
         self.failure_threshold = failure_threshold
         self.timeout = timeout
         self.failure_count = 0
@@ -57,11 +57,11 @@ class CircuitBreaker:
         else:  # HALF_OPEN
             return True
             
-    def record_success(self):
+    def record_success(self) -> None:
         self.failure_count = 0
         self.state = "CLOSED"
         
-    def record_failure(self):
+    def record_failure(self) -> None:
         self.failure_count += 1
         self.last_failure_time = datetime.now(tz=timezone.utc)
         if self.failure_count >= self.failure_threshold:
@@ -82,7 +82,7 @@ class DataProvider(ABC):
 class YFinanceProvider(DataProvider):
     """Yahoo Finance data provider with improved error handling"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self.rate_limiter = RateLimiter(calls=100, period=60)
         # Create a session for better performance
         self._session = None
@@ -168,7 +168,7 @@ class YFinanceProvider(DataProvider):
 class AlphaVantageProvider(DataProvider):
     """Alpha Vantage data provider"""
     
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str) -> None:
         self.api_key = api_key
         self.base_url = "https://www.alphavantage.co/query"
         self.rate_limiter = RateLimiter(calls=5, period=60)  # Free tier limits
@@ -276,7 +276,7 @@ class MockDataProvider(DataProvider):
 class MarketDataManager:
     """Main market data manager with multi-provider support"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize providers
         self.providers = self._initialize_providers()
         

@@ -20,7 +20,7 @@ class OHLCV(BaseModel):
     volume: int = Field(..., ge=0)
     
     @validator("high")
-    def high_must_be_highest(cls, v, values):
+    def high_must_be_highest(cls, v, values) -> bool:
         """Validate high is the highest price"""
         if "open" in values and "low" in values and "close" in values:
             prices = [values["open"], values["low"], values["close"], v]
@@ -29,7 +29,7 @@ class OHLCV(BaseModel):
         return v
     
     @validator("low")
-    def low_must_be_lowest(cls, v, values):
+    def low_must_be_lowest(cls, v, values) -> bool:
         """Validate low is the lowest price"""
         if "open" in values and "close" in values:
             prices = [values["open"], values["close"], v]
@@ -48,7 +48,7 @@ class VolumeProfile(BaseModel):
     value_area_low: float = Field(..., description="Value Area Low")
     
     @validator("volumes")
-    def volumes_match_prices(cls, v, values):
+    def volumes_match_prices(cls, v, values) -> bool:
         """Ensure volumes list matches price levels"""
         if "price_levels" in values and len(v) != len(values["price_levels"]):
             raise ValueError("Volumes must match price levels length")
@@ -188,7 +188,7 @@ class MarketData(BaseModel):
     last_updated: datetime = Field(default_factory=datetime.utcnow)
     
     @validator("day_change", pre=True, always=True)
-    def calculate_day_change(cls, v, values):
+    def calculate_day_change(cls, v, values) -> float:
         """Auto-calculate day change if not provided"""
         if v is None and "current_price" in values and "previous_close" in values:
             if values["previous_close"]:
@@ -196,7 +196,7 @@ class MarketData(BaseModel):
         return v
     
     @validator("day_change_percent", pre=True, always=True)
-    def calculate_day_change_percent(cls, v, values):
+    def calculate_day_change_percent(cls, v, values) -> float:
         """Auto-calculate day change percentage if not provided"""
         if v is None and "day_change" in values and "previous_close" in values:
             if values["previous_close"] and values["day_change"] is not None:
