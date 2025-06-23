@@ -14,7 +14,7 @@ import logging
 from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 import uuid
-from enum import Enum
+from e, timezonenum import Enum
 import io
 import base64
 
@@ -232,7 +232,7 @@ class MultimodalAIChatService:
             session.messages.append(assistant_msg)
             
             # Update session
-            session.updated_at = datetime.utcnow()
+            session.updated_at = datetime.now(timezone.utc)
             
             return response
             
@@ -575,7 +575,7 @@ class MultimodalAIChatService:
         summary = {
             "session_id": session_id,
             "message_count": len(session.messages),
-            "duration": (datetime.utcnow() - session.created_at).total_seconds(),
+            "duration": (datetime.now(timezone.utc) - session.created_at).total_seconds(),
             "topics_discussed": [],
             "files_analyzed": [],
             "key_insights": [],

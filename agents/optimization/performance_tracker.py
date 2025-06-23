@@ -41,7 +41,7 @@ class PerformanceTracker:
                         "profit": trade_result.get("profit", 0.0),
                         "drawdown": trade_result.get("drawdown", 0.0),
                         "sharpe_ratio": trade_result.get("sharpe_ratio", 0.0),
-                        "timestamp": pd.Timestamp.now(),
+                        "timestamp": pd.Timestamp.now(tz='UTC'),
                     }
                 ]
             )

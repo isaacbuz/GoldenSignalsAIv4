@@ -21,7 +21,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, time
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typi, timezoneng import Dict, List, Any, Optional, Tuple, Callable
 import logging
 from dataclasses import dataclass, asdict
 import threading
@@ -284,7 +284,7 @@ class MarketDataCache:
         """Save market tick to cache"""
         self.memory_cache[f"tick_{symbol}"] = {
             "data": asdict(tick),
-            "timestamp": datetime.now().timestamp()
+            "timestamp": datetime.now(timezone.utc).timestamp()
         }
         
         # Also persist to disk
@@ -301,7 +301,7 @@ class MarketDataCache:
         cache_key = f"tick_{symbol}"
         if cache_key in self.memory_cache:
             cached = self.memory_cache[cache_key]
-            age = datetime.now().timestamp() - cached["timestamp"]
+            age = datetime.now(timezone.utc).timestamp() - cached["timestamp"]
             if age < self.cache_ttl:
                 data = cached["data"]
                 return MarketTick(**data)
@@ -311,7 +311,7 @@ class MarketDataCache:
             cache_file = os.path.join(self.cache_dir, f"{symbol}_tick.json")
             if os.path.exists(cache_file):
                 mtime = os.path.getmtime(cache_file)
-                age = datetime.now().timestamp() - mtime
+                age = datetime.now(timezone.utc).timestamp() - mtime
                 if age < self.cache_ttl:
                     with open(cache_file, 'r') as f:
                         data = json.load(f)
@@ -327,7 +327,7 @@ class MarketDataCache:
             cache_file = os.path.join(self.cache_dir, f"{symbol}_historical.pkl")
             data.to_pickle(cache_file)
             self.memory_cache[f"hist_{symbol}"] = {
-                "timestamp": datetime.now().timestamp()
+                "timestamp": datetime.now(timezone.utc).timestamp()
             }
         except Exception as e:
             logger.error(f"Failed to save historical cache for {symbol}: {e}")
@@ -339,7 +339,7 @@ class MarketDataCache:
         
         if os.path.exists(cache_file):
             mtime = os.path.getmtime(cache_file)
-            age = datetime.now().timestamp() - mtime
+            age = datetime.now(timezone.utc).timestamp() - mtime
             if age < self.cache_ttl:
                 try:
                     return pd.read_pickle(cache_file)
@@ -590,7 +590,7 @@ class MarketDataService:
         """Get current market status"""
         try:
             # Check if market is open
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             
             # Simple market hours check (NYSE)
             market_open = now.replace(hour=9, minute=30, second=0, microsecond=0)
@@ -696,7 +696,7 @@ class MarketDataService:
                 "selected_expiry": nearest_expiry,
                 "calls": calls[:20],  # Limit to 20 strikes
                 "puts": puts[:20],
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat()
             }
             
         except Exception as e:

@@ -18,7 +18,7 @@ import json
 import os
 import pickle
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Callable, Tuple
+from typi, timezoneng import Dict, List, Any, Optional, Callable, Tuple
 from dataclasses import dataclass, asdict
 from enum import Enum
 import logging
@@ -368,7 +368,7 @@ class RateLimitHandler:
                 "volume": info.get("volume", 0),
                 "change": info.get("regularMarketChange", 0),
                 "change_percent": info.get("regularMarketChangePercent", 0),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "source": DataSource.YAHOO_FINANCE.value
             }
         except Exception as e:
@@ -404,7 +404,7 @@ class RateLimitHandler:
                             "volume": int(quote.get("06. volume", 0)),
                             "change": float(quote.get("09. change", 0)),
                             "change_percent": float(quote.get("10. change percent", "0%").rstrip('%')),
-                            "timestamp": datetime.utcnow().isoformat(),
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
                             "source": DataSource.ALPHA_VANTAGE.value
                         }
         except Exception as e:

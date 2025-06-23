@@ -24,7 +24,7 @@ class TestSignalGenerationEngine:
     @pytest.fixture
     def mock_market_data(self):
         """Create mock market data"""
-        dates = pd.date_range(end=pd.Timestamp.now(), periods=100, freq='D')
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=100, freq='D')
         
         # Generate more realistic price data
         base_price = 100

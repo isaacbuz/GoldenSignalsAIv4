@@ -19,7 +19,7 @@ import logging
 from typing import Dict, List, Optional, Any, Union, Tuple
 from datetime import datetime, timedelta
 import uuid
-from enum import Enum
+from e, timezonenum import Enum
 import io
 import base64
 import tempfile
@@ -1005,7 +1005,7 @@ Always be transparent about limitations and risks. Cite data sources and explain
                 'type': signal_type,
                 'confidence': 0.75,  # Placeholder
                 'reasoning': 'Based on comprehensive analysis',
-                'timestamp': datetime.utcnow().isoformat()
+                'timestamp': datetime.now(timezone.utc).isoformat()
             }
             
             # Add price targets if available in market data

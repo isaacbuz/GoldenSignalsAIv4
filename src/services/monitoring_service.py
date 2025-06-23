@@ -18,7 +18,7 @@ import logging
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
-from collections import deque, defaultdict
+from collectio, timezonens import deque, defaultdict
 import statistics
 import json
 
@@ -315,7 +315,7 @@ class MonitoringService:
     def get_dashboard_data(self) -> Dict[str, Any]:
         """Get data for monitoring dashboard"""
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "latency": self.stats["latency"],
             "cache": self.stats["cache"],
             "api": {

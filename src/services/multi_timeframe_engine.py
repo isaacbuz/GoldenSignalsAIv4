@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from typing import Dict, List
+from typi, timezoneng import Dict, List
 from src.services.signal_engine import SignalEngine
 
 class MultiTimeframeSignalEngine:
@@ -20,6 +20,6 @@ class MultiTimeframeSignalEngine:
                 signal_result = engine.compute_signal(df)
                 results[interval] = {
                     "signal": signal_result,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.now(timezone.utc).isoformat()
                 }
         return results

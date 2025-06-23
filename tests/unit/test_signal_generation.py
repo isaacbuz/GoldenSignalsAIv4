@@ -253,7 +253,7 @@ class TestSignalGeneration:
             'action': 'buy',
             'confidence': 0.85,
             'price': 450.00,
-            'timestamp': pd.Timestamp.now(),
+            'timestamp': pd.Timestamp.now(tz='UTC'),
             'indicators': {
                 'rsi': 25,
                 'macd_histogram': 0.8,
