@@ -1,0 +1,207 @@
+[
+  {
+    "title": "EPIC: Comprehensive RAG, Agent, and MCP Enhancement for GoldenSignalsAI V2",
+    "body": "## \ud83d\ude80 Epic Overview\n\nThis epic tracks the comprehensive enhancement of GoldenSignalsAI V2 with:\n- **15 RAG Systems** for historical context and intelligence\n- **20 New Autonomous Agents** for specialized trading\n- **12 MCP Servers** for standardized interfaces\n\n### Expected Impact\n- Signal Accuracy: 62% \u2192 85% (+23%)\n- Sharpe Ratio: 1.2 \u2192 2.1 (+75%)\n- Max Drawdown: -15% \u2192 -8% (-47%)\n- Automation: 20% \u2192 90%\n\n### Implementation Phases\n1. **Quick Wins (Weeks 1-2)**: Basic RAG, Regime Agent, Market Data MCP\n2. **High Impact (Weeks 3-4)**: News RAG, Liquidity Agent, Communication MCP  \n3. **Game Changers (Month 2-3)**: Full deployment of all systems\n\n### Sub-Issues\nThis epic will be broken down into:\n- RAG Implementation Issues (#1-15)\n- Agent Development Issues (#16-35)\n- MCP Server Issues (#36-47)\n- Integration & Testing Issues (#48-50)\n\n### Success Criteria\n- [ ] All RAG systems operational with <100ms query time\n- [ ] All agents achieving >80% accuracy\n- [ ] MCP servers handling 1000+ req/sec\n- [ ] Measurable improvement in trading metrics\n\n### Resources\n- Team: 5 engineers\n- Timeline: 3 months\n- Budget: ~$380k\n- Expected ROI: 300-500% performance improvement\n",
+    "labels": [
+      "epic",
+      "enhancement",
+      "rag",
+      "agents",
+      "mcp",
+      "high-priority"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "RAG-1: Implement Historical Market Context RAG",
+    "body": "## \ud83d\udcca Historical Market Context RAG\n\n### Objective\nCreate a RAG system that retrieves relevant historical market scenarios for better decision-making.\n\n### Requirements\n- Store 20+ years of market scenarios in vector DB\n- Index scenarios by regime, volatility, events\n- Retrieve similar patterns with <100ms latency\n- Return context with confidence scores\n\n### Implementation Tasks\n- [ ] Set up Pinecone/Weaviate vector database\n- [ ] Design market scenario schema\n- [ ] Create embedding pipeline for scenarios\n- [ ] Implement retrieval API\n- [ ] Add caching layer\n- [ ] Create similarity scoring algorithm\n\n### Example Schema\n```python\n{\n    'date': '2020-03-12',\n    'regime': 'crisis',\n    'vix': 75.47,\n    'spy_return': -9.51,\n    'volume_ratio': 3.2,\n    'events': ['COVID-19', 'Circuit Breaker'],\n    'outcome': 'V-shaped recovery',\n    'duration_days': 23\n}\n```\n\n### Expected Impact\n- +15% signal accuracy\n- Better regime-aware decisions\n- Reduced drawdowns during similar events\n\n### Acceptance Criteria\n- [ ] Can index 1M+ historical scenarios\n- [ ] Retrieves top-5 similar scenarios in <100ms\n- [ ] Returns actionable insights with confidence\n- [ ] Integrated with Market Regime Agent\n",
+    "labels": [
+      "rag",
+      "historical-data",
+      "high-priority",
+      "week-1"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "RAG-2: Implement News & Event Impact RAG",
+    "body": "## \ud83d\udcf0 News & Event Impact RAG\n\n### Objective\nLink news events to historical price movements for predictive insights.\n\n### Requirements\n- Index earnings calls, Fed minutes, geopolitical events\n- Map news sentiment to price impact\n- Real-time news categorization and matching\n- Historical outcome tracking\n\n### Implementation Tasks\n- [ ] Create news event database schema\n- [ ] Build news parsing and categorization pipeline\n- [ ] Implement sentiment-to-impact mapping\n- [ ] Create real-time matching algorithm\n- [ ] Build historical validation system\n- [ ] Design API for agent queries\n\n### Data Sources\n- Earnings transcripts (10+ years)\n- Federal Reserve minutes and speeches\n- Major geopolitical events\n- Corporate actions and announcements\n\n### Expected Impact\n- 25% better event-driven trading\n- Faster reaction to breaking news\n- Predictive positioning before events\n\n### Acceptance Criteria\n- [ ] Processes news in <1 second\n- [ ] 80%+ accuracy in impact prediction\n- [ ] Handles 100+ news items/minute\n- [ ] Provides confidence intervals\n",
+    "labels": [
+      "rag",
+      "news",
+      "sentiment",
+      "high-priority"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "RAG-3: Implement Options Flow Intelligence RAG",
+    "body": "## \ud83c\udfaf Options Flow Intelligence RAG\n\n### Objective\nDetect and analyze institutional options flow patterns for early signals.\n\n### Requirements\n- Track unusual options activity\n- Identify institutional vs retail flow\n- Pattern match to historical outcomes\n- Real-time flow analysis\n\n### Implementation Tasks\n- [ ] Design options flow database schema\n- [ ] Create institutional pattern detection\n- [ ] Build flow aggregation pipeline\n- [ ] Implement pattern matching algorithm\n- [ ] Create predictive models\n- [ ] Build real-time alerting system\n\n### Key Patterns to Detect\n- Large block trades\n- Sweep orders across exchanges\n- Unusual strike/expiry combinations\n- Rolling positions\n- Hedging patterns\n\n### Expected Impact\n- Detect institutional positioning 2-3 days early\n- 40% improvement in options trading\n- Better understanding of smart money\n\n### Acceptance Criteria\n- [ ] Processes 10K+ options trades/second\n- [ ] Identifies institutional flow with 85% accuracy\n- [ ] Provides actionable signals within 30 seconds\n- [ ] Tracks success rate of predictions\n",
+    "labels": [
+      "rag",
+      "options",
+      "institutional",
+      "game-changer"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "RAG-4: Implement Technical Pattern Success RAG",
+    "body": "## \ud83d\udcc8 Technical Pattern Success RAG\n\n### Objective\nTrack historical success rates of technical patterns in different market conditions.\n\n### Requirements\n- Index all major chart patterns with outcomes\n- Context-aware success probability\n- Pattern quality scoring\n- Real-time pattern matching\n\n### Implementation Tasks\n- [ ] Create pattern recognition system\n- [ ] Build pattern outcome database\n- [ ] Implement context matching (regime, volume, etc.)\n- [ ] Create probability calculation engine\n- [ ] Design pattern quality metrics\n- [ ] Build API for technical agents\n\n### Patterns to Track\n- Head and shoulders\n- Double tops/bottoms\n- Triangles (ascending, descending, symmetrical)\n- Flags and pennants\n- Cup and handle\n- Wedges\n\n### Expected Impact\n- 30% reduction in false pattern signals\n- Better entry/exit timing\n- Context-aware technical analysis\n\n### Acceptance Criteria\n- [ ] Recognizes patterns with 90% accuracy\n- [ ] Provides success probability within context\n- [ ] Updates success rates in real-time\n- [ ] Handles 1000+ symbols simultaneously\n",
+    "labels": [
+      "rag",
+      "technical-analysis",
+      "patterns"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "RAG-5: Implement Risk Event Prediction RAG",
+    "body": "## \ud83d\udea8 Risk Event Prediction RAG\n\n### Objective\nProactively identify conditions that historically preceded major risk events.\n\n### Requirements\n- Index all major market crashes and corrections\n- Identify early warning patterns\n- Real-time risk scoring\n- Automated hedging recommendations\n\n### Implementation Tasks\n- [ ] Create risk event database\n- [ ] Build pattern recognition for risk precursors\n- [ ] Implement multi-factor risk scoring\n- [ ] Create early warning system\n- [ ] Design hedging recommendation engine\n- [ ] Build backtesting framework\n\n### Risk Events to Study\n- 1987 Black Monday\n- 2000 Dot-com crash\n- 2008 Financial crisis\n- 2020 COVID crash\n- Flash crashes\n- Sector-specific corrections\n\n### Expected Impact\n- 60% reduction in maximum drawdowns\n- 2-5 days early warning for major events\n- Automated portfolio protection\n\n### Acceptance Criteria\n- [ ] Identifies risk patterns with 75% accuracy\n- [ ] Provides warnings 24-72 hours in advance\n- [ ] Suggests specific hedging strategies\n- [ ] Zero false positives for extreme events\n",
+    "labels": [
+      "rag",
+      "risk-management",
+      "critical",
+      "high-priority"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Agent-1: Develop Market Regime Classification Agent",
+    "body": "## \ud83c\udf21\ufe0f Market Regime Classification Agent\n\n### Objective\nContinuously classify market regime (Bull/Bear/Sideways/Crisis) for all other agents.\n\n### Requirements\n- Real-time regime classification\n- Multiple timeframe analysis\n- Confidence scoring\n- Historical validation\n\n### Implementation Tasks\n- [ ] Define regime classification criteria\n- [ ] Implement multi-indicator analysis\n- [ ] Create adaptive threshold system\n- [ ] Build confidence scoring algorithm\n- [ ] Integrate with Historical RAG\n- [ ] Create regime transition detection\n\n### Key Indicators\n- VIX levels and term structure\n- Market breadth (advance/decline)\n- Sector correlations\n- Volume patterns\n- Credit spreads\n- Economic indicators\n\n### Expected Impact\n- Better strategy selection by regime\n- Reduced losses in regime transitions\n- Proactive positioning changes\n\n### Acceptance Criteria\n- [ ] 85%+ regime classification accuracy\n- [ ] Updates regime every 1 minute\n- [ ] Provides probability distribution\n- [ ] Integrates with all other agents\n",
+    "labels": [
+      "agent",
+      "regime",
+      "core",
+      "week-1"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Agent-2: Develop Liquidity Prediction Agent",
+    "body": "## \ud83d\udca7 Liquidity Prediction Agent\n\n### Objective\nPredict market liquidity 1-5 minutes ahead for optimal execution timing.\n\n### Requirements\n- LSTM-based sequence prediction\n- Order book analysis\n- Multi-venue liquidity aggregation\n- Execution recommendations\n\n### Implementation Tasks\n- [ ] Build LSTM model architecture\n- [ ] Create order book feature extraction\n- [ ] Implement time-series prediction\n- [ ] Design liquidity scoring system\n- [ ] Build execution timing optimizer\n- [ ] Create real-time inference pipeline\n\n### Features to Analyze\n- Bid-ask spreads\n- Order book depth\n- Trade sizes and frequency\n- Market maker participation\n- Time of day patterns\n- Event calendars\n\n### Expected Impact\n- 10-20bps execution improvement\n- Reduced market impact\n- Better fill rates\n\n### Acceptance Criteria\n- [ ] Predicts liquidity with 80% accuracy\n- [ ] Updates predictions every second\n- [ ] Handles 100+ symbols concurrently\n- [ ] Provides actionable execution windows\n",
+    "labels": [
+      "agent",
+      "liquidity",
+      "ml",
+      "execution"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Agent-3: Develop Smart Execution Agent",
+    "body": "## \ud83c\udfaf Smart Execution Agent\n\n### Objective\nIntelligent order routing and execution across multiple venues.\n\n### Requirements\n- Multi-venue order routing\n- Dynamic order slicing\n- Impact minimization\n- Real-time adaptation\n\n### Implementation Tasks\n- [ ] Build order routing engine\n- [ ] Implement VWAP/TWAP algorithms\n- [ ] Create adaptive slicing logic\n- [ ] Design impact prediction model\n- [ ] Build venue selection optimizer\n- [ ] Implement urgency-based execution\n\n### Execution Strategies\n- Iceberg orders\n- Time-weighted execution\n- Liquidity-seeking algorithms\n- Dark pool access\n- Minimal impact routing\n\n### Expected Impact\n- 20-30bps execution cost reduction\n- 95% fill rate improvement\n- Minimal market impact\n\n### Acceptance Criteria\n- [ ] Routes to 5+ execution venues\n- [ ] Achieves VWAP or better 80% of time\n- [ ] Handles urgent and patient orders\n- [ ] Provides execution analytics\n",
+    "labels": [
+      "agent",
+      "execution",
+      "trading",
+      "high-priority"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Agent-4: Develop News Arbitrage Agent",
+    "body": "## \ud83d\udcf0 News Arbitrage Agent\n\n### Objective\nTrade news events before the market fully prices them in.\n\n### Requirements\n- Sub-second news processing\n- Impact prediction\n- Speed-optimized execution\n- Risk controls\n\n### Implementation Tasks\n- [ ] Build ultra-fast news parser\n- [ ] Create impact prediction model\n- [ ] Implement speed-priority execution\n- [ ] Design position sizing algorithm\n- [ ] Build risk management system\n- [ ] Create performance tracking\n\n### News Sources\n- Professional news terminals\n- Social media firehose\n- Company announcements\n- Regulatory filings\n- Economic releases\n\n### Expected Impact\n- Capture 70% of news-driven moves\n- Sub-second reaction time\n- 60% win rate on news trades\n\n### Acceptance Criteria\n- [ ] Processes news in <100ms\n- [ ] Executes trades in <500ms\n- [ ] Maintains 60%+ win rate\n- [ ] Handles 1000+ news items/minute\n",
+    "labels": [
+      "agent",
+      "news",
+      "arbitrage",
+      "speed"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Agent-5: Develop Multi-Agent Consensus System",
+    "body": "## \ud83e\udd1d Multi-Agent Consensus System\n\n### Objective\nCoordinate decisions across all agents using weighted voting and consensus.\n\n### Requirements\n- Agent registration and discovery\n- Weighted voting system\n- Consensus algorithms\n- Conflict resolution\n\n### Implementation Tasks\n- [ ] Design consensus protocol\n- [ ] Build agent registry\n- [ ] Implement voting mechanism\n- [ ] Create weight calculation system\n- [ ] Design conflict resolution\n- [ ] Build decision aggregation\n\n### Consensus Features\n- Performance-based weighting\n- Confidence-aware voting\n- Regime-specific weights\n- Real-time adaptation\n- Explainable decisions\n\n### Expected Impact\n- 70% reduction in conflicting signals\n- 25% improvement in Sharpe ratio\n- Better risk-adjusted returns\n\n### Acceptance Criteria\n- [ ] Handles 50+ agent inputs\n- [ ] Makes decisions in <50ms\n- [ ] Provides decision explanations\n- [ ] Tracks consensus accuracy\n",
+    "labels": [
+      "agent",
+      "consensus",
+      "coordination",
+      "critical"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "MCP-1: Build Universal Market Data MCP Server",
+    "body": "## \ud83d\udcca Universal Market Data MCP Server\n\n### Objective\nProvide standardized access to all market data sources through a single interface.\n\n### Requirements\n- Multi-source data aggregation\n- Automatic failover\n- Rate limit management\n- Real-time and historical data\n\n### Implementation Tasks\n- [ ] Design unified data schema\n- [ ] Build source adapters (Yahoo, IB, Bloomberg)\n- [ ] Implement caching layer\n- [ ] Create rate limit manager\n- [ ] Build failover system\n- [ ] Design REST and WebSocket APIs\n\n### Supported Data Types\n- Real-time prices\n- Order book data\n- Historical bars\n- Corporate actions\n- Economic indicators\n- Alternative data\n\n### Expected Impact\n- 50% reduction in API calls\n- 99.9% data availability\n- Unified data access for all agents\n\n### Acceptance Criteria\n- [ ] Handles 10K+ requests/second\n- [ ] <10ms latency for cached data\n- [ ] Automatic source failover\n- [ ] Supports 10+ data sources\n",
+    "labels": [
+      "mcp",
+      "market-data",
+      "infrastructure",
+      "week-1"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "MCP-2: Build RAG Query MCP Server",
+    "body": "## \ud83d\udd0d RAG Query MCP Server\n\n### Objective\nStandardized interface for all RAG system queries across agents.\n\n### Requirements\n- Semantic search across all indexes\n- Query optimization\n- Result caching\n- Relevance scoring\n\n### Implementation Tasks\n- [ ] Design query protocol\n- [ ] Build query router\n- [ ] Implement caching system\n- [ ] Create relevance scoring\n- [ ] Build result aggregation\n- [ ] Design monitoring system\n\n### Query Types\n- Semantic similarity search\n- Hybrid search (semantic + keyword)\n- Filtered searches\n- Multi-index queries\n- Contextual retrieval\n\n### Expected Impact\n- Unified RAG access for all agents\n- 10x faster repeated queries\n- Better relevance scoring\n\n### Acceptance Criteria\n- [ ] Handles 1000+ queries/second\n- [ ] <100ms query latency\n- [ ] 90%+ cache hit rate\n- [ ] Supports all RAG indexes\n",
+    "labels": [
+      "mcp",
+      "rag",
+      "infrastructure"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "MCP-3: Build Agent Communication MCP Server",
+    "body": "## \ud83d\udcac Agent Communication MCP Server\n\n### Objective\nEnable efficient inter-agent communication and coordination.\n\n### Requirements\n- Pub/sub messaging\n- Agent discovery\n- Message routing\n- Priority queuing\n\n### Implementation Tasks\n- [ ] Design communication protocol\n- [ ] Build message broker\n- [ ] Implement agent registry\n- [ ] Create routing system\n- [ ] Build priority queue\n- [ ] Design monitoring dashboard\n\n### Communication Patterns\n- Broadcast messages\n- Direct agent-to-agent\n- Topic-based subscriptions\n- Request-response\n- Event streaming\n\n### Expected Impact\n- Seamless agent coordination\n- Reduced message latency\n- Better system observability\n\n### Acceptance Criteria\n- [ ] Handles 100K+ messages/second\n- [ ] <1ms message delivery\n- [ ] Supports 100+ agents\n- [ ] Zero message loss\n",
+    "labels": [
+      "mcp",
+      "communication",
+      "infrastructure"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "MCP-4: Build Risk Analytics MCP Server",
+    "body": "## \u26a0\ufe0f Risk Analytics MCP Server\n\n### Objective\nProvide real-time risk calculations and analytics for all trading activities.\n\n### Requirements\n- Portfolio risk metrics\n- Real-time calculations\n- Stress testing\n- Risk limits enforcement\n\n### Implementation Tasks\n- [ ] Implement VaR/CVaR calculations\n- [ ] Build correlation engine\n- [ ] Create stress test framework\n- [ ] Design limit monitoring\n- [ ] Build risk dashboard\n- [ ] Implement alerting system\n\n### Risk Metrics\n- Value at Risk (VaR)\n- Conditional VaR\n- Maximum drawdown\n- Sharpe/Sortino ratios\n- Greeks (for options)\n- Correlation matrices\n\n### Expected Impact\n- Real-time risk awareness\n- Automated limit enforcement\n- 50% reduction in risk events\n\n### Acceptance Criteria\n- [ ] Calculates risk in <100ms\n- [ ] Handles 1000+ positions\n- [ ] Runs 100+ stress scenarios\n- [ ] Real-time limit monitoring\n",
+    "labels": [
+      "mcp",
+      "risk",
+      "analytics",
+      "critical"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "MCP-5: Build Execution Management MCP Server",
+    "body": "## \ud83d\udcc8 Execution Management MCP Server\n\n### Objective\nUnified execution interface for all trading operations.\n\n### Requirements\n- Multi-broker support\n- Order lifecycle management\n- Smart routing\n- TCA (Transaction Cost Analysis)\n\n### Implementation Tasks\n- [ ] Build broker adapters\n- [ ] Create order management system\n- [ ] Implement smart router\n- [ ] Design TCA engine\n- [ ] Build position reconciliation\n- [ ] Create execution analytics\n\n### Supported Brokers\n- Interactive Brokers\n- TD Ameritrade\n- Alpaca\n- Tradier\n- FIX connections\n\n### Expected Impact\n- Unified execution interface\n- Better execution quality\n- Comprehensive trade analytics\n\n### Acceptance Criteria\n- [ ] Connects to 5+ brokers\n- [ ] Handles 1000+ orders/second\n- [ ] Provides real-time TCA\n- [ ] 99.9% order reliability\n",
+    "labels": [
+      "mcp",
+      "execution",
+      "trading",
+      "infrastructure"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Integration-1: RAG-Agent-MCP Integration Testing",
+    "body": "## \ud83d\udd17 RAG-Agent-MCP Integration Testing\n\n### Objective\nEnsure seamless integration between all RAG systems, agents, and MCP servers.\n\n### Requirements\n- End-to-end testing\n- Performance benchmarking\n- Stress testing\n- Failure recovery\n\n### Testing Scenarios\n- [ ] Historical RAG \u2192 Regime Agent \u2192 Trading\n- [ ] News \u2192 Multiple Agents \u2192 Consensus \u2192 Execution\n- [ ] Options Flow \u2192 Risk Analysis \u2192 Position Sizing\n- [ ] Market Data failure and recovery\n- [ ] High-load stress testing\n\n### Performance Targets\n- Full decision cycle: <100ms\n- 10,000 decisions/minute\n- 99.9% uptime\n- Zero data loss\n\n### Acceptance Criteria\n- [ ] All integration tests passing\n- [ ] Performance targets met\n- [ ] Failure recovery working\n- [ ] System monitoring active\n",
+    "labels": [
+      "testing",
+      "integration",
+      "critical"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Integration-2: Production Deployment and Monitoring",
+    "body": "## \ud83d\ude80 Production Deployment and Monitoring\n\n### Objective\nDeploy the complete system to production with comprehensive monitoring.\n\n### Deployment Tasks\n- [ ] Kubernetes deployment configs\n- [ ] Database migrations\n- [ ] Service mesh setup\n- [ ] Load balancer configuration\n- [ ] SSL/TLS certificates\n- [ ] Backup systems\n\n### Monitoring Setup\n- [ ] Prometheus metrics\n- [ ] Grafana dashboards\n- [ ] Log aggregation\n- [ ] Alert rules\n- [ ] Performance tracking\n- [ ] Cost monitoring\n\n### Success Metrics\n- System uptime: 99.9%\n- Average latency: <50ms\n- Error rate: <0.1%\n- Cost per trade: <$0.01\n\n### Acceptance Criteria\n- [ ] All services deployed\n- [ ] Monitoring active\n- [ ] Alerts configured\n- [ ] Runbooks created\n",
+    "labels": [
+      "deployment",
+      "monitoring",
+      "production"
+    ],
+    "assignees": []
+  },
+  {
+    "title": "Integration-3: Performance Optimization and Tuning",
+    "body": "## \u26a1 Performance Optimization and Tuning\n\n### Objective\nOptimize system performance to meet latency and throughput requirements.\n\n### Optimization Areas\n- [ ] Database query optimization\n- [ ] Caching strategy refinement\n- [ ] Network latency reduction\n- [ ] Algorithm optimization\n- [ ] Resource allocation tuning\n- [ ] Code profiling and optimization\n\n### Performance Targets\n- RAG query: <50ms\n- Agent decision: <10ms\n- MCP call: <5ms\n- End-to-end: <100ms\n\n### Tools and Techniques\n- Profiling: cProfile, line_profiler\n- Monitoring: Prometheus, Grafana\n- Load testing: Locust, K6\n- APM: DataDog, New Relic\n\n### Acceptance Criteria\n- [ ] All performance targets met\n- [ ] Resource usage optimized\n- [ ] Bottlenecks identified and resolved\n- [ ] Scalability validated\n",
+    "labels": [
+      "performance",
+      "optimization",
+      "technical"
+    ],
+    "assignees": []
+  }
+]

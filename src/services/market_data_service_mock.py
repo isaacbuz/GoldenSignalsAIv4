@@ -7,8 +7,8 @@ For demonstration and testing without API rate limits
 import random
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta, time
-from typi, timezoneng import Dict, List, Any, Optional, Tuple
+from datetime import datetime, timedelta, time, timezone
+from typing import Dict, List, Any, Optional, Tuple
 import logging
 from dataclasses import dataclass, asdict
 import pytz

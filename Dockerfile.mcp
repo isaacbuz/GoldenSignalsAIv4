@@ -1,0 +1,44 @@
+# Dockerfile for MCP Servers
+FROM python:3.11-slim
+
+# Build arguments
+ARG MCP_SERVICE
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gcc \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional MCP dependencies
+RUN pip install --no-cache-dir \
+    fastapi \
+    uvicorn[standard] \
+    aiohttp \
+    websockets \
+    prometheus-client
+
+# Copy MCP servers
+COPY mcp_servers/ ./mcp_servers/
+COPY agents/ ./agents/
+
+# Create necessary directories
+RUN mkdir -p /app/cache /app/logs
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV MCP_SERVICE=${MCP_SERVICE}
+
+# Expose ports based on service
+EXPOSE 8190 8191 8192 8193 8194
+
+# Run the specified MCP service
+CMD ["sh", "-c", "python -m uvicorn mcp_servers.${MCP_SERVICE}:app --host 0.0.0.0 --port $(echo ${MCP_SERVICE} | grep -o '[0-9]*$')"] 

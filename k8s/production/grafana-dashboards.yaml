@@ -1,0 +1,317 @@
+# Grafana Dashboards ConfigMap for GoldenSignals Production
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: goldensignals
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+    - name: 'goldensignals'
+      orgId: 1
+      folder: 'GoldenSignals'
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /var/lib/grafana/dashboards
+  
+  service-overview.json: |
+    {
+      "dashboard": {
+        "title": "GoldenSignals Service Overview",
+        "uid": "goldensignals-overview",
+        "panels": [
+          {
+            "title": "Request Rate",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{namespace=\"goldensignals\"}[5m])) by (service)",
+                "legendFormat": "{{ service }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Error Rate",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{namespace=\"goldensignals\",status=~\"5..\"}[5m])) by (service)",
+                "legendFormat": "{{ service }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Response Time (p95)",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace=\"goldensignals\"}[5m])) by (service, le))",
+                "legendFormat": "{{ service }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Active Connections",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+            "targets": [
+              {
+                "expr": "sum(websocket_connections_active{namespace=\"goldensignals\"}) by (service)",
+                "legendFormat": "{{ service }}"
+              }
+            ],
+            "type": "graph"
+          }
+        ]
+      }
+    }
+  
+  mcp-servers.json: |
+    {
+      "dashboard": {
+        "title": "MCP Servers Performance",
+        "uid": "mcp-servers",
+        "panels": [
+          {
+            "title": "Market Data MCP - Data Points/sec",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "rate(market_data_points_processed_total{service=\"market-data-mcp\"}[1m])",
+                "legendFormat": "{{ symbol }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "RAG Query MCP - Query Latency",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(rag_query_duration_seconds_bucket{service=\"rag-query-mcp\"}[5m]))",
+                "legendFormat": "p95"
+              },
+              {
+                "expr": "histogram_quantile(0.99, rate(rag_query_duration_seconds_bucket{service=\"rag-query-mcp\"}[5m]))",
+                "legendFormat": "p99"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Agent Comm Hub - Message Rate",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+            "targets": [
+              {
+                "expr": "sum(rate(agent_messages_total{service=\"agent-comm-mcp\"}[1m])) by (agent_type)",
+                "legendFormat": "{{ agent_type }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Risk Analytics - VaR Calculations",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+            "targets": [
+              {
+                "expr": "risk_var_95{service=\"risk-analytics-mcp\"}",
+                "legendFormat": "VaR 95%"
+              },
+              {
+                "expr": "risk_var_99{service=\"risk-analytics-mcp\"}",
+                "legendFormat": "VaR 99%"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Execution MCP - Order Success Rate",
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+            "targets": [
+              {
+                "expr": "sum(rate(orders_executed_total{service=\"execution-mcp\",status=\"success\"}[5m])) / sum(rate(orders_executed_total{service=\"execution-mcp\"}[5m])) * 100",
+                "legendFormat": "Success Rate %"
+              }
+            ],
+            "type": "stat"
+          }
+        ]
+      }
+    }
+  
+  business-metrics.json: |
+    {
+      "dashboard": {
+        "title": "GoldenSignals Business Metrics",
+        "uid": "business-metrics",
+        "panels": [
+          {
+            "title": "Active Users",
+            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "goldensignals_active_users",
+                "legendFormat": "Active Users"
+              }
+            ],
+            "type": "stat"
+          },
+          {
+            "title": "Trading Signals Generated",
+            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(trading_signals_generated_total[1h]))",
+                "legendFormat": "Signals/Hour"
+              }
+            ],
+            "type": "stat"
+          },
+          {
+            "title": "Portfolio Performance",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "avg(portfolio_return_percentage)",
+                "legendFormat": "Avg Return %"
+              }
+            ],
+            "type": "gauge"
+          },
+          {
+            "title": "Signal Accuracy by Type",
+            "gridPos": {"h": 10, "w": 12, "x": 0, "y": 8},
+            "targets": [
+              {
+                "expr": "signal_accuracy_rate",
+                "legendFormat": "{{ signal_type }}"
+              }
+            ],
+            "type": "barchart"
+          },
+          {
+            "title": "Top Performing Strategies",
+            "gridPos": {"h": 10, "w": 12, "x": 12, "y": 8},
+            "targets": [
+              {
+                "expr": "topk(5, strategy_performance_score)",
+                "legendFormat": "{{ strategy_name }}"
+              }
+            ],
+            "type": "table"
+          }
+        ]
+      }
+    }
+  
+  infrastructure.json: |
+    {
+      "dashboard": {
+        "title": "Infrastructure Health",
+        "uid": "infrastructure",
+        "panels": [
+          {
+            "title": "CPU Usage by Pod",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"goldensignals\"}[5m])) by (pod) * 100",
+                "legendFormat": "{{ pod }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Memory Usage by Pod",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(container_memory_working_set_bytes{namespace=\"goldensignals\"}) by (pod) / 1024 / 1024 / 1024",
+                "legendFormat": "{{ pod }}"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Redis Performance",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+            "targets": [
+              {
+                "expr": "redis_connected_clients",
+                "legendFormat": "Connected Clients"
+              },
+              {
+                "expr": "rate(redis_commands_processed_total[1m])",
+                "legendFormat": "Commands/sec"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "PostgreSQL Connections",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+            "targets": [
+              {
+                "expr": "pg_stat_database_numbackends{datname=\"goldensignals\"}",
+                "legendFormat": "Active Connections"
+              },
+              {
+                "expr": "pg_settings_max_connections",
+                "legendFormat": "Max Connections"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Kafka Lag",
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+            "targets": [
+              {
+                "expr": "kafka_consumer_lag_sum",
+                "legendFormat": "{{ topic }} - {{ consumer_group }}"
+              }
+            ],
+            "type": "graph"
+          }
+        ]
+      }
+    }
+  
+  alerts.json: |
+    {
+      "dashboard": {
+        "title": "Alert Overview",
+        "uid": "alerts",
+        "panels": [
+          {
+            "title": "Active Alerts",
+            "gridPos": {"h": 10, "w": 24, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "ALERTS{namespace=\"goldensignals\"}",
+                "instant": true,
+                "format": "table"
+              }
+            ],
+            "type": "table"
+          },
+          {
+            "title": "Alert History",
+            "gridPos": {"h": 10, "w": 24, "x": 0, "y": 10},
+            "targets": [
+              {
+                "expr": "increase(ALERTS_FOR_STATE[24h])",
+                "legendFormat": "{{ alertname }} - {{ alertstate }}"
+              }
+            ],
+            "type": "graph"
+          }
+        ]
+      }
+    } 

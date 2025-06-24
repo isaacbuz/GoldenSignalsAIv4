@@ -20,8 +20,8 @@ import websockets
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta, time
-from typi, timezoneng import Dict, List, Any, Optional, Tuple, Callable
+from datetime import datetime, timedelta, time, timezone
+from typing import Dict, List, Any, Optional, Tuple, Callable
 import logging
 from dataclasses import dataclass, asdict
 import threading

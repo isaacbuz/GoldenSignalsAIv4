@@ -45,27 +45,25 @@ class TestSignalGenerationEngine:
         return DataQualityReport(
             symbol="AAPL",
             is_valid=True,
+            completeness=1.0,
+            accuracy=1.0,
+            timeliness=1.0,
+            consistency=1.0,
             issues=[],
-            metrics={
-                'completeness': 1.0,
-                'consistency': 1.0,
-                'timeliness': 1.0
-            },
-            overall_score=1.0
+            recommendations=[]
         )
     
     @pytest.mark.asyncio
-    async def test_generate_signals_success(self, engine):
+    async def test_generate_signals_success(self, engine, sample_market_data, quality_report):
         """Test successful signal generation"""
         # Mock the data validator
         with patch.object(engine.data_validator, 'get_market_data_with_fallback') as mock_get_data:
             # Setup mock data
-            sample_data = self.sample_market_data()
-            mock_get_data.return_value = (sample_data, 'yahoo')
+            mock_get_data.return_value = (sample_market_data, 'yahoo')
             
             # Mock validate_market_data
             with patch.object(engine.data_validator, 'validate_market_data') as mock_validate:
-                mock_validate.return_value = self.quality_report()
+                mock_validate.return_value = quality_report
                 
                 # Generate signals
                 signals = await engine.generate_signals(['AAPL', 'GOOGL'])
@@ -136,11 +134,10 @@ class TestSignalGenerationEngine:
             assert feature in features.columns
     
     @pytest.mark.asyncio
-    async def test_analyze_and_generate_signal(self, engine, sample_market_data):
+    async def test_analyze_and_generate_signal(self, engine, sample_market_data, quality_report):
         """Test signal analysis and generation"""
         indicators = await engine._calculate_indicators(sample_market_data)
         features = engine._engineer_features(sample_market_data, indicators)
-        quality_report = self.quality_report()
         
         signal = await engine._analyze_and_generate_signal(
             "AAPL", sample_market_data, indicators, features, quality_report
@@ -179,14 +176,13 @@ class TestSignalGenerationEngine:
         assert isinstance(signal_dict['timestamp'], str)
     
     @pytest.mark.asyncio
-    async def test_signal_caching(self, engine):
+    async def test_signal_caching(self, engine, sample_market_data, quality_report):
         """Test signal caching mechanism"""
         with patch.object(engine.data_validator, 'get_market_data_with_fallback') as mock_get_data:
-            sample_data = self.sample_market_data()
-            mock_get_data.return_value = (sample_data, 'yahoo')
+            mock_get_data.return_value = (sample_market_data, 'yahoo')
             
             with patch.object(engine.data_validator, 'validate_market_data') as mock_validate:
-                mock_validate.return_value = self.quality_report()
+                mock_validate.return_value = quality_report
                 
                 # First call
                 signal1 = await engine._generate_signal_for_symbol('AAPL')

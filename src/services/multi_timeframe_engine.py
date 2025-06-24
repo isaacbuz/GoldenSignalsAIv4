@@ -1,6 +1,6 @@
 import pandas as pd
-from datetime import datetime
-from typi, timezoneng import Dict, List
+from datetime import datetime, timezone
+from typing import Dict, List
 from src.services.signal_engine import SignalEngine
 
 class MultiTimeframeSignalEngine:

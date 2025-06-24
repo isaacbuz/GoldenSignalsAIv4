@@ -1,0 +1,144 @@
+# Services for GoldenSignals Production Deployment
+---
+# Market Data MCP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: market-data-mcp-service
+  namespace: goldensignals
+  labels:
+    app: market-data-mcp
+spec:
+  selector:
+    app: market-data-mcp
+  ports:
+  - name: http
+    port: 8190
+    targetPort: 8190
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# RAG Query MCP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-query-mcp-service
+  namespace: goldensignals
+  labels:
+    app: rag-query-mcp
+spec:
+  selector:
+    app: rag-query-mcp
+  ports:
+  - name: http
+    port: 8191
+    targetPort: 8191
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# Agent Communication Hub Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-comm-mcp-service
+  namespace: goldensignals
+  labels:
+    app: agent-comm-mcp
+spec:
+  selector:
+    app: agent-comm-mcp
+  ports:
+  - name: http
+    port: 8192
+    targetPort: 8192
+  - name: websocket
+    port: 8193
+    targetPort: 8193
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# Risk Analytics MCP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: risk-analytics-mcp-service
+  namespace: goldensignals
+  labels:
+    app: risk-analytics-mcp
+spec:
+  selector:
+    app: risk-analytics-mcp
+  ports:
+  - name: http
+    port: 8193
+    targetPort: 8193
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# Execution Management MCP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: execution-mcp-service
+  namespace: goldensignals
+  labels:
+    app: execution-mcp
+spec:
+  selector:
+    app: execution-mcp
+  ports:
+  - name: http
+    port: 8194
+    targetPort: 8194
+  - name: websocket
+    port: 8195
+    targetPort: 8195
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# API Gateway Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+  namespace: goldensignals
+  labels:
+    app: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: goldensignals
+  labels:
+    app: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP 
