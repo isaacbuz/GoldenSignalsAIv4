@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-06-24T11:47:58.871230",
+  "repository": "isaacbuz/GoldenSignalsAIv4",
+  "created_count": 11,
+  "failed_count": 0,
+  "created_issues": [
+    {
+      "number": 168,
+      "title": "\ud83d\ude80 [EPIC] Implement RAG (Retrieval-Augmented Generation) for Enhanced Backtesting",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/168"
+    },
+    {
+      "number": 169,
+      "title": "\ud83c\udfd7\ufe0f Core RAG Infrastructure Setup",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/169"
+    },
+    {
+      "number": 170,
+      "title": "\ud83d\udcca Implement Historical Pattern Matching System",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/170"
+    },
+    {
+      "number": 171,
+      "title": "\ud83d\udcf0 Real-time News and Sentiment Integration",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/171"
+    },
+    {
+      "number": 172,
+      "title": "\ud83c\udf21\ufe0f Market Regime Classification System",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/172"
+    },
+    {
+      "number": 173,
+      "title": "\u26a0\ufe0f Risk Event Prediction System",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/173"
+    },
+    {
+      "number": 174,
+      "title": "\ud83c\udfaf Strategy Performance Context Engine",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/174"
+    },
+    {
+      "number": 175,
+      "title": "\ud83e\udd16 RAG-Enhanced Adaptive Agents",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/175"
+    },
+    {
+      "number": 176,
+      "title": "\ud83d\uddc4\ufe0f Vector Database Integration",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/176"
+    },
+    {
+      "number": 177,
+      "title": "\ud83c\udf10 RAG API Endpoints",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/177"
+    },
+    {
+      "number": 178,
+      "title": "\ud83d\udcca RAG Performance Monitoring Dashboard",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/178"
+    }
+  ]
+}

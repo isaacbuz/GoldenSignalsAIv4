@@ -41,7 +41,7 @@ from src.config.settings import settings
 from src.core.database import DatabaseManager
 from src.core.redis_manager import RedisManager
 from src.core.logging_config import setup_logging
-from agents import AgentOrchestrator
+from agents.orchestrator import AgentOrchestrator
 from src.api.v1 import api_router
 from src.api.v1.websocket import router as websocket_router
 from src.websocket.manager import WebSocketManager

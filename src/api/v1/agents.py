@@ -9,8 +9,8 @@ from typing import Dict, List, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from ...agents.orchestrator import AgentOrchestrator
-from ...core.dependencies import get_agent_orchestrator
+from agents.orchestrator import AgentOrchestrator
+from src.core.dependencies import get_agent_orchestrator
 
 logger = logging.getLogger(__name__)
 

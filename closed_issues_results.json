@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-06-24T15:45:31.818721",
+  "total_issues": 10,
+  "success_count": 10,
+  "failed_issues": [],
+  "results": {
+    "180": "success",
+    "181": "success",
+    "182": "success",
+    "183": "success",
+    "184": "success",
+    "185": "success",
+    "186": "success",
+    "187": "success",
+    "188": "success",
+    "189": "success"
+  }
+}

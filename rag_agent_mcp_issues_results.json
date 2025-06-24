@@ -1,0 +1,101 @@
+{
+  "created": [
+    {
+      "number": 179,
+      "title": "EPIC: Comprehensive RAG, Agent, and MCP Enhancement for GoldenSignalsAI V2",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/179"
+    },
+    {
+      "number": 180,
+      "title": "RAG-1: Implement Historical Market Context RAG",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/180"
+    },
+    {
+      "number": 181,
+      "title": "RAG-2: Implement News & Event Impact RAG",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/181"
+    },
+    {
+      "number": 182,
+      "title": "RAG-3: Implement Options Flow Intelligence RAG",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/182"
+    },
+    {
+      "number": 183,
+      "title": "RAG-4: Implement Technical Pattern Success RAG",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/183"
+    },
+    {
+      "number": 184,
+      "title": "RAG-5: Implement Risk Event Prediction RAG",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/184"
+    },
+    {
+      "number": 185,
+      "title": "Agent-1: Develop Market Regime Classification Agent",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/185"
+    },
+    {
+      "number": 186,
+      "title": "Agent-2: Develop Liquidity Prediction Agent",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/186"
+    },
+    {
+      "number": 187,
+      "title": "Agent-3: Develop Smart Execution Agent",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/187"
+    },
+    {
+      "number": 188,
+      "title": "Agent-4: Develop News Arbitrage Agent",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/188"
+    },
+    {
+      "number": 189,
+      "title": "Agent-5: Develop Multi-Agent Consensus System",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/189"
+    },
+    {
+      "number": 190,
+      "title": "MCP-1: Build Universal Market Data MCP Server",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/190"
+    },
+    {
+      "number": 191,
+      "title": "MCP-2: Build RAG Query MCP Server",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/191"
+    },
+    {
+      "number": 192,
+      "title": "MCP-3: Build Agent Communication MCP Server",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/192"
+    },
+    {
+      "number": 193,
+      "title": "MCP-4: Build Risk Analytics MCP Server",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/193"
+    },
+    {
+      "number": 194,
+      "title": "MCP-5: Build Execution Management MCP Server",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/194"
+    },
+    {
+      "number": 195,
+      "title": "Integration-1: RAG-Agent-MCP Integration Testing",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/195"
+    },
+    {
+      "number": 196,
+      "title": "Integration-2: Production Deployment and Monitoring",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/196"
+    },
+    {
+      "number": 197,
+      "title": "Integration-3: Performance Optimization and Tuning",
+      "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues/197"
+    }
+  ],
+  "failed": [],
+  "total": 19
+}

@@ -1,0 +1,197 @@
+version: '3.8'
+
+services:
+  # Universal Market Data MCP Server
+  market-data-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        MCP_SERVICE: universal_market_data_mcp
+    ports:
+      - "8190:8190"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_NAME=market-data-mcp
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./data/market_cache:/app/cache
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8190/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - goldensignals-net
+
+  # RAG Query MCP Server
+  rag-query-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        MCP_SERVICE: rag_query_mcp
+    ports:
+      - "8191:8191"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_NAME=rag-query-mcp
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./agents/rag:/app/agents/rag
+    depends_on:
+      - market-data-mcp
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8191/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - goldensignals-net
+
+  # Agent Communication Hub
+  agent-comm-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        MCP_SERVICE: agent_communication_mcp
+    ports:
+      - "8192:8192"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_NAME=agent-comm-mcp
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8192/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - goldensignals-net
+
+  # Risk Analytics MCP Server
+  risk-analytics-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        MCP_SERVICE: risk_analytics_mcp
+    ports:
+      - "8193:8193"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_NAME=risk-analytics-mcp
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+    depends_on:
+      - market-data-mcp
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8193/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - goldensignals-net
+
+  # Execution Management MCP Server
+  execution-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        MCP_SERVICE: execution_management_mcp
+    ports:
+      - "8194:8194"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_NAME=execution-mcp
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+    depends_on:
+      - market-data-mcp
+      - risk-analytics-mcp
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8194/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - goldensignals-net
+
+  # Integration Test Runner
+  integration-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MARKET_DATA_URL=http://market-data-mcp:8190
+      - RAG_QUERY_URL=http://rag-query-mcp:8191
+      - AGENT_COMM_URL=http://agent-comm-mcp:8192
+      - RISK_ANALYTICS_URL=http://risk-analytics-mcp:8193
+      - EXECUTION_URL=http://execution-mcp:8194
+    volumes:
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+    depends_on:
+      - market-data-mcp
+      - rag-query-mcp
+      - agent-comm-mcp
+      - risk-analytics-mcp
+      - execution-mcp
+    command: >
+      sh -c "
+        echo 'Waiting for services to be ready...' &&
+        sleep 10 &&
+        python -m pytest tests/integration/test_rag_agent_mcp_integration.py -v --junit-xml=/app/test_results/integration-test-results.xml
+      "
+    networks:
+      - goldensignals-net
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - goldensignals-net
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    networks:
+      - goldensignals-net
+
+networks:
+  goldensignals-net:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
