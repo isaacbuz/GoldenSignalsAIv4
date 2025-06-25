@@ -37,7 +37,7 @@ pmdarima==2.0.3
 arch==6.1.0
 
 # Feature Engineering
-featuretools==1.27.0
+featuretools==1.31.0
 tsfresh==0.20.1
 
 # Model Validation
