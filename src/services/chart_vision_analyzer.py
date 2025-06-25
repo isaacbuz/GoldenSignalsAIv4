@@ -5,8 +5,8 @@ Analyzes trading chart screenshots using computer vision and AI
 
 import base64
 from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime
-import , timezonenumpy as np
+from datetime import datetime, timezone
+import numpy as np
 from PIL import Image
 import io
 import cv2

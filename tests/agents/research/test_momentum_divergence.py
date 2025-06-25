@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from agents.predictive.momentum_divergence import MomentumDivergenceAgent
+from agents.core.technical.momentum.momentum_divergence_agent import MomentumDivergenceAgent
 
 def test_momentum_divergence_agent_bullish():
     # Simulate bullish divergence: price lower low, RSI higher low

@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 import pandas as pd
 import os
-from agents.ml.enhanced_signal_agent import EnhancedSignalAgent
+from agents.research.ml.enhanced_signal_agent import EnhancedSignalAgent
 
 @pytest.fixture
 def sample_market_data():

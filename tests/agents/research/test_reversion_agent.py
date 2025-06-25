@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from agents.predictive.reversion import ReversionAgent
+from agents.research.ml.reversion import ReversionAgent
 
 def test_reversion_agent_basic():
     data = {

@@ -6,8 +6,8 @@ Integrates multiple data sources for comprehensive market intelligence
 import asyncio
 import aiohttp
 from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
-import , timezonenumpy as np
+from datetime import datetime, timedelta, timezone
+import numpy as np
 from dataclasses import dataclass
 import logging
 import os

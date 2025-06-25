@@ -4,7 +4,7 @@ Combined RSI and MACD technical analysis agent.
 from typing import Dict, Any, Optional
 import pandas as pd
 import logging
-from ...base.base_agent import BaseAgent
+from ....base import BaseAgent
 from .rsi_agent import RSIAgent
 from .macd_agent import MACDAgent
 
