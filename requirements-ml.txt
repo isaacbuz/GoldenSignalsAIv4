@@ -38,7 +38,7 @@ arch==6.1.0
 
 # Feature Engineering
 featuretools==1.27.0
-tsfresh==0.20.1
+tsfresh==0.21.0
 
 # Model Validation
 great-expectations==0.17.12
