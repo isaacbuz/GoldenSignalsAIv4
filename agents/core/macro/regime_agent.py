@@ -9,7 +9,7 @@ import logging
 from scipy import stats
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
-from ...common.base.base_agent import BaseAgent
+from agents.common.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

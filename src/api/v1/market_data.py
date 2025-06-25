@@ -10,8 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel
 from datetime import datetime
 
-from ...services.market_data_service import MarketDataService
-from ...core.dependencies import get_market_data_service
+from agents.services.market_data_service import MarketDataService
+from agents.core.dependencies import get_market_data_service
 
 logger = logging.getLogger(__name__)
 

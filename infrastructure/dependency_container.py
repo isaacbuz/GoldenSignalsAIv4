@@ -4,7 +4,7 @@ from dependency_injector.wiring import inject, Provide
 from agents.factory import AgentFactory
 from notifications.alert_manager import AlertManager
 from goldensignalsai.application.services.signal_engine import SignalEngine
-from infrastructure.config_manager import config_manager
+from src.infrastructure.config_manager import config_manager
 from src.data.data_fetcher import MarketDataFetcher
 
 class Container(containers.DeclarativeContainer):

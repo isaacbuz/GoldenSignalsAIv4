@@ -9,7 +9,7 @@ import logging
 import re
 from datetime import datetime, timedelta
 from collections import Counter, defaultdict
-from ..base.base_agent import BaseAgent
+from src.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 import pytest
-from infrastructure.config_manager import ConfigManager
-from infrastructure.dependency_container import Container
-from infrastructure.error_handling import ApplicationError, ErrorSeverity
+from src.infrastructure.config_manager import ConfigManager
+from src.infrastructure.dependency_container import Container
+from src.infrastructure.error_handling import ApplicationError, ErrorSeverity
 
 def test_config_manager():
     """Test configuration management capabilities."""

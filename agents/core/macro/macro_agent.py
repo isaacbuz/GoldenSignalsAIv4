@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import logging
 from datetime import datetime, timedelta
-from ...common.base.base_agent import BaseAgent
+from agents.common.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

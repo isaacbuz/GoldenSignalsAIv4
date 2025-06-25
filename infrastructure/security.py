@@ -6,7 +6,7 @@ from cryptography.fernet import Fernet
 from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
-from infrastructure.config_manager import config_manager
+from src.infrastructure.config_manager import config_manager
 
 class SecurityManager:
     """

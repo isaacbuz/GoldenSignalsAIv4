@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.mixture import GaussianMixture
 import logging
-from ...base.base_agent import BaseAgent
+from agents.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

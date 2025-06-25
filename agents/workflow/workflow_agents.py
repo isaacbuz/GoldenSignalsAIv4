@@ -7,8 +7,8 @@ import asyncio
 from typing import Dict, Any, List, Optional
 from datetime import datetime, time
 import pytz
-from ..monitoring.monitoring_agents import AIMonitor
-from ..strategy.strategy_utils import StrategyTuner
+from src.monitoring.monitoring_agents import AIMonitor
+from src.strategy.strategy_utils import StrategyTuner
 
 logger = logging.getLogger(__name__)
 

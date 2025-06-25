@@ -2,13 +2,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api import placeholder_routes
-from api.alerts import router as alerts_router
-from api.performance import router as performance_router
-from api.options_route import router as options_route_router
-from api.etf_heatmap import router as etf_heatmap_router
-from api.signal_cluster_stats import router as signal_cluster_stats_router
-from api.analytics import router as analytics_router
-from api.arbitrage import router as arbitrage_router
+from src.api.alerts import router as alerts_router
+from src.api.performance import router as performance_router
+from src.api.options_route import router as options_route_router
+from src.api.etf_heatmap import router as etf_heatmap_router
+from src.api.signal_cluster_stats import router as signal_cluster_stats_router
+from src.api.analytics import router as analytics_router
+from src.api.arbitrage import router as arbitrage_router
 
 app = FastAPI()
 

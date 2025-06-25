@@ -8,7 +8,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from sklearn.preprocessing import MinMaxScaler
-from ...base.base_agent import BaseAgent
+from agents.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

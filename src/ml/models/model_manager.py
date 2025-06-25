@@ -1,7 +1,7 @@
 from typing import Dict, Any, Optional, Union
 import pandas as pd
 import numpy as np
-from sklearn.base import BaseEstimator
+from agents.base import BaseEstimator
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor
 from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
 import joblib

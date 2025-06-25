@@ -9,7 +9,7 @@ from opentelemetry import trace
 from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from infrastructure.config_manager import config_manager
+from src.infrastructure.config_manager import config_manager
 
 class SystemMonitoring:
     """

@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 from src.ml.models.ai_models import LSTMModel, TransformerModel
-from infrastructure.config_manager import config_manager
+from src.infrastructure.config_manager import config_manager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

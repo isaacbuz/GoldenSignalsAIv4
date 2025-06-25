@@ -7,8 +7,8 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 import joblib
-from ...base.base_agent import BaseAgent
-from ...common.utils.validation import validate_market_data
+from agents.base.base_agent import BaseAgent
+from agents.common.utils.validation import validate_market_data
 
 class EnhancedSignalAgent(BaseAgent):
     """Agent that combines technical analysis with machine learning for signal generation."""

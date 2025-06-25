@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any, List, Callable
 from scipy.optimize import minimize
-from ..monitoring.monitoring_agents import AgentPerformanceTracker
+from src.monitoring.monitoring_agents import AgentPerformanceTracker
 
 logger = logging.getLogger(__name__)
 

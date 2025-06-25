@@ -11,7 +11,7 @@ import pandas as pd
 POSITIVE_WORDS = {'good', 'great', 'excellent', 'bullish', 'buy', 'positive', 'strong', 'gain', 'rise', 'up'}
 NEGATIVE_WORDS = {'bad', 'poor', 'terrible', 'bearish', 'sell', 'negative', 'weak', 'loss', 'fall', 'down'}
 
-from ...base import BaseAgent
+from agents.base import BaseAgent
 
 # Configure logging with JSON-like format
 logging.basicConfig(
