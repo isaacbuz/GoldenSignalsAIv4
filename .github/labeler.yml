@@ -1,0 +1,93 @@
+# Add labels to PRs based on file changes
+
+# Component labels
+backend:
+  - src/**/*
+  - agents/**/*
+  - '*.py'
+
+frontend:
+  - frontend/**/*
+  - '*.ts'
+  - '*.tsx'
+  - '*.js'
+  - '*.jsx'
+
+documentation:
+  - '**/*.md'
+  - docs/**/*
+
+# Infrastructure labels
+docker:
+  - '**/Dockerfile*'
+  - docker-compose*.yml
+  - .dockerignore
+
+kubernetes:
+  - k8s/**/*
+  - helm/**/*
+  - '**/*.yaml'
+  - '**/*.yml'
+
+ci/cd:
+  - .github/**/*
+  - scripts/**/*
+
+# Test labels
+tests:
+  - tests/**/*
+  - '**/*test*.py'
+  - '**/*test*.ts'
+  - '**/*test*.tsx'
+  - '**/*spec*.ts'
+  - '**/*spec*.tsx'
+
+# Agent-specific labels
+agent:technical:
+  - agents/core/technical/**/*
+  - agents/technical/**/*
+
+agent:sentiment:
+  - agents/core/sentiment/**/*
+  - agents/sentiment/**/*
+
+agent:options:
+  - agents/core/options/**/*
+  - agents/options/**/*
+
+agent:risk:
+  - agents/core/risk/**/*
+  - agents/risk/**/*
+
+agent:portfolio:
+  - agents/core/portfolio/**/*
+  - agents/portfolio/**/*
+
+# Feature labels
+api:
+  - src/api/**/*
+
+websocket:
+  - src/websocket/**/*
+  - '**/websocket*'
+
+database:
+  - '**/migrations/**/*'
+  - src/core/database.py
+  - '**/*model*.py'
+
+# Configuration labels
+config:
+  - config/**/*
+  - '**/*.yml'
+  - '**/*.yaml'
+  - '**/*.json'
+  - '**/*.toml'
+  - .env*
+
+# Security labels
+security:
+  - '**/auth*'
+  - '**/security*'
+  - '**/jwt*'
+  - '**/encryption*' 
