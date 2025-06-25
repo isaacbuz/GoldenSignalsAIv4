@@ -1,0 +1,28 @@
+{
+  "timestamp": "2025-06-24T22:55:52.619202",
+  "issue": "#209 - Codebase Consolidation",
+  "actions": {
+    "backup_branch": "backup/pre-consolidation-20250625",
+    "removed_folders": [
+      "archive/2024-06-duplicates",
+      "archive/consolidation_20250623_150136",
+      "archive/legacy_backend_agents",
+      "archive/legacy_ml_training",
+      "archive/legacy_monitoring",
+      "archive/legacy_orchestration",
+      "archive/legacy_signal_generators"
+    ],
+    "removed_files": [
+      "archive/advanced_trading_system.py",
+      "archive/basic_trading_system.py",
+      "archive/backtest_research.py",
+      "archive/factory.py",
+      "archive/README.md"
+    ],
+    "gitignore_updated": true
+  },
+  "statistics": {
+    "folders_removed": 7,
+    "files_removed": 5
+  }
+}
