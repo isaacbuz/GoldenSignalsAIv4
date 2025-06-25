@@ -1,0 +1,282 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Label PR
+  label:
+    name: Label PR
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/labeler@v5
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        
+  # Check PR Size
+  size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check PR size
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const additions = pr.additions;
+          const deletions = pr.deletions;
+          const total = additions + deletions;
+          
+          let label = 'size/XS';
+          if (total > 1000) label = 'size/XXL';
+          else if (total > 500) label = 'size/XL';
+          else if (total > 250) label = 'size/L';
+          else if (total > 100) label = 'size/M';
+          else if (total > 50) label = 'size/S';
+          
+          await github.rest.issues.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr.number,
+            labels: [label]
+          });
+          
+          if (total > 500) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: `⚠️ This PR is quite large (${total} lines changed). Consider breaking it into smaller PRs for easier review.`
+            });
+          }
+          
+  # Lint Commit Messages
+  commitlint:
+    name: Lint Commits
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Lint commits
+      uses: wagoid/commitlint-github-action@v6
+      
+  # Check for Conflicts
+  conflict-check:
+    name: Conflict Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check for merge conflicts
+      uses: eps1lon/actions-label-merge-conflict@v3
+      with:
+        dirtyLabel: "has conflicts"
+        repoToken: "${{ secrets.GITHUB_TOKEN }}"
+        
+  # Dependency Review
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: moderate
+        
+  # Code Quality Checks
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install Python tools
+      run: |
+        pip install flake8 black isort pylint bandit
+        
+    - name: Run flake8
+      run: flake8 src/ agents/ --count --statistics
+      
+    - name: Check black formatting
+      run: black --check src/ agents/
+      
+    - name: Check import sorting
+      run: isort --check-only src/ agents/
+      
+    - name: Run pylint
+      run: pylint src/ agents/ --exit-zero
+      
+    - name: Security scan with bandit
+      run: bandit -r src/ agents/ -f json -o bandit-report.json
+      
+    - name: Upload bandit report
+      uses: actions/upload-artifact@v4
+      with:
+        name: bandit-report
+        path: bandit-report.json
+        
+  # Test Coverage
+  test-coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: goldensignals_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Run tests with coverage
+      env:
+        DATABASE_URL: postgresql://test:test@localhost:5432/goldensignals_test
+        REDIS_URL: redis://localhost:6379
+        ENVIRONMENT: test
+      run: |
+        pytest tests/ -v --cov=src --cov=agents --cov-report=xml --cov-report=term
+        
+    - name: Check coverage threshold
+      run: |
+        coverage report --fail-under=60
+        
+    - name: Comment coverage on PR
+      uses: py-cov-action/python-coverage-comment-action@v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MINIMUM_GREEN: 80
+        MINIMUM_ORANGE: 60
+        
+  # Documentation Check
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check for documentation updates
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const files = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number
+          });
+          
+          const codeFiles = files.data.filter(f => 
+            f.filename.endsWith('.py') || 
+            f.filename.endsWith('.ts') || 
+            f.filename.endsWith('.tsx')
+          );
+          
+          const docFiles = files.data.filter(f => 
+            f.filename.endsWith('.md') || 
+            f.filename.includes('docs/')
+          );
+          
+          if (codeFiles.length > 0 && docFiles.length === 0) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '📝 This PR contains code changes but no documentation updates. Please consider updating the documentation if needed.'
+            });
+          }
+          
+  # PR Summary
+  pr-summary:
+    name: Generate PR Summary
+    runs-on: ubuntu-latest
+    needs: [code-quality, test-coverage]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Generate summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          
+          // Get check runs
+          const checks = await github.rest.checks.listForRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: pr.head.sha
+          });
+          
+          // Build summary
+          let summary = `## PR Summary\n\n`;
+          summary += `**Author:** @${pr.user.login}\n`;
+          summary += `**Branch:** ${pr.head.ref} → ${pr.base.ref}\n`;
+          summary += `**Files Changed:** ${pr.changed_files}\n`;
+          summary += `**Lines:** +${pr.additions} -${pr.deletions}\n\n`;
+          
+          summary += `### Check Results\n\n`;
+          checks.data.check_runs.forEach(check => {
+            const status = check.conclusion === 'success' ? '✅' : '❌';
+            summary += `- ${status} ${check.name}\n`;
+          });
+          
+          // Update PR description
+          await github.rest.pulls.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: pr.number,
+            body: pr.body + '\n\n---\n\n' + summary
+          }); 

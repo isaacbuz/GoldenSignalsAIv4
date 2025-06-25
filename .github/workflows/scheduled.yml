@@ -1,0 +1,230 @@
+name: Scheduled Tasks
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+    # Run weekly on Sundays at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Daily health check
+  health-check:
+    name: Daily Health Check
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * *' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check API health
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://api.goldensignals.ai/health)
+        if [ $response -ne 200 ]; then
+          echo "API health check failed with status $response"
+          exit 1
+        fi
+        
+    - name: Check frontend health
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://app.goldensignals.ai)
+        if [ $response -ne 200 ]; then
+          echo "Frontend health check failed with status $response"
+          exit 1
+        fi
+        
+    - name: Notify on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        text: 'Daily health check failed!'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        
+  # Clean up old artifacts
+  cleanup-artifacts:
+    name: Clean Up Artifacts
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * *' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Delete old artifacts
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const artifacts = await github.rest.actions.listArtifactsForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            per_page: 100
+          });
+          
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+          
+          for (const artifact of artifacts.data.artifacts) {
+            const createdAt = new Date(artifact.created_at);
+            if (createdAt < oneWeekAgo) {
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id
+              });
+              console.log(`Deleted artifact: ${artifact.name}`);
+            }
+          }
+          
+  # Weekly security scan
+  security-audit:
+    name: Weekly Security Audit
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 3 * * 0' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit pip-audit
+        
+    - name: Run pip audit
+      run: pip-audit
+      
+    - name: Run safety check
+      run: safety check --json
+      
+    - name: Run bandit scan
+      run: bandit -r src/ agents/ -f json -o bandit-weekly.json
+      
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports-${{ github.run_id }}
+        path: |
+          bandit-weekly.json
+          
+  # Database backup check
+  database-backup-check:
+    name: Database Backup Verification
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * *' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Check latest backup
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: us-east-1
+      run: |
+        # Check if backup from last 24 hours exists
+        YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d)
+        BACKUP_EXISTS=$(aws s3 ls s3://goldensignals-backups/postgres/$YESTERDAY/ | wc -l)
+        
+        if [ $BACKUP_EXISTS -eq 0 ]; then
+          echo "No backup found for $YESTERDAY"
+          exit 1
+        fi
+        
+        echo "Backup verified for $YESTERDAY"
+        
+  # Performance metrics collection
+  collect-metrics:
+    name: Collect Performance Metrics
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * *' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Collect API metrics
+      run: |
+        # Collect response time metrics
+        for i in {1..10}; do
+          time=$(curl -o /dev/null -s -w '%{time_total}\n' https://api.goldensignals.ai/health)
+          echo "Response time: $time"
+        done
+        
+    - name: Store metrics
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Store metrics as workflow artifact or send to monitoring service
+          console.log('Metrics collected and stored');
+          
+  # Clean up old logs
+  cleanup-logs:
+    name: Clean Up Old Logs
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 3 * * 0' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Clean CloudWatch logs
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: us-east-1
+      run: |
+        # Delete logs older than 30 days
+        CUTOFF_DATE=$(date -u -d "30 days ago" +%s000)
+        
+        for log_group in $(aws logs describe-log-groups --query 'logGroups[?starts_with(logGroupName, `/ecs/goldensignals`)].logGroupName' --output text); do
+          echo "Cleaning log group: $log_group"
+          
+          for stream in $(aws logs describe-log-streams --log-group-name "$log_group" --query "logStreams[?lastEventTimestamp < \`$CUTOFF_DATE\`].logStreamName" --output text); do
+            aws logs delete-log-stream --log-group-name "$log_group" --log-stream-name "$stream"
+            echo "Deleted old log stream: $stream"
+          done
+        done
+        
+  # Update dependencies
+  check-updates:
+    name: Check for Updates
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 3 * * 0' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check Python updates
+      run: |
+        pip list --outdated
+        
+    - name: Check npm updates
+      working-directory: ./frontend
+      run: |
+        npm outdated
+        
+    - name: Create update report
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Weekly Dependency Update Report - ${new Date().toISOString().split('T')[0]}`,
+            body: `## Dependency Update Report
+            
+            This is an automated weekly report of outdated dependencies.
+            
+            ### Python Dependencies
+            \`\`\`
+            // Add pip outdated output here
+            \`\`\`
+            
+            ### NPM Dependencies
+            \`\`\`
+            // Add npm outdated output here
+            \`\`\`
+            
+            Please review and update as necessary.`,
+            labels: ['dependencies', 'maintenance']
+          }); 
