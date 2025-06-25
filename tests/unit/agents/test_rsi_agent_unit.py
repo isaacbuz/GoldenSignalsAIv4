@@ -15,7 +15,7 @@ from src.ml.models.market_data import MarketData
 
 
 # Custom MarketData for testing that supports data field
-class TestMarketData:
+class MockMarketData:
     """Test market data class that supports data field."""
     def __init__(self, symbol: str, timestamp: datetime, current_price: float, data: Optional[Dict[str, Any]] = None):
         self.symbol = symbol
@@ -94,7 +94,7 @@ def sample_prices():
 @pytest.fixture
 def market_data(sample_prices):
     """Create sample market data."""
-    return TestMarketData(
+    return MockMarketData(
         symbol="AAPL",
         timestamp=datetime.now(),
         current_price=float(sample_prices.iloc[-1]),
@@ -283,7 +283,7 @@ class TestRSIAgent:
     @pytest.mark.asyncio
     async def test_analyze_with_insufficient_data(self, rsi_agent):
         """Test analyze with insufficient data."""
-        market_data = TestMarketData(
+        market_data = MockMarketData(
             symbol="AAPL",
             timestamp=datetime.now(),
             current_price=102.0,
