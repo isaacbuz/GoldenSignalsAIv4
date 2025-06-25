@@ -9,7 +9,7 @@ import logging
 from scipy import stats
 from sklearn.ensemble import VotingClassifier
 from sklearn.linear_model import LogisticRegression
-from ..common.base.base_agent import BaseAgent
+from src.common.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

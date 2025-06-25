@@ -9,7 +9,7 @@ import logging
 from scipy.stats import norm
 from scipy.optimize import brentq
 import math
-from ...common.base.base_agent import BaseAgent
+from agents.common.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

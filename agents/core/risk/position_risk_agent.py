@@ -5,7 +5,7 @@ from typing import Dict, Any, List, Optional
 import numpy as np
 import pandas as pd
 import logging
-from ..base.base_agent import BaseAgent
+from src.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

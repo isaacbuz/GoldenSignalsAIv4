@@ -38,7 +38,7 @@ class AdvancedStrategies:
         try:
             return strat(*args, **kwargs)
         except Exception as e:
-            from infrastructure.error_handler import ErrorHandler
+            from src.infrastructure.error_handler import ErrorHandler
             ErrorHandler.handle_error(Exception(f"Error running strategy '{name}': {e}"))
             raise
 

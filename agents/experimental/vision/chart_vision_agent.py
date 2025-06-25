@@ -8,8 +8,8 @@ from PIL import Image, ImageDraw
 import io
 import torch
 import logging
-from ..base.base_agent import BaseAgent
-from ..predictive.patterns.candlestick_pattern_agent import CandlestickPatternAgent
+from src.base.base_agent import BaseAgent
+from src.predictive.patterns.candlestick_pattern_agent import CandlestickPatternAgent
 from .chart_model import ChartPatternModel
 
 logger = logging.getLogger(__name__)

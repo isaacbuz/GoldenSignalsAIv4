@@ -4,7 +4,7 @@ Base arbitrage agent defining common functionality.
 from typing import Dict, Any, List, Optional
 import logging
 from datetime import datetime
-from ..base.base_agent import BaseAgent
+from src.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

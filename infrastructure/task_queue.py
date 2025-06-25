@@ -6,8 +6,8 @@ import json
 from typing import Any, Dict, Callable
 from rq import Queue, Worker, Connection
 from rq.job import Job
-from infrastructure.config_manager import config_manager
-from infrastructure.monitoring import system_monitoring
+from src.infrastructure.config_manager import config_manager
+from src.infrastructure.monitoring import system_monitoring
 
 class DistributedTaskQueue:
     """

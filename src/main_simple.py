@@ -44,7 +44,7 @@ except Exception as e:
 
 # Import the hybrid signals router
 try:
-    from api.v1.hybrid_signals import router as hybrid_router
+    from src.api.v1.hybrid_signals import router as hybrid_router
     hybrid_available = True
 except Exception as e:
     print(f"⚠️ Could not import hybrid router: {e}")
@@ -52,13 +52,13 @@ except Exception as e:
     hybrid_available = False
 
 # Import the new signals router
-from api.v1.signals import router as signals_router_v1
-from api.v1.analytics import router as analytics_router_v1
-from api.v1.agents import router as agents_router_v1
-from api.v1.backtesting import router as backtesting_router_v1
-from api.v1.strategies import router as strategies_router_v1
-from api.v1.portfolio import router as portfolio_router_v1
-from api.v1.integrated_signals import router as integrated_signals_router
+from src.api.v1.signals import router as signals_router_v1
+from src.api.v1.analytics import router as analytics_router_v1
+from src.api.v1.agents import router as agents_router_v1
+from src.api.v1.backtesting import router as backtesting_router_v1
+from src.api.v1.strategies import router as strategies_router_v1
+from src.api.v1.portfolio import router as portfolio_router_v1
+from src.api.v1.integrated_signals import router as integrated_signals_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -231,7 +231,7 @@ async def get_market_data(symbol: str):
             if error:
                 # Return appropriate status based on error type
                 # Import the enum from the module
-                from services.market_data_service import DataUnavailableReason
+                from src.services.market_data_service import DataUnavailableReason
                 
                 if error.reason == DataUnavailableReason.INVALID_SYMBOL:
                     status_code = status.HTTP_404_NOT_FOUND

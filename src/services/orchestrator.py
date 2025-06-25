@@ -45,7 +45,7 @@ from agents.rsi_macd_agent import RSIMACDAgent
 from strategies.advanced_strategies import AdvancedStrategies
 from src.domain.trading.strategies.backtest_strategy import BacktestStrategy
 from src.ml.models.factory import ModelFactory
-from infrastructure.error_handler import ErrorHandler, ModelInferenceError, DataFetchError
+from src.infrastructure.error_handler import ErrorHandler, ModelInferenceError, DataFetchError
 
 logger = logging.getLogger(__name__)
 DEVICE, USE_NUMBA = configure_hardware()

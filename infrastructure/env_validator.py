@@ -1,7 +1,7 @@
 import os
 import sys
 from typing import Dict, Any, List
-from infrastructure.config_manager import config_manager
+from src.infrastructure.config_manager import config_manager
 import logging
 
 class EnvironmentValidator:

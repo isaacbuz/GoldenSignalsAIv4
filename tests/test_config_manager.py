@@ -1,5 +1,5 @@
 import pytest
-from infrastructure.config_manager import ConfigManager
+from src.infrastructure.config_manager import ConfigManager
 
 def test_load_config_success():
     cm = ConfigManager('config/config.yaml')

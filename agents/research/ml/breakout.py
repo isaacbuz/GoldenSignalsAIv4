@@ -9,7 +9,7 @@ import logging
 import pandas as pd
 from typing import Dict, Any
 
-from ...base import BaseAgent
+from agents.base import BaseAgent
 
 # Configure logging with JSON-like format
 logging.basicConfig(

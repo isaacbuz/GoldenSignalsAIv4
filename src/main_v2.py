@@ -25,7 +25,7 @@ sys.path.append(str(project_root))
 
 # Import our services
 try:
-    from services.market_data_service import MarketDataService
+    from src.services.market_data_service import MarketDataService
 except ImportError:
     try:
         # Try absolute import

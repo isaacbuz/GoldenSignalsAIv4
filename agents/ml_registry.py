@@ -18,8 +18,8 @@ import torch
 import numpy as np
 from typing import Dict, Any, Optional, List
 from datetime import datetime
-from infrastructure.config_manager import config_manager
-from infrastructure.monitoring import system_monitoring
+from src.infrastructure.config_manager import config_manager
+from src.infrastructure.monitoring import system_monitoring
 
 class ModelRegistry:
     """

@@ -8,7 +8,7 @@ import pandas as pd
 import logging
 from scipy import stats
 from scipy.interpolate import interp1d
-from ...common.base.base_agent import BaseAgent
+from agents.common.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 

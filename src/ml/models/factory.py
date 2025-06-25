@@ -24,7 +24,7 @@ class ModelFactory:
         try:
             return model_cls(**params)
         except Exception as e:
-            from infrastructure.error_handler import ModelInferenceError, ErrorHandler
+            from src.infrastructure.error_handler import ModelInferenceError, ErrorHandler
             ErrorHandler.handle_error(ModelInferenceError(f"Failed to instantiate model '{name}': {e}"))
             raise
 

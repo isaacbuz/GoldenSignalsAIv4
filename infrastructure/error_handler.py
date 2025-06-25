@@ -3,8 +3,8 @@ import traceback
 from typing import Callable, Any, Dict
 from functools import wraps
 import requests
-from infrastructure.config_manager import config_manager
-from infrastructure.monitoring import system_monitoring
+from src.infrastructure.config_manager import config_manager
+from src.infrastructure.monitoring import system_monitoring
 
 class CircuitBreaker:
     """

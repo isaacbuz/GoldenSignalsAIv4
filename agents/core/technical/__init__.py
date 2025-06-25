@@ -7,7 +7,7 @@ from .momentum.macd_agent import MACDAgent
 from .momentum.rsi_macd_agent import RSIMACDAgent
 from .momentum.momentum_divergence_agent import MomentumDivergenceAgent
 from .crypto.crypto_signal_agent import CryptoSignalAgent
-from ...research.ml.enhanced_signal_agent import EnhancedSignalAgent
+from agents.research.ml.enhanced_signal_agent import EnhancedSignalAgent
 
 __all__ = [
     'RSIAgent',

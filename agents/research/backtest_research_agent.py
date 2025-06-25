@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 from typing import Dict, Any
 from src.services.backtest import Backtester
-from ..base import BaseAgent
+from agents.base import BaseAgent
 
 logging.basicConfig(
     level=logging.INFO,
