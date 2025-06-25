@@ -4,7 +4,7 @@ Forecast Ensemble Agent that combines predictions from multiple forecasting mode
 import numpy as np
 from typing import Dict, Any, List, Optional
 import logging
-from ...base.base_agent import BaseAgent
+from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 

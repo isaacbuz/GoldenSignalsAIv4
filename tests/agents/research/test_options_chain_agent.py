@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from agents.predictive.options_chain import OptionsChainAgent
+from agents.research.ml.options.options_chain_agent import OptionsChainAgent
 
 def test_options_chain_agent():
     data = {

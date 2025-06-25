@@ -4,7 +4,7 @@ Specialized agent for cryptocurrency trading signals.
 from typing import Dict, Any, Optional
 import pandas as pd
 import numpy as np
-from ...base.base_agent import BaseAgent
+from ....base import BaseAgent
 
 class CryptoSignalAgent(BaseAgent):
     """Agent specialized for cryptocurrency trading signals with volatility-adjusted parameters."""

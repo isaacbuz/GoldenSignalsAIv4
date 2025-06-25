@@ -4,7 +4,7 @@ Sentiment Aggregator Agent that combines signals from multiple sentiment sources
 import asyncio
 from typing import Dict, Any, List
 import logging
-from ...base.base_agent import BaseAgent
+from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ import requests
 from textblob import TextBlob
 from typing import List, Dict, Any
 import logging
-from ...base.base_agent import BaseAgent
+from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 

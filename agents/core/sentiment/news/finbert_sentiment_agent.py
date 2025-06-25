@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from transformers import pipeline, Pipeline
 import logging
-from ...base.base_agent import BaseAgent
+from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 

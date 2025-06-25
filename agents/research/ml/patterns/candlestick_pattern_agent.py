@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import talib
 import logging
-from ...base.base_agent import BaseAgent
+from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 

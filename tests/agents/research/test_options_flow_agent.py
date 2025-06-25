@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from agents.predictive.options_flow import OptionsFlowAgent
+from agents.research.ml.options_flow import OptionsFlowAgent
 
 def test_options_flow_agent():
     data = {
