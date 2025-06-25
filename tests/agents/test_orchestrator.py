@@ -4,7 +4,7 @@ Tests for the agent orchestrator.
 import pytest
 from datetime import datetime
 from agents.orchestration.orchestrator import AgentOrchestrator
-from agents.technical.rsi_agent import RSIAgent
+from agents.core.technical.momentum.rsi_agent import RSIAgent
 from agents.technical.macd_agent import MACDAgent
 from agents.sentiment.sentiment_agent import SentimentAgent
 

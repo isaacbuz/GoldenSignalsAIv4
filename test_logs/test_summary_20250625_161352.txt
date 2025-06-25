@@ -1,0 +1,19 @@
+GoldenSignalsAI V2 Test Summary
+===============================
+Date: Wed Jun 25 16:13:53 EDT 2025
+Total Modules: 12
+Passed: 2
+Failed: 10
+Success Rate: 16.67%
+
+Failed Modules:
+  - Backend Unit Tests
+  - Backend Integration Tests
+  - Agent Tests
+  - Performance Tests
+  - AlphaPy Tests
+  - Root Tests
+  - Comprehensive System Test
+  - Frontend Unit Tests
+  - Frontend E2E Tests
+  - ML Training Tests

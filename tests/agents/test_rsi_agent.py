@@ -3,7 +3,7 @@ Tests for the RSI (Relative Strength Index) agent.
 """
 import pytest
 import numpy as np
-from agents.technical.rsi_agent import RSIAgent
+from agents.core.technical.momentum.rsi_agent import RSIAgent
 
 def test_rsi_initialization():
     """Test RSI agent initialization"""

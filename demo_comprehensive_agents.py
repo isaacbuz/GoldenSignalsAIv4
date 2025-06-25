@@ -18,7 +18,7 @@ from agents.orchestration.agent_orchestrator import (
 from agents.orchestration.meta_orchestrator import (
     MetaOrchestrator, MetaStrategy, MetaWorkflow
 )
-from agents.core.unified_base_agent import MessagePriority
+from agents.base import BaseAgent
 
 
 def generate_sample_market_data(symbol: str, days: int = 30) -> pd.DataFrame:
@@ -263,7 +263,7 @@ async def demo_complete_system():
     print(f"Total available agent types: {len(available)}")
     
     # Show agents by type
-    from agents.core.unified_base_agent import AgentType
+    from agents.base import BaseAgent
     for agent_type in AgentType:
         agents = factory.get_agents_by_type(agent_type)
         print(f"  {agent_type.value}: {len(agents)} agents")
