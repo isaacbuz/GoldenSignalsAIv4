@@ -2,7 +2,7 @@
 # Multi-stage build for minimal production image
 
 # Stage 1: Build dependencies and compile packages
-FROM python:3.11-slim as builder
+FROM python:3.13-slim as builder
 
 # Set build environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -35,7 +35,7 @@ RUN poetry config virtualenvs.create false && \
     poetry install --only=main --no-dev --no-interaction --no-ansi
 
 # Stage 2: Runtime image
-FROM python:3.11-slim as runtime
+FROM python:3.13-slim as runtime
 
 # Set runtime environment variables
 ENV PYTHONUNBUFFERED=1 \
