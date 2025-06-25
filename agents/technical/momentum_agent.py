@@ -9,14 +9,14 @@ from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime, timedelta
 import talib
 
-from agents.core.unified_base_agent import UnifiedBaseAgent, AgentType, MessagePriority, AgentMessage
+from agents.base import BaseAgent
 
 
-class MomentumAgent(UnifiedBaseAgent):
+class MomentumAgent(BaseAgent):
     """Agent specialized in momentum-based trading strategies"""
     
     def __init__(self, agent_id: str, config: Dict[str, Any]):
-        super().__init__(agent_id, AgentType.TECHNICAL, config)
+        super().__init__(agent_id, config)
         
         # Momentum indicators configuration
         self.rsi_period = config.get('rsi_period', 14)
@@ -46,45 +46,12 @@ class MomentumAgent(UnifiedBaseAgent):
         self.indicator_cache: Dict[str, Dict[str, Any]] = {}
         self.signal_history: List[Dict[str, Any]] = []
         
-    def _register_capabilities(self):
-        """Register momentum agent capabilities"""
-        self.capabilities = {
-            'analyze_momentum': {
-                'description': 'Analyze price momentum indicators',
-                'input': {'symbol': 'str', 'data': 'pd.DataFrame'},
-                'output': {'indicators': 'Dict[str, float]', 'strength': 'float'}
-            },
-            'generate_momentum_signals': {
-                'description': 'Generate momentum-based trading signals',
-                'input': {'symbol': 'str', 'data': 'pd.DataFrame'},
-                'output': {'signals': 'List[Dict]'}
-            },
-            'screen_momentum': {
-                'description': 'Screen for momentum opportunities',
-                'input': {'symbols': 'List[str]', 'market_data': 'Dict[str, pd.DataFrame]'},
-                'output': {'opportunities': 'List[Dict]'}
-            },
-            'detect_breakouts': {
-                'description': 'Detect momentum breakouts',
-                'input': {'symbol': 'str', 'data': 'pd.DataFrame'},
-                'output': {'breakouts': 'List[Dict]'}
-            }
-        }
-    
-    def _register_message_handlers(self):
-        """Register message handlers"""
-        self.message_handlers = {
-            'analyze_momentum': self.handle_analyze_momentum,
-            'generate_signals': self.handle_generate_signals,
-            'screen_momentum': self.handle_screen_momentum,
-            'detect_breakouts': self.handle_detect_breakouts,
-            'backtest_strategy': self.handle_backtest_strategy
-        }
-    
-    async def handle_analyze_momentum(self, message: AgentMessage) -> Dict[str, Any]:
+
+
+    async def handle_analyze_momentum(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze momentum indicators for a symbol"""
-        symbol = message.payload.get('symbol')
-        data = message.payload.get('data')
+        symbol = message.get('symbol')
+        data = message.get('data')
         
         if not isinstance(data, pd.DataFrame):
             return {'error': 'Invalid data format'}
@@ -111,7 +78,34 @@ class MomentumAgent(UnifiedBaseAgent):
             self.logger.error(f"Error analyzing momentum: {e}")
             return {'error': str(e)}
     
-    def _calculate_momentum_indicators(self, data: pd.DataFrame) -> Dict[str, float]:
+    def analyze(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze momentum for the given data"""
+        symbol = data.get('symbol', 'UNKNOWN')
+        market_data = data.get('data')
+        
+        if not isinstance(market_data, pd.DataFrame):
+            return {'error': 'Invalid data format'}
+        
+        try:
+            indicators = self._calculate_momentum_indicators(market_data)
+            strength = self._calculate_momentum_strength(indicators)
+            signals = self._generate_momentum_signals(symbol, market_data, indicators, strength)
+            
+            return {
+                'symbol': symbol,
+                'indicators': indicators,
+                'strength': strength,
+                'signals': signals,
+                'interpretation': self._interpret_momentum(indicators, strength)
+            }
+        except Exception as e:
+            return {'error': str(e)}
+    
+    def get_required_data_types(self) -> List[str]:
+        """Return required data types for momentum analysis"""
+        return ['price', 'volume']
+    
+        def _calculate_momentum_indicators(self, data: pd.DataFrame) -> Dict[str, float]:
         """Calculate all momentum indicators"""
         indicators = {}
         
@@ -240,10 +234,10 @@ class MomentumAgent(UnifiedBaseAgent):
         else:
             return "Strong bearish momentum"
     
-    async def handle_generate_signals(self, message: AgentMessage) -> Dict[str, Any]:
+    async def handle_generate_signals(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """Generate momentum-based trading signals"""
-        symbol = message.payload.get('symbol')
-        data = message.payload.get('data')
+        symbol = message.get('symbol')
+        data = message.get('data')
         
         if not isinstance(data, pd.DataFrame):
             return {'error': 'Invalid data format'}
@@ -375,10 +369,10 @@ class MomentumAgent(UnifiedBaseAgent):
         
         return signals
     
-    async def handle_screen_momentum(self, message: AgentMessage) -> Dict[str, Any]:
+    async def handle_screen_momentum(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """Screen multiple symbols for momentum opportunities"""
-        symbols = message.payload.get('symbols', [])
-        market_data = message.payload.get('market_data', {})
+        symbols = message.get('symbols', [])
+        market_data = message.get('market_data', {})
         
         opportunities = []
         
@@ -418,10 +412,10 @@ class MomentumAgent(UnifiedBaseAgent):
             'timestamp': datetime.now()
         }
     
-    async def handle_detect_breakouts(self, message: AgentMessage) -> Dict[str, Any]:
+    async def handle_detect_breakouts(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """Detect momentum breakouts"""
-        symbol = message.payload.get('symbol')
-        data = message.payload.get('data')
+        symbol = message.get('symbol')
+        data = message.get('data')
         
         if not isinstance(data, pd.DataFrame):
             return {'error': 'Invalid data format'}
@@ -485,11 +479,11 @@ class MomentumAgent(UnifiedBaseAgent):
         
         return breakouts
     
-    async def handle_backtest_strategy(self, message: AgentMessage) -> Dict[str, Any]:
+    async def handle_backtest_strategy(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """Backtest momentum strategy"""
-        symbol = message.payload.get('symbol')
-        data = message.payload.get('data')
-        initial_capital = message.payload.get('initial_capital', 10000)
+        symbol = message.get('symbol')
+        data = message.get('data')
+        initial_capital = message.get('initial_capital', 10000)
         
         if not isinstance(data, pd.DataFrame):
             return {'error': 'Invalid data format'}

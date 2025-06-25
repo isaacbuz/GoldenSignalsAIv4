@@ -69,7 +69,7 @@ class ProjectImportFixer:
                 
                 # Fix mock imports
                 (r'from tests\.mocks import', 'from tests.mocks import'),
-                (r'from tests\.fixtures import', 'from tests.fixtures import'),
+                (r'from tests\.fixtures import', 'from tests.fixtures.conftest import'),
                 
                 # Fix service imports
                 (r'from src\.services\.database_optimization_service import', 
