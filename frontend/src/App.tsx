@@ -12,67 +12,61 @@
  */
 
 import React from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
-import { Box } from '@mui/material';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { AppRoutes } from './AppRoutes';
-import { AlertProvider } from './contexts/AlertContext';
-import AIChatButton from './components/AI/AIChatButton';
-import { CommandPalette } from './components/Common/CommandPalette';
-import { darkProTheme } from './theme/darkPro';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { goldenTheme } from './theme/goldenTheme';
 
-// Create a client
-const queryClient = new QueryClient();
+// AI Signal Platform Pages
+import AICommandCenter from './pages/AICommandCenter/AICommandCenter';
+import SignalStream from './pages/SignalStream/SignalStream';
+import AIAssistant from './pages/AIAssistant/AIAssistant';
+import SignalAnalytics from './pages/SignalAnalytics/SignalAnalytics';
+import ModelDashboard from './pages/ModelDashboard/ModelDashboard';
+import MarketIntelligence from './pages/MarketIntelligence/MarketIntelligence';
+import SignalHistory from './pages/SignalHistory/SignalHistory';
+import AdminPanel from './pages/Admin/AdminPanel';
+import Settings from './pages/Settings/Settings';
 
-// Professional Trading Platform Theme
-export const tradingTheme = darkProTheme;
+// Layout
+import MainLayout from './components/Layout/MainLayout';
 
-function AppContent() {
+// Notifications
+import { NotificationProvider } from './components/Notifications/NotificationProvider';
+
+const App: React.FC = () => {
   return (
-    <>
-      <CssBaseline />
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-        }}
-      />
+    <Provider store={store}>
+      <ThemeProvider theme={goldenTheme}>
+        <CssBaseline />
+        <Router>
+          <NotificationProvider>
+            <MainLayout>
+              <Routes>
+                {/* Default route - AI Command Center */}
+                <Route path="/" element={<Navigate to="/command-center" replace />} />
 
-      {/* Main App Content */}
-      <AppRoutes />
+                {/* AI Signal Platform Routes */}
+                <Route path="/command-center" element={<AICommandCenter />} />
+                <Route path="/signals" element={<SignalStream />} />
+                <Route path="/ai-assistant" element={<AIAssistant />} />
+                <Route path="/analytics" element={<SignalAnalytics />} />
+                <Route path="/models" element={<ModelDashboard />} />
+                <Route path="/intelligence" element={<MarketIntelligence />} />
+                <Route path="/history" element={<SignalHistory />} />
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/settings" element={<Settings />} />
 
-      {/* Command Palette */}
-      <CommandPalette />
-
-      {/* AI Chat */}
-      <AIChatButton />
-    </>
-  );
-}
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={tradingTheme}>
-        <Router
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <AlertProvider>
-            <AppContent />
-          </AlertProvider>
+                {/* Catch all - redirect to command center */}
+                <Route path="*" element={<Navigate to="/command-center" replace />} />
+              </Routes>
+            </MainLayout>
+          </NotificationProvider>
         </Router>
       </ThemeProvider>
-    </QueryClientProvider>
+    </Provider>
   );
-}
+};
 
 export default App; 

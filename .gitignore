@@ -134,3 +134,11 @@ logs/
 .servers.pid
 *.db
 *.sqlite
+
+# Prevent future archive folders
+archive/
+**/archive/
+**/*_archive/
+**/*_backup/
+*.backup
+*.old

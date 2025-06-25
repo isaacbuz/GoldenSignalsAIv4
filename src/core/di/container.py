@@ -1,54 +1,26 @@
-"""
-Dependency injection container for the application
-"""
+"""Dependency Injection Container"""
 
-from dependency_injector import containers, providers
-from src.repositories.market.market_repository import MarketRepository
-from src.repositories.signals.signal_repository import SignalRepository
-from src.services.signals.signal_service import SignalService
-from src.services.market.data_service import MarketDataService
-from src.services.market.quality_validator import DataQualityValidator
+from typing import Dict, Type, Any
 
-class Container(containers.DeclarativeContainer):
-    """Application DI container"""
-    
-    # Configuration
-    config = providers.Configuration()
-    
-    # Repositories
-    market_repository = providers.Singleton(
-        MarketRepository,
-        api_key=config.market.api_key,
-        cache_enabled=config.cache.enabled
-    )
-    
-    signal_repository = providers.Singleton(
-        SignalRepository,
-        database_url=config.database.url
-    )
-    
-    # Services
-    quality_validator = providers.Singleton(
-        DataQualityValidator
-    )
-    
-    market_service = providers.Singleton(
-        MarketDataService,
-        repository=market_repository,
-        validator=quality_validator
-    )
-    
-    signal_service = providers.Singleton(
-        SignalService,
-        market_service=market_service,
-        signal_repository=signal_repository,
-        ml_models=providers.Dict({
-            'default': providers.Singleton(lambda: load_ml_model('default')),
-            'advanced': providers.Singleton(lambda: load_ml_model('advanced'))
-        })
-    )
+class DIContainer:
+    def __init__(self):
+        self._services = {}
+        self._singletons = {}
+        
+    def register(self, interface: Type, implementation: Type, singleton: bool = False):
+        """Register service"""
+        self._services[interface] = (implementation, singleton)
+        
+    def resolve(self, interface: Type) -> Any:
+        """Resolve service"""
+        if interface in self._services:
+            impl, is_singleton = self._services[interface]
+            if is_singleton:
+                if interface not in self._singletons:
+                    self._singletons[interface] = impl()
+                return self._singletons[interface]
+            return impl()
+        raise ValueError(f"Service {interface} not registered")
 
-def load_ml_model(model_type: str):
-    """Load ML model by type"""
-    # Implementation to load models
-    pass
+# Global container
+container = DIContainer()

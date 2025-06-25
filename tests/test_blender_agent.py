@@ -1,4 +1,4 @@
-from archive.legacy_backend_agents.blender_agent import blend_signals
+from agents.legacy_backend_agents.blender_agent import blend_signals
 
 def test_blender_output_format():
     inputs = [

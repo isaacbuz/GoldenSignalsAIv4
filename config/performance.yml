@@ -1,0 +1,33 @@
+# Performance Tuning Configuration
+
+# Database Optimization
+database:
+  connection_pool_size: 100
+  query_timeout: 5000
+  cache_size: 1GB
+  indexes:
+    - signals_timestamp_idx
+    - signals_symbol_idx
+    - agents_consensus_idx
+
+# Redis Optimization  
+redis:
+  maxmemory: 2GB
+  maxmemory_policy: allkeys-lru
+  save: ""  # Disable persistence for speed
+  
+# Application Optimization
+application:
+  worker_processes: auto
+  worker_connections: 1024
+  keepalive_timeout: 65
+  send_timeout: 300
+  
+# Python Optimization
+python:
+  PYTHONOPTIMIZE: 2
+  PYTHONUNBUFFERED: 1
+  garbage_collection:
+    threshold0: 700
+    threshold1: 10
+    threshold2: 10

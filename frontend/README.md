@@ -1,295 +1,329 @@
-# GoldenSignalsAI V3 Frontend
+# Golden Signals AI - Frontend Documentation
 
-A modern, real-time trading dashboard built with React, TypeScript, and Material-UI.
+## 🏗 Architecture Overview
 
-## 🚀 Features
-
-### Core Functionality
-- **Real-time Dashboard** with live market data and trading signals
-- **WebSocket Integration** for instant data updates
-- **Multi-Agent AI System** monitoring and performance tracking
-- **Portfolio Management** with P&L tracking and position analysis
-- **Advanced Signal Filtering** with confidence scoring and risk assessment
-- **Responsive Design** optimized for desktop and mobile devices
-
-### Technical Highlights
-- **TypeScript** for type safety and better developer experience
-- **Material-UI (MUI)** for consistent, professional design
-- **React Query** for efficient data fetching and caching
-- **Socket.IO** for real-time WebSocket communication
-- **React Router** for client-side navigation
-- **Vite** for fast development and optimized builds
+The frontend is built with:
+- **React 18.3** with TypeScript
+- **Material-UI v5** with custom golden theme
+- **Redux Toolkit** for state management
+- **React Query** for server state
+- **WebSockets** for real-time updates
+- **D3.js & Three.js** for visualizations
 
 ## 📁 Project Structure
 
 ```
-frontend/src/
-├── components/          # Reusable UI components
-│   ├── Common/         # Generic components (Loading, Error Boundary)
-│   └── Layout/         # Layout components (Navigation, Header)
-├── pages/              # Main application pages
-│   ├── Dashboard/      # Real-time trading dashboard
-│   ├── Signals/        # Trading signals management
-│   ├── Agents/         # AI agents monitoring
-│   ├── Portfolio/      # Portfolio tracking
-│   ├── Analytics/      # Performance analytics
-│   └── Settings/       # Application settings
-├── services/           # API and WebSocket services
-│   ├── api.ts         # REST API client
-│   └── websocket.ts   # WebSocket service
-└── App.tsx            # Main application component
+frontend/
+├── src/
+│   ├── components/         # Reusable components
+│   │   ├── AI/            # AI-specific components
+│   │   ├── Agents/        # Agent visualizations
+│   │   ├── Charts/        # Data visualizations
+│   │   ├── Common/        # Shared components
+│   │   ├── DesignSystem/  # UI component library
+│   │   ├── Layout/        # Layout components
+│   │   ├── Notifications/ # Notification system
+│   │   └── Signals/       # Signal components
+│   ├── contexts/          # React contexts
+│   ├── hooks/             # Custom React hooks
+│   ├── pages/             # Page components
+│   ├── services/          # API services
+│   ├── store/             # Redux store
+│   ├── theme/             # Theme configuration
+│   ├── types/             # TypeScript types
+│   └── utils/             # Utility functions
+├── public/                # Static assets
+└── cypress/               # E2E tests
 ```
 
-## 🛠️ Development Setup
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
-- Backend API running on http://localhost:8000
 
 ### Installation
-
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-2. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-3. **Open in browser:**
-   ```
-   http://localhost:3000
-   ```
-
-### Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Run TypeScript compiler check
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the frontend directory:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000/api/v1
-VITE_WS_BASE_URL=ws://localhost:8000
+```bash
+cd frontend
+npm install
 ```
 
-### API Integration
+### Development
+```bash
+npm start
+# App runs on http://localhost:3000
+```
 
-The frontend connects to the FastAPI backend through:
-- **REST API** for data fetching and mutations
-- **WebSocket** for real-time updates
-- **Automatic reconnection** with exponential backoff
+### Build
+```bash
+npm run build
+# Production build in ./build
+```
 
-## 📱 Core Pages
+### Testing
+```bash
+# Unit tests
+npm test
 
-### 1. Dashboard (`/dashboard`)
-- Real-time market overview with key metrics
-- Live trading signals feed
-- Agent performance summary
-- Quick action buttons
+# E2E tests
+npm run cypress:open
+```
 
-### 2. Trading Signals (`/signals`)
-- Comprehensive signal listing with filtering
-- Card and table view modes
-- Confidence scoring and risk assessment
-- Real-time signal updates
+## 🎨 Component Library
 
-### 3. AI Agents (`/agents`)
-- Agent performance monitoring
-- Individual agent statistics
-- Orchestrator status overview
-- Agent feature breakdown
+### Core Components
 
-### 4. Portfolio (`/portfolio`)
-- Portfolio value and P&L tracking
-- Current positions table
-- Recent trades history
-- Performance analytics
+#### GoldenButton
+Premium button with multiple variants:
+```tsx
+import { GoldenButton } from '@/components/DesignSystem/GoldenComponents';
 
-### 5. Analytics (`/analytics`)
-- Advanced performance metrics (placeholder)
-- Risk analysis and reporting
-- Market insights and trends
+<GoldenButton variant="gradient" onClick={handleClick}>
+  Click Me
+</GoldenButton>
 
-### 6. Settings (`/settings`)
-- User preferences and configuration (placeholder)
-- Trading parameters
-- Notification settings
+// Variants: contained, outlined, text, gradient, glow
+```
 
-## 🎨 Design System
+#### GoldenCard
+Card with glassmorphism effect:
+```tsx
+import { GoldenCard } from '@/components/DesignSystem/GoldenComponents';
 
-### Theme
-- **Dark Mode** optimized for trading environments
-- **Green/Red** color scheme for buy/sell signals
-- **Professional Typography** with Inter font family
-- **Consistent Spacing** using 8px grid system
+<GoldenCard>
+  <Typography>Content</Typography>
+</GoldenCard>
+```
 
-### Components
-- **Responsive Grid System** for layout
-- **Cards** for content organization
-- **Data Tables** for financial data
-- **Charts** for market visualization (ready for integration)
-- **Real-time Indicators** for connection status
+#### SignalCard
+Display signal information:
+```tsx
+import SignalCard from '@/components/Signals/SignalCard';
 
-## 🔄 Real-time Features
+<SignalCard 
+  signal={signalData}
+  onAction={handleAction}
+  compact={false}
+/>
+```
 
-### WebSocket Integration
-- Automatic connection management
-- Subscription-based data updates
-- Custom React hooks for real-time data
-- Connection status monitoring
+## 🔌 API Integration
 
-### Supported Events
-- `market_data` - Live price updates
-- `signal` - New trading signals
-- `agent_status` - Agent performance updates
-- `portfolio_update` - Portfolio changes
-- `alert` - System notifications
+### REST API
+```typescript
+import { api } from '@/services/api';
 
-## 📊 State Management
+// Get signals
+const signals = await api.signals.getAll();
 
-### React Query
-- Server state management
-- Automatic background refetching
-- Optimistic updates
-- Error handling and retries
+// Get specific signal
+const signal = await api.signals.getById(id);
+```
 
-### Local State
-- React hooks for component state
-- Custom hooks for WebSocket subscriptions
-- Context for global UI state
+### WebSocket
+```typescript
+import { useWebSocket } from '@/hooks/useWebSocket';
 
-## 🚀 Performance Optimizations
+const { data, isConnected } = useWebSocket('signals.all', {
+  onMessage: (data) => {
+    console.log('New signal:', data);
+  }
+});
+```
+
+## 🎯 State Management
+
+### Redux Store Structure
+```typescript
+{
+  signals: {
+    items: Signal[],
+    loading: boolean,
+    error: string | null
+  },
+  agents: {
+    consensus: ConsensusData,
+    status: AgentStatus[]
+  },
+  user: {
+    profile: UserProfile,
+    preferences: UserPreferences
+  }
+}
+```
+
+### Using Redux
+```typescript
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { signalActions } from '@/store/slices/signalSlice';
+
+// Read state
+const signals = useAppSelector(state => state.signals.items);
+
+// Dispatch action
+const dispatch = useAppDispatch();
+dispatch(signalActions.addSignal(newSignal));
+```
+
+## 🎨 Theming
+
+### Using the Golden Theme
+```typescript
+import { useTheme } from '@mui/material/styles';
+
+const theme = useTheme();
+
+// Access theme values
+theme.palette.primary.main // #FFD700
+theme.palette.background.default // #0D1117
+```
+
+### Custom Styling
+```typescript
+import { styled } from '@mui/material/styles';
+import { utilityClasses } from '@/theme/goldenTheme';
+
+const StyledComponent = styled('div')(({ theme }) => ({
+  ...utilityClasses.glassmorphism,
+  padding: theme.spacing(2),
+}));
+```
+
+## 📊 Data Visualization
+
+### D3.js Charts
+```typescript
+import { AdvancedSignalChart } from '@/components/Charts/AdvancedSignalChart';
+
+<AdvancedSignalChart
+  data={chartData}
+  type="timeline" // timeline, bubble, radar, 3d
+  height={400}
+/>
+```
+
+### Real-time Updates
+Charts automatically update when new data arrives via WebSocket.
+
+## 🧪 Testing
+
+### Unit Testing
+```typescript
+import { render, screen } from '@testing-library/react';
+import { SignalCard } from '@/components/Signals/SignalCard';
+
+test('renders signal card', () => {
+  render(<SignalCard signal={mockSignal} />);
+  expect(screen.getByText(mockSignal.symbol)).toBeInTheDocument();
+});
+```
+
+### E2E Testing
+```typescript
+describe('Signal Flow', () => {
+  it('displays new signals in real-time', () => {
+    cy.visit('/signals');
+    cy.get('[data-testid="signal-card"]').should('have.length.gte', 1);
+  });
+});
+```
+
+## 🚀 Performance
 
 ### Code Splitting
-- Lazy loading of route components
-- Dynamic imports for heavy libraries
-- Bundle splitting for vendor code
+Pages are automatically code-split:
+```typescript
+const SignalStream = lazy(() => import('./pages/SignalStream'));
+```
 
-### Caching Strategy
-- React Query for server state caching
-- 5-minute stale time for market data
-- Background refetching for real-time data
+### Optimization Tips
+1. Use `React.memo` for expensive components
+2. Implement virtual scrolling for long lists
+3. Debounce search inputs
+4. Lazy load images and heavy components
+5. Use WebWorkers for computations
 
-### WebSocket Optimization
-- Connection pooling
-- Automatic reconnection
-- Heartbeat monitoring
-- Efficient event handling
+## 🔐 Security
 
-## 🔐 Security Features
-
-### API Security
-- Automatic token management
-- Request/response interceptors
-- Error handling for auth failures
-- HTTPS enforcement in production
-
-### Data Validation
-- TypeScript interfaces for type safety
-- Runtime validation for API responses
-- Sanitization of user inputs
+- All API calls use HTTPS
+- Authentication tokens stored securely
+- XSS protection via React's built-in escaping
+- CSRF tokens for state-changing operations
 
 ## 📱 Responsive Design
 
-### Breakpoints
-- **Mobile:** < 600px
-- **Tablet:** 600px - 960px
-- **Desktop:** > 960px
+Breakpoints:
+- **xs**: 0px
+- **sm**: 600px
+- **md**: 960px
+- **lg**: 1280px
+- **xl**: 1920px
 
-### Adaptive Features
-- Collapsible navigation drawer
-- Responsive grid layouts
-- Touch-optimized controls
-- Optimized table layouts
+## 🚢 Deployment
 
-## 🧪 Testing Strategy
-
-### Unit Testing
-- Component testing with React Testing Library
-- Service layer testing
-- Custom hook testing
-
-### Integration Testing
-- API integration tests
-- WebSocket connection tests
-- End-to-end user flows
-
-## 🚀 Deployment
-
-### Production Build
-```bash
-npm run build
+### Environment Variables
+```env
+REACT_APP_API_URL=https://api.goldensignals.ai
+REACT_APP_WS_URL=wss://ws.goldensignals.ai
+REACT_APP_ENABLE_ANALYTICS=true
 ```
 
 ### Build Optimization
-- Tree shaking for minimal bundle size
-- Asset optimization and compression
-- Source maps for debugging
-- Progressive web app features
+```bash
+npm run build
+# Generates optimized production build
+```
 
-### Environment Configuration
-- Environment-specific API endpoints
-- Feature flags for staging
-- Performance monitoring integration
-
-## 🔧 Development Tools
-
-### Developer Experience
-- Hot module replacement
-- TypeScript error checking
-- ESLint code quality
-- Prettier code formatting
-
-### Debugging
-- React DevTools integration
-- Redux DevTools for state inspection
-- Network request monitoring
-- Real-time data flow visualization
-
-## 📈 Performance Monitoring
-
-### Metrics Tracked
-- Bundle size and load times
-- WebSocket connection health
-- API response times
-- User interaction analytics
-
-### Optimization Targets
-- < 3s initial load time
-- < 100ms WebSocket latency
-- 95%+ cache hit rate
-- Zero memory leaks
+### Docker
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+```
 
 ## 🤝 Contributing
 
-### Code Standards
-- TypeScript strict mode
-- ESLint + Prettier configuration
-- Conventional commit messages
-- Component documentation
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
 
-### Pull Request Process
-1. Feature branch from main
-2. TypeScript compilation check
-3. Lint and format code
-4. Component testing
-5. Code review approval
+### Code Style
+- Use TypeScript strict mode
+- Follow ESLint rules
+- Format with Prettier
+- Write tests for new features
 
----
+## 📚 Resources
+
+- [React Documentation](https://react.dev)
+- [Material-UI Documentation](https://mui.com)
+- [Redux Toolkit](https://redux-toolkit.js.org)
+- [D3.js Documentation](https://d3js.org)
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+1. **WebSocket connection fails**
+   - Check WS_URL environment variable
+   - Verify backend is running
+
+2. **Build errors**
+   - Clear node_modules and reinstall
+   - Check TypeScript errors
+
+3. **Performance issues**
+   - Enable React DevTools Profiler
+   - Check for unnecessary re-renders
 
 ## 📞 Support
 
-For technical support or questions about the frontend implementation, please refer to the main project documentation or contact the development team.
-
-**Built with ❤️ for professional traders and developers** 
+For questions or issues:
+- Check existing GitHub issues
+- Create new issue with reproduction steps
+- Contact development team

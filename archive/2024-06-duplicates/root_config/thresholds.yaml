@@ -1,6 +1,0 @@
-# Symbol-specific thresholds for price alerts or trading logic
-AAPL: 105.0
-TSLA: 120.0
-GOOGL: 98.5
-MSFT: 110.0
-# Default threshold will be used if symbol not listed above

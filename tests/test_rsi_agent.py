@@ -1,4 +1,4 @@
-from archive.legacy_backend_agents.indicators.rsi_agent import RSI
+from agents.legacy_backend_agents.indicators.rsi_agent import RSI
 
 def test_rsi_run_returns_valid_signal():
     agent = RSI()

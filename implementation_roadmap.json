@@ -1,0 +1,703 @@
+{
+  "roadmap": {
+    "phase1_foundation": {
+      "name": "Foundation & Infrastructure",
+      "duration": "1 week",
+      "issues": [
+        {
+          "number": 169,
+          "title": "Core RAG Infrastructure Setup",
+          "type": "infrastructure",
+          "priority": "critical",
+          "dependencies": [],
+          "implementation": "rag_infrastructure"
+        },
+        {
+          "number": 176,
+          "title": "Vector Database Integration",
+          "type": "infrastructure",
+          "priority": "critical",
+          "dependencies": [
+            169
+          ],
+          "implementation": "vector_db"
+        },
+        {
+          "number": 214,
+          "title": "Distributed Tracing with OpenTelemetry/Jaeger",
+          "type": "monitoring",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "tracing"
+        },
+        {
+          "number": 215,
+          "title": "Horizontal Scaling Architecture for Agents",
+          "type": "architecture",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "scaling"
+        }
+      ]
+    },
+    "phase2_rag_system": {
+      "name": "RAG System Implementation",
+      "duration": "2 weeks",
+      "issues": [
+        {
+          "number": 170,
+          "title": "Implement Historical Pattern Matching System",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169,
+            176
+          ],
+          "implementation": "pattern_matching"
+        },
+        {
+          "number": 171,
+          "title": "Real-time News and Sentiment Integration",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169
+          ],
+          "implementation": "news_integration"
+        },
+        {
+          "number": 172,
+          "title": "Market Regime Classification System",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169
+          ],
+          "implementation": "regime_classification"
+        },
+        {
+          "number": 173,
+          "title": "Risk Event Prediction System",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169,
+            172
+          ],
+          "implementation": "risk_prediction"
+        },
+        {
+          "number": 174,
+          "title": "Strategy Performance Context Engine",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169
+          ],
+          "implementation": "strategy_context"
+        },
+        {
+          "number": 175,
+          "title": "RAG-Enhanced Adaptive Agents",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169,
+            170
+          ],
+          "implementation": "adaptive_agents"
+        },
+        {
+          "number": 177,
+          "title": "RAG API Endpoints",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169
+          ],
+          "implementation": "rag_api"
+        },
+        {
+          "number": 178,
+          "title": "RAG Performance Monitoring Dashboard",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169,
+            177
+          ],
+          "implementation": "rag_monitoring"
+        }
+      ]
+    },
+    "phase3_mcp_servers": {
+      "name": "MCP Server Implementation",
+      "duration": "1 week",
+      "issues": [
+        {
+          "number": 191,
+          "title": "Build RAG Query MCP Server",
+          "type": "mcp",
+          "priority": "high",
+          "dependencies": [
+            169,
+            177
+          ],
+          "implementation": "mcp_rag_query"
+        },
+        {
+          "number": 193,
+          "title": "Build Risk Analytics MCP Server",
+          "type": "mcp",
+          "priority": "medium",
+          "dependencies": [
+            173
+          ],
+          "implementation": "mcp_risk"
+        },
+        {
+          "number": 194,
+          "title": "Build Execution Management MCP Server",
+          "type": "mcp",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "mcp_execution"
+        }
+      ]
+    },
+    "phase4_frontend_enhancement": {
+      "name": "Frontend & UI Enhancement",
+      "duration": "1 week",
+      "issues": [
+        {
+          "number": 202,
+          "title": "Hybrid Signal Intelligence Dashboard",
+          "type": "frontend",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "hybrid_dashboard"
+        },
+        {
+          "number": 204,
+          "title": "Admin Dashboard & System Monitoring",
+          "type": "frontend",
+          "priority": "high",
+          "dependencies": [
+            214
+          ],
+          "implementation": "admin_monitoring"
+        },
+        {
+          "number": 206,
+          "title": "UI/UX Design System Enhancement",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "design_system"
+        },
+        {
+          "number": 205,
+          "title": "Frontend Performance Optimization",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "frontend_perf"
+        },
+        {
+          "number": 208,
+          "title": "Frontend Documentation & Developer Experience",
+          "type": "frontend",
+          "priority": "low",
+          "dependencies": [
+            206
+          ],
+          "implementation": "frontend_docs"
+        }
+      ]
+    },
+    "phase5_advanced_features": {
+      "name": "Advanced Features & Integration",
+      "duration": "2 weeks",
+      "issues": [
+        {
+          "number": 200,
+          "title": "Advanced Backtesting Suite Implementation",
+          "type": "feature",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "backtesting_suite"
+        },
+        {
+          "number": 201,
+          "title": "AI & Multimodal Integration Enhancement",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "multimodal_ai"
+        },
+        {
+          "number": 203,
+          "title": "Portfolio & Risk Management Tools",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [
+            193
+          ],
+          "implementation": "portfolio_tools"
+        },
+        {
+          "number": 216,
+          "title": "A/B Testing Framework for Trading Strategies",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "ab_testing"
+        },
+        {
+          "number": 6,
+          "title": "Implement Dependency Injection Framework",
+          "type": "architecture",
+          "priority": "low",
+          "dependencies": [],
+          "implementation": "dependency_injection"
+        }
+      ]
+    },
+    "phase6_integration_testing": {
+      "name": "Integration, Testing & Deployment",
+      "duration": "1 week",
+      "issues": [
+        {
+          "number": 195,
+          "title": "RAG-Agent-MCP Integration Testing",
+          "type": "testing",
+          "priority": "high",
+          "dependencies": [
+            191,
+            193,
+            194
+          ],
+          "implementation": "integration_testing"
+        },
+        {
+          "number": 196,
+          "title": "Production Deployment and Monitoring",
+          "type": "deployment",
+          "priority": "high",
+          "dependencies": [
+            214
+          ],
+          "implementation": "prod_deployment"
+        },
+        {
+          "number": 197,
+          "title": "Performance Optimization and Tuning",
+          "type": "optimization",
+          "priority": "medium",
+          "dependencies": [
+            214,
+            215
+          ],
+          "implementation": "performance_tuning"
+        },
+        {
+          "number": 179,
+          "title": "EPIC: Comprehensive RAG, Agent, and MCP Enhancement",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            195
+          ],
+          "implementation": "epic_summary"
+        },
+        {
+          "number": 168,
+          "title": "EPIC: Implement RAG for Enhanced Backtesting",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            200
+          ],
+          "implementation": "epic_rag_backtesting"
+        },
+        {
+          "number": 198,
+          "title": "EPIC: Frontend Enhancement - Utilize All Backend",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            202,
+            204
+          ],
+          "implementation": "epic_frontend"
+        },
+        {
+          "number": 199,
+          "title": "Frontend Core Infrastructure Enhancement",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "frontend_infrastructure"
+        }
+      ]
+    }
+  },
+  "timeline": [
+    {
+      "phase": "phase1_foundation",
+      "name": "Foundation & Infrastructure",
+      "start_week": 1,
+      "end_week": 1,
+      "issues": [
+        {
+          "number": 169,
+          "title": "Core RAG Infrastructure Setup",
+          "type": "infrastructure",
+          "priority": "critical",
+          "dependencies": [],
+          "implementation": "rag_infrastructure"
+        },
+        {
+          "number": 176,
+          "title": "Vector Database Integration",
+          "type": "infrastructure",
+          "priority": "critical",
+          "dependencies": [
+            169
+          ],
+          "implementation": "vector_db"
+        },
+        {
+          "number": 214,
+          "title": "Distributed Tracing with OpenTelemetry/Jaeger",
+          "type": "monitoring",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "tracing"
+        },
+        {
+          "number": 215,
+          "title": "Horizontal Scaling Architecture for Agents",
+          "type": "architecture",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "scaling"
+        }
+      ]
+    },
+    {
+      "phase": "phase2_rag_system",
+      "name": "RAG System Implementation",
+      "start_week": 2,
+      "end_week": 3,
+      "issues": [
+        {
+          "number": 170,
+          "title": "Implement Historical Pattern Matching System",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169,
+            176
+          ],
+          "implementation": "pattern_matching"
+        },
+        {
+          "number": 171,
+          "title": "Real-time News and Sentiment Integration",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169
+          ],
+          "implementation": "news_integration"
+        },
+        {
+          "number": 172,
+          "title": "Market Regime Classification System",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169
+          ],
+          "implementation": "regime_classification"
+        },
+        {
+          "number": 173,
+          "title": "Risk Event Prediction System",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169,
+            172
+          ],
+          "implementation": "risk_prediction"
+        },
+        {
+          "number": 174,
+          "title": "Strategy Performance Context Engine",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169
+          ],
+          "implementation": "strategy_context"
+        },
+        {
+          "number": 175,
+          "title": "RAG-Enhanced Adaptive Agents",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169,
+            170
+          ],
+          "implementation": "adaptive_agents"
+        },
+        {
+          "number": 177,
+          "title": "RAG API Endpoints",
+          "type": "rag",
+          "priority": "high",
+          "dependencies": [
+            169
+          ],
+          "implementation": "rag_api"
+        },
+        {
+          "number": 178,
+          "title": "RAG Performance Monitoring Dashboard",
+          "type": "rag",
+          "priority": "medium",
+          "dependencies": [
+            169,
+            177
+          ],
+          "implementation": "rag_monitoring"
+        }
+      ]
+    },
+    {
+      "phase": "phase3_mcp_servers",
+      "name": "MCP Server Implementation",
+      "start_week": 4,
+      "end_week": 4,
+      "issues": [
+        {
+          "number": 191,
+          "title": "Build RAG Query MCP Server",
+          "type": "mcp",
+          "priority": "high",
+          "dependencies": [
+            169,
+            177
+          ],
+          "implementation": "mcp_rag_query"
+        },
+        {
+          "number": 193,
+          "title": "Build Risk Analytics MCP Server",
+          "type": "mcp",
+          "priority": "medium",
+          "dependencies": [
+            173
+          ],
+          "implementation": "mcp_risk"
+        },
+        {
+          "number": 194,
+          "title": "Build Execution Management MCP Server",
+          "type": "mcp",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "mcp_execution"
+        }
+      ]
+    },
+    {
+      "phase": "phase4_frontend_enhancement",
+      "name": "Frontend & UI Enhancement",
+      "start_week": 5,
+      "end_week": 5,
+      "issues": [
+        {
+          "number": 202,
+          "title": "Hybrid Signal Intelligence Dashboard",
+          "type": "frontend",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "hybrid_dashboard"
+        },
+        {
+          "number": 204,
+          "title": "Admin Dashboard & System Monitoring",
+          "type": "frontend",
+          "priority": "high",
+          "dependencies": [
+            214
+          ],
+          "implementation": "admin_monitoring"
+        },
+        {
+          "number": 206,
+          "title": "UI/UX Design System Enhancement",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "design_system"
+        },
+        {
+          "number": 205,
+          "title": "Frontend Performance Optimization",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "frontend_perf"
+        },
+        {
+          "number": 208,
+          "title": "Frontend Documentation & Developer Experience",
+          "type": "frontend",
+          "priority": "low",
+          "dependencies": [
+            206
+          ],
+          "implementation": "frontend_docs"
+        }
+      ]
+    },
+    {
+      "phase": "phase5_advanced_features",
+      "name": "Advanced Features & Integration",
+      "start_week": 6,
+      "end_week": 7,
+      "issues": [
+        {
+          "number": 200,
+          "title": "Advanced Backtesting Suite Implementation",
+          "type": "feature",
+          "priority": "high",
+          "dependencies": [],
+          "implementation": "backtesting_suite"
+        },
+        {
+          "number": 201,
+          "title": "AI & Multimodal Integration Enhancement",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "multimodal_ai"
+        },
+        {
+          "number": 203,
+          "title": "Portfolio & Risk Management Tools",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [
+            193
+          ],
+          "implementation": "portfolio_tools"
+        },
+        {
+          "number": 216,
+          "title": "A/B Testing Framework for Trading Strategies",
+          "type": "feature",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "ab_testing"
+        },
+        {
+          "number": 6,
+          "title": "Implement Dependency Injection Framework",
+          "type": "architecture",
+          "priority": "low",
+          "dependencies": [],
+          "implementation": "dependency_injection"
+        }
+      ]
+    },
+    {
+      "phase": "phase6_integration_testing",
+      "name": "Integration, Testing & Deployment",
+      "start_week": 8,
+      "end_week": 8,
+      "issues": [
+        {
+          "number": 195,
+          "title": "RAG-Agent-MCP Integration Testing",
+          "type": "testing",
+          "priority": "high",
+          "dependencies": [
+            191,
+            193,
+            194
+          ],
+          "implementation": "integration_testing"
+        },
+        {
+          "number": 196,
+          "title": "Production Deployment and Monitoring",
+          "type": "deployment",
+          "priority": "high",
+          "dependencies": [
+            214
+          ],
+          "implementation": "prod_deployment"
+        },
+        {
+          "number": 197,
+          "title": "Performance Optimization and Tuning",
+          "type": "optimization",
+          "priority": "medium",
+          "dependencies": [
+            214,
+            215
+          ],
+          "implementation": "performance_tuning"
+        },
+        {
+          "number": 179,
+          "title": "EPIC: Comprehensive RAG, Agent, and MCP Enhancement",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            195
+          ],
+          "implementation": "epic_summary"
+        },
+        {
+          "number": 168,
+          "title": "EPIC: Implement RAG for Enhanced Backtesting",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            200
+          ],
+          "implementation": "epic_rag_backtesting"
+        },
+        {
+          "number": 198,
+          "title": "EPIC: Frontend Enhancement - Utilize All Backend",
+          "type": "epic",
+          "priority": "low",
+          "dependencies": [
+            202,
+            204
+          ],
+          "implementation": "epic_frontend"
+        },
+        {
+          "number": 199,
+          "title": "Frontend Core Infrastructure Enhancement",
+          "type": "frontend",
+          "priority": "medium",
+          "dependencies": [],
+          "implementation": "frontend_infrastructure"
+        }
+      ]
+    }
+  ],
+  "total_issues": 32,
+  "total_duration_weeks": 8,
+  "created_at": "2025-06-25T11:51:29.838107"
+}
