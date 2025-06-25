@@ -8,7 +8,50 @@ from typing import Generator
 from datetime import datetime, timezone
 import pandas as pd
 import numpy as np
+import sys
+import os
+from pathlib import Path
 
+# Add project root to Python path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+# Import fixtures to make them available globally
+from tests.fixtures.market_data import *
+from tests.fixtures.agent_mocks import *
+
+# Configure pytest
+def pytest_configure(config):
+    """Configure pytest with custom markers"""
+    config.addinivalue_line("markers", "unit: Unit tests")
+    config.addinivalue_line("markers", "integration: Integration tests")
+    config.addinivalue_line("markers", "performance: Performance tests")
+    config.addinivalue_line("markers", "slow: Slow running tests")
+    config.addinivalue_line("markers", "requires_api: Tests requiring external API access")
+
+# Global test settings
+import logging
+
+# Set up logging for tests
+logging.basicConfig(level=logging.INFO)
+
+@pytest.fixture(autouse=True)
+def reset_test_environment():
+    """Reset test environment before each test"""
+    yield
+    # Cleanup after test if needed
+    pass
+
+@pytest.fixture
+def test_config():
+    """Provide test configuration"""
+    return {
+        "test_mode": True,
+        "api_key": "test_key",
+        "database_url": "sqlite:///:memory:",
+        "redis_url": "redis://localhost:6379/15",  # Use test database
+        "websocket_enabled": False
+    }
 
 @pytest.fixture(scope="session")
 def event_loop():
