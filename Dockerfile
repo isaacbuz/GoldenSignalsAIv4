@@ -3,7 +3,7 @@
 
 # Multi-stage Dockerfile for FastAPI backend (GoldenSignalsAI)
 # Stage 1: Build dependencies
-FROM python:3.11-slim as builder
+FROM python:3.13-slim as builder
 
 # Install build dependencies and TA-Lib
 RUN apt-get update && \
@@ -34,7 +34,7 @@ RUN apt-get remove -y build-essential wget && \
     rm -rf /var/lib/apt/lists/*
 
 # Stage 2: Production image
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Copy TA-Lib from the builder stage
 COPY --from=builder /usr/lib/libta_lib.so.0 /usr/lib/libta_lib.so.0
