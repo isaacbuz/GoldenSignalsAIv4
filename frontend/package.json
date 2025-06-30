@@ -73,7 +73,7 @@
     "@cypress/webpack-dev-server": "^4.1.0",
     "@mswjs/data": "^0.16.2",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^14.3.1",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/howler": "^2.2.12",
     "@types/jest": "^30.0.0",
