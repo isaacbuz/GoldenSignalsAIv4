@@ -143,3 +143,7 @@ export type { EnhancedSignalData } from './Signals/SignalList';
  * - Consistent API across similar components
  * - Enhanced features through consolidation
  */
+export { SignalCard } from './SignalCard/SignalCard';
+export { RealTimeFeed } from './RealTimeFeed/RealTimeFeed';
+export { FloatingOrbAssistant } from './FloatingOrbAssistant/FloatingOrbAssistant';
+export { AdvancedChart } from './AdvancedChart/AdvancedChart';
