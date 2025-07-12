@@ -49,7 +49,7 @@ ray[default]==2.6.1
 dask-ml==2023.3.24
 
 # Database Connectors
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.10
 sqlalchemy==2.0.19
 alembic==1.11.2
 
