@@ -25,11 +25,17 @@ import {
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
+import GridLayout from 'react-grid-layout';
 
 // Import existing components
 import { AdvancedSignalChart } from '../Chart/AdvancedSignalChart';
 import AgentConsensusFlow from '../Agents/AgentConsensusFlow';
 import SignalList from '../Signals/SignalList';
+import { SignalCard } from '../SignalCard';
+import { RealTimeFeed } from '../RealTimeFeed';
+import { FloatingOrbAssistant } from '../FloatingOrbAssistant';
+import { AdvancedChart } from '../AdvancedChart';
+import { List as VirtualizedList } from 'react-virtualized';
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
     minHeight: '100vh',
@@ -87,7 +93,11 @@ interface UnifiedDashboardProps {
 export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SPY' }) => {
     const theme = useTheme();
     const [refreshing, setRefreshing] = useState(false);
-    const [selectedTimeframe, setSelectedTimeframe] = useState('1d');
+    const [timeframe, setTimeframe] = useState('1d');
+    const [layout, setLayout] = useState([
+        { i: 'signals', x: 0, y: 0, w: 6, h: 10 },
+        { i: 'chart', x: 6, y: 0, w: 6, h: 10 },
+    ]);
 
     const handleRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -95,6 +105,11 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
         await new Promise(resolve => setTimeout(resolve, 1000));
         setRefreshing(false);
     }, []);
+
+    const handleLayoutChange = (newLayout: any) => {
+        setLayout(newLayout);
+        localStorage.setItem('dashboardLayout', JSON.stringify(newLayout));
+    };
 
     const mockSignals = useMemo(() => [
         {
@@ -179,126 +194,8 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
             </Grid>
 
             {/* Main Dashboard Grid */}
-            <Grid container spacing={3}>
-                {/* Advanced Chart */}
-                <Grid item xs={12} lg={8}>
-                    <DashboardCard>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <ShowChartIcon sx={{ mr: 1, color: 'primary.main' }} />
-                                <Typography variant="h6" fontWeight="bold">
-                                    Advanced Chart Analysis
-                                </Typography>
-                            </Box>
-                            <AdvancedSignalChart
-                                symbol={symbol}
-                                height={400}
-                                showControls={true}
-                                showSignals={true}
-                                timeframe={selectedTimeframe as any}
-                            />
-                        </CardContent>
-                    </DashboardCard>
-                </Grid>
-
-                {/* Signal Summary */}
-                <Grid item xs={12} lg={4}>
-                    <DashboardCard>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <AnalyticsIcon sx={{ mr: 1, color: 'primary.main' }} />
-                                <Typography variant="h6" fontWeight="bold">
-                                    Signal Summary
-                                </Typography>
-                            </Box>
-
-                            <Stack spacing={2}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="body2">Total Signals</Typography>
-                                    <Typography variant="h6" fontWeight="bold">
-                                        {SIGNAL_SUMMARY.totalSignals}
-                                    </Typography>
-                                </Box>
-
-                                <Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                        <Typography variant="body2">Bullish</Typography>
-                                        <Typography variant="body2" color="success.main" fontWeight="bold">
-                                            {SIGNAL_SUMMARY.bullishSignals}
-                                        </Typography>
-                                    </Box>
-                                    <LinearProgress
-                                        variant="determinate"
-                                        value={(SIGNAL_SUMMARY.bullishSignals / SIGNAL_SUMMARY.totalSignals) * 100}
-                                        sx={{
-                                            height: 6,
-                                            borderRadius: 3,
-                                            backgroundColor: alpha(theme.palette.success.main, 0.2),
-                                            '& .MuiLinearProgress-bar': {
-                                                backgroundColor: theme.palette.success.main,
-                                            },
-                                        }}
-                                    />
-                                </Box>
-
-                                <Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                        <Typography variant="body2">Bearish</Typography>
-                                        <Typography variant="body2" color="error.main" fontWeight="bold">
-                                            {SIGNAL_SUMMARY.bearishSignals}
-                                        </Typography>
-                                    </Box>
-                                    <LinearProgress
-                                        variant="determinate"
-                                        value={(SIGNAL_SUMMARY.bearishSignals / SIGNAL_SUMMARY.totalSignals) * 100}
-                                        sx={{
-                                            height: 6,
-                                            borderRadius: 3,
-                                            backgroundColor: alpha(theme.palette.error.main, 0.2),
-                                            '& .MuiLinearProgress-bar': {
-                                                backgroundColor: theme.palette.error.main,
-                                            },
-                                        }}
-                                    />
-                                </Box>
-
-                                <Divider />
-
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="body2">Avg Confidence</Typography>
-                                    <Typography variant="h6" fontWeight="bold" color="primary.main">
-                                        {SIGNAL_SUMMARY.averageConfidence}%
-                                    </Typography>
-                                </Box>
-
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="body2">Win Rate</Typography>
-                                    <Typography variant="h6" fontWeight="bold" color="success.main">
-                                        {SIGNAL_SUMMARY.winRate}%
-                                    </Typography>
-                                </Box>
-                            </Stack>
-                        </CardContent>
-                    </DashboardCard>
-                </Grid>
-
-                {/* Agent Consensus */}
-                <Grid item xs={12} lg={6}>
-                    <DashboardCard>
-                        <CardContent sx={{ height: 500, overflow: 'auto' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <PsychologyIcon sx={{ mr: 1, color: 'primary.main' }} />
-                                <Typography variant="h6" fontWeight="bold">
-                                    AI Agent Consensus
-                                </Typography>
-                            </Box>
-                            <AgentConsensusFlow />
-                        </CardContent>
-                    </DashboardCard>
-                </Grid>
-
-                {/* Recent Signals */}
-                <Grid item xs={12} lg={6}>
+            <GridLayout className="layout" layout={layout} onLayoutChange={handleLayoutChange}>
+                <div key="signals">
                     <DashboardCard>
                         <CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -307,17 +204,24 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
                                     Recent Signals
                                 </Typography>
                             </Box>
-                            <SignalList
-                                signals={mockSignals}
-                                onSignalSelect={(signal) => console.log('Signal clicked:', signal)}
+                            <VirtualizedList
+                                width={300}
                                 height={400}
-                                enableFiltering={false}
-                                enableSorting={false}
+                                rowCount={mockSignals.length}
+                                rowHeight={120}
+                                rowRenderer={({ index, key, style }: { index: number, key: string, style: React.CSSProperties }) => (
+                                    <div key={key} style={style}>
+                                        <SignalCard signal={mockSignals[index]} />
+                                    </div>
+                                )}
                             />
                         </CardContent>
                     </DashboardCard>
-                </Grid>
-            </Grid>
+                </div>
+                <div key="realtime"><RealTimeFeed /></div>
+                <div key="advancedChart"><AdvancedChart data={[]} signals={[]} timeframe={timeframe} onTimeframeChange={setTimeframe} /></div>
+                {/* Add more widgets here */}
+            </GridLayout>
 
             {/* Loading indicator */}
             {refreshing && (
@@ -331,6 +235,7 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
                     }}
                 />
             )}
+            <FloatingOrbAssistant onClick={() => console.log('Open AI Chat')} />
         </DashboardContainer>
     );
 };

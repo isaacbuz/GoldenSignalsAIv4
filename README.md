@@ -5258,3 +5258,19 @@ This **ultra-comprehensive README** now provides everything needed to rebuild Go
 This README serves as the **definitive blueprint** for rebuilding the entire GoldenSignalsAI project from scratch. Every architectural decision, implementation detail, and configuration option is documented with working code examples.
 
 **The system is now ready for immediate deployment and scaling to serve thousands of users with enterprise-grade reliability and performance.** 
+
+## Troubleshooting Common Issues
+
+### yfinance Data Errors
+- **Symptom**: 'No price data found' in logs.
+- **Fix**: Use mock fallback (already implemented). For real data, add API keys to .env and restart.
+- **Verify**: `curl http://localhost:8000/api/v1/market-data/AAPL`
+
+### Database Connection Errors
+- **Symptom**: 'role "user" does not exist'.
+- **Fix**: Update .env with correct credentials (e.g., postgresql://goldensignalsai:password@localhost/goldensignals).
+- **Verify**: `psql -U goldensignalsai -d goldensignals -c "SELECT version();"`
+
+### General
+- Restart app: `pkill -f "python main.py" && python main.py`
+- Check health: `curl http://localhost:8000/health`

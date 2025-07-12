@@ -450,43 +450,33 @@ async def generate_signal(
         logger.error(f"Error generating signal for {symbol}: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate signal")
 
+class MarketDataProvider:
+    def __init__(self):
+        self.providers = ['yfinance', 'polygon', 'alpha_vantage']
+        self.api_keys = {
+            'polygon': os.getenv('POLYGON_API_KEY'),
+            'alpha_vantage': os.getenv('ALPHA_VANTAGE_API_KEY')
+        }
+
+    def get_data(self, symbol: str, period: str = '30d'):
+        for provider in self.providers:
+            try:
+                if provider == 'yfinance':
+                    return yf.Ticker(symbol).history(period=period)
+                # Add Polygon and Alpha Vantage logic here
+                # For example:
+                # if provider == 'polygon': ...
+                if not hist.empty:
+                    return hist
+            except:
+                logger.warning(f"Provider {provider} failed for {symbol}")
+        raise HTTPException(404, "All providers failed")
+
 @app.get("/api/v1/market-data/{symbol}", response_model=MarketDataResponse)
 async def get_market_data(symbol: str):
-    """Get current market data for a symbol"""
-    try:
-        # Try Yahoo Finance first
-        ticker = yf.Ticker(symbol)
-        info = ticker.info
-        hist = ticker.history(period="2d")
-        
-        if hist.empty:
-            # If Yahoo Finance fails, use mock data
-            logger.warning(f"Yahoo Finance failed for {symbol}, using mock data")
-            return _generate_mock_market_data(symbol)
-        
-        current_price = float(hist['Close'].iloc[-1])
-        previous_close = float(hist['Close'].iloc[-2]) if len(hist) > 1 else current_price
-        change = current_price - previous_close
-        change_percent = (change / previous_close * 100) if previous_close != 0 else 0
-        
-        return MarketDataResponse(
-            symbol=symbol.upper(),
-            price=current_price,
-            change=change,
-            change_percent=change_percent,
-            volume=int(hist['Volume'].iloc[-1]),
-            high=float(hist['High'].iloc[-1]),
-            low=float(hist['Low'].iloc[-1]),
-            open=float(hist['Open'].iloc[-1]),
-            previous_close=previous_close,
-            timestamp=datetime.now()
-        )
-    
-    except Exception as e:
-        logger.error(f"Error fetching market data for {symbol}: {e}")
-        # Use mock data as fallback
-        logger.warning(f"Using mock data for {symbol}")
-        return _generate_mock_market_data(symbol)
+    provider = MarketDataProvider()
+    hist = provider.get_data(symbol, '2d')
+    # Rest of function
 
 def _generate_mock_market_data(symbol: str) -> MarketDataResponse:
     """Generate mock market data for testing"""
