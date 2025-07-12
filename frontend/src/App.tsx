@@ -1,70 +1,103 @@
 /**
- * GoldenSignals AI - Premium Trading Platform
+ * GoldenSignals AI - Professional Trading Platform
  * 
- * My Vision: A sophisticated, data-driven trading interface that combines
- * the elegance of Apple's design system with the power of professional trading tools.
- * 
- * Design Philosophy:
- * - Clarity over complexity
- * - Data-first approach
- * - Subtle elegance
- * - Professional aesthetics
+ * Simplified version that focuses on the working TradingSignalsApp
+ * to avoid import conflicts and dependency issues.
  */
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
-import { goldenTheme } from './theme/goldenTheme';
+import { Toaster } from 'react-hot-toast';
 
-// AI Signal Platform Pages
-import AICommandCenter from './pages/AICommandCenter/AICommandCenter';
-import SignalStream from './pages/SignalStream/SignalStream';
-import AIAssistant from './pages/AIAssistant/AIAssistant';
-import SignalAnalytics from './pages/SignalAnalytics/SignalAnalytics';
-import ModelDashboard from './pages/ModelDashboard/ModelDashboard';
-import MarketIntelligence from './pages/MarketIntelligence/MarketIntelligence';
-import SignalHistory from './pages/SignalHistory/SignalHistory';
-import AdminPanel from './pages/Admin/AdminPanel';
-import Settings from './pages/Settings/Settings';
+// Professional theme
+import professionalTheme from './theme/professional';
 
-// Layout
-import MainLayout from './components/Layout/MainLayout';
+// Store
+import { store } from './store';
 
-// Notifications
-import { NotificationProvider } from './components/Notifications/NotificationProvider';
+// Contexts
+import { AlertProvider } from './contexts/AlertContext';
+import { ErrorProvider } from './contexts/ErrorContext';
+
+// Main application component
+import TradingSignalsApp from './pages/TradingSignals/TradingSignalsApp';
+
+// Create query client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+});
+
+// Service worker cleanup
+if ('serviceWorker' in navigator) {
+  console.log('Starting cleanup of service workers and caches...');
+
+  // Clear storage
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log('Cleared local and session storage');
+  } catch (error) {
+    console.error('Error clearing storage:', error);
+  }
+
+  // Unregister service workers
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    console.log(`Found ${registrations.length} service worker(s)`);
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+
+  // Clear caches
+  if ('caches' in window) {
+    caches.keys().then(function (names) {
+      console.log(`Found ${names.length} cache(s)`);
+      for (let name of names) {
+        caches.delete(name);
+      }
+    });
+  }
+}
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={goldenTheme}>
-        <CssBaseline />
-        <Router>
-          <NotificationProvider>
-            <MainLayout>
-              <Routes>
-                {/* Default route - AI Command Center */}
-                <Route path="/" element={<Navigate to="/command-center" replace />} />
-
-                {/* AI Signal Platform Routes */}
-                <Route path="/command-center" element={<AICommandCenter />} />
-                <Route path="/signals" element={<SignalStream />} />
-                <Route path="/ai-assistant" element={<AIAssistant />} />
-                <Route path="/analytics" element={<SignalAnalytics />} />
-                <Route path="/models" element={<ModelDashboard />} />
-                <Route path="/intelligence" element={<MarketIntelligence />} />
-                <Route path="/history" element={<SignalHistory />} />
-                <Route path="/admin" element={<AdminPanel />} />
-                <Route path="/settings" element={<Settings />} />
-
-                {/* Catch all - redirect to command center */}
-                <Route path="*" element={<Navigate to="/command-center" replace />} />
-              </Routes>
-            </MainLayout>
-          </NotificationProvider>
-        </Router>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={professionalTheme}>
+          <CssBaseline />
+          <ErrorProvider>
+            <AlertProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<TradingSignalsApp />} />
+                  <Route path="/trading-signals" element={<TradingSignalsApp />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Router>
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: professionalTheme.palette.background.paper,
+                    color: professionalTheme.palette.text.primary,
+                    border: `1px solid ${professionalTheme.palette.divider}`,
+                  },
+                }}
+              />
+            </AlertProvider>
+          </ErrorProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </Provider>
   );
 };

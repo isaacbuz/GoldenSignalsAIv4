@@ -1,0 +1,602 @@
+{
+  "03-DEVELOPMENT/API_REFERENCE.md": [
+    {
+      "old_path": "REAL_TIME_SENTIMENT_ANALYZER_IMPLEMENTATION.md",
+      "title": "Real-time Sentiment Analyzer Implementation Summary",
+      "size": 5057,
+      "sections": 10
+    },
+    {
+      "old_path": "API_DOCUMENTATION.md",
+      "title": "GoldenSignalsAI V2 API Documentation",
+      "size": 14175,
+      "sections": 12
+    },
+    {
+      "old_path": "AFTER_HOURS_HANDLING.md",
+      "title": "After-Hours Data Handling in GoldenSignalsAI V3",
+      "size": 4795,
+      "sections": 9
+    },
+    {
+      "old_path": "HYBRID_SENTIMENT_SYSTEM.md",
+      "title": "GoldenSignalsAI V2 - Hybrid Sentiment System Documentation",
+      "size": 10049,
+      "sections": 13
+    },
+    {
+      "old_path": "APPLICATION_RUNNING_GUIDE.md",
+      "title": "\ud83d\ude80 GoldenSignalsAI Application Running Guide",
+      "size": 1774,
+      "sections": 7
+    },
+    {
+      "old_path": "COMPONENT_MAPPING.md",
+      "title": "Component Mapping for UI Redesign",
+      "size": 6952,
+      "sections": 3
+    },
+    {
+      "old_path": "FRONTEND_ENHANCEMENT_PLAN.md",
+      "title": "Frontend Enhancement Plan - GoldenSignalsAI V2",
+      "size": 8753,
+      "sections": 10
+    },
+    {
+      "old_path": "API_DOCUMENTATION_SUMMARY.md",
+      "title": "API Documentation Summary - GoldenSignalsAI",
+      "size": 2498,
+      "sections": 4
+    },
+    {
+      "old_path": "RAPID_IMPLEMENTATION_REPORT.md",
+      "title": "GoldenSignalsAI V4 - Rapid Implementation Report",
+      "size": 8585,
+      "sections": 7
+    },
+    {
+      "old_path": "RATE_LIMIT_SOLUTIONS.md",
+      "title": "\ud83d\ude80 GoldenSignalsAI - Rate Limit Solutions Guide",
+      "size": 6767,
+      "sections": 10
+    },
+    {
+      "old_path": "OPTIONS_FLOW_INTELLIGENCE_IMPLEMENTATION.md",
+      "title": "Options Flow Intelligence RAG Implementation Summary",
+      "size": 4225,
+      "sections": 8
+    },
+    {
+      "old_path": "frontend/UI_IMPROVEMENTS_GUIDE.md",
+      "title": "GoldenSignalsAI UI Improvements Guide",
+      "size": 7181,
+      "sections": 9
+    },
+    {
+      "old_path": "frontend/UI_IMPLEMENTATION_STATUS.md",
+      "title": "UI Implementation Status",
+      "size": 3141,
+      "sections": 6
+    },
+    {
+      "old_path": "frontend/FINAL_UI_IMPLEMENTATION.md",
+      "title": "GoldenSignalsAI - Final UI Implementation",
+      "size": 7021,
+      "sections": 12
+    },
+    {
+      "old_path": "frontend/verify-ui.md",
+      "title": "UI Verification Guide",
+      "size": 2518,
+      "sections": 1
+    }
+  ],
+  "03-DEVELOPMENT/TESTING_GUIDE.md": [
+    {
+      "old_path": "INTEGRATION_TESTING_SUMMARY.md",
+      "title": "Integration Testing Implementation Summary",
+      "size": 5807,
+      "sections": 11
+    },
+    {
+      "old_path": "TEST_RESULTS_SUMMARY.md",
+      "title": "Test Results Summary - GoldenSignalsAI V2",
+      "size": 3306,
+      "sections": 6
+    },
+    {
+      "old_path": "TEST_QUICK_REFERENCE.md",
+      "title": "GoldenSignalsAI V2 Test Quick Reference Guide",
+      "size": 3370,
+      "sections": 9
+    },
+    {
+      "old_path": "FINAL_TEST_SUMMARY.md",
+      "title": "GoldenSignalsAIv4 - Final Test Summary",
+      "size": 5668,
+      "sections": 7
+    },
+    {
+      "old_path": "BACKTESTING_ENHANCEMENT_PLAN.md",
+      "title": "Comprehensive Backtesting Enhancement Plan",
+      "size": 10511,
+      "sections": 1
+    },
+    {
+      "old_path": "FINAL_TEST_STATUS.md",
+      "title": "Final Test Status Report - GoldenSignalsAI V2",
+      "size": 4348,
+      "sections": 8
+    },
+    {
+      "old_path": "TEST_IMPLEMENTATION_SUMMARY.md",
+      "title": "Test Implementation Summary",
+      "size": 4657,
+      "sections": 8
+    },
+    {
+      "old_path": "BACKTESTING_ENHANCEMENT_SUMMARY.md",
+      "title": "GoldenSignalsAI V2 - Backtesting Enhancement Summary",
+      "size": 6038,
+      "sections": 7
+    },
+    {
+      "old_path": "BACKTESTING_ENHANCEMENT_IMPLEMENTATION.md",
+      "title": "Backtesting Enhancement Implementation Status",
+      "size": 6817,
+      "sections": 6
+    },
+    {
+      "old_path": "TEST_RUNNER_GUIDE.md",
+      "title": "GoldenSignalsAI V2 - Comprehensive Test Runner Guide",
+      "size": 7441,
+      "sections": 13
+    },
+    {
+      "old_path": "TEST_IMPLEMENTATION_PLAN.md",
+      "title": "\ud83e\uddea Test Implementation Plan for GoldenSignalsAI",
+      "size": 7426,
+      "sections": 9
+    },
+    {
+      "old_path": "BACKTESTING_MODULE_TEST_REPORT.md",
+      "title": "Backtesting Module Test Report",
+      "size": 4115,
+      "sections": 1
+    }
+  ],
+  "07-ARCHIVE/LICENSE.md": [
+    {
+      "old_path": "LICENSE.md",
+      "title": "MIT License",
+      "size": 1068,
+      "sections": 0
+    }
+  ],
+  "04-MODULES/AI_INTEGRATION.md": [
+    {
+      "old_path": "RAG_AGENT_MCP_IMPLEMENTATION_STATUS.md",
+      "title": "RAG, Agent, and MCP Implementation Status Report",
+      "size": 5852,
+      "sections": 10
+    },
+    {
+      "old_path": "RAG_AGENT_MCP_ANALYSIS_SUMMARY.md",
+      "title": "Executive Summary: RAG, Agent, and MCP Enhancement Analysis",
+      "size": 5079,
+      "sections": 9
+    },
+    {
+      "old_path": "RAG_AGENT_MCP_PRIORITY_IMPLEMENTATION.md",
+      "title": "Priority Implementation Plan for RAG, Agent, and MCP Enhancement",
+      "size": 7378,
+      "sections": 14
+    },
+    {
+      "old_path": "COMPREHENSIVE_RAG_AGENT_MCP_ANALYSIS.md",
+      "title": "Comprehensive RAGify, Agentify, and MCPify Analysis for GoldenSignalsAI V2",
+      "size": 19514,
+      "sections": 11
+    },
+    {
+      "old_path": "AI_LAB_CONSOLIDATION_PLAN.md",
+      "title": "AI Trading Lab Consolidation Plan",
+      "size": 7712,
+      "sections": 9
+    },
+    {
+      "old_path": "AI_TRADING_LAB_MILESTONES.md",
+      "title": "AI Trading Lab Implementation Plan",
+      "size": 12469,
+      "sections": 12
+    },
+    {
+      "old_path": "AI_PLATFORM_TRANSFORMATION_PLAN.md",
+      "title": "GoldenSignals AI Platform Transformation Plan",
+      "size": 7268,
+      "sections": 12
+    },
+    {
+      "old_path": "docs/DOMAIN.md",
+      "title": "Domain Components Documentation",
+      "size": 3747,
+      "sections": 7
+    }
+  ],
+  "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md": [
+    {
+      "old_path": "IMPLEMENTATION_STATUS.md",
+      "title": "GoldenSignalsAI V2 - Implementation Status",
+      "size": 5602,
+      "sections": 7
+    },
+    {
+      "old_path": "PHASE_1_IMPLEMENTATION_SUMMARY.md",
+      "title": "Phase 1 Implementation Summary - Week 1 Progress",
+      "size": 5207,
+      "sections": 9
+    },
+    {
+      "old_path": "DOCUMENTATION_CONSOLIDATION_PLAN.md",
+      "title": "GoldenSignalsAI Documentation Consolidation Plan",
+      "size": 8754,
+      "sections": 17
+    },
+    {
+      "old_path": "PLATFORM_TRANSFORMATION_COMPLETE.md",
+      "title": "\ud83c\udf89 GoldenSignals AI Platform Transformation Complete!",
+      "size": 5580,
+      "sections": 11
+    },
+    {
+      "old_path": "PROJECT_COMPLETION_SUMMARY.md",
+      "title": "GoldenSignalsAI V2 - Project Completion Summary",
+      "size": 6043,
+      "sections": 8
+    },
+    {
+      "old_path": "PRODUCTION_DEPLOYMENT_GUIDE.md",
+      "title": "GoldenSignals AI V2 Production Deployment Guide",
+      "size": 8916,
+      "sections": 12
+    },
+    {
+      "old_path": "FINAL_IMPLEMENTATION_SUMMARY.md",
+      "title": "\ud83c\udf89 Final Implementation Summary - All Issues Complete!",
+      "size": 4490,
+      "sections": 8
+    },
+    {
+      "old_path": "DOCUMENTATION_HUB.md",
+      "title": "\ud83d\udcda GoldenSignals AI Documentation Hub",
+      "size": 7122,
+      "sections": 7
+    },
+    {
+      "old_path": "COMPLETE_IMPLEMENTATION_SUMMARY.md",
+      "title": "\ud83c\udf89 Complete Implementation Summary - GoldenSignals AI V2",
+      "size": 8292,
+      "sections": 13
+    },
+    {
+      "old_path": "UNIFIED_IMPLEMENTATION_ROADMAP.md",
+      "title": "Unified Implementation Roadmap: Documentation & UI Redesign",
+      "size": 7470,
+      "sections": 10
+    },
+    {
+      "old_path": "DEPLOYMENT_GUIDE.md",
+      "title": "GoldenSignalsAI V2 Deployment Guide",
+      "size": 16173,
+      "sections": 11
+    },
+    {
+      "old_path": "DEPLOYMENT.md",
+      "title": "GoldenSignalsAI AKS Deployment Guide",
+      "size": 2599,
+      "sections": 11
+    },
+    {
+      "old_path": "CONTRIBUTING.md",
+      "title": "Contributing to GoldenSignalsAI",
+      "size": 1952,
+      "sections": 10
+    },
+    {
+      "old_path": "PRODUCTION_DEPLOYMENT_SUMMARY.md",
+      "title": "Production Deployment Implementation Summary",
+      "size": 3702,
+      "sections": 6
+    },
+    {
+      "old_path": "CLEANUP_REPORT.md",
+      "title": "\ud83e\uddf9 GoldenSignalsAI V4 - Duplicate Implementation Cleanup Report",
+      "size": 4890,
+      "sections": 7
+    },
+    {
+      "old_path": "FINAL_COMPLETION_SUMMARY.md",
+      "title": "GoldenSignalsAIv4 - Final Completion Summary",
+      "size": 6528,
+      "sections": 12
+    },
+    {
+      "old_path": "EPIC_IMPLEMENTATION_SUMMARY.md",
+      "title": "EPIC Implementation Summary",
+      "size": 1075,
+      "sections": 2
+    },
+    {
+      "old_path": "MCP_SERVERS_IMPLEMENTATION_SUMMARY.md",
+      "title": "MCP Servers Implementation Summary",
+      "size": 6106,
+      "sections": 11
+    },
+    {
+      "old_path": "STARTUP_GUIDE.md",
+      "title": "GoldenSignalsAI Startup Guide",
+      "size": 3504,
+      "sections": 9
+    }
+  ],
+  "02-GETTING_STARTED/TROUBLESHOOTING.md": [
+    {
+      "old_path": "ISSUES_COMPLETION_SUMMARY.md",
+      "title": "Issues Completion Summary - GoldenSignalsAI V2",
+      "size": 3958,
+      "sections": 4
+    },
+    {
+      "old_path": "OPEN_ISSUES_SUMMARY.md",
+      "title": "Open Issues Summary - GoldenSignalsAIv4",
+      "size": 2251,
+      "sections": 4
+    },
+    {
+      "old_path": "ISSUES_FINAL_SUMMARY.md",
+      "title": "GoldenSignalsAI V2 - GitHub Issues Final Summary",
+      "size": 5350,
+      "sections": 6
+    },
+    {
+      "old_path": "ISSUES_IMPLEMENTATION_STATUS.md",
+      "title": "GitHub Issues Implementation Status",
+      "size": 6573,
+      "sections": 10
+    },
+    {
+      "old_path": "TROUBLESHOOTING_GUIDE.md",
+      "title": "GoldenSignalsAI V2 Troubleshooting Guide",
+      "size": 12019,
+      "sections": 12
+    },
+    {
+      "old_path": "CLOSE_THESE_ISSUES.md",
+      "title": "GitHub Issues Ready to Close",
+      "size": 2676,
+      "sections": 4
+    }
+  ],
+  "01-OVERVIEW/ARCHITECTURE.md": [
+    {
+      "old_path": "PROJECT_STRUCTURE.md",
+      "title": "GoldenSignalsAI Project Structure",
+      "size": 5084,
+      "sections": 11
+    },
+    {
+      "old_path": "REDESIGN_SUMMARY.md",
+      "title": "GoldenSignalsAI Redesign Summary",
+      "size": 4903,
+      "sections": 6
+    },
+    {
+      "old_path": "STREAMLINED_ARCHITECTURE.md",
+      "title": "GoldenSignalsAI v3 - Streamlined Architecture",
+      "size": 6064,
+      "sections": 11
+    },
+    {
+      "old_path": "HYBRID_SENTIMENT_ARCHITECTURE.md",
+      "title": "Hybrid Sentiment & Dynamic Scoring Architecture",
+      "size": 6580,
+      "sections": 10
+    },
+    {
+      "old_path": "AGENT_COMMUNICATION_ARCHITECTURE.md",
+      "title": "Agent Communication Architecture - GoldenSignalsAI V2",
+      "size": 6634,
+      "sections": 10
+    },
+    {
+      "old_path": "ADAPTIVE_LEARNING_ARCHITECTURE.md",
+      "title": "Adaptive Learning Architecture for GoldenSignalsAI",
+      "size": 8721,
+      "sections": 12
+    },
+    {
+      "old_path": "UI_REDESIGN_PLAN.md",
+      "title": "UI_REDESIGN_PLAN",
+      "size": 21352,
+      "sections": 0
+    },
+    {
+      "old_path": "REDESIGN_ROADMAP.md",
+      "title": "GoldenSignals AI Platform Redesign Roadmap",
+      "size": 2241,
+      "sections": 3
+    },
+    {
+      "old_path": "UI_REDESIGN_COMPREHENSIVE_PLAN.md",
+      "title": "GoldenSignalsAI Comprehensive UI Redesign Plan v2.0",
+      "size": 23054,
+      "sections": 13
+    },
+    {
+      "old_path": "frontend/src/components/DesignSystem/STYLE_GUIDE.md",
+      "title": "Golden Signals AI - Style Guide",
+      "size": 2218,
+      "sections": 7
+    },
+    {
+      "old_path": "frontend/src/components/AITradingLab/TRADINGVIEW_INTEGRATION_GUIDE.md",
+      "title": "TradingView Integration Guide for AI Signal Prophet",
+      "size": 3541,
+      "sections": 4
+    }
+  ],
+  "06-OPERATIONS/SECURITY.md": [
+    {
+      "old_path": "SECURITY_AUDIT_REPORT.md",
+      "title": "Security Audit Report - GoldenSignalsAI V2",
+      "size": 3937,
+      "sections": 13
+    }
+  ],
+  "06-OPERATIONS/MONITORING.md": [
+    {
+      "old_path": "IMPLEMENTATION_LOG.md",
+      "title": "GoldenSignals AI Platform Implementation Log",
+      "size": 4267,
+      "sections": 7
+    }
+  ],
+  "06-OPERATIONS/PERFORMANCE.md": [
+    {
+      "old_path": "PERFORMANCE_OPTIMIZATION_SUMMARY.md",
+      "title": "Performance Optimization Implementation Summary",
+      "size": 5323,
+      "sections": 9
+    }
+  ],
+  "02-GETTING_STARTED/SETUP_GUIDE.md": [
+    {
+      "old_path": "DATABASE_SETUP_GUIDE.md",
+      "title": "\ud83d\uddc4\ufe0f GoldenSignalsAI V3 - Database Setup Guide",
+      "size": 8764,
+      "sections": 12
+    },
+    {
+      "old_path": "LIVE_DATA_QUICK_START.md",
+      "title": "GoldenSignalsAI V2 - Live Data Quick Start Guide",
+      "size": 8208,
+      "sections": 12
+    },
+    {
+      "old_path": "SETUP_API_KEYS_GUIDE.md",
+      "title": "API Keys Setup Guide for Enhanced Sentiment Analysis",
+      "size": 5426,
+      "sections": 9
+    },
+    {
+      "old_path": "docs/TEMPLATE.md",
+      "title": "Document Title",
+      "size": 1480,
+      "sections": 7
+    }
+  ],
+  "01-OVERVIEW/PROJECT_OVERVIEW.md": [
+    {
+      "old_path": "README.md",
+      "title": "GoldenSignalsAI V3 \ud83d\ude80",
+      "size": 11490,
+      "sections": 14
+    },
+    {
+      "old_path": "PROJECT_BOARD_README.md",
+      "title": "Frontend Enhancement Project Board",
+      "size": 1891,
+      "sections": 6
+    },
+    {
+      "old_path": ".pytest_cache/README.md",
+      "title": "pytest cache directory #",
+      "size": 302,
+      "sections": 0
+    },
+    {
+      "old_path": "docs/README.md",
+      "title": "GoldenSignalsAI Documentation",
+      "size": 3576,
+      "sections": 5
+    },
+    {
+      "old_path": "ml_training/README_LIVE_EVALUATION.md",
+      "title": "Live Transformer Model Evaluation",
+      "size": 2341,
+      "sections": 8
+    },
+    {
+      "old_path": "external/Stock-Prediction-Models/README.md",
+      "title": "README",
+      "size": 12667,
+      "sections": 3
+    },
+    {
+      "old_path": "external/Stock-Prediction-Models/stock-forecasting-js/README.md",
+      "title": "Stock forecasting JS",
+      "size": 1059,
+      "sections": 2
+    },
+    {
+      "old_path": "external/Stock-Prediction-Models/realtime-agent/README.md",
+      "title": "README",
+      "size": 2294,
+      "sections": 2
+    },
+    {
+      "old_path": "src/ml/research/README.md",
+      "title": "Machine Learning Research Agents",
+      "size": 2392,
+      "sections": 7
+    }
+  ],
+  "03-DEVELOPMENT/FRONTEND_GUIDE.md": [
+    {
+      "old_path": "frontend/README.md",
+      "title": "Golden Signals AI - Frontend Documentation",
+      "size": 7028,
+      "sections": 17
+    }
+  ],
+  "04-MODULES/AGENTS.md": [
+    {
+      "old_path": "agents/README.md",
+      "title": "GoldenSignalsAI Agent Framework",
+      "size": 2273,
+      "sections": 4
+    },
+    {
+      "old_path": "agents/research/ml/README.md",
+      "title": "Machine Learning Research Agents",
+      "size": 2392,
+      "sections": 7
+    },
+    {
+      "old_path": "agents/core/sentiment/README.md",
+      "title": "Sentiment Analysis Agents",
+      "size": 2229,
+      "sections": 8
+    },
+    {
+      "old_path": "agents/core/technical/README.md",
+      "title": "Technical Analysis Agents",
+      "size": 1631,
+      "sections": 6
+    },
+    {
+      "old_path": "agents/strategy/README.md",
+      "title": "Advanced Trading Strategy Orchestration",
+      "size": 2068,
+      "sections": 8
+    }
+  ],
+  "07-ARCHIVE/FUTURE_ENHANCEMENTS.md": [
+    {
+      "old_path": "docs/FUTURE_ENHANCEMENTS.md",
+      "title": "Future Enhancements for Transformer Model Evaluation System",
+      "size": 3014,
+      "sections": 12
+    }
+  ]
+}

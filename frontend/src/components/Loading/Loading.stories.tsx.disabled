@@ -1,0 +1,320 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState, useEffect } from 'react';
+import { Loading, LoadingContainer, SkeletonText, SkeletonAvatar, SkeletonButton, SkeletonCard } from './Loading';
+import { Card } from '../Card/Card';
+import { Button } from '../Core/Button/Button';
+
+const meta = {
+    title: 'Core/Loading',
+    component: Loading,
+    parameters: {
+        layout: 'centered',
+        docs: {
+            description: {
+                component: 'A comprehensive loading component with multiple types of loading indicators including spinners, dots, bars, skeletons, progress bars, and pulse effects.',
+            },
+        },
+    },
+    tags: ['autodocs'],
+    argTypes: {
+        type: {
+            control: 'select',
+            options: ['spinner', 'dots', 'bars', 'skeleton', 'progress', 'pulse'],
+            description: 'Type of loading indicator',
+        },
+        size: {
+            control: 'select',
+            options: ['small', 'medium', 'large'],
+            description: 'Size of the loading indicator',
+        },
+        color: {
+            control: 'select',
+            options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info'],
+            description: 'Color variant',
+        },
+        text: {
+            control: 'text',
+            description: 'Loading text to display',
+        },
+        overlay: {
+            control: 'boolean',
+            description: 'Whether to show as overlay',
+        },
+        center: {
+            control: 'boolean',
+            description: 'Whether to center the loading indicator',
+        },
+        progress: {
+            control: { type: 'range', min: 0, max: 100, step: 1 },
+            description: 'Progress value (0-100) for progress type',
+        },
+    },
+} satisfies Meta<typeof Loading>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Basic types
+export const Spinner: Story = {
+    args: {
+        type: 'spinner',
+        'data-testid': 'spinner-loading',
+    },
+};
+
+export const Dots: Story = {
+    args: {
+        type: 'dots',
+        'data-testid': 'dots-loading',
+    },
+};
+
+export const Bars: Story = {
+    args: {
+        type: 'bars',
+        'data-testid': 'bars-loading',
+    },
+};
+
+export const Skeleton: Story = {
+    args: {
+        type: 'skeleton',
+        'data-testid': 'skeleton-loading',
+    },
+};
+
+export const Progress: Story = {
+    args: {
+        type: 'progress',
+        progress: 65,
+        'data-testid': 'progress-loading',
+    },
+};
+
+export const Pulse: Story = {
+    args: {
+        type: 'pulse',
+        'data-testid': 'pulse-loading',
+    },
+};
+
+// With text
+export const WithText: Story = {
+    args: {
+        type: 'spinner',
+        text: 'Loading data...',
+        'data-testid': 'text-loading',
+    },
+};
+
+// Sizes
+export const Sizes: Story = {
+    render: () => (
+        <div className="flex items-center gap-8">
+            <Loading type="spinner" size="small" text="Small" />
+            <Loading type="spinner" size="medium" text="Medium" />
+            <Loading type="spinner" size="large" text="Large" />
+        </div>
+    ),
+};
+
+// Colors
+export const Colors: Story = {
+    render: () => (
+        <div className="grid grid-cols-3 gap-4">
+            <Loading type="spinner" color="primary" text="Primary" />
+            <Loading type="spinner" color="secondary" text="Secondary" />
+            <Loading type="spinner" color="success" text="Success" />
+            <Loading type="spinner" color="danger" text="Danger" />
+            <Loading type="spinner" color="warning" text="Warning" />
+            <Loading type="spinner" color="info" text="Info" />
+        </div>
+    ),
+};
+
+// All types showcase
+export const AllTypes: Story = {
+    render: () => (
+        <div className="grid grid-cols-3 gap-8">
+            <div className="text-center">
+                <Loading type="spinner" />
+                <p className="mt-2 text-sm text-gray-600">Spinner</p>
+            </div>
+            <div className="text-center">
+                <Loading type="dots" />
+                <p className="mt-2 text-sm text-gray-600">Dots</p>
+            </div>
+            <div className="text-center">
+                <Loading type="bars" />
+                <p className="mt-2 text-sm text-gray-600">Bars</p>
+            </div>
+            <div className="text-center">
+                <Loading type="skeleton" />
+                <p className="mt-2 text-sm text-gray-600">Skeleton</p>
+            </div>
+            <div className="text-center">
+                <Loading type="progress" progress={75} />
+                <p className="mt-2 text-sm text-gray-600">Progress</p>
+            </div>
+            <div className="text-center">
+                <Loading type="pulse" />
+                <p className="mt-2 text-sm text-gray-600">Pulse</p>
+            </div>
+        </div>
+    ),
+};
+
+// Overlay example
+export const Overlay: Story = {
+    render: () => (
+        <div className="relative p-8 bg-gray-100 rounded" style={{ height: '300px', width: '400px' }}>
+            <h3 className="text-lg font-semibold mb-4">Content Area</h3>
+            <p>This content is covered by a loading overlay.</p>
+            <Loading overlay center type="spinner" text="Processing..." />
+        </div>
+    ),
+};
+
+// Progress animation
+export const ProgressAnimation: Story = {
+    render: () => {
+        const [progress, setProgress] = useState(0);
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setProgress((prev) => {
+                    if (prev >= 100) return 0;
+                    return prev + 2;
+                });
+            }, 100);
+
+            return () => clearInterval(interval);
+        }, []);
+
+        return <Loading type="progress" progress={progress} />;
+    },
+};
+
+// Loading container
+export const LoadingContainerExample: Story = {
+    render: () => {
+        const [loading, setLoading] = useState(true);
+
+        return (
+            <div>
+                <Button onClick={() => setLoading(!loading)} className="mb-4">
+                    Toggle Loading
+                </Button>
+
+                <LoadingContainer loading={loading} loadingProps={{ type: 'spinner', text: 'Loading content...' }}>
+                    <Card>
+                        <h3 className="text-lg font-semibold mb-2">Card Content</h3>
+                        <p>This content is wrapped in a LoadingContainer.</p>
+                        <p>Click the button above to toggle the loading state.</p>
+                    </Card>
+                </LoadingContainer>
+            </div>
+        );
+    },
+};
+
+// Skeleton components
+export const SkeletonComponents: Story = {
+    render: () => (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-semibold mb-2">Skeleton Text</h4>
+                <SkeletonText lines={3} />
+            </div>
+
+            <div>
+                <h4 className="text-sm font-semibold mb-2">Skeleton Avatar</h4>
+                <div className="flex gap-4">
+                    <SkeletonAvatar size="small" />
+                    <SkeletonAvatar size="medium" />
+                    <SkeletonAvatar size="large" />
+                    <SkeletonAvatar size="medium" shape="square" />
+                </div>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-semibold mb-2">Skeleton Button</h4>
+                <div className="flex gap-4">
+                    <SkeletonButton size="small" />
+                    <SkeletonButton size="medium" />
+                    <SkeletonButton size="large" />
+                </div>
+            </div>
+        </div>
+    ),
+};
+
+// Skeleton card
+export const SkeletonCardExample: Story = {
+    render: () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ width: '600px' }}>
+            <SkeletonCard />
+            <SkeletonCard showImage={false} showAvatar={true} lines={2} />
+        </div>
+    ),
+};
+
+// Real-world example: Data table loading
+export const TableLoading: Story = {
+    render: () => (
+        <div className="bg-white p-4 rounded shadow" style={{ width: '600px' }}>
+            <div className="mb-4">
+                <SkeletonText lines={1} width="200px" />
+            </div>
+            <div className="space-y-2">
+                {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex gap-4 p-2 border-b">
+                        <SkeletonAvatar size="small" />
+                        <div className="flex-1">
+                            <SkeletonText lines={2} />
+                        </div>
+                        <SkeletonButton size="small" width="60px" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    ),
+};
+
+// Real-world example: Form submission
+export const FormSubmission: Story = {
+    render: () => {
+        const [submitting, setSubmitting] = useState(false);
+
+        const handleSubmit = () => {
+            setSubmitting(true);
+            setTimeout(() => setSubmitting(false), 3000);
+        };
+
+        return (
+            <Card style={{ width: '400px' }}>
+                <h3 className="text-lg font-semibold mb-4">Submit Form</h3>
+                <p className="mb-4">Click submit to see the loading state.</p>
+                <Button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    fullWidth
+                >
+                    {submitting ? <Loading type="dots" size="small" /> : 'Submit'}
+                </Button>
+            </Card>
+        );
+    },
+};
+
+// Centered loading
+export const CenteredLoading: Story = {
+    render: () => (
+        <div className="bg-gray-100 rounded" style={{ height: '400px', width: '600px' }}>
+            <Loading center type="spinner" size="large" text="Loading application..." />
+        </div>
+    ),
+    parameters: {
+        layout: 'fullscreen',
+    },
+}; 

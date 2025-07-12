@@ -1,0 +1,39 @@
+{
+  "dashboard": {
+    "title": "GoldenSignalsAI Dashboard",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "targets": [
+          {
+            "expr": "rate(goldensignals_http_requests_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Signal Generation Rate",
+        "targets": [
+          {
+            "expr": "rate(goldensignals_signals_generated_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Portfolio Value",
+        "targets": [
+          {
+            "expr": "goldensignals_portfolio_value_usd"
+          }
+        ]
+      },
+      {
+        "title": "Agent Performance",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, goldensignals_agent_execution_seconds)"
+          }
+        ]
+      }
+    ]
+  }
+}

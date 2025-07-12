@@ -26,7 +26,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Only log errors in development mode to prevent console spam
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+    
     this.setState({ errorInfo });
 
     // Call optional error handler
@@ -37,11 +41,14 @@ class ErrorBoundary extends Component<Props, State> {
     // Log to error reporting service in production
     if (process.env.NODE_ENV === 'production') {
       // Send to error tracking service (e.g., Sentry, LogRocket)
-      console.error('Production error:', {
-        error: error.toString(),
-        stack: errorInfo.componentStack,
-        timestamp: new Date().toISOString(),
-      });
+      // Only log critical errors to avoid console spam
+      if (error.name !== 'ChunkLoadError' && error.name !== 'NetworkError') {
+        console.error('Production error:', {
+          error: error.toString(),
+          stack: errorInfo.componentStack,
+          timestamp: new Date().toISOString(),
+        });
+      }
     }
   }
 

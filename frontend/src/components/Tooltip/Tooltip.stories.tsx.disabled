@@ -1,0 +1,287 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Tooltip, TooltipText, IconTooltip, RichTooltip } from './Tooltip';
+import { Button } from '../Core/Button';
+import { 
+  InformationCircleIcon,
+  QuestionMarkCircleIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon
+} from '@heroicons/react/24/outline';
+
+const meta = {
+  title: 'UI/Tooltip',
+  component: Tooltip,
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: `
+# Tooltip Component
+
+A flexible tooltip component with smart positioning and accessibility features.
+
+## Features:
+- 4 positions: top, bottom, left, right
+- Auto-repositioning to stay in viewport
+- Customizable delay
+- Arrow indicator
+- Keyboard accessible (shows on focus)
+- Rich content support
+- Dark mode support
+
+## Reused Patterns:
+- Portal rendering (like Alert)
+- Framer Motion animations
+- Smart positioning logic
+- Accessibility patterns
+
+## Usage:
+\`\`\`tsx
+// Simple text tooltip
+<TooltipText text="Delete this item">
+  <Button>Delete</Button>
+</TooltipText>
+
+// Icon tooltip with reduced delay
+<IconTooltip content="Help information">
+  <InformationCircleIcon className="w-5 h-5" />
+</IconTooltip>
+
+// Rich content tooltip
+<RichTooltip 
+  title="Pro Feature"
+  description="Upgrade to access advanced features"
+>
+  <Button>Upgrade</Button>
+</RichTooltip>
+\`\`\`
+        `
+      }
+    }
+  },
+  tags: ['autodocs'],
+} satisfies Meta<typeof Tooltip>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Default tooltip
+export const Default: Story = {
+  args: {
+    content: 'This is a helpful tooltip',
+    children: <Button>Hover me</Button>
+  }
+};
+
+// Position variations
+export const Positions: Story = {
+  render: () => (
+    <div className="grid grid-cols-2 gap-8 p-16">
+      <Tooltip content="Top tooltip" position="top">
+        <Button variant="secondary">Top</Button>
+      </Tooltip>
+      <Tooltip content="Bottom tooltip" position="bottom">
+        <Button variant="secondary">Bottom</Button>
+      </Tooltip>
+      <Tooltip content="Left tooltip" position="left">
+        <Button variant="secondary">Left</Button>
+      </Tooltip>
+      <Tooltip content="Right tooltip" position="right">
+        <Button variant="secondary">Right</Button>
+      </Tooltip>
+    </div>
+  )
+};
+
+// Simple text tooltips
+export const TextTooltips: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <TooltipText text="Save your changes">
+        <Button>Save</Button>
+      </TooltipText>
+      <TooltipText text="Cancel and discard changes">
+        <Button variant="secondary">Cancel</Button>
+      </TooltipText>
+      <TooltipText text="This action cannot be undone!">
+        <Button variant="destructive">Delete</Button>
+      </TooltipText>
+    </div>
+  )
+};
+
+// Icon tooltips
+export const IconTooltips: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <IconTooltip content="More information">
+        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
+          <InformationCircleIcon className="w-5 h-5" />
+        </button>
+      </IconTooltip>
+      <IconTooltip content="Get help">
+        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
+          <QuestionMarkCircleIcon className="w-5 h-5" />
+        </button>
+      </IconTooltip>
+      <IconTooltip content="Warning: Proceed with caution">
+        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-yellow-600">
+          <ExclamationTriangleIcon className="w-5 h-5" />
+        </button>
+      </IconTooltip>
+    </div>
+  )
+};
+
+// Rich content tooltips
+export const RichTooltips: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <RichTooltip
+        title="Premium Feature"
+        description="This feature is available for premium users only."
+      >
+        <Button variant="secondary">
+          <BoltIcon className="w-4 h-4 mr-2" />
+          Premium
+        </Button>
+      </RichTooltip>
+      <RichTooltip
+        title="Keyboard Shortcut"
+        description="Press ⌘K to open the command palette"
+      >
+        <Button>Open Command</Button>
+      </RichTooltip>
+    </div>
+  )
+};
+
+// Trading context examples
+export const TradingContext: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        <TooltipText text="Market is currently open">
+          <div className="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/20 rounded">
+            <div className="w-2 h-2 bg-green-500 rounded-full" />
+            <span className="text-sm font-medium">Market Open</span>
+          </div>
+        </TooltipText>
+        
+        <RichTooltip
+          title="P&L: +$1,234"
+          description="Today's profit/loss across all positions"
+        >
+          <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded">
+            <span className="text-sm font-medium text-green-600">+2.45%</span>
+          </div>
+        </RichTooltip>
+      </div>
+      
+      <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">AAPL</span>
+            <TooltipText text="52-week high: $198.23">
+              <span className="text-sm text-gray-500 cursor-help">$175.84</span>
+            </TooltipText>
+          </div>
+          <div className="flex gap-2">
+            <RichTooltip
+              title="Buy Signal"
+              description="AI confidence: 92%. Based on technical and sentiment analysis."
+            >
+              <Button size="sm">Buy</Button>
+            </RichTooltip>
+            <TooltipText text="Add to watchlist">
+              <Button size="sm" variant="ghost">
+                <StarIcon className="w-4 h-4" />
+              </Button>
+            </TooltipText>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Disabled state
+export const Disabled: Story = {
+  args: {
+    content: 'This tooltip is disabled',
+    disabled: true,
+    children: <Button>Hover me (disabled tooltip)</Button>
+  }
+};
+
+// Custom styling
+export const CustomStyling: Story = {
+  args: {
+    content: 'Custom styled tooltip with no arrow',
+    arrow: false,
+    className: 'bg-blue-600 text-white',
+    children: <Button>Custom Style</Button>
+  }
+};
+
+// Long content
+export const LongContent: Story = {
+  args: {
+    content: 'This is a very long tooltip content that demonstrates how the tooltip handles longer text. It will wrap nicely within the max width constraint.',
+    maxWidth: 250,
+    children: <Button>Long Content</Button>
+  }
+};
+
+// Interactive demo
+export const InteractiveDemo: Story = {
+  render: () => {
+    const positions: Array<'top' | 'bottom' | 'left' | 'right'> = ['top', 'bottom', 'left', 'right'];
+    const delays = [0, 200, 500, 1000];
+    
+    return (
+      <div className="space-y-8 p-8">
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Position Demo</h3>
+          <div className="flex gap-4">
+            {positions.map(pos => (
+              <Tooltip key={pos} content={`Position: ${pos}`} position={pos}>
+                <Button variant="secondary">{pos}</Button>
+              </Tooltip>
+            ))}
+          </div>
+        </div>
+        
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Delay Demo</h3>
+          <div className="flex gap-4">
+            {delays.map(delay => (
+              <Tooltip key={delay} content={`Delay: ${delay}ms`} delay={delay}>
+                <Button variant="secondary">{delay}ms</Button>
+              </Tooltip>
+            ))}
+          </div>
+        </div>
+        
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Focus Demo (Tab through)</h3>
+          <div className="flex gap-4">
+            <TooltipText text="Tooltip 1">
+              <Button>First</Button>
+            </TooltipText>
+            <TooltipText text="Tooltip 2">
+              <Button>Second</Button>
+            </TooltipText>
+            <TooltipText text="Tooltip 3">
+              <Button>Third</Button>
+            </TooltipText>
+          </div>
+        </div>
+      </div>
+    );
+  }
+};
+
+// Missing imports
+const BoltIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
+const StarIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>; 

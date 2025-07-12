@@ -4,166 +4,128 @@
  * Displays price action with entry, stop loss, and target levels
  */
 
-import React, { useEffect, useRef } from 'react';
-import { Box, useTheme, alpha } from '@mui/material';
-import { createChart, IChartApi, ISeriesApi, Time } from 'lightweight-charts';
+import React, { useMemo } from 'react';
+import { Box, Typography, useTheme, alpha } from '@mui/material';
+import { LineChart, Line, ResponsiveContainer, YAxis, Tooltip } from 'recharts';
+import { TrendingUp, TrendingDown, TrendingFlat } from '@mui/icons-material';
 
 interface MiniChartProps {
     symbol: string;
-    entryPrice: number;
-    stopLoss: number;
-    targets: number[];
-    signalType: 'BUY_CALL' | 'BUY_PUT';
+    data: Array<{ time: string; value: number }>;
     height?: number;
+    showLabel?: boolean;
+    color?: 'primary' | 'success' | 'error' | 'warning';
+    sparkline?: boolean;
 }
 
-const MiniChart: React.FC<MiniChartProps> = ({
+export const MiniChart: React.FC<MiniChartProps> = ({
     symbol,
-    entryPrice,
-    stopLoss,
-    targets,
-    signalType,
-    height = 400,
+    data,
+    height = 50,
+    showLabel = true,
+    color = 'primary',
+    sparkline = false,
 }) => {
     const theme = useTheme();
-    const chartContainerRef = useRef<HTMLDivElement>(null);
-    const chartRef = useRef<IChartApi | null>(null);
 
-    useEffect(() => {
-        if (!chartContainerRef.current) return;
+    const { currentPrice, change, changePercent, trend } = useMemo(() => {
+        if (!data || data.length === 0) {
+            return { currentPrice: 0, change: 0, changePercent: 0, trend: 'flat' };
+        }
 
-        // Create chart
-        const chart = createChart(chartContainerRef.current, {
-            width: chartContainerRef.current.clientWidth,
-            height,
-            layout: {
-                background: { color: 'transparent' },
-                textColor: theme.palette.text.secondary,
-            },
-            grid: {
-                vertLines: { color: alpha(theme.palette.divider, 0.1) },
-                horzLines: { color: alpha(theme.palette.divider, 0.1) },
-            },
-            crosshair: {
-                mode: 1,
-            },
-            rightPriceScale: {
-                borderColor: alpha(theme.palette.divider, 0.1),
-            },
-            timeScale: {
-                borderColor: alpha(theme.palette.divider, 0.1),
-                timeVisible: true,
-            },
-        });
+        const current = data[data.length - 1].value;
+        const previous = data[0].value;
+        const changeAmount = current - previous;
+        const changePct = (changeAmount / previous) * 100;
 
-        chartRef.current = chart;
-
-        // Generate sample data around entry price
-        const generateData = () => {
-            const data = [];
-            const basePrice = entryPrice;
-            const now = Math.floor(Date.now() / 1000);
-
-            for (let i = -50; i < 50; i++) {
-                const time = now + i * 900; // 15-minute intervals
-                const volatility = 0.02;
-                const trend = signalType === 'BUY_CALL' ? 0.0001 * i : -0.0001 * i;
-
-                const open = basePrice * (1 + (Math.random() - 0.5) * volatility + trend);
-                const close = basePrice * (1 + (Math.random() - 0.5) * volatility + trend);
-                const high = Math.max(open, close) * (1 + Math.random() * volatility * 0.5);
-                const low = Math.min(open, close) * (1 - Math.random() * volatility * 0.5);
-
-                data.push({
-                    time: time as Time,
-                    open,
-                    high,
-                    low,
-                    close,
-                });
-            }
-
-            return data;
+        return {
+            currentPrice: current,
+            change: changeAmount,
+            changePercent: changePct,
+            trend: changeAmount > 0 ? 'up' : changeAmount < 0 ? 'down' : 'flat',
         };
+    }, [data]);
 
-        // Add candlestick series
-        const candlestickSeries = chart.addCandlestickSeries({
-            upColor: theme.palette.success.main,
-            downColor: theme.palette.error.main,
-            borderUpColor: theme.palette.success.main,
-            borderDownColor: theme.palette.error.main,
-            wickUpColor: theme.palette.success.main,
-            wickDownColor: theme.palette.error.main,
-        });
+    const chartColor = useMemo(() => {
+        if (color === 'primary') {
+            return trend === 'up' ? theme.palette.success.main : theme.palette.error.main;
+        }
+        return theme.palette[color].main;
+    }, [color, trend, theme]);
 
-        candlestickSeries.setData(generateData());
+    const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : TrendingFlat;
 
-        // Add entry line
-        candlestickSeries.createPriceLine({
-            price: entryPrice,
-            color: theme.palette.primary.main,
-            lineWidth: 2,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: 'Entry',
-        });
-
-        // Add stop loss line
-        candlestickSeries.createPriceLine({
-            price: stopLoss,
-            color: theme.palette.error.main,
-            lineWidth: 2,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: 'Stop Loss',
-        });
-
-        // Add target lines
-        targets.forEach((target, index) => {
-            candlestickSeries.createPriceLine({
-                price: target,
-                color: theme.palette.success.main,
-                lineWidth: 2,
-                lineStyle: 2,
-                axisLabelVisible: true,
-                title: `Target ${index + 1}`,
-            });
-        });
-
-        // Fit content
-        chart.timeScale().fitContent();
-
-        // Handle resize
-        const handleResize = () => {
-            if (chartContainerRef.current && chartRef.current) {
-                chartRef.current.applyOptions({
-                    width: chartContainerRef.current.clientWidth,
-                });
-            }
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            if (chartRef.current) {
-                chartRef.current.remove();
-                chartRef.current = null;
-            }
-        };
-    }, [theme, entryPrice, stopLoss, targets, signalType, height]);
+    if (!data || data.length === 0) {
+        return (
+            <Box sx={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="caption" color="text.secondary">No data</Typography>
+            </Box>
+        );
+    }
 
     return (
-        <Box
-            ref={chartContainerRef}
-            sx={{
-                width: '100%',
-                height,
-                position: 'relative',
-                borderRadius: 1,
-                overflow: 'hidden',
-            }}
-        />
+        <Box sx={{ width: '100%', height: showLabel ? height + 30 : height }}>
+            {showLabel && (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}>
+                    <Typography variant="body2" fontWeight="bold">{symbol}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: trend === 'up' ? theme.palette.success.main : trend === 'down' ? theme.palette.error.main : theme.palette.text.secondary,
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            ${currentPrice.toFixed(2)}
+                        </Typography>
+                        <TrendIcon
+                            fontSize="small"
+                            sx={{
+                                color: trend === 'up' ? theme.palette.success.main : trend === 'down' ? theme.palette.error.main : theme.palette.text.secondary,
+                            }}
+                        />
+                        <Typography
+                            variant="caption"
+                            sx={{
+                                color: trend === 'up' ? theme.palette.success.main : trend === 'down' ? theme.palette.error.main : theme.palette.text.secondary,
+                            }}
+                        >
+                            {change >= 0 ? '+' : ''}{changePercent.toFixed(2)}%
+                        </Typography>
+                    </Box>
+                </Box>
+            )}
+
+            <ResponsiveContainer width="100%" height={height}>
+                <LineChart data={data} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                    {!sparkline && (
+                        <YAxis
+                            hide
+                            domain={['dataMin - 1', 'dataMax + 1']}
+                        />
+                    )}
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: alpha(theme.palette.background.paper, 0.95),
+                            border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                            borderRadius: theme.shape.borderRadius,
+                            padding: theme.spacing(1),
+                        }}
+                        labelStyle={{ color: theme.palette.text.primary }}
+                        formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
+                        labelFormatter={(label) => `Time: ${label}`}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke={chartColor}
+                        strokeWidth={sparkline ? 1 : 2}
+                        dot={false}
+                        animationDuration={300}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </Box>
     );
 };
 

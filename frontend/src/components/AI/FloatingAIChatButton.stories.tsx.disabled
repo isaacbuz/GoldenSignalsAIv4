@@ -1,0 +1,92 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { FloatingAIChatButton } from './FloatingAIChatButton';
+
+const meta = {
+    title: 'Components/AI/FloatingAIChatButton',
+    component: FloatingAIChatButton,
+    parameters: {
+        layout: 'fullscreen',
+        docs: {
+            description: {
+                component: 'A floating AI chat button with animations and notification states',
+            },
+        },
+    },
+    tags: ['autodocs'],
+    argTypes: {
+        unreadCount: {
+            control: { type: 'number', min: 0, max: 99 },
+            description: 'Number of unread messages to display',
+        },
+        isMinimized: {
+            control: 'boolean',
+            description: 'Whether the chat is minimized',
+        },
+        isLoading: {
+            control: 'boolean',
+            description: 'Show loading state',
+        },
+        onToggle: {
+            action: 'toggled',
+            description: 'Called when the button is clicked',
+        },
+    },
+} satisfies Meta<typeof FloatingAIChatButton>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+    args: {
+        unreadCount: 0,
+        isMinimized: true,
+        isLoading: false,
+    },
+};
+
+export const WithNotifications: Story = {
+    args: {
+        unreadCount: 3,
+        isMinimized: true,
+        isLoading: false,
+    },
+};
+
+export const Loading: Story = {
+    args: {
+        unreadCount: 0,
+        isMinimized: true,
+        isLoading: true,
+    },
+};
+
+export const Minimized: Story = {
+    args: {
+        unreadCount: 5,
+        isMinimized: true,
+        isLoading: false,
+    },
+};
+
+export const MaxNotifications: Story = {
+    args: {
+        unreadCount: 99,
+        isMinimized: true,
+        isLoading: false,
+    },
+};
+
+export const Interactive: Story = {
+    args: {
+        unreadCount: 2,
+        isMinimized: true,
+        isLoading: false,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: 'Click the button to see the toggle action in the Actions panel',
+            },
+        },
+    },
+}; 

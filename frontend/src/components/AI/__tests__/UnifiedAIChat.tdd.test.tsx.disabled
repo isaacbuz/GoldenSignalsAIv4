@@ -1,0 +1,305 @@
+/**
+ * TDD-style tests for UnifiedAIChat component
+ * Following Test-Driven Development methodology
+ */
+
+import React from 'react'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { createTDDSuite, componentTDD, apiMock, performanceTDD } from '../../../test/tdd-helpers'
+import { UnifiedAIChat } from '../UnifiedAIChat'
+
+interface AIChatTestContext {
+    user: any
+    mockProps: any
+    component: any
+}
+
+describe('UnifiedAIChat - TDD Tests', () => {
+    beforeEach(() => {
+        apiMock.clearMocks()
+    })
+
+    // TDD Test Suite using fluent API
+    const aiChatSuite = createTDDSuite<AIChatTestContext>('UnifiedAIChat')
+        .setup(async () => {
+            const user = await componentTDD.userInteraction()
+            const mockProps = componentTDD.createMockProps({
+                mode: 'embedded',
+                open: true,
+                onClose: vi.fn()
+            })
+
+            return { user, mockProps, component: null }
+        })
+
+    // Test 1: Basic Rendering (Red -> Green -> Refactor)
+    aiChatSuite
+        .test('should render AI chat interface')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            return context!
+        })
+        .when(async (context) => {
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, context.mockProps)
+        })
+        .then(async (context) => {
+            // THEN: AI chat interface should be visible
+            componentTDD.expectElementToExist('ai-chat-container')
+            componentTDD.expectElementToExist('ai-chat-input')
+            componentTDD.expectElementToExist('ai-chat-send-button')
+        })
+        .build()
+
+    // Test 2: Message Sending Flow
+    aiChatSuite
+        .test('should send message when user types and clicks send')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            apiMock.mockApiCall('/api/ai/chat', {
+                response: 'Hello! How can I help you with trading signals?',
+                confidence: 0.95
+            })
+            return context!
+        })
+        .when(async (context) => {
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, context.mockProps)
+
+            // Type a message
+            const input = screen.getByTestId('ai-chat-input')
+            await context.user.type(input, 'What is the latest AAPL signal?')
+
+            // Click send
+            const sendButton = screen.getByTestId('ai-chat-send-button')
+            await context.user.click(sendButton)
+        })
+        .then(async (context) => {
+            // THEN: Message should be sent and response received
+            await componentTDD.expectTextToAppear('What is the latest AAPL signal?')
+            await componentTDD.expectTextToAppear('Hello! How can I help you with trading signals?')
+
+            apiMock.expectApiCallMade('/api/ai/chat', 1)
+            apiMock.expectApiCallWith('/api/ai/chat', expect.objectContaining({
+                message: 'What is the latest AAPL signal?'
+            }))
+        })
+        .build()
+
+    // Test 3: File Upload Functionality
+    aiChatSuite
+        .test('should handle file upload for chart analysis')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            apiMock.mockApiCall('/api/ai/analyze-file', {
+                analysis: 'This chart shows a bullish trend with RSI indicating oversold conditions',
+                signals: [{ type: 'BUY', confidence: 0.87 }]
+            })
+            return context!
+        })
+        .when(async (context) => {
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, context.mockProps)
+
+            // Simulate file upload
+            const fileInput = screen.getByTestId('ai-chat-file-input')
+            const file = new File(['mock chart data'], 'chart.png', { type: 'image/png' })
+
+            await context.user.upload(fileInput, file)
+        })
+        .then(async (context) => {
+            // THEN: File should be uploaded and analyzed
+            await componentTDD.expectTextToAppear('Analyzing uploaded chart...')
+            await componentTDD.expectTextToAppear('This chart shows a bullish trend')
+
+            apiMock.expectApiCallMade('/api/ai/analyze-file', 1)
+        })
+        .build()
+
+    // Test 4: Voice Input Feature
+    aiChatSuite
+        .test('should handle voice input when speech recognition is available')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+
+            // Mock speech recognition
+            global.webkitSpeechRecognition = vi.fn(() => ({
+                start: vi.fn(),
+                stop: vi.fn(),
+                onresult: null,
+                onerror: null,
+                onend: null
+            })) as any
+
+            return context!
+        })
+        .when(async (context) => {
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, context.mockProps)
+
+            // Click voice input button
+            const voiceButton = screen.getByTestId('ai-chat-voice-button')
+            await context.user.click(voiceButton)
+        })
+        .then(async (context) => {
+            // THEN: Voice recording should start
+            componentTDD.expectElementToExist('ai-chat-recording-indicator')
+            expect(global.webkitSpeechRecognition).toHaveBeenCalled()
+        })
+        .build()
+
+    // Test 5: Performance Requirements
+    aiChatSuite
+        .test('should render within performance requirements')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            return context!
+        })
+        .when(async (context) => {
+            // WHEN: Component is rendered
+            const { renderTime } = await performanceTDD.measureRenderTime(
+                () => componentTDD.renderComponent(UnifiedAIChat, context.mockProps),
+                50 // Max 50ms render time
+            )
+            context.renderTime = renderTime
+        })
+        .then(async (context) => {
+            // THEN: Should render quickly
+            expect(context.renderTime).toBeLessThan(50)
+        })
+        .build()
+
+    // Test 6: Error Handling
+    aiChatSuite
+        .test('should handle API errors gracefully')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            apiMock.mockApiCall('/api/ai/chat', null, { error: true })
+            return context!
+        })
+        .when(async (context) => {
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, context.mockProps)
+
+            // Send a message that will fail
+            const input = screen.getByTestId('ai-chat-input')
+            await context.user.type(input, 'Test message')
+
+            const sendButton = screen.getByTestId('ai-chat-send-button')
+            await context.user.click(sendButton)
+        })
+        .then(async (context) => {
+            // THEN: Should show error message
+            await componentTDD.expectTextToAppear('Sorry, I encountered an error')
+            componentTDD.expectElementToExist('ai-chat-error-retry-button')
+        })
+        .build()
+
+    // Test 7: Mode Switching
+    aiChatSuite
+        .test('should switch between different AI chat modes')
+        .given(async () => {
+            const context = await aiChatSuite['setupFn']?.()
+            return context!
+        })
+        .when(async (context) => {
+            // Start with embedded mode
+            context.component = await componentTDD.renderComponent(UnifiedAIChat, {
+                ...context.mockProps,
+                mode: 'embedded'
+            })
+
+            // Switch to floating mode
+            const modeButton = screen.getByTestId('ai-chat-mode-toggle')
+            await context.user.click(modeButton)
+        })
+        .then(async (context) => {
+            // THEN: Should switch to floating mode
+            componentTDD.expectElementToExist('ai-chat-floating-container')
+            componentTDD.expectElementNotToExist('ai-chat-embedded-container')
+        })
+        .build()
+
+    // Run all TDD tests
+    aiChatSuite.run()
+
+    // Additional integration tests using traditional describe/it
+    describe('Integration Tests', () => {
+        it('should integrate with unified dashboard', async () => {
+            const mockProps = {
+                mode: 'embedded' as const,
+                open: true,
+                onClose: vi.fn(),
+                dashboardContext: {
+                    selectedSymbol: 'AAPL',
+                    timeframe: '1d',
+                    signals: []
+                }
+            }
+
+            await componentTDD.renderComponent(UnifiedAIChat, mockProps)
+
+            // Should show context-aware suggestions
+            await componentTDD.expectTextToAppear('Ask me about AAPL')
+            componentTDD.expectElementToExist('ai-chat-context-suggestions')
+        })
+
+        it('should maintain conversation history', async () => {
+            const mockProps = {
+                mode: 'embedded' as const,
+                open: true,
+                onClose: vi.fn()
+            }
+
+            const user = await componentTDD.userInteraction()
+            await componentTDD.renderComponent(UnifiedAIChat, mockProps)
+
+            // Send first message
+            const input = screen.getByTestId('ai-chat-input')
+            await user.type(input, 'First message')
+            await user.click(screen.getByTestId('ai-chat-send-button'))
+
+            // Send second message
+            await user.clear(input)
+            await user.type(input, 'Second message')
+            await user.click(screen.getByTestId('ai-chat-send-button'))
+
+            // Both messages should be visible
+            expect(screen.getByText('First message')).toBeInTheDocument()
+            expect(screen.getByText('Second message')).toBeInTheDocument()
+        })
+    })
+
+    describe('Accessibility Tests', () => {
+        it('should be keyboard navigable', async () => {
+            const mockProps = {
+                mode: 'embedded' as const,
+                open: true,
+                onClose: vi.fn()
+            }
+
+            const user = await componentTDD.userInteraction()
+            await componentTDD.renderComponent(UnifiedAIChat, mockProps)
+
+            // Should be able to tab to input
+            await user.tab()
+            expect(screen.getByTestId('ai-chat-input')).toHaveFocus()
+
+            // Should be able to tab to send button
+            await user.tab()
+            expect(screen.getByTestId('ai-chat-send-button')).toHaveFocus()
+        })
+
+        it('should have proper ARIA labels', async () => {
+            const mockProps = {
+                mode: 'embedded' as const,
+                open: true,
+                onClose: vi.fn()
+            }
+
+            await componentTDD.renderComponent(UnifiedAIChat, mockProps)
+
+            const input = screen.getByTestId('ai-chat-input')
+            expect(input).toHaveAttribute('aria-label', expect.stringContaining('AI chat'))
+
+            const sendButton = screen.getByTestId('ai-chat-send-button')
+            expect(sendButton).toHaveAttribute('aria-label', expect.stringContaining('Send message'))
+        })
+    })
+}) 

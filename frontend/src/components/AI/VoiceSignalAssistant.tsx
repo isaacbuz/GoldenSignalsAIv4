@@ -186,7 +186,7 @@ export const VoiceSignalAssistant: React.FC<VoiceSignalAssistantProps> = ({
                 speak(responseText);
 
                 // Fetch actual signals
-                const signals = await apiClient.getPreciseOptionsSignals(symbol);
+                const signals = await apiClient.getPreciseOptionsSignals(symbol, '1d');
                 if (signals && signals.length > 0) {
                     const topSignal = signals[0];
                     responseText = `I found a ${topSignal.confidence}% confidence ${topSignal.type} signal for ${symbol}. `;

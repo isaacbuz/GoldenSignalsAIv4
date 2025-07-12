@@ -92,7 +92,8 @@ const MarketHeatMap: React.FC<MarketHeatMapProps> = ({
             // In production, fetch real market data
             return generateMockMarketData();
         },
-        refetchInterval: 30000,
+        // Disabled auto-refresh to prevent constant updating
+        staleTime: 300000, // Keep data fresh for 5 minutes
     });
 
     // Generate mock market data

@@ -4,13 +4,18 @@ import { AISignalProphet } from '../../components/AISignalProphet';
 import { useAlerts } from '../../contexts/AlertContext';
 
 const AISignalProphetPage: React.FC = () => {
-    const { showAlert } = useAlert();
+    const { addAlert } = useAlerts();
 
     const handleSignalGenerated = (signal: any) => {
-        showAlert(
-            `New ${signal.type} signal generated for ${signal.symbol} with ${signal.confidence}% confidence!`,
-            'success'
-        );
+        addAlert({
+            id: `signal-${Date.now()}`,
+            type: signal.type || 'CALL',
+            symbol: signal.symbol || 'UNKNOWN',
+            confidence: signal.confidence || 0,
+            priority: 'HIGH',
+            timestamp: new Date(),
+            message: `New ${signal.type} signal generated with ${signal.confidence}% confidence!`
+        });
     };
 
     return (

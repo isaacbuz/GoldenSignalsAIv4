@@ -125,7 +125,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('keydown', handleInteraction);
     };
-  }, [sounds]);
+  }, []); // Empty dependency array since we only want this to run once
 
   // Play alert sound
   const playAlertSound = (severity: Alert['priority']) => {

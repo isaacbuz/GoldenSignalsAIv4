@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🤖 AI Assistant Widget Test</h1>
+
+        <div class="status info">
+            <strong>Test Status:</strong> Testing AI assistant widget functionality
+        </div>
+
+        <h2>Test Results</h2>
+
+        <div class="test-results">
+            <h3>✅ Fixed Issues:</h3>
+            <ul>
+                <li><strong>React Maximum Update Depth Error:</strong> Fixed circular dependency in UnifiedSearchBar
+                    component</li>
+                <li><strong>AI Chat Widget Closing:</strong> Fixed isOpen prop handling in UnifiedDashboard</li>
+                <li><strong>Error Tracking:</strong> Implemented comprehensive error monitoring system</li>
+            </ul>
+
+            <h3>🔧 Changes Made:</h3>
+            <ul>
+                <li>Moved <code>clearSearch</code> and <code>handleSymbolSelect</code> functions before
+                    <code>generateSuggestions</code></li>
+                <li>Fixed <code>useEffect</code> dependency array in UnifiedSearchBar</li>
+                <li>Added proper <code>isOpen</code> prop to UnifiedAIChat component</li>
+                <li>Added <code>mode="floating"</code> prop to ensure proper widget behavior</li>
+                <li>Enhanced error tracking with structured logging</li>
+            </ul>
+
+            <h3>🚀 Error Tracking Features:</h3>
+            <ul>
+                <li><strong>Health Monitoring:</strong> <code>GET /api/v1/monitoring/health</code></li>
+                <li><strong>Error Summary:</strong> <code>GET /api/v1/monitoring/errors</code></li>
+                <li><strong>Performance Metrics:</strong> <code>GET /api/v1/monitoring/performance-detailed</code></li>
+                <li><strong>Frontend Logging:</strong> <code>POST /api/logs/frontend</code></li>
+            </ul>
+
+            <h3>📊 Current Backend Status:</h3>
+            <div id="backend-status">Loading...</div>
+        </div>
+
+        <div class="test-results">
+            <h3>🧪 Manual Testing Instructions:</h3>
+            <ol>
+                <li>Open <a href="http://localhost:3000/dashboard" target="_blank">http://localhost:3000/dashboard</a>
+                </li>
+                <li>Look for the AI assistant button (Psychology icon) in the top bar</li>
+                <li>Click the AI assistant button to open the widget</li>
+                <li>Verify the widget opens in floating mode</li>
+                <li>Click the X (close) button in the widget header</li>
+                <li>Verify the widget closes properly</li>
+                <li>Check browser console for any React errors</li>
+            </ol>
+        </div>
+
+        <button class="test-button" onclick="testBackendHealth()">Test Backend Health</button>
+        <button class="test-button" onclick="testErrorTracking()">Test Error Tracking</button>
+        <button class="test-button" onclick="clearResults()">Clear Results</button>
+
+        <div id="test-output"></div>
+    </div>
+
+    <script>
+        async function testBackendHealth() {
+            const output = document.getElementById('test-output');
+            output.innerHTML = '<div class="status info">Testing backend health...</div>';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/monitoring/health');
+                const data = await response.json();
+
+                output.innerHTML = `
+                    <div class="status success">
+                        <strong>✅ Backend Health Check Passed</strong><br>
+                        Status: ${data.status}<br>
+                        Total Requests: ${data.performance.total_requests}<br>
+                        Total Errors: ${data.errors.total_errors}<br>
+                        Recent Errors (1h): ${data.errors.recent_errors_1h}
+                    </div>
+                `;
+            } catch (error) {
+                output.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Backend Health Check Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testErrorTracking() {
+            const output = document.getElementById('test-output');
+            output.innerHTML = '<div class="status info">Testing error tracking...</div>';
+
+            try {
+                // Test frontend logging
+                const logResponse = await fetch('http://localhost:8000/api/logs/frontend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        level: 'info',
+                        message: 'Test message from AI widget test',
+                        data: { test: true, timestamp: new Date().toISOString() }
+                    })
+                });
+
+                const logResult = await logResponse.json();
+
+                // Test error summary
+                const errorResponse = await fetch('http://localhost:8000/api/v1/monitoring/errors');
+                const errorData = await errorResponse.json();
+
+                output.innerHTML = `
+                    <div class="status success">
+                        <strong>✅ Error Tracking Test Passed</strong><br>
+                        Frontend Log Status: ${logResult.status}<br>
+                        Total Errors Tracked: ${errorData.total_errors}<br>
+                        Recent Errors (1h): ${errorData.recent_errors_1h}
+                    </div>
+                `;
+            } catch (error) {
+                output.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Error Tracking Test Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('test-output').innerHTML = '';
+        }
+
+        // Auto-load backend status on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/monitoring/health');
+                const data = await response.json();
+
+                document.getElementById('backend-status').innerHTML = `
+                    <div class="status success">
+                        ✅ Backend is running - Status: ${data.status} | 
+                        Requests: ${data.performance.total_requests} | 
+                        Errors: ${data.errors.total_errors}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('backend-status').innerHTML = `
+                    <div class="status error">
+                        ❌ Backend connection failed: ${error.message}
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

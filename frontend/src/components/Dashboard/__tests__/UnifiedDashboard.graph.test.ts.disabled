@@ -1,0 +1,146 @@
+/**
+ * Graph-based tests for UnifiedDashboard component
+ * Tests component relationships and data flow using Neo4j
+ */
+
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { setupGraphTests, teardownGraphTests, graphScenarios, graphTestHelper } from '../../../test/neo4j-test-utils'
+
+describe('UnifiedDashboard - Graph Relationships', () => {
+    beforeAll(async () => {
+        await setupGraphTests()
+    })
+
+    afterAll(async () => {
+        await teardownGraphTests()
+    })
+
+    describe('Component Architecture', () => {
+        it('should have proper component relationships', async () => {
+            // Create test graph representing dashboard component structure
+            await graphScenarios.createUserInteractionNetwork()
+
+            // Verify dashboard contains expected components
+            const dashboardExists = await graphTestHelper.assertNodeExists('dashboard1', ['Dashboard'])
+            expect(dashboardExists).toBe(true)
+
+            // Verify relationships exist
+            const chartRelationship = await graphTestHelper.assertRelationshipExists(
+                'dashboard1', 'chart1', 'CONTAINS'
+            )
+            expect(chartRelationship).toBe(true)
+
+            const aiChatRelationship = await graphTestHelper.assertRelationshipExists(
+                'dashboard1', 'ai_chat1', 'CONTAINS'
+            )
+            expect(aiChatRelationship).toBe(true)
+
+            const searchRelationship = await graphTestHelper.assertRelationshipExists(
+                'dashboard1', 'search1', 'CONTAINS'
+            )
+            expect(searchRelationship).toBe(true)
+        })
+
+        it('should validate user interaction patterns', async () => {
+            // Verify user interactions
+            const userChartInteraction = await graphTestHelper.assertRelationshipExists(
+                'user1', 'chart1', 'INTERACTS_WITH'
+            )
+            expect(userChartInteraction).toBe(true)
+
+            const userAIInteraction = await graphTestHelper.assertRelationshipExists(
+                'user1', 'ai_chat1', 'INTERACTS_WITH'
+            )
+            expect(userAIInteraction).toBe(true)
+
+            // Check interaction metrics
+            const interactions = await graphTestHelper.queryGraph(`
+        MATCH (u:User {id: 'user1'})-[r:INTERACTS_WITH]->(c)
+        RETURN c.id as componentId, r.queries as queries, r.satisfaction as satisfaction
+      `)
+
+            expect(interactions).toHaveLength(2) // AI chat and search interactions
+
+            const aiChatInteraction = interactions.find(i => i.get('componentId') === 'ai_chat1')
+            expect(aiChatInteraction?.get('queries')).toBe(15)
+            expect(aiChatInteraction?.get('satisfaction')).toBe(0.9)
+        })
+
+        it('should analyze component connectivity', async () => {
+            const componentStats = await graphScenarios.validateComponentRelationships('Dashboard')
+
+            expect(componentStats.totalComponents).toBeGreaterThan(0)
+            expect(componentStats.connectedComponents).toBe(componentStats.totalComponents)
+            expect(componentStats.isolatedComponents).toBe(0)
+            expect(componentStats.averageConnections).toBeGreaterThan(2)
+        })
+    })
+
+    describe('Data Flow Analysis', () => {
+        it('should validate data flow paths', async () => {
+            // Test data flow from user to components
+            const pathLength = await graphTestHelper.findShortestPath('user1', 'chart1')
+            expect(pathLength).toBe(2) // user -> dashboard -> chart
+
+            // Test component interconnections
+            const aiChatPath = await graphTestHelper.findShortestPath('user1', 'ai_chat1')
+            expect(aiChatPath).toBe(2) // user -> dashboard -> ai_chat
+        })
+
+        it('should measure component centrality', async () => {
+            // Dashboard should be central hub
+            const dashboardCentrality = await graphTestHelper.getCentralityMetrics('dashboard1')
+
+            expect(dashboardCentrality.pagerank).toBeGreaterThan(0.15) // Higher than base PageRank
+            expect(dashboardCentrality.betweenness).toBeGreaterThan(0) // Acts as bridge
+
+            // User should have high out-degree
+            const userDegree = await graphTestHelper.getNodeDegree('user1')
+            expect(userDegree.out).toBeGreaterThan(userDegree.in)
+        })
+    })
+
+    describe('Performance Impact Analysis', () => {
+        it('should validate component load distribution', async () => {
+            // Check if components are properly distributed
+            const componentLoads = await graphTestHelper.queryGraph(`
+        MATCH (c)-[r:INTERACTS_WITH]-(u:User)
+        RETURN c.id as componentId, count(r) as interactionCount
+        ORDER BY interactionCount DESC
+      `)
+
+            expect(componentLoads.length).toBeGreaterThan(0)
+
+            // Ensure no single component is overloaded
+            const maxInteractions = Math.max(...componentLoads.map(c => c.get('interactionCount')))
+            const avgInteractions = componentLoads.reduce((sum, c) => sum + c.get('interactionCount'), 0) / componentLoads.length
+
+            expect(maxInteractions / avgInteractions).toBeLessThan(3) // No component should have 3x average load
+        })
+    })
+
+    describe('Dashboard Mode Relationships', () => {
+        it('should handle different dashboard modes', async () => {
+            // Create nodes for different dashboard modes
+            await graphTestHelper.createTestGraph([
+                { id: 'trading_dashboard', labels: ['Dashboard'], properties: { mode: 'trading', layout: 'standard' } },
+                { id: 'analytics_dashboard', labels: ['Dashboard'], properties: { mode: 'analytics', layout: 'advanced' } },
+                { id: 'ai_dashboard', labels: ['Dashboard'], properties: { mode: 'ai', layout: 'minimal' } }
+            ], [
+                { type: 'TRANSFORMS_TO', from: 'trading_dashboard', to: 'analytics_dashboard' },
+                { type: 'TRANSFORMS_TO', from: 'analytics_dashboard', to: 'ai_dashboard' },
+                { type: 'TRANSFORMS_TO', from: 'ai_dashboard', to: 'trading_dashboard' }
+            ])
+
+            // Verify mode transitions exist
+            const modeTransition = await graphTestHelper.assertRelationshipExists(
+                'trading_dashboard', 'analytics_dashboard', 'TRANSFORMS_TO'
+            )
+            expect(modeTransition).toBe(true)
+
+            // Check circular transformation capability
+            const circularPath = await graphTestHelper.findShortestPath('trading_dashboard', 'trading_dashboard')
+            expect(circularPath).toBe(3) // Should be able to cycle through all modes
+        })
+    })
+}) 

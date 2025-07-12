@@ -1,0 +1,302 @@
+/* Container */
+.container {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.container.fullWidth {
+    width: 100%;
+}
+
+/* Label */
+.label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 0 4px;
+    color: #666;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+
+.label.focused,
+.input:focus+.label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #1976d2;
+}
+
+.label.error {
+    color: #d32f2f;
+}
+
+.label.disabled {
+    color: #bbb;
+}
+
+.label.small {
+    font-size: 14px;
+}
+
+.label.large {
+    font-size: 18px;
+}
+
+.required {
+    color: #d32f2f;
+    margin-left: 2px;
+}
+
+/* Input Wrapper */
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+/* Input Base */
+.input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.input::placeholder {
+    color: #999;
+}
+
+.input:disabled {
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+/* Variants */
+/* Outlined */
+.inputWrapper.outlined {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 12px;
+}
+
+.input.outlined {
+    padding: 16px 0;
+}
+
+.inputWrapper.outlined:hover {
+    border-color: #999;
+}
+
+.inputWrapper.outlined:has(.input:focus) {
+    border-color: #1976d2;
+    border-width: 2px;
+    padding: 0 11px;
+    /* Compensate for border width */
+}
+
+.inputWrapper.outlined:has(.input.error) {
+    border-color: #d32f2f;
+}
+
+.inputWrapper.outlined:has(.input:disabled) {
+    border-color: #e0e0e0;
+    background-color: #f5f5f5;
+}
+
+/* Filled */
+.inputWrapper.filled {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    padding: 20px 12px 8px;
+}
+
+.input.filled {
+    padding: 4px 0;
+}
+
+.inputWrapper.filled:hover {
+    background-color: #ebebeb;
+    border-bottom-color: #999;
+}
+
+.inputWrapper.filled:has(.input:focus) {
+    background-color: #e8e8e8;
+    border-bottom: 2px solid #1976d2;
+    padding-bottom: 7px;
+    /* Compensate for border width */
+}
+
+.inputWrapper.filled:has(.input.error) {
+    border-bottom-color: #d32f2f;
+}
+
+.inputWrapper.filled:has(.input:disabled) {
+    background-color: #f0f0f0;
+    border-bottom-color: #e0e0e0;
+}
+
+/* Standard */
+.inputWrapper.standard {
+    border-bottom: 1px solid #ccc;
+    padding: 4px 0;
+}
+
+.input.standard {
+    padding: 8px 0;
+}
+
+.inputWrapper.standard:hover {
+    border-bottom-color: #999;
+}
+
+.inputWrapper.standard:has(.input:focus) {
+    border-bottom: 2px solid #1976d2;
+    padding-bottom: 3px;
+    /* Compensate for border width */
+}
+
+.inputWrapper.standard:has(.input.error) {
+    border-bottom-color: #d32f2f;
+}
+
+.inputWrapper.standard:has(.input:disabled) {
+    border-bottom-color: #e0e0e0;
+    border-bottom-style: dotted;
+}
+
+/* Sizes */
+/* Small */
+.input.small {
+    font-size: 14px;
+    padding: 12px 0;
+}
+
+.inputWrapper.outlined:has(.input.small) {
+    padding: 0 8px;
+}
+
+.inputWrapper.filled:has(.input.small) {
+    padding: 16px 8px 6px;
+}
+
+/* Large */
+.input.large {
+    font-size: 18px;
+    padding: 20px 0;
+}
+
+.inputWrapper.outlined:has(.input.large) {
+    padding: 0 16px;
+}
+
+.inputWrapper.filled:has(.input.large) {
+    padding: 24px 16px 10px;
+}
+
+/* Icons */
+.icon {
+    display: flex;
+    align-items: center;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+.startIcon {
+    margin-right: 8px;
+}
+
+.endIcon {
+    margin-left: 8px;
+}
+
+.inputWrapper:has(.input:focus) .icon {
+    color: #1976d2;
+}
+
+.inputWrapper:has(.input.error) .icon {
+    color: #d32f2f;
+}
+
+.inputWrapper:has(.input:disabled) .icon {
+    color: #bbb;
+}
+
+/* With Icons adjustments */
+.input.hasStartIcon {
+    padding-left: 0;
+}
+
+.input.hasEndIcon {
+    padding-right: 0;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    padding: 0 12px;
+    min-height: 20px;
+}
+
+/* Helper Text */
+.helperText {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.helperText.error {
+    color: #d32f2f;
+}
+
+/* Character Count */
+.count {
+    font-size: 12px;
+    color: #666;
+    margin-left: auto;
+}
+
+/* Focus styles for accessibility */
+.input:focus-visible {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+}
+
+/* Animation for label */
+@keyframes labelFloat {
+    from {
+        top: 50%;
+        font-size: 16px;
+    }
+
+    to {
+        top: 0;
+        font-size: 12px;
+    }
+}
+
+.label.focused {
+    animation: labelFloat 0.2s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        min-width: 100%;
+    }
+}

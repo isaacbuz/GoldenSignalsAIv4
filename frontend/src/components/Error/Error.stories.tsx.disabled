@@ -1,0 +1,389 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import {
+    Error,
+    ErrorBoundary,
+    NotFoundError,
+    ServerError,
+    NetworkError,
+    ValidationError
+} from './Error';
+import { Button } from '../Core/Button/Button';
+import { Card } from '../Card/Card';
+
+const meta = {
+    title: 'Core/Error',
+    component: Error,
+    parameters: {
+        layout: 'centered',
+        docs: {
+            description: {
+                component: 'A comprehensive error component for displaying error states, including error boundaries and common error pages.',
+            },
+        },
+    },
+    tags: ['autodocs'],
+    argTypes: {
+        type: {
+            control: 'select',
+            options: ['inline', 'page', 'card', 'toast'],
+            description: 'Error display type',
+        },
+        severity: {
+            control: 'select',
+            options: ['error', 'warning', 'info'],
+            description: 'Error severity level',
+        },
+        title: {
+            control: 'text',
+            description: 'Error title',
+        },
+        message: {
+            control: 'text',
+            description: 'Error message',
+        },
+        dismissible: {
+            control: 'boolean',
+            description: 'Whether error is dismissible',
+        },
+        showDetails: {
+            control: 'boolean',
+            description: 'Whether to show details by default',
+        },
+    },
+} satisfies Meta<typeof Error>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Basic error types
+export const InlineError: Story = {
+    args: {
+        type: 'inline',
+        severity: 'error',
+        title: 'Error',
+        message: 'Something went wrong. Please try again.',
+        'data-testid': 'inline-error',
+    },
+};
+
+export const CardError: Story = {
+    args: {
+        type: 'card',
+        severity: 'error',
+        title: 'Connection Failed',
+        message: 'Unable to connect to the server. Please check your internet connection and try again.',
+        dismissible: true,
+        'data-testid': 'card-error',
+    },
+};
+
+export const PageError: Story = {
+    args: {
+        type: 'page',
+        severity: 'error',
+        title: 'Oops! Something went wrong',
+        message: 'We encountered an unexpected error. Our team has been notified and is working on a fix.',
+        'data-testid': 'page-error',
+    },
+    parameters: {
+        layout: 'fullscreen',
+    },
+};
+
+// Severity levels
+export const SeverityLevels: Story = {
+    render: () => (
+        <div className="space-y-4">
+            <Error
+                type="inline"
+                severity="error"
+                title="Error"
+                message="This is an error message"
+            />
+            <Error
+                type="inline"
+                severity="warning"
+                title="Warning"
+                message="This is a warning message"
+            />
+            <Error
+                type="inline"
+                severity="info"
+                title="Info"
+                message="This is an informational message"
+            />
+        </div>
+    ),
+};
+
+// With details
+export const WithDetails: Story = {
+    args: {
+        type: 'card',
+        severity: 'error',
+        title: 'API Error',
+        message: 'Failed to fetch user data',
+        details: new Error('Network request failed: 500 Internal Server Error\n  at fetchUserData (api.js:45)\n  at UserProfile.componentDidMount (UserProfile.jsx:23)'),
+        showDetails: false,
+    },
+};
+
+// With retry action
+export const WithRetry: Story = {
+    render: () => {
+        const [error, setError] = useState(true);
+
+        return (
+            <>
+                {error ? (
+                    <Error
+                        type="card"
+                        severity="error"
+                        title="Failed to load data"
+                        message="We couldn't load your data. Please try again."
+                        onRetry={() => {
+                            console.log('Retrying...');
+                            setError(false);
+                            setTimeout(() => setError(true), 2000);
+                        }}
+                    />
+                ) : (
+                    <Card>
+                        <p className="text-green-600">Success! Data loaded.</p>
+                        <p className="text-sm text-gray-600">Will fail again in 2 seconds...</p>
+                    </Card>
+                )}
+            </>
+        );
+    },
+};
+
+// Dismissible errors
+export const DismissibleError: Story = {
+    render: () => {
+        const [visible, setVisible] = useState(true);
+
+        return (
+            <div>
+                {visible ? (
+                    <Error
+                        type="card"
+                        severity="warning"
+                        title="Session Expiring"
+                        message="Your session will expire in 5 minutes. Please save your work."
+                        dismissible
+                        onDismiss={() => setVisible(false)}
+                    />
+                ) : (
+                    <div className="text-center">
+                        <p className="mb-4">Error dismissed</p>
+                        <Button onClick={() => setVisible(true)}>Show Error Again</Button>
+                    </div>
+                )}
+            </div>
+        );
+    },
+};
+
+// Custom actions
+export const CustomActions: Story = {
+    args: {
+        type: 'card',
+        severity: 'error',
+        title: 'Payment Failed',
+        message: 'Your payment could not be processed.',
+        actions: (
+            <div className="flex gap-2">
+                <Button variant="primary" size="small">
+                    Try Another Card
+                </Button>
+                <Button variant="ghost" size="small">
+                    Contact Support
+                </Button>
+            </div>
+        ),
+    },
+};
+
+// Error boundary demo
+const ThrowError = () => {
+    throw new Error('This is a simulated error!');
+};
+
+export const ErrorBoundaryDemo: Story = {
+    render: () => {
+        const [showError, setShowError] = useState(false);
+
+        return (
+            <div className="space-y-4">
+                <Card>
+                    <h3 className="text-lg font-semibold mb-2">Error Boundary Demo</h3>
+                    <p className="mb-4">Click the button to trigger an error that will be caught by the error boundary.</p>
+                    <Button onClick={() => setShowError(true)}>Trigger Error</Button>
+                </Card>
+
+                <ErrorBoundary onError={(error) => console.log('Error caught:', error)}>
+                    {showError ? <ThrowError /> : <Card>Protected content - this will be replaced when error occurs</Card>}
+                </ErrorBoundary>
+            </div>
+        );
+    },
+};
+
+// Custom error boundary fallback
+export const CustomErrorBoundary: Story = {
+    render: () => {
+        const [showError, setShowError] = useState(false);
+
+        return (
+            <ErrorBoundary
+                fallback={(error, reset) => (
+                    <Error
+                        type="card"
+                        severity="error"
+                        title="Custom Error Handler"
+                        message="This is a custom error boundary fallback"
+                        details={error}
+                        actions={
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    onClick={() => {
+                                        reset();
+                                        setShowError(false);
+                                    }}
+                                >
+                                    Reset App
+                                </Button>
+                                <Button variant="ghost" size="small">
+                                    Report Issue
+                                </Button>
+                            </div>
+                        }
+                    />
+                )}
+            >
+                {showError ? <ThrowError /> : (
+                    <Card>
+                        <p className="mb-4">Content protected by custom error boundary</p>
+                        <Button onClick={() => setShowError(true)}>Trigger Error</Button>
+                    </Card>
+                )}
+            </ErrorBoundary>
+        );
+    },
+};
+
+// Common error pages
+export const NotFoundPage: Story = {
+    render: () => <NotFoundError onGoHome={() => console.log('Navigate to home')} />,
+    parameters: {
+        layout: 'fullscreen',
+    },
+};
+
+export const ServerErrorPage: Story = {
+    render: () => <ServerError onRetry={() => console.log('Retry')} />,
+    parameters: {
+        layout: 'fullscreen',
+    },
+};
+
+export const NetworkErrorCard: Story = {
+    render: () => <NetworkError onRetry={() => console.log('Retry')} />,
+};
+
+export const ValidationErrors: Story = {
+    render: () => (
+        <ValidationError
+            errors={[
+                'Email address is required',
+                'Password must be at least 8 characters',
+                'Username is already taken',
+            ]}
+        />
+    ),
+};
+
+// Real-world examples
+export const FormValidation: Story = {
+    render: () => (
+        <Card style={{ width: '400px' }}>
+            <h3 className="text-lg font-semibold mb-4">Create Account</h3>
+            <ValidationError
+                errors={[
+                    'Email address is invalid',
+                    'Password is too weak',
+                    'Terms of service must be accepted',
+                ]}
+            />
+            <form className="mt-4 space-y-3">
+                <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full px-3 py-2 border rounded"
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    className="w-full px-3 py-2 border rounded"
+                />
+                <Button fullWidth>Create Account</Button>
+            </form>
+        </Card>
+    ),
+};
+
+export const APIErrorWithDetails: Story = {
+    render: () => (
+        <Error
+            type="card"
+            severity="error"
+            title="API Request Failed"
+            message="Unable to fetch trading signals"
+            details={`Status: 500 Internal Server Error
+Endpoint: /api/v1/signals
+Request ID: 123e4567-e89b-12d3-a456-426614174000
+Timestamp: ${new Date().toISOString()}
+
+Stack trace:
+  at fetchSignals (signals.js:45:12)
+  at async SignalsList.loadData (SignalsList.tsx:78:20)
+  at async SignalsList.componentDidMount (SignalsList.tsx:65:10)`}
+            onRetry={() => console.log('Retrying API request...')}
+        />
+    ),
+};
+
+// Multiple errors
+export const MultipleErrors: Story = {
+    render: () => (
+        <div className="space-y-4" style={{ width: '600px' }}>
+            <Error
+                type="inline"
+                severity="error"
+                title="Connection lost"
+                dismissible
+            />
+            <Error
+                type="inline"
+                severity="warning"
+                title="Low disk space"
+                message="You have less than 1GB of storage remaining"
+            />
+            <Error
+                type="inline"
+                severity="info"
+                title="Update available"
+                message="Version 2.0 is now available"
+                actions={
+                    <Button variant="primary" size="small">
+                        Update Now
+                    </Button>
+                }
+            />
+        </div>
+    ),
+}; 

@@ -1,0 +1,45 @@
+/**
+ * Input Styles
+ */
+
+.container {
+  /* Base container styles */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* TODO: Add component-specific styles */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    /* Mobile styles */
+  }
+}
+
+/* Dark theme support */
+[data-theme="dark"] .container {
+  /* Dark theme overrides */
+}
+
+/* Animation classes */
+.container {
+  transition: all 0.2s ease-in-out;
+}
+
+.container:hover {
+  /* Hover state */
+}
+
+/* State variations */
+.container.active {
+  /* Active state */
+}
+
+.container.disabled {
+  /* Disabled state */
+  opacity: 0.6;
+  pointer-events: none;
+}

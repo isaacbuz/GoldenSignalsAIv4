@@ -9,7 +9,7 @@ import {
     Stack,
 } from '@mui/material';
 import {
-    NavigateNext,
+    ChevronRight,
     Home,
     Dashboard,
     Analytics,
@@ -18,7 +18,6 @@ import {
     Settings,
     TrendingUp,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
 
 interface BreadcrumbItem {
     label: string;
@@ -61,10 +60,6 @@ export const Breadcrumbs: React.FC = () => {
 
     return (
         <Box
-            component={motion.div}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
             sx={{
                 py: 1,
                 px: 2,
@@ -74,7 +69,7 @@ export const Breadcrumbs: React.FC = () => {
             }}
         >
             <MuiBreadcrumbs
-                separator={<NavigateNext fontSize="small" sx={{ color: 'text.secondary' }} />}
+                separator={<ChevronRight fontSize="small" sx={{ color: 'text.secondary' }} />}
                 aria-label="breadcrumb"
                 sx={{
                     '& .MuiBreadcrumbs-ol': {

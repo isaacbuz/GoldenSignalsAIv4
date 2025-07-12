@@ -5,71 +5,32 @@
  */
 
 export interface PreciseOptionsSignal {
-    // Identification
     id: string;
+    signal_id?: string;
     symbol: string;
-    signal_id: string;
-    generated_at: string;
-    timestamp: string;
-
-    // Trade Direction
-    type: 'CALL' | 'PUT';
     signal_type: 'BUY_CALL' | 'BUY_PUT';
-    confidence: number; // 0-100
-    priority: 'HIGH' | 'MEDIUM' | 'LOW';
+    type?: string;
+    strike_price: number;
+    expiration_date: string;
+    confidence: number;
+    timestamp: string;
+    reasoning?: string;
 
-    // Precise Timing
-    entry_window: {
-        date: string;
+    // Additional properties used by components
+    entry_price?: number;
+    stop_loss?: number;
+    take_profit?: number;
+    risk_reward_ratio?: number;
+    max_loss?: number;
+    setup_name?: string;
+    entry_window?: {
         start_time: string;
         end_time: string;
     };
-    hold_duration: string;
-    expiration_warning: string;
-
-    // Options Contract
-    strike_price: number;
-    expiration_date: string;
-    contract_type: 'Weekly' | 'Monthly';
-    max_premium: number;
-
-    // Entry Levels
-    current_price: number;
-    entry_price: number;
-    entry_trigger: number;
-    entry_zone: [number, number];
-
-    // Risk Management
-    stop_loss: number;
-    stop_loss_pct: number;
-    position_size: number;
-    max_risk_dollars: number;
-    max_loss: number;
-
-    // Profit Targets
-    take_profit: number;
-    targets: Array<{
+    targets?: Array<{
         price: number;
-        exit_pct: number;
+        probability: number;
     }>;
-    risk_reward_ratio: number;
-
-    // Exit Conditions
-    exit_rules: string[];
-    time_based_exits: {
-        intraday: string;
-        multi_day: string;
-        expiration: string;
-    };
-
-    // Technical Justification
-    setup_name: string;
-    key_indicators: Record<string, string | number>;
-    chart_patterns: string[];
-
-    // Action Items
-    alerts_to_set: string[];
-    pre_entry_checklist: string[];
 }
 
 export interface PerformanceMetrics {
@@ -110,13 +71,9 @@ export interface MarketConditions {
 }
 
 export interface SignalFilters {
-    priority?: 'ALL' | 'HIGH' | 'MEDIUM' | 'LOW';
-    type?: 'ALL' | 'CALL' | 'PUT';
-    signalType?: 'all' | 'CALL' | 'PUT';
+    signalType?: 'all' | 'BUY_CALL' | 'BUY_PUT';
     minConfidence?: number;
-    maxRisk?: number;
-    symbols?: string[];
-    timeframe?: 'all' | 'INTRADAY' | 'SWING' | 'POSITION';
+    timeframe?: 'all' | string;
 }
 
 export interface AIInsight {
@@ -164,4 +121,21 @@ export interface SignalPerformance {
     entryTime: string;
     exitTime?: string;
     holdTime: string;
+}
+
+export interface SignalDetails {
+    entry_price: number;
+    target_price: number;
+    stop_loss: number;
+    reason: string;
+}
+
+export interface Signal {
+    signal_id: string;
+    symbol: string;
+    signal_type: string;
+    confidence_score: number;
+    timestamp: string;
+    timeframe: string;
+    signal_details: SignalDetails;
 } 

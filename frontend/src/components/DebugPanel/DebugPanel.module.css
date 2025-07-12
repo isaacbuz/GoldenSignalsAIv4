@@ -1,0 +1,360 @@
+/**
+ * DebugPanel Styles
+ */
+
+.container {
+  /* Base container styles */
+  position: fixed;
+  z-index: 9999;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+}
+
+/* Position variations */
+.bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.top-left {
+  top: 20px;
+  left: 20px;
+}
+
+/* Toggle button */
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.icon {
+  font-size: 16px;
+}
+
+.errorBadge {
+  background-color: #d32f2f;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+/* Panel */
+.panel {
+  width: 480px;
+  max-height: 600px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #2d2d2d;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+}
+
+.errorCount {
+  color: #ff5252;
+}
+
+.warnCount {
+  color: #ffb74d;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #ffffff;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #252525;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.filterSelect {
+  flex: 1;
+  padding: 4px 8px;
+  background-color: #3e3e3e;
+  color: #ffffff;
+  border: 1px solid #4e4e4e;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: inherit;
+}
+
+.actionButton {
+  padding: 4px 12px;
+  background-color: #3e3e3e;
+  color: #ffffff;
+  border: 1px solid #4e4e4e;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.actionButton:hover {
+  background-color: #4e4e4e;
+  border-color: #5e5e5e;
+}
+
+/* Log container */
+.logContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  background-color: #1e1e1e;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  font-style: italic;
+}
+
+/* Log entry */
+.logEntry {
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: #252525;
+  border-radius: 4px;
+  border-left: 3px solid #3e3e3e;
+  font-size: 11px;
+}
+
+.logEntry.error {
+  border-left-color: #ff5252;
+  background-color: rgba(255, 82, 82, 0.1);
+}
+
+.logEntry.warn {
+  border-left-color: #ffb74d;
+  background-color: rgba(255, 183, 77, 0.1);
+}
+
+.logEntry.info {
+  border-left-color: #64b5f6;
+  background-color: rgba(100, 181, 246, 0.1);
+}
+
+.logEntry.debug {
+  border-left-color: #81c784;
+  background-color: rgba(129, 199, 132, 0.1);
+}
+
+/* Log header */
+.logHeader {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  align-items: center;
+}
+
+.timestamp {
+  color: #999;
+  font-size: 10px;
+}
+
+.level {
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.logEntry.error .level {
+  background-color: #ff5252;
+  color: white;
+}
+
+.logEntry.warn .level {
+  background-color: #ffb74d;
+  color: #1e1e1e;
+}
+
+.logEntry.info .level {
+  background-color: #64b5f6;
+  color: white;
+}
+
+.logEntry.debug .level {
+  background-color: #81c784;
+  color: #1e1e1e;
+}
+
+.component {
+  color: #b39ddb;
+  font-size: 10px;
+  padding: 2px 6px;
+  background-color: rgba(179, 157, 219, 0.2);
+  border-radius: 3px;
+}
+
+/* Message */
+.message {
+  color: #ffffff;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Data */
+.data {
+  margin-top: 4px;
+  padding: 8px;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  color: #81c784;
+  font-size: 10px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Stack trace */
+.stackTrace {
+  margin-top: 4px;
+}
+
+.stackTrace summary {
+  cursor: pointer;
+  color: #999;
+  font-size: 10px;
+  user-select: none;
+}
+
+.stackTrace summary:hover {
+  color: #ffffff;
+}
+
+.stackTrace pre {
+  margin-top: 4px;
+  padding: 8px;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  color: #ff5252;
+  font-size: 10px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #2d2d2d;
+  border-top: 1px solid #3e3e3e;
+}
+
+.info {
+  color: #999;
+  font-size: 10px;
+}
+
+/* Scrollbar styling */
+.logContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.logContainer::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.logContainer::-webkit-scrollbar-thumb {
+  background: #4e4e4e;
+  border-radius: 4px;
+}
+
+.logContainer::-webkit-scrollbar-thumb:hover {
+  background: #5e5e5e;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .panel {
+    width: calc(100vw - 40px);
+    max-height: 50vh;
+  }
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.panel {
+  animation: slideIn 0.2s ease-out;
+}
