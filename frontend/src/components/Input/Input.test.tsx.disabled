@@ -1,0 +1,272 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Input } from './Input';
+import { UserIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+
+describe('Input', () => {
+    describe('Basic rendering', () => {
+        it('renders with label', () => {
+            render(<Input label="Username" data-testid="input" />);
+            expect(screen.getByText('Username')).toBeInTheDocument();
+            expect(screen.getByTestId('input')).toBeInTheDocument();
+        });
+
+        it('renders with placeholder', () => {
+            render(<Input placeholder="Enter text" data-testid="input" />);
+            expect(screen.getByPlaceholderText('Enter text')).toBeInTheDocument();
+        });
+
+        it('renders required indicator', () => {
+            render(<Input label="Email" required data-testid="input" />);
+            expect(screen.getByText('*')).toBeInTheDocument();
+        });
+    });
+
+    describe('Variants', () => {
+        it('applies outlined variant classes', () => {
+            render(<Input variant="outlined" data-testid="input" />);
+            const container = screen.getByTestId('input-container');
+            const wrapper = container.querySelector('.inputWrapper');
+            expect(wrapper).toHaveClass('outlined');
+        });
+
+        it('applies filled variant classes', () => {
+            render(<Input variant="filled" data-testid="input" />);
+            const container = screen.getByTestId('input-container');
+            const wrapper = container.querySelector('.inputWrapper');
+            expect(wrapper).toHaveClass('filled');
+        });
+
+        it('applies standard variant classes', () => {
+            render(<Input variant="standard" data-testid="input" />);
+            const container = screen.getByTestId('input-container');
+            const wrapper = container.querySelector('.inputWrapper');
+            expect(wrapper).toHaveClass('standard');
+        });
+    });
+
+    describe('Sizes', () => {
+        it('applies small size classes', () => {
+            render(<Input size="small" data-testid="input" />);
+            const input = screen.getByTestId('input');
+            expect(input).toHaveClass('small');
+        });
+
+        it('applies large size classes', () => {
+            render(<Input size="large" data-testid="input" />);
+            const input = screen.getByTestId('input');
+            expect(input).toHaveClass('large');
+        });
+    });
+
+    describe('States', () => {
+        it('shows error state and message', () => {
+            render(<Input error="Invalid input" data-testid="input" />);
+            expect(screen.getByText('Invalid input')).toBeInTheDocument();
+            expect(screen.getByRole('alert')).toBeInTheDocument();
+        });
+
+        it('disables input when disabled prop is true', () => {
+            render(<Input disabled data-testid="input" />);
+            expect(screen.getByTestId('input')).toBeDisabled();
+        });
+
+        it('applies focus styles on focus', async () => {
+            render(<Input label="Username" data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.click(input);
+
+            const container = screen.getByTestId('input-container');
+            const label = container.querySelector('.label');
+            expect(label).toHaveClass('focused');
+        });
+
+        it('removes focus styles on blur', async () => {
+            render(<Input label="Username" data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.click(input);
+            await userEvent.tab();
+
+            const container = screen.getByTestId('input-container');
+            const label = container.querySelector('.label');
+            expect(label).not.toHaveClass('focused');
+        });
+    });
+
+    describe('Icons', () => {
+        it('renders start icon', () => {
+            render(<Input startIcon={<UserIcon data-testid="start-icon" />} data-testid="input" />);
+            expect(screen.getByTestId('start-icon')).toBeInTheDocument();
+        });
+
+        it('renders end icon', () => {
+            render(<Input endIcon={<MagnifyingGlassIcon data-testid="end-icon" />} data-testid="input" />);
+            expect(screen.getByTestId('end-icon')).toBeInTheDocument();
+        });
+
+        it('renders both icons', () => {
+            render(
+                <Input
+                    startIcon={<UserIcon data-testid="start-icon" />}
+                    endIcon={<MagnifyingGlassIcon data-testid="end-icon" />}
+                    data-testid="input"
+                />
+            );
+            expect(screen.getByTestId('start-icon')).toBeInTheDocument();
+            expect(screen.getByTestId('end-icon')).toBeInTheDocument();
+        });
+    });
+
+    describe('Helper text and character count', () => {
+        it('shows helper text', () => {
+            render(<Input helperText="Enter at least 8 characters" data-testid="input" />);
+            expect(screen.getByText('Enter at least 8 characters')).toBeInTheDocument();
+        });
+
+        it('shows character count when enabled', async () => {
+            render(<Input showCount maxLength={10} data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.type(input, 'Hello');
+
+            expect(screen.getByText('5/10')).toBeInTheDocument();
+        });
+
+        it('prevents typing beyond maxLength', async () => {
+            render(<Input maxLength={5} data-testid="input" />);
+            const input = screen.getByTestId('input') as HTMLInputElement;
+
+            await userEvent.type(input, 'Hello World');
+
+            expect(input.value).toBe('Hello');
+        });
+    });
+
+    describe('User interactions', () => {
+        it('updates value on change', async () => {
+            const handleChange = jest.fn();
+            render(<Input onChange={handleChange} data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.type(input, 'test');
+
+            expect(handleChange).toHaveBeenCalledTimes(4);
+            expect((input as HTMLInputElement).value).toBe('test');
+        });
+
+        it('calls onFocus handler', async () => {
+            const handleFocus = jest.fn();
+            render(<Input onFocus={handleFocus} data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.click(input);
+
+            expect(handleFocus).toHaveBeenCalledTimes(1);
+        });
+
+        it('calls onBlur handler', async () => {
+            const handleBlur = jest.fn();
+            render(<Input onBlur={handleBlur} data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            await userEvent.click(input);
+            await userEvent.tab();
+
+            expect(handleBlur).toHaveBeenCalledTimes(1);
+        });
+
+        it('focuses input when wrapper is clicked', async () => {
+            render(<Input label="Username" data-testid="input" />);
+            const container = screen.getByTestId('input-container');
+            const wrapper = container.querySelector('.inputWrapper') as HTMLElement;
+            const input = screen.getByTestId('input');
+
+            await userEvent.click(wrapper);
+
+            expect(input).toHaveFocus();
+        });
+    });
+
+    describe('Accessibility', () => {
+        it('associates label with input', () => {
+            render(<Input label="Email" id="email-input" data-testid="input" />);
+            const input = screen.getByTestId('input');
+            const label = screen.getByText('Email');
+
+            expect(input).toHaveAttribute('id', 'email-input');
+            expect(label).toHaveAttribute('for', 'email-input');
+        });
+
+        it('sets aria-invalid on error', () => {
+            render(<Input error="Invalid input" data-testid="input" />);
+            const input = screen.getByTestId('input');
+
+            expect(input).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        it('associates error message with input', () => {
+            render(<Input error="Invalid input" id="test-input" data-testid="input" />);
+            const input = screen.getByTestId('input');
+            const errorMessage = screen.getByText('Invalid input');
+
+            expect(input).toHaveAttribute('aria-describedby', 'test-input-error');
+            expect(errorMessage).toHaveAttribute('id', 'test-input-error');
+        });
+
+        it('supports keyboard navigation', async () => {
+            render(
+                <>
+                    <Input data-testid="input1" />
+                    <Input data-testid="input2" />
+                </>
+            );
+
+            const input1 = screen.getByTestId('input1');
+            const input2 = screen.getByTestId('input2');
+
+            await userEvent.click(input1);
+            expect(input1).toHaveFocus();
+
+            await userEvent.tab();
+            expect(input2).toHaveFocus();
+        });
+    });
+
+    describe('Input types', () => {
+        it('renders as password input', () => {
+            render(<Input type="password" data-testid="input" />);
+            expect(screen.getByTestId('input')).toHaveAttribute('type', 'password');
+        });
+
+        it('renders as email input', () => {
+            render(<Input type="email" data-testid="input" />);
+            expect(screen.getByTestId('input')).toHaveAttribute('type', 'email');
+        });
+
+        it('renders as number input', () => {
+            render(<Input type="number" data-testid="input" />);
+            expect(screen.getByTestId('input')).toHaveAttribute('type', 'number');
+        });
+    });
+
+    describe('Full width', () => {
+        it('applies full width classes', () => {
+            render(<Input fullWidth data-testid="input" />);
+            const container = screen.getByTestId('input-container');
+
+            expect(container).toHaveClass('fullWidth');
+        });
+    });
+
+    describe('Ref forwarding', () => {
+        it('forwards ref to input element', () => {
+            const ref = React.createRef<HTMLInputElement>();
+            render(<Input ref={ref} data-testid="input" />);
+
+            expect(ref.current).toBeInstanceOf(HTMLInputElement);
+            expect(ref.current).toBe(screen.getByTestId('input'));
+        });
+    });
+}); 

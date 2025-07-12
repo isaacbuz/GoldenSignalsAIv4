@@ -12,6 +12,7 @@ interface Notification {
   duration?: number;
   timestamp: Date;
   data?: any;
+  read?: boolean;
 }
 
 interface NotificationContextType {
@@ -88,7 +89,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       newSet.delete(id);
       return newSet;
     });
-    
+
     // Remove from list after animation
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
@@ -125,7 +126,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   return (
     <NotificationContext.Provider value={{ notifications, showNotification, removeNotification, clearAll }}>
       {children}
-      
+
       {/* Render notifications */}
       {notifications.map((notification, index) => (
         <Snackbar
@@ -135,7 +136,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
           onClose={() => removeNotification(notification.id)}
           TransitionComponent={SlideTransition}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          sx={{ 
+          sx={{
             bottom: (theme) => theme.spacing(8 + index * 10),
             zIndex: 1400 + index,
           }}

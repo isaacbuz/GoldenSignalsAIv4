@@ -40,7 +40,8 @@ const MarketScreener: React.FC<MarketScreenerProps> = ({ onSymbolSelect }) => {
     const { data: opportunities = [], isLoading, refetch } = useQuery({
         queryKey: ['marketOpportunities'],
         queryFn: () => apiClient.getMarketOpportunities(),
-        refetchInterval: 60000, // Refresh every minute
+        // Disabled auto-refresh to prevent constant updating
+        staleTime: 300000, // Keep data fresh for 5 minutes
     });
 
     const getMomentumColor = (momentum: string) => {

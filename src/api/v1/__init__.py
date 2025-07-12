@@ -20,6 +20,7 @@ from .ai_chat_enhanced import router as ai_chat_enhanced_router
 from .hybrid_signals import router as hybrid_signals_router
 from .auth import router as auth_router
 from .admin import router as admin_router
+from .logs import router as logs_router
 
 # Create main API router
 api_router = APIRouter()
@@ -107,6 +108,12 @@ api_router.include_router(
     admin_router,
     prefix="/admin",
     tags=["admin"]
+)
+
+api_router.include_router(
+    logs_router,
+    prefix="/logs",
+    tags=["logging"]
 )
 
 __all__ = ["api_router"] 

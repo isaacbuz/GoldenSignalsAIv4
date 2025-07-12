@@ -19,9 +19,12 @@ export default defineConfig({
     },
   },
   server: {
-    port: parseInt(process.env.VITE_PORT || '3000'),
+    port: 3000,
     host: true,
     strictPort: true,
+    hmr: {
+      overlay: false
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

@@ -54,7 +54,8 @@ const MiniHeatMap: React.FC<MiniHeatMapProps> = ({ onSymbolSelect }) => {
                 { name: 'Industrial', change: 2.4, topStock: { symbol: 'BA', change: 3.2 } },
             ] as SectorSummary[];
         },
-        refetchInterval: 60000,
+        // Disabled auto-refresh to prevent constant updating
+        staleTime: 300000, // Keep data fresh for 5 minutes
     });
 
     const getColor = (change: number) => {

@@ -1,0 +1,206 @@
+/* Base button styles */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    outline: none;
+    min-height: 40px;
+}
+
+.button:focus {
+    outline: 2px solid var(--primary-color, #007AFF);
+    outline-offset: 2px;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Variants */
+.primary {
+    background: var(--primary-color, #007AFF);
+    color: white;
+}
+
+.primary:hover:not(:disabled) {
+    background: var(--primary-hover, #0056b3);
+    transform: translateY(-1px);
+}
+
+.secondary {
+    background: var(--surface-color, #1a1a1a);
+    color: var(--text-primary, #ffffff);
+    border: 1px solid var(--border-color, #333);
+}
+
+.secondary:hover:not(:disabled) {
+    border-color: var(--primary-color, #007AFF);
+    background: rgba(0, 122, 255, 0.1);
+}
+
+.ghost {
+    background: transparent;
+    color: var(--text-secondary, #a0a0a0);
+}
+
+.ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary, #ffffff);
+}
+
+.danger {
+    background: var(--error-color, #FF3B30);
+    color: white;
+}
+
+.danger:hover:not(:disabled) {
+    background: var(--error-hover, #d32f2f);
+}
+
+/* Sizes */
+.small {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-height: 32px;
+}
+
+.medium {
+    padding: 12px 24px;
+    font-size: 14px;
+    min-height: 40px;
+}
+
+.large {
+    padding: 16px 32px;
+    font-size: 16px;
+    min-height: 48px;
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.loading::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Style variants */
+.primary:active:not(:disabled) {
+    background-color: var(--color-primary-darker, #0d47a1);
+    border-color: var(--color-primary-darker, #0d47a1);
+}
+
+.secondary:active:not(:disabled) {
+    background-color: var(--color-secondary-darker, #d0d0d0);
+    border-color: var(--color-border-darker, #bbb);
+}
+
+.success {
+    color: white;
+    background-color: var(--color-success, #4caf50);
+    border-color: var(--color-success, #4caf50);
+}
+
+.success:hover:not(:disabled) {
+    background-color: var(--color-success-dark, #388e3c);
+    border-color: var(--color-success-dark, #388e3c);
+}
+
+.success:active:not(:disabled) {
+    background-color: var(--color-success-darker, #2e7d32);
+    border-color: var(--color-success-darker, #2e7d32);
+}
+
+.danger:active:not(:disabled) {
+    background-color: var(--color-danger-darker, #c62828);
+    border-color: var(--color-danger-darker, #c62828);
+}
+
+.ghost:active:not(:disabled) {
+    background-color: rgba(25, 118, 210, 0.12);
+}
+
+/* States */
+.fullWidth {
+    width: 100%;
+}
+
+/* Icons */
+.startIcon,
+.endIcon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.startIcon {
+    margin-right: 0.25rem;
+}
+
+.endIcon {
+    margin-left: 0.25rem;
+}
+
+/* Ripple effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+    .secondary {
+        color: var(--color-text-dark, #fff);
+        background-color: var(--color-secondary-dark, #333);
+        border-color: var(--color-border-dark, #555);
+    }
+
+    .secondary:hover:not(:disabled) {
+        background-color: var(--color-secondary-darker, #444);
+        border-color: var(--color-border-darker, #666);
+    }
+
+    .ghost {
+        color: var(--color-primary-light, #42a5f5);
+    }
+
+    .ghost:hover:not(:disabled) {
+        background-color: rgba(66, 165, 245, 0.08);
+    }
+}

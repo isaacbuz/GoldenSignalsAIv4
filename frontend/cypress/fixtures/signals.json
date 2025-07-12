@@ -1,0 +1,32 @@
+[
+    {
+        "id": "1",
+        "symbol": "AAPL",
+        "type": "BUY",
+        "confidence": 85.5,
+        "timestamp": "2023-10-27T10:00:00Z",
+        "agents": [
+            "MomentumBot",
+            "TrendMaster"
+        ],
+        "reasoning": "Strong upward momentum detected.",
+        "impact": "MEDIUM",
+        "historicalAccuracy": 78.2,
+        "expectedMove": 2.5
+    },
+    {
+        "id": "2",
+        "symbol": "GOOGL",
+        "type": "SELL",
+        "confidence": 92.1,
+        "timestamp": "2023-10-27T10:05:00Z",
+        "agents": [
+            "VolatilityBot",
+            "MeanReversion"
+        ],
+        "reasoning": "High volatility and overbought conditions.",
+        "impact": "HIGH",
+        "historicalAccuracy": 85.0,
+        "expectedMove": -3.1
+    }
+]

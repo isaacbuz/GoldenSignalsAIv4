@@ -31,7 +31,7 @@ import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
 
 # Technical indicators
-import talib
+# import talib  # Temporarily disabled due to numpy compatibility issue
 import pandas_ta as ta
 
 # Machine learning
@@ -532,34 +532,34 @@ class AdvancedBacktestEngine:
         """Calculate technical indicators for all symbols"""
         for symbol, df in market_data.items():
             # Price-based indicators
-            df['SMA_20'] = talib.SMA(df['close'], timeperiod=20)
-            df['SMA_50'] = talib.SMA(df['close'], timeperiod=50)
-            df['EMA_12'] = talib.EMA(df['close'], timeperiod=12)
-            df['EMA_26'] = talib.EMA(df['close'], timeperiod=26)
+            df['SMA_20'] = ta.SMA(df['close'], timeperiod=20)
+            df['SMA_50'] = ta.SMA(df['close'], timeperiod=50)
+            df['EMA_12'] = ta.EMA(df['close'], timeperiod=12)
+            df['EMA_26'] = ta.EMA(df['close'], timeperiod=26)
             
             # MACD
-            df['MACD'], df['MACD_signal'], df['MACD_hist'] = talib.MACD(
+            df['MACD'], df['MACD_signal'], df['MACD_hist'] = ta.MACD(
                 df['close'], fastperiod=12, slowperiod=26, signalperiod=9
             )
             
             # RSI
-            df['RSI'] = talib.RSI(df['close'], timeperiod=14)
+            df['RSI'] = ta.RSI(df['close'], timeperiod=14)
             
             # Bollinger Bands
-            df['BB_upper'], df['BB_middle'], df['BB_lower'] = talib.BBANDS(
+            df['BB_upper'], df['BB_middle'], df['BB_lower'] = ta.BBANDS(
                 df['close'], timeperiod=20, nbdevup=2, nbdevdn=2
             )
             
             # Volume indicators
-            df['OBV'] = talib.OBV(df['close'], df['volume'])
-            df['AD'] = talib.AD(df['high'], df['low'], df['close'], df['volume'])
+            df['OBV'] = ta.OBV(df['close'], df['volume'])
+            df['AD'] = ta.AD(df['high'], df['low'], df['close'], df['volume'])
             
             # Volatility
-            df['ATR'] = talib.ATR(df['high'], df['low'], df['close'], timeperiod=14)
+            df['ATR'] = ta.ATR(df['high'], df['low'], df['close'], timeperiod=14)
             
             # Pattern recognition
-            df['HAMMER'] = talib.CDLHAMMER(df['open'], df['high'], df['low'], df['close'])
-            df['DOJI'] = talib.CDLDOJI(df['open'], df['high'], df['low'], df['close'])
+            df['HAMMER'] = ta.CDLHAMMER(df['open'], df['high'], df['low'], df['close'])
+            df['DOJI'] = ta.CDLDOJI(df['open'], df['high'], df['low'], df['close'])
             
             # Custom indicators using pandas_ta
             df.ta.vwap(append=True)

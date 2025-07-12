@@ -1,0 +1,263 @@
+import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { Button } from './Button';
+import { logger } from '@/services/logging/logger';
+
+// Mock the logger
+vi.mock('@/services/logging/logger', () => ({
+    logger: {
+        debug: vi.fn(),
+        error: vi.fn(),
+    }
+}));
+
+describe('Button', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    describe('Rendering', () => {
+        it('renders with default props', () => {
+            render(<Button>Click me</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            expect(button).toBeInTheDocument();
+            expect(button).toHaveTextContent('Click me');
+            expect(button).not.toBeDisabled();
+        });
+
+        it('renders with custom data-testid', () => {
+            render(<Button data-testid="custom-button">Test</Button>);
+
+            expect(screen.getByTestId('custom-button')).toBeInTheDocument();
+        });
+
+        it('renders all variants correctly', () => {
+            const variants = ['primary', 'secondary', 'success', 'danger', 'ghost'] as const;
+
+            variants.forEach(variant => {
+                const { container } = render(
+                    <Button variant={variant}>
+                        {variant} button
+                    </Button>
+                );
+
+                const button = container.querySelector(`.${variant}`);
+                expect(button).toBeInTheDocument();
+            });
+        });
+
+        it('renders all sizes correctly', () => {
+            const sizes = ['small', 'medium', 'large'] as const;
+
+            sizes.forEach(size => {
+                const { container } = render(
+                    <Button size={size}>
+                        {size} button
+                    </Button>
+                );
+
+                const button = container.querySelector(`.${size}`);
+                expect(button).toBeInTheDocument();
+            });
+        });
+
+        it('renders full width button', () => {
+            const { container } = render(
+                <Button fullWidth>Full width</Button>
+            );
+
+            const button = container.querySelector('.fullWidth');
+            expect(button).toBeInTheDocument();
+        });
+    });
+
+    describe('Icons', () => {
+        it('renders with start icon', () => {
+            const icon = <span>→</span>;
+            render(<Button startIcon={icon}>Button</Button>);
+
+            const startIcon = screen.getByTestId('button-start-icon');
+            expect(startIcon).toBeInTheDocument();
+            expect(startIcon).toHaveTextContent('→');
+        });
+
+        it('renders with end icon', () => {
+            const icon = <span>←</span>;
+            render(<Button endIcon={icon}>Button</Button>);
+
+            const endIcon = screen.getByTestId('button-end-icon');
+            expect(endIcon).toBeInTheDocument();
+            expect(endIcon).toHaveTextContent('←');
+        });
+
+        it('does not render icons when loading', () => {
+            const startIcon = <span>→</span>;
+            const endIcon = <span>←</span>;
+
+            render(
+                <Button loading startIcon={startIcon} endIcon={endIcon}>
+                    Button
+                </Button>
+            );
+
+            expect(screen.queryByTestId('button-start-icon')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('button-end-icon')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('States', () => {
+        it('handles disabled state', () => {
+            const handleClick = vi.fn();
+            render(
+                <Button disabled onClick={handleClick}>
+                    Disabled
+                </Button>
+            );
+
+            const button = screen.getByTestId('button-primary');
+            expect(button).toBeDisabled();
+
+            fireEvent.click(button);
+            expect(handleClick).not.toHaveBeenCalled();
+            expect(logger.debug).not.toHaveBeenCalled();
+        });
+
+        it('handles loading state', () => {
+            const handleClick = vi.fn();
+            render(
+                <Button loading onClick={handleClick}>
+                    Loading
+                </Button>
+            );
+
+            const button = screen.getByTestId('button-primary');
+            const spinner = screen.getByTestId('button-spinner');
+
+            expect(button).toBeDisabled();
+            expect(spinner).toBeInTheDocument();
+
+            fireEvent.click(button);
+            expect(handleClick).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Interactions', () => {
+        it('handles click events', () => {
+            const handleClick = vi.fn();
+            render(<Button onClick={handleClick}>Click me</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            fireEvent.click(button);
+
+            expect(handleClick).toHaveBeenCalledTimes(1);
+            expect(logger.debug).toHaveBeenCalledWith('Button clicked', {
+                variant: 'primary',
+                size: 'medium',
+                testId: 'button-primary'
+            });
+        });
+
+        it('creates ripple effect on click when enabled', async () => {
+            const { container } = render(<Button ripple>Ripple</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            fireEvent.click(button);
+
+            await waitFor(() => {
+                const ripple = container.querySelector('.ripple');
+                expect(ripple).toBeInTheDocument();
+            });
+        });
+
+        it('does not create ripple when disabled', () => {
+            const { container } = render(<Button ripple={false}>No Ripple</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            fireEvent.click(button);
+
+            const ripple = container.querySelector('.ripple');
+            expect(ripple).not.toBeInTheDocument();
+        });
+
+        it('does not create ripple when button is disabled', () => {
+            const { container } = render(<Button disabled ripple>Disabled</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            fireEvent.click(button);
+
+            const ripple = container.querySelector('.ripple');
+            expect(ripple).not.toBeInTheDocument();
+        });
+    });
+
+    describe('Accessibility', () => {
+        it('forwards ref correctly', () => {
+            const ref = React.createRef<HTMLButtonElement>();
+            render(<Button ref={ref}>Button</Button>);
+
+            expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+            expect(ref.current?.textContent).toBe('Button');
+        });
+
+        it('supports keyboard navigation', () => {
+            const handleClick = vi.fn();
+            render(<Button onClick={handleClick}>Keyboard</Button>);
+
+            const button = screen.getByTestId('button-primary');
+            button.focus();
+
+            fireEvent.keyDown(button, { key: 'Enter' });
+            expect(handleClick).toHaveBeenCalledTimes(1);
+
+            fireEvent.keyDown(button, { key: ' ' });
+            expect(handleClick).toHaveBeenCalledTimes(2);
+        });
+
+        it('has proper ARIA attributes', () => {
+            render(
+                <Button
+                    aria-label="Submit form"
+                    aria-describedby="submit-help"
+                    aria-pressed="true"
+                >
+                    Submit
+                </Button>
+            );
+
+            const button = screen.getByTestId('button-primary');
+            expect(button).toHaveAttribute('aria-label', 'Submit form');
+            expect(button).toHaveAttribute('aria-describedby', 'submit-help');
+            expect(button).toHaveAttribute('aria-pressed', 'true');
+        });
+    });
+
+    describe('Custom props', () => {
+        it('applies custom className', () => {
+            const { container } = render(
+                <Button className="custom-class">Custom</Button>
+            );
+
+            const button = container.querySelector('.custom-class');
+            expect(button).toBeInTheDocument();
+        });
+
+        it('forwards HTML button attributes', () => {
+            render(
+                <Button
+                    type="submit"
+                    form="test-form"
+                    name="submit-button"
+                >
+                    Submit
+                </Button>
+            );
+
+            const button = screen.getByTestId('button-primary');
+            expect(button).toHaveAttribute('type', 'submit');
+            expect(button).toHaveAttribute('form', 'test-form');
+            expect(button).toHaveAttribute('name', 'submit-button');
+        });
+    });
+}); 

@@ -1,0 +1,196 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { TopBar } from './TopBar';
+
+const meta = {
+    title: 'Trading/TopBar',
+    component: TopBar,
+    parameters: {
+        layout: 'fullscreen',
+        docs: {
+            description: {
+                component: `
+# TopBar Component
+
+This component demonstrates **composition over creation** by reusing existing components:
+
+## Reused Components:
+- \`SymbolSearchBar\` - 368 lines of search functionality
+- \`Button\` - Core button component
+- \`ThemeSwitcher\` - 30 lines of theme logic
+- \`@heroicons/react\` - Icon library
+
+## New Code:
+- Only ~150 lines for composition and layout
+- Saves 500+ lines vs building from scratch
+
+## Key Features:
+- Global symbol search (reuses SymbolSearchBar)
+- Theme switching (reuses ThemeSwitcher)
+- Notifications dropdown
+- User profile menu
+- Responsive design
+        `
+            }
+        }
+    },
+    tags: ['autodocs'],
+} satisfies Meta<typeof TopBar>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Default state
+export const Default: Story = {
+    args: {
+        user: {
+            name: 'John Doe',
+            email: 'john.doe@example.com'
+        },
+        notifications: []
+    }
+};
+
+// With notifications
+export const WithNotifications: Story = {
+    args: {
+        user: {
+            name: 'John Doe',
+            email: 'john.doe@example.com'
+        },
+        notifications: [
+            { id: '1', message: 'New signal: AAPL BUY at $175.50', unread: true },
+            { id: '2', message: 'Portfolio update: +2.5% today', unread: true },
+            { id: '3', message: 'Market alert: Fed meeting today', unread: false },
+            { id: '4', message: 'Signal executed: GOOGL SELL completed', unread: false }
+        ]
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: 'TopBar with notification badges showing unread count'
+            }
+        }
+    }
+};
+
+// With user avatar
+export const WithAvatar: Story = {
+    args: {
+        user: {
+            name: 'Jane Smith',
+            email: 'jane.smith@example.com',
+            avatar: 'https://i.pravatar.cc/150?u=jane'
+        },
+        notifications: [
+            { id: '1', message: 'New signal available', unread: true }
+        ]
+    }
+};
+
+// Dark theme
+export const DarkTheme: Story = {
+    args: {
+        ...Default.args,
+        theme: 'dark'
+    },
+    parameters: {
+        backgrounds: {
+            default: 'dark'
+        }
+    }
+};
+
+// Mobile view
+export const Mobile: Story = {
+    args: Default.args,
+    parameters: {
+        viewport: {
+            defaultViewport: 'iphone12'
+        },
+        docs: {
+            description: {
+                story: 'Responsive mobile view - name hidden, compact layout'
+            }
+        }
+    }
+};
+
+// Loading state (search in progress)
+export const SearchActive: Story = {
+    args: Default.args,
+    parameters: {
+        docs: {
+            description: {
+                story: 'Shows the SymbolSearchBar component in action - try typing "AAPL" or "GOOGL"'
+            }
+        }
+    }
+};
+
+// Integrated with TradingAppShell
+export const InAppShell: Story = {
+    render: () => {
+        const { TradingAppShell } = require('./TradingAppShell');
+
+        return (
+            <TradingAppShell>
+                <div className="p-6">
+                    <h1 className="text-2xl font-bold mb-4">TopBar in Context</h1>
+                    <p className="text-gray-600 mb-4">
+                        This shows how the TopBar would look integrated into the TradingAppShell.
+                        Notice how it seamlessly fits into the layout system.
+                    </p>
+                    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                        <h2 className="font-semibold mb-2">Component Reuse Summary:</h2>
+                        <ul className="space-y-1 text-sm">
+                            <li>• SymbolSearchBar: 368 lines reused</li>
+                            <li>• Button component: Core UI element</li>
+                            <li>• ThemeSwitcher: 30 lines reused</li>
+                            <li>• TopBar: Only 150 new lines</li>
+                            <li className="font-semibold text-green-600">Total saved: ~500 lines!</li>
+                        </ul>
+                    </div>
+                </div>
+            </TradingAppShell>
+        );
+    },
+    parameters: {
+        layout: 'fullscreen',
+        docs: {
+            description: {
+                story: 'TopBar integrated into the full TradingAppShell layout'
+            }
+        }
+    }
+};
+
+// Interactive demo
+export const InteractiveDemo: Story = {
+    args: {
+        user: {
+            name: 'Demo User',
+            email: 'demo@goldensignals.ai'
+        },
+        notifications: [
+            { id: '1', message: 'Click the bell icon to see notifications!', unread: true },
+            { id: '2', message: 'Click your name to see the user menu', unread: true },
+            { id: '3', message: 'Try searching for a symbol like AAPL', unread: false }
+        ]
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: `
+### Interactive Features:
+1. **Search**: Type in the search bar to see autocomplete
+2. **Notifications**: Click the bell icon (shows badge with count)
+3. **User Menu**: Click the user name/avatar
+4. **Theme**: Toggle between light and dark themes
+5. **Responsive**: Resize window to see mobile behavior
+
+All of these features come from reusing existing components!
+        `
+            }
+        }
+    }
+}; 

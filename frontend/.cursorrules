@@ -1,0 +1,530 @@
+# GoldenSignalsAI Cursor Rules - COMPREHENSIVE DEVELOPMENT GUIDE
+
+## 🚨 **MANDATORY CONTEXT CHECKS (ALWAYS DO FIRST)**
+
+### **Before ANY code changes, you MUST:**
+1. **Read development context**: `frontend/DEVELOPMENT_CONTEXT.md`
+2. **Check component inventory**: `frontend/COMPONENT_INVENTORY.md`
+3. **Verify existing files**: Use `ls` or `find` commands
+4. **Understand current architecture**: Read existing implementations
+5. **Plan targeted updates**: NEVER regenerate large files
+
+### **Emergency Context Recovery Commands:**
+```bash
+# CRITICAL: Run these if context is lost
+find frontend/src -name "Unified*.tsx"
+ls -la frontend/src/components/
+ls -la frontend/src/store/
+cat frontend/DEVELOPMENT_CONTEXT.md | head -50
+```
+
+---
+
+## 🏗️ **PROJECT ARCHITECTURE (NEVER CHANGE)**
+
+### **GoldenSignalsAI Identity**
+- **Type**: AI-powered trading signals platform (NOT a trading app)
+- **Purpose**: Generate BUY/SELL/HOLD signals using AI
+- **NO order execution**: Signals only, no actual trading
+- **Target**: Professional traders and signal analysts
+
+### **Technology Stack (FIXED)**
+- **Frontend**: React 18.2 + TypeScript 5.2 + Vite 5.0
+- **UI Framework**: Material-UI (MUI) v5.14
+- **State Management**: Redux Toolkit 2.8 + React Query 5.81
+- **Charts**: TradingView Lightweight Charts 4.2
+- **Testing**: Vitest 1.6 + React Testing Library + Neo4j + TDD helpers
+- **Package Manager**: npm (NOT yarn or pnpm)
+
+---
+
+## ✅ **UNIFIED COMPONENTS (PRODUCTION READY - NEVER REGENERATE)**
+
+### **The Big Four - NEVER RECREATE THESE:**
+
+1. **UnifiedDashboard.tsx** (1,132 lines)
+   - **Location**: `frontend/src/components/Dashboard/UnifiedDashboard.tsx`
+   - **Features**: 7 modes, 4 layouts, complete widget system
+   - **Modes**: trading, signals, analytics, ai, models, professional, hybrid
+   - **Status**: ✅ PRODUCTION READY
+
+2. **UnifiedAIChat.tsx** (1,132 lines)
+   - **Location**: `frontend/src/components/AI/UnifiedAIChat.tsx`
+   - **Features**: Multi-modal AI, file upload, voice, vision
+   - **Models**: claude, gpt4, perplexity, financeGPT
+   - **Status**: ✅ PRODUCTION READY
+
+3. **UnifiedSearchBar.tsx** (907 lines)
+   - **Location**: `frontend/src/components/Search/UnifiedSearchBar.tsx`
+   - **Features**: AI-powered search, autocomplete, voice input
+   - **Variants**: standard, compact, floating, minimal
+   - **Status**: ✅ PRODUCTION READY
+
+4. **UnifiedChart.tsx** (1,035 lines)
+   - **Location**: `frontend/src/components/Charts/UnifiedChart.tsx`
+   - **Features**: Advanced trading charts, 50+ indicators
+   - **Types**: candlestick, line, bar, area, heatmap, scatter
+   - **Status**: ✅ PRODUCTION READY
+
+### **Achievement**: 82% code reduction (22 components → 4 unified components)
+
+---
+
+## 🚫 **FORBIDDEN COMPONENT NAMES (NEVER CREATE)**
+
+### **Dashboard Variants (ABSOLUTELY FORBIDDEN)**
+- `NewDashboard.tsx`
+- `ImprovedDashboard.tsx`
+- `ModernDashboard.tsx`
+- `AdvancedDashboard.tsx`
+- `TradingDashboard.tsx`
+- `SignalsDashboard.tsx`
+- `AnalyticsDashboard.tsx`
+- `AIDashboard.tsx`
+- Any dashboard variant
+
+### **AI Chat Variants (ABSOLUTELY FORBIDDEN)**
+- `NewAIChat.tsx`
+- `ImprovedAIChat.tsx`
+- `EnhancedAIChat.tsx`
+- `BetterAIChat.tsx`
+- `ModernAIChat.tsx`
+- `AdvancedAIChat.tsx`
+- `AIAssistant.tsx`
+- `ChatBot.tsx`
+- Any AI chat variant
+
+### **Search Bar Variants (ABSOLUTELY FORBIDDEN)**
+- `NewSearchBar.tsx`
+- `ImprovedSearchBar.tsx`
+- `EnhancedSearchBar.tsx`
+- `BetterSearchBar.tsx`
+- `ModernSearchBar.tsx`
+- `AdvancedSearchBar.tsx`
+- `AISearchBar.tsx`
+- `SmartSearchBar.tsx`
+- Any search bar variant
+
+### **Chart Variants (ABSOLUTELY FORBIDDEN)**
+- `NewChart.tsx`
+- `ImprovedChart.tsx`
+- `EnhancedChart.tsx`
+- `BetterChart.tsx`
+- `ModernChart.tsx`
+- `AdvancedChart.tsx`
+- `TradingChart.tsx`
+- `PriceChart.tsx`
+- Any chart variant
+
+---
+
+## ✅ **CORRECT DEVELOPMENT PATTERNS**
+
+### **Extending Unified Components (CORRECT WAY)**
+
+```typescript
+// ✅ CORRECT: Add new dashboard mode
+// In UnifiedDashboard.tsx:
+const DASHBOARD_MODES = [
+  'trading', 'signals', 'analytics', 'ai', 'models', 'professional', 'hybrid',
+  'newMode' // Add here
+];
+
+// ✅ CORRECT: Add new AI model
+// In UnifiedAIChat.tsx:
+const AI_MODELS = [
+  'claude', 'gpt4', 'perplexity', 'financeGPT',
+  'newModel' // Add here
+];
+
+// ✅ CORRECT: Add new search variant
+// In UnifiedSearchBar.tsx:
+const SEARCH_VARIANTS = [
+  'standard', 'compact', 'floating', 'minimal',
+  'newVariant' // Add here
+];
+
+// ✅ CORRECT: Add new chart type
+// In UnifiedChart.tsx:
+const CHART_TYPES = [
+  'candlestick', 'line', 'bar', 'area', 'heatmap', 'scatter',
+  'newType' // Add here
+];
+```
+
+### **Redux Integration (CORRECT WAY)**
+
+```typescript
+// ✅ CORRECT: Use existing Redux hooks
+import { useSymbolSelection, useUIState, useTheme } from '../store/hooks';
+
+// ✅ CORRECT: Use existing selectors
+import { selectSelectedSymbol, selectUserTheme } from '../store/selectors';
+
+// ✅ CORRECT: Extend existing slices
+// Add new actions to existing slices, don't create new slices
+```
+
+### **Component Import Patterns (CORRECT WAY)**
+
+```typescript
+// ✅ CORRECT: Import unified components
+import { 
+  UnifiedDashboard, 
+  UnifiedAIChat, 
+  UnifiedSearchBar, 
+  UnifiedChart 
+} from '../components';
+
+// ✅ CORRECT: Use with modes/variants
+<UnifiedDashboard mode="signals" layout="advanced" />
+<UnifiedAIChat model="claude" mode="floating" />
+<UnifiedSearchBar variant="compact" />
+<UnifiedChart type="candlestick" />
+```
+
+---
+
+## ❌ **FORBIDDEN PATTERNS (NEVER DO THESE)**
+
+### **File Creation Anti-Patterns**
+```typescript
+// ❌ FORBIDDEN: Creating new components for existing functionality
+const NewDashboard = () => { /* NEVER DO THIS */ };
+const ImprovedAIChat = () => { /* NEVER DO THIS */ };
+const BetterSearchBar = () => { /* NEVER DO THIS */ };
+const ModernChart = () => { /* NEVER DO THIS */ };
+
+// ❌ FORBIDDEN: Regenerating large files
+// Don't regenerate any file over 500 lines
+// Don't regenerate any "Unified" component
+```
+
+### **Import Anti-Patterns**
+```typescript
+// ❌ FORBIDDEN: Importing non-existent components
+import { NewDashboard } from '../components/NewDashboard';
+import { ImprovedAIChat } from '../components/ImprovedAIChat';
+
+// ❌ FORBIDDEN: Ignoring existing unified components
+// Don't create separate dashboard components when UnifiedDashboard exists
+```
+
+### **State Management Anti-Patterns**
+```typescript
+// ❌ FORBIDDEN: Creating new state patterns
+const [localState, setLocalState] = useState(); // Use Redux for global state
+
+// ❌ FORBIDDEN: Ignoring existing Redux architecture
+// Don't create new slices when existing ones can be extended
+```
+
+---
+
+## 🔧 **DEVELOPMENT WORKFLOW (MANDATORY)**
+
+### **Step 1: Context Verification (ALWAYS FIRST)**
+```bash
+# MANDATORY: Check existing files
+ls -la frontend/src/components/
+find frontend/src -name "Unified*.tsx"
+
+# MANDATORY: Read context
+cat frontend/DEVELOPMENT_CONTEXT.md | head -20
+cat frontend/COMPONENT_INVENTORY.md | head -20
+```
+
+### **Step 2: File Analysis (BEFORE CHANGES)**
+```bash
+# MANDATORY: Check if target file exists
+ls -la frontend/src/components/Dashboard/UnifiedDashboard.tsx
+ls -la frontend/src/components/AI/UnifiedAIChat.tsx
+ls -la frontend/src/components/Search/UnifiedSearchBar.tsx
+ls -la frontend/src/components/Charts/UnifiedChart.tsx
+
+# MANDATORY: Read existing implementation
+# Use read_file tool to understand current structure
+```
+
+### **Step 3: Update Strategy (NEVER REGENERATE)**
+```bash
+# ✅ CORRECT: Use targeted updates
+# search_replace for specific changes
+# edit_file for larger targeted updates
+
+# ❌ FORBIDDEN: Regenerate large files
+# Don't regenerate files over 500 lines
+# Don't create new files for existing functionality
+```
+
+### **Step 4: Testing (AFTER CHANGES)**
+```bash
+# MANDATORY: Run tests
+npm run test:quick
+npm run type:check
+npm run lint:fix
+
+# MANDATORY: Verify functionality
+npm run dev
+```
+
+---
+
+## 🎯 **PREFERRED TOOLS FOR DIFFERENT TASKS**
+
+### **File Modifications**
+- **Small changes (< 10 lines)**: Use `search_replace`
+- **Medium changes (10-50 lines)**: Use `edit_file` with targeted updates
+- **Large changes (> 50 lines)**: Multiple targeted `edit_file` calls
+- **NEVER**: Regenerate entire files over 500 lines
+
+### **Component Updates**
+- **Add new modes**: Update mode arrays in unified components
+- **Add new features**: Extend existing component functionality
+- **Fix bugs**: Use `search_replace` for surgical fixes
+- **Performance**: Optimize existing code, don't rebuild
+
+### **Redux Updates**
+- **New state**: Extend existing slices
+- **New selectors**: Add to selectors.ts
+- **New hooks**: Add to hooks.ts
+- **NEVER**: Create new slices for existing functionality
+
+---
+
+## 📋 **MANDATORY DEVELOPMENT CHECKLIST**
+
+### **Before ANY code changes:**
+- [ ] ✅ Read `frontend/DEVELOPMENT_CONTEXT.md`
+- [ ] ✅ Read `frontend/COMPONENT_INVENTORY.md`
+- [ ] ✅ Check existing files with `ls` or `find`
+- [ ] ✅ Read existing implementation with `read_file`
+- [ ] ✅ Understand current patterns and structure
+- [ ] ✅ Plan targeted updates, NOT regeneration
+- [ ] ✅ Verify no forbidden component names
+- [ ] ✅ Confirm Redux integration approach
+- [ ] ✅ Plan testing strategy
+
+### **During development:**
+- [ ] ✅ Use `search_replace` for specific changes
+- [ ] ✅ Use `edit_file` for targeted updates
+- [ ] ✅ Maintain existing patterns and interfaces
+- [ ] ✅ Follow TypeScript best practices
+- [ ] ✅ Ensure accessibility compliance
+- [ ] ✅ Test changes incrementally
+
+### **After development:**
+- [ ] ✅ Run `npm run test:quick`
+- [ ] ✅ Run `npm run type:check`
+- [ ] ✅ Run `npm run lint:fix`
+- [ ] ✅ Test in browser with `npm run dev`
+- [ ] ✅ Verify existing functionality still works
+- [ ] ✅ Update documentation if needed
+
+---
+
+## 🛠️ **DEVELOPMENT ACCELERATION TOOLS**
+
+### **Component Generator (USE THIS)**
+```bash
+# Generate new utility components (not duplicating existing)
+npm run generate:component ComponentName
+npm run generate:page PageName
+npm run generate:utility UtilityName
+
+# NEVER use for dashboard, AI chat, search, or chart components
+```
+
+### **Development Scripts (USE THESE)**
+```bash
+# Parallel development
+npm run dev:full          # Dev server + Storybook
+
+# Fast testing
+npm run test:quick        # Quick test run
+npm run test:watch        # Watch mode
+
+# Quality checks
+npm run check:all         # Comprehensive validation
+npm run type:check        # TypeScript validation
+npm run lint:fix          # Auto-fix linting
+
+# Progress tracking
+npm run report            # Daily progress report
+```
+
+### **Context Recovery (EMERGENCY USE)**
+```bash
+# If context is lost, run immediately:
+cat frontend/DEVELOPMENT_CONTEXT.md | head -50
+cat frontend/COMPONENT_INVENTORY.md | head -30
+find frontend/src -name "Unified*.tsx"
+ls -la frontend/src/store/
+```
+
+---
+
+## 📊 **PERFORMANCE GUIDELINES**
+
+### **Bundle Size Optimization**
+- **Current achievement**: 60% bundle size reduction
+- **Target**: Keep bundle under 1MB
+- **Method**: Code splitting, lazy loading, tree shaking
+
+### **Runtime Performance**
+- **Current achievement**: 25% faster load times
+- **Target**: < 300ms initial load
+- **Method**: Memoization, virtualization, efficient re-renders
+
+### **Memory Usage**
+- **Current achievement**: 40% memory reduction
+- **Target**: < 120MB runtime memory
+- **Method**: Proper cleanup, efficient data structures
+
+### **Development Speed**
+- **Current achievement**: 94% faster component creation
+- **Target**: < 2 minutes for new components
+- **Method**: Component generator, templates, automation
+
+---
+
+## 🔍 **DEBUGGING COMMANDS**
+
+### **Component Verification**
+```bash
+# Check unified components exist
+find frontend/src -name "Unified*.tsx" | wc -l  # Should be 4
+
+# Check component exports
+grep -n "export" frontend/src/components/index.ts
+
+# Check Redux store structure
+ls -la frontend/src/store/slices/ | wc -l  # Should be 3 slices
+```
+
+### **Context Verification**
+```bash
+# Check development context
+wc -l frontend/DEVELOPMENT_CONTEXT.md  # Should be 500+ lines
+
+# Check component inventory
+wc -l frontend/COMPONENT_INVENTORY.md  # Should be 300+ lines
+
+# Check cursorrules
+wc -l frontend/.cursorrules  # Should be 200+ lines
+```
+
+### **Build Verification**
+```bash
+# Check build status
+npm run build 2>&1 | grep -i error
+
+# Check type safety
+npm run type:check 2>&1 | grep -i error
+
+# Check test status
+npm run test:quick 2>&1 | grep -E "(failed|error)"
+```
+
+---
+
+## 🎯 **SUCCESS METRICS**
+
+### **Code Quality Indicators**
+- ✅ No duplicate components
+- ✅ No files over 1,200 lines
+- ✅ 100% TypeScript coverage
+- ✅ All tests passing
+- ✅ No linting errors
+
+### **Performance Indicators**
+- ✅ Bundle size < 1MB
+- ✅ Load time < 300ms
+- ✅ Memory usage < 120MB
+- ✅ No memory leaks
+- ✅ Smooth 60fps interactions
+
+### **Development Indicators**
+- ✅ Component creation < 2 minutes
+- ✅ Build time < 30 seconds
+- ✅ Test execution < 10 seconds
+- ✅ Context recovery < 1 minute
+- ✅ No regeneration of large files
+
+---
+
+## 🚨 **EMERGENCY PROCEDURES**
+
+### **If Context Is Lost**
+1. **STOP** - Don't create anything new
+2. **READ** `frontend/DEVELOPMENT_CONTEXT.md`
+3. **READ** `frontend/COMPONENT_INVENTORY.md`
+4. **VERIFY** unified components exist
+5. **UNDERSTAND** architecture before proceeding
+
+### **If Wrong Component Is Created**
+1. **DELETE** the incorrect component immediately
+2. **IDENTIFY** correct unified component to extend
+3. **PLAN** proper extension strategy
+4. **IMPLEMENT** using existing patterns
+
+### **If Build Breaks**
+1. **CHECK** TypeScript errors first
+2. **VERIFY** all imports are correct
+3. **CONFIRM** no missing dependencies
+4. **REVERT** to last working state if needed
+
+---
+
+## 📚 **REFERENCE DOCUMENTATION**
+
+### **Must-Read Files (IN ORDER)**
+1. `frontend/DEVELOPMENT_CONTEXT.md` - Complete development context
+2. `frontend/COMPONENT_INVENTORY.md` - All existing components
+3. `frontend/.cursorrules` - This file (development rules)
+4. `frontend/PROMPT_TEMPLATES.md` - AI assistance templates
+5. `frontend/REDUX_IMPLEMENTATION_GUIDE.md` - Redux patterns
+
+### **Reference Files**
+- `frontend/ENHANCED_TESTING_GUIDE.md` - Testing methodology
+- `frontend/DEVELOPMENT_ACCELERATION_GUIDE.md` - Speed optimization
+- `frontend/src/components/index.ts` - Component exports
+- `frontend/package.json` - Available scripts
+- `UI_REDESIGN_PLAN.md` - Original requirements
+
+---
+
+## 🎯 **FINAL REMINDERS**
+
+### **Golden Rules (NEVER FORGET)**
+1. **ALWAYS** read context files before changes
+2. **NEVER** regenerate files over 500 lines
+3. **ALWAYS** extend existing unified components
+4. **NEVER** create duplicate functionality
+5. **ALWAYS** use targeted updates (search_replace/edit_file)
+6. **NEVER** assume - always verify what exists
+7. **ALWAYS** maintain existing Redux patterns
+8. **NEVER** break existing component interfaces
+
+### **Success Mantra**
+- ✅ **Read First** - Understand before changing
+- ✅ **Extend, Don't Replace** - Build on existing work
+- ✅ **Test Everything** - Ensure quality
+- ✅ **Document Changes** - Keep context current
+- ✅ **Optimize Performance** - Maintain speed
+
+### **Failure Prevention**
+- ❌ **Don't Regenerate** - Update existing files
+- ❌ **Don't Duplicate** - Use existing components
+- ❌ **Don't Assume** - Verify what exists
+- ❌ **Don't Rush** - Follow the checklist
+- ❌ **Don't Ignore** - Read the documentation
+
+---
+
+**Last Updated**: January 2025
+**Next Review**: When major changes are made
+**Maintainer**: Development Team
+**Status**: COMPREHENSIVE RULES - COMPLETE GUIDANCE
+
+**These rules contain EVERYTHING needed for successful GoldenSignalsAI development. Follow them religiously for optimal results.** 

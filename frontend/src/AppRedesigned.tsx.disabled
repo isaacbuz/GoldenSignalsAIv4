@@ -1,0 +1,376 @@
+/**
+ * GoldenSignalsAI - Professional Signals Intelligence Platform
+ * Redesigned App Component
+ * 
+ * This implements the new professional UI/UX design focused on:
+ * - AI-powered signal generation (NOT trading)
+ * - Professional quant aesthetics
+ * - Educational value
+ * - Signal analytics and insights
+ */
+
+import React, { useState, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+    ThemeProvider,
+    CssBaseline,
+    Box,
+    createTheme,
+    alpha,
+} from '@mui/material';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Import redesigned pages
+import { SignalsCommandCenter } from './pages/Dashboard/SignalsCommandCenter';
+import { SignalsDashboard } from './pages/SignalsDashboard/SignalsDashboard';
+import { AICommandCenter } from './pages/AICommandCenter/AICommandCenter';
+import { MarketIntelligence } from './pages/MarketIntelligence/MarketIntelligence';
+import { SignalAnalytics } from './pages/SignalAnalytics/SignalAnalytics';
+import { Portfolio } from './pages/Portfolio/Portfolio';
+import { Settings } from './pages/Settings/Settings';
+import ModernSignalsHub from './pages/Dashboard/ModernSignalsHub';
+
+// Import shared components
+import { ModernSidebar } from './components/Layout/ModernSidebar';
+import { AIAssistant } from './components/AI/AIAssistant';
+
+// Professional Trading Theme
+const createProfessionalTheme = (mode: 'dark' | 'light' = 'dark') => {
+    const isDark = mode === 'dark';
+
+    return createTheme({
+        palette: {
+            mode,
+            primary: {
+                main: '#00D4AA', // Mint Green
+                contrastText: '#0A0E1A',
+            },
+            secondary: {
+                main: '#FFD700', // Gold (AI)
+                contrastText: '#0A0E1A',
+            },
+            error: {
+                main: '#FF4757', // Coral Red
+            },
+            warning: {
+                main: '#F59E0B', // Amber
+            },
+            success: {
+                main: '#22C55E', // Green
+            },
+            info: {
+                main: '#3B82F6', // Blue
+            },
+            background: {
+                default: isDark ? '#0A0E1A' : '#F8FAFC',
+                paper: isDark ? '#131A2A' : '#FFFFFF',
+            },
+            text: {
+                primary: isDark ? '#E2E8F0' : '#1E293B',
+                secondary: isDark ? '#94A3B8' : '#64748B',
+            },
+            divider: isDark ? alpha('#E2E8F0', 0.12) : alpha('#1E293B', 0.12),
+        },
+        typography: {
+            fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            h1: {
+                fontWeight: 800,
+                letterSpacing: '-0.025em',
+            },
+            h2: {
+                fontWeight: 700,
+                letterSpacing: '-0.025em',
+            },
+            h3: {
+                fontWeight: 700,
+                letterSpacing: '-0.025em',
+            },
+            h4: {
+                fontWeight: 700,
+                letterSpacing: '-0.025em',
+            },
+            h5: {
+                fontWeight: 600,
+            },
+            h6: {
+                fontWeight: 600,
+            },
+            button: {
+                fontWeight: 600,
+                textTransform: 'none',
+            },
+        },
+        shape: {
+            borderRadius: 8,
+        },
+        components: {
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8,
+                        padding: '8px 16px',
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(0, 212, 170, 0.2)',
+                        },
+                    },
+                    contained: {
+                        boxShadow: 'none',
+                        '&:hover': {
+                            boxShadow: '0 4px 12px rgba(0, 212, 170, 0.3)',
+                        },
+                    },
+                },
+            },
+            MuiCard: {
+                styleOverrides: {
+                    root: {
+                        backgroundImage: 'none',
+                        backgroundColor: isDark ? alpha('#131A2A', 0.8) : '#FFFFFF',
+                        backdropFilter: 'blur(10px)',
+                        border: `1px solid ${isDark ? alpha('#E2E8F0', 0.1) : alpha('#1E293B', 0.1)}`,
+                    },
+                },
+            },
+            MuiPaper: {
+                styleOverrides: {
+                    root: {
+                        backgroundImage: 'none',
+                        backgroundColor: isDark ? alpha('#131A2A', 0.8) : '#FFFFFF',
+                        backdropFilter: 'blur(10px)',
+                    },
+                },
+            },
+            MuiChip: {
+                styleOverrides: {
+                    root: {
+                        fontWeight: 600,
+                        borderRadius: 6,
+                    },
+                },
+            },
+        },
+    });
+};
+
+// Query Client Configuration
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 5 * 60 * 1000, // 5 minutes
+            retry: 2,
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
+// Navigation Items
+const navigationItems = [
+    {
+        title: 'Dashboard',
+        path: '/',
+        icon: '📊',
+        description: 'AI-powered command center',
+    },
+    {
+        title: 'Signal Discovery',
+        path: '/signals',
+        icon: '🎯',
+        description: 'Find high-confidence signals',
+    },
+    {
+        title: 'AI Lab',
+        path: '/ai-lab',
+        icon: '🤖',
+        description: 'Model insights & analysis',
+    },
+    {
+        title: 'Market Intel',
+        path: '/intelligence',
+        icon: '🔍',
+        description: 'Market analysis & trends',
+    },
+    {
+        title: 'Analytics',
+        path: '/analytics',
+        icon: '📈',
+        description: 'Signal performance metrics',
+    },
+    {
+        title: 'Portfolio',
+        path: '/portfolio',
+        icon: '💼',
+        description: 'Educational paper trading',
+    },
+];
+
+// Main App Component
+export const AppRedesigned: React.FC = () => {
+    const [darkMode, setDarkMode] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+
+    const theme = useMemo(() => createProfessionalTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Router>
+                    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+                        {/* Modern Sidebar */}
+                        <ModernSidebar
+                            open={sidebarOpen}
+                            onClose={() => setSidebarOpen(false)}
+                            onOpen={() => setSidebarOpen(true)}
+                            navigationItems={navigationItems}
+                        />
+
+                        {/* Main Content Area */}
+                        <Box
+                            component="main"
+                            sx={{
+                                flexGrow: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                ml: sidebarOpen ? '240px' : '64px',
+                                transition: 'margin-left 0.3s ease-in-out',
+                                bgcolor: 'background.default',
+                                minHeight: '100vh',
+                            }}
+                        >
+                            <Routes>
+                                {/* Main Dashboard */}
+                                <Route path="/" element={<SignalsCommandCenter />} />
+                                <Route path="/dashboard" element={<Navigate to="/" replace />} />
+
+                                {/* Signal Discovery */}
+                                <Route path="/signals" element={<SignalsDashboard />} />
+
+                                {/* AI Laboratory */}
+                                <Route path="/ai-lab" element={<AICommandCenter />} />
+
+                                {/* Market Intelligence */}
+                                <Route path="/intelligence" element={<MarketIntelligence />} />
+
+                                {/* Analytics */}
+                                <Route path="/analytics" element={<SignalAnalytics />} />
+
+                                {/* Portfolio Simulator */}
+                                <Route path="/portfolio" element={<Portfolio />} />
+
+                                {/* Settings */}
+                                <Route path="/settings" element={<Settings />} />
+
+                                {/* Modern Signals Hub */}
+                                <Route path="/modern" element={<ModernSignalsHub />} />
+
+                                {/* Default redirect */}
+                                <Route path="*" element={<Navigate to="/" replace />} />
+                            </Routes>
+                        </Box>
+
+                        {/* AI Assistant (Global) */}
+                        <AIAssistant
+                            open={aiAssistantOpen}
+                            onClose={() => setAiAssistantOpen(false)}
+                            context={{
+                                page: window.location.pathname,
+                                theme: darkMode ? 'dark' : 'light',
+                            }}
+                        />
+                    </Box>
+                </Router>
+
+                {/* Global Styles */}
+                <style jsx global>{`
+                    /* Professional Font Import */
+                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&family=Bebas+Neue&display=swap');
+
+                    /* Smooth Scrolling */
+                    html {
+                        scroll-behavior: smooth;
+                    }
+
+                    /* Custom Scrollbar */
+                    ::-webkit-scrollbar {
+                        width: 8px;
+                        height: 8px;
+                    }
+
+                    ::-webkit-scrollbar-track {
+                        background: ${darkMode ? '#0A0E1A' : '#F8FAFC'};
+                    }
+
+                    ::-webkit-scrollbar-thumb {
+                        background: ${darkMode ? '#1E293B' : '#CBD5E1'};
+                        border-radius: 4px;
+                    }
+
+                    ::-webkit-scrollbar-thumb:hover {
+                        background: ${darkMode ? '#334155' : '#94A3B8'};
+                    }
+
+                    /* Animations */
+                    @keyframes pulse {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.5; }
+                    }
+
+                    @keyframes slideIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+
+                    /* Glass Morphism Effect */
+                    .glass {
+                        background: ${darkMode
+                        ? 'rgba(19, 26, 42, 0.8)'
+                        : 'rgba(255, 255, 255, 0.8)'};
+                        backdrop-filter: blur(10px);
+                        border: 1px solid ${darkMode
+                        ? 'rgba(226, 232, 240, 0.1)'
+                        : 'rgba(30, 41, 59, 0.1)'};
+                    }
+
+                    /* Glow Effects */
+                    .glow-green {
+                        box-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+                    }
+
+                    .glow-gold {
+                        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                    }
+
+                    .glow-red {
+                        box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+                    }
+
+                    /* Professional Number Display */
+                    .mono-number {
+                        font-family: 'JetBrains Mono', monospace;
+                        font-variant-numeric: tabular-nums;
+                    }
+
+                    /* Signal Confidence Display */
+                    .confidence-display {
+                        font-family: 'Bebas Neue', sans-serif;
+                        letter-spacing: 0.02em;
+                    }
+                `}</style>
+            </ThemeProvider>
+        </QueryClientProvider>
+    );
+}; 

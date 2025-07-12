@@ -3,6 +3,9 @@
  * Handles connection failures, retries, and message queuing
  */
 
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+
 export interface WebSocketConfig {
     url: string;
     reconnectInterval?: number;

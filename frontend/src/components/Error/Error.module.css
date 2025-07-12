@@ -1,0 +1,343 @@
+/* Container base styles */
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid;
+    transition: all 0.2s ease;
+}
+
+/* Error types */
+.inline {
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.page {
+    min-height: 100vh;
+    border: none;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.card {
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+.toast {
+    max-width: 400px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Severity styles */
+.error {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.error .defaultIcon {
+    color: #dc2626;
+}
+
+.warning {
+    background-color: #fffbeb;
+    border-color: #fed7aa;
+    color: #92400e;
+}
+
+.warning .defaultIcon {
+    color: #f59e0b;
+}
+
+.info {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e3a8a;
+}
+
+.info .defaultIcon {
+    color: #3b82f6;
+}
+
+/* Icon wrapper */
+.iconWrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.defaultIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.page .iconWrapper .defaultIcon {
+    width: 64px;
+    height: 64px;
+}
+
+.card .iconWrapper .defaultIcon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    min-width: 0;
+}
+
+.textWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.inline .textWrapper {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.title {
+    font-weight: 600;
+    margin: 0;
+}
+
+.page .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.card .title {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.message {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.page .message {
+    font-size: 18px;
+    color: #6b7280;
+    max-width: 600px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.card .message {
+    font-size: 14px;
+}
+
+/* Page specific */
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Card specific */
+.cardContent {
+    padding: 16px;
+}
+
+.header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.header .textWrapper {
+    flex: 1;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.inline .actions {
+    margin-top: 0;
+    margin-left: auto;
+}
+
+/* Dismiss button */
+.dismissButton {
+    background: transparent;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: inherit;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+}
+
+.dismissButton:hover {
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Details */
+.details {
+    margin-top: 12px;
+}
+
+.detailsToggle {
+    background: transparent;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: inherit;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity 0.2s ease;
+}
+
+.detailsToggle:hover {
+    opacity: 1;
+}
+
+.chevron {
+    transition: transform 0.2s ease;
+}
+
+.chevron.expanded {
+    transform: rotate(180deg);
+}
+
+.detailsContent {
+    margin-top: 8px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Error list */
+.errorList {
+    margin: 8px 0 0 20px;
+    padding: 0;
+    list-style: disc;
+}
+
+.errorList li {
+    margin: 4px 0;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .error {
+        background-color: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #fecaca;
+    }
+
+    .error .defaultIcon {
+        color: #ef4444;
+    }
+
+    .warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.3);
+        color: #fed7aa;
+    }
+
+    .warning .defaultIcon {
+        color: #f59e0b;
+    }
+
+    .info {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+        color: #bfdbfe;
+    }
+
+    .info .defaultIcon {
+        color: #60a5fa;
+    }
+
+    .page {
+        background-color: #111827;
+        color: #f3f4f6;
+    }
+
+    .page .message {
+        color: #9ca3af;
+    }
+
+    .dismissButton:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .detailsContent {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #d1d5db;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.toast {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .page .title {
+        font-size: 24px;
+    }
+
+    .page .message {
+        font-size: 16px;
+    }
+
+    .page .iconWrapper .defaultIcon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .inline {
+        flex-direction: column;
+    }
+
+    .inline .actions {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+}

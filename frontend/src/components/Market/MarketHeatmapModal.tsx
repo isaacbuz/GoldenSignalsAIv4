@@ -107,7 +107,8 @@ const MarketHeatmapModal: React.FC<MarketHeatmapModalProps> = ({
             }
             return mockStocks.filter(s => s.sector === sector);
         },
-        refetchInterval: 30000, // Refresh every 30 seconds
+        // Disabled auto-refresh to prevent constant updating
+        staleTime: 300000, // Keep data fresh for 5 minutes
     });
 
     const getColorIntensity = (changePercent: number) => {

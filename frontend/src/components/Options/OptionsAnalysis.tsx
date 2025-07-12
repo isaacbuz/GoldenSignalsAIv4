@@ -59,7 +59,8 @@ export const OptionsAnalysis: React.FC<OptionsAnalysisProps> = ({ symbol, metric
   const { data: signals, isLoading } = useQuery<AISignal[]>({
     queryKey: ['activeSignals'],
     queryFn: fetchActiveSignals,
-    refetchInterval: 30000,
+    // Disabled auto-refresh to prevent constant updating
+    staleTime: 300000, // Keep data fresh for 5 minutes
   });
 
   const getFlowColor = (sentiment: string) => {
@@ -155,8 +156,8 @@ export const OptionsAnalysis: React.FC<OptionsAnalysisProps> = ({ symbol, metric
                             signal.urgency === 'HIGH'
                               ? 'error'
                               : signal.urgency === 'MEDIUM'
-                              ? 'warning'
-                              : 'info'
+                                ? 'warning'
+                                : 'info'
                           }
                           size="small"
                         />
@@ -246,8 +247,8 @@ export const OptionsAnalysis: React.FC<OptionsAnalysisProps> = ({ symbol, metric
                               signal.confidence > 0.7
                                 ? 'success.main'
                                 : signal.confidence > 0.5
-                                ? 'warning.main'
-                                : 'error.main',
+                                  ? 'warning.main'
+                                  : 'error.main',
                           },
                         }}
                       />

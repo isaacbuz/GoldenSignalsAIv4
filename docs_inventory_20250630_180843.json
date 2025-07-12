@@ -1,0 +1,1427 @@
+[
+  {
+    "path": "REAL_TIME_SENTIMENT_ANALYZER_IMPLEMENTATION.md",
+    "title": "Real-time Sentiment Analyzer Implementation Summary",
+    "size": 5057,
+    "lines": 134,
+    "sections": 10,
+    "last_modified": "2025-06-24T14:06:02.311818",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "INTEGRATION_TESTING_SUMMARY.md",
+    "title": "Integration Testing Implementation Summary",
+    "size": 5807,
+    "lines": 207,
+    "sections": 11,
+    "last_modified": "2025-06-24T16:14:06.640683",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "TEST_RESULTS_SUMMARY.md",
+    "title": "Test Results Summary - GoldenSignalsAI V2",
+    "size": 3306,
+    "lines": 116,
+    "sections": 6,
+    "last_modified": "2025-06-25T15:35:12.175488",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "LICENSE.md",
+    "title": "MIT License",
+    "size": 1068,
+    "lines": 21,
+    "sections": 0,
+    "last_modified": "2025-05-29T12:31:57.385301",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "07-ARCHIVE/LICENSE.md"
+  },
+  {
+    "path": "API_DOCUMENTATION.md",
+    "title": "GoldenSignalsAI V2 API Documentation",
+    "size": 14175,
+    "lines": 756,
+    "sections": 12,
+    "last_modified": "2025-06-23T11:43:54.850990",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "RAG_AGENT_MCP_IMPLEMENTATION_STATUS.md",
+    "title": "RAG, Agent, and MCP Implementation Status Report",
+    "size": 5852,
+    "lines": 166,
+    "sections": 10,
+    "last_modified": "2025-06-24T13:42:12.022120",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "AFTER_HOURS_HANDLING.md",
+    "title": "After-Hours Data Handling in GoldenSignalsAI V3",
+    "size": 4795,
+    "lines": 174,
+    "sections": 9,
+    "last_modified": "2025-06-10T22:24:36.730278",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "IMPLEMENTATION_STATUS.md",
+    "title": "GoldenSignalsAI V2 - Implementation Status",
+    "size": 5602,
+    "lines": 176,
+    "sections": 7,
+    "last_modified": "2025-06-26T12:16:54.865691",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "PHASE_1_IMPLEMENTATION_SUMMARY.md",
+    "title": "Phase 1 Implementation Summary - Week 1 Progress",
+    "size": 5207,
+    "lines": 140,
+    "sections": 9,
+    "last_modified": "2025-06-24T14:06:50.664051",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "ISSUES_COMPLETION_SUMMARY.md",
+    "title": "Issues Completion Summary - GoldenSignalsAI V2",
+    "size": 3958,
+    "lines": 96,
+    "sections": 4,
+    "last_modified": "2025-06-23T18:37:20.972033",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "PROJECT_STRUCTURE.md",
+    "title": "GoldenSignalsAI Project Structure",
+    "size": 5084,
+    "lines": 169,
+    "sections": 11,
+    "last_modified": "2025-05-29T12:31:57.385430",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "SECURITY_AUDIT_REPORT.md",
+    "title": "Security Audit Report - GoldenSignalsAI V2",
+    "size": 3937,
+    "lines": 151,
+    "sections": 13,
+    "last_modified": "2025-06-26T12:55:16.286627",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "06-OPERATIONS/SECURITY.md"
+  },
+  {
+    "path": "IMPLEMENTATION_LOG.md",
+    "title": "GoldenSignals AI Platform Implementation Log",
+    "size": 4267,
+    "lines": 147,
+    "sections": 7,
+    "last_modified": "2025-06-25T09:51:51.858973",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "06-OPERATIONS/MONITORING.md"
+  },
+  {
+    "path": "PERFORMANCE_OPTIMIZATION_SUMMARY.md",
+    "title": "Performance Optimization Implementation Summary",
+    "size": 5323,
+    "lines": 179,
+    "sections": 9,
+    "last_modified": "2025-06-24T16:54:43.044370",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "06-OPERATIONS/PERFORMANCE.md"
+  },
+  {
+    "path": "OPEN_ISSUES_SUMMARY.md",
+    "title": "Open Issues Summary - GoldenSignalsAIv4",
+    "size": 2251,
+    "lines": 63,
+    "sections": 4,
+    "last_modified": "2025-06-25T15:31:01.383680",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "TEST_QUICK_REFERENCE.md",
+    "title": "GoldenSignalsAI V2 Test Quick Reference Guide",
+    "size": 3370,
+    "lines": 144,
+    "sections": 9,
+    "last_modified": "2025-06-23T07:57:11.870666",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": false,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "DOCUMENTATION_CONSOLIDATION_PLAN.md",
+    "title": "GoldenSignalsAI Documentation Consolidation Plan",
+    "size": 8754,
+    "lines": 320,
+    "sections": 17,
+    "last_modified": "2025-06-30T17:58:57.427121",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "REDESIGN_SUMMARY.md",
+    "title": "GoldenSignalsAI Redesign Summary",
+    "size": 4903,
+    "lines": 143,
+    "sections": 6,
+    "last_modified": "2025-06-30T18:02:51.491366",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "DATABASE_SETUP_GUIDE.md",
+    "title": "\ud83d\uddc4\ufe0f GoldenSignalsAI V3 - Database Setup Guide",
+    "size": 8764,
+    "lines": 374,
+    "sections": 12,
+    "last_modified": "2025-06-13T22:11:42.907217",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "02-GETTING_STARTED/SETUP_GUIDE.md"
+  },
+  {
+    "path": "PLATFORM_TRANSFORMATION_COMPLETE.md",
+    "title": "\ud83c\udf89 GoldenSignals AI Platform Transformation Complete!",
+    "size": 5580,
+    "lines": 201,
+    "sections": 11,
+    "last_modified": "2025-06-25T09:59:46.172457",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "HYBRID_SENTIMENT_SYSTEM.md",
+    "title": "GoldenSignalsAI V2 - Hybrid Sentiment System Documentation",
+    "size": 10049,
+    "lines": 350,
+    "sections": 13,
+    "last_modified": "2025-06-10T20:56:39.003994",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "FINAL_TEST_SUMMARY.md",
+    "title": "GoldenSignalsAIv4 - Final Test Summary",
+    "size": 5668,
+    "lines": 159,
+    "sections": 7,
+    "last_modified": "2025-06-26T18:44:21.341014",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "BACKTESTING_ENHANCEMENT_PLAN.md",
+    "title": "Comprehensive Backtesting Enhancement Plan",
+    "size": 10511,
+    "lines": 284,
+    "sections": 1,
+    "last_modified": "2025-06-23T19:39:16.264306",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "ISSUES_FINAL_SUMMARY.md",
+    "title": "GoldenSignalsAI V2 - GitHub Issues Final Summary",
+    "size": 5350,
+    "lines": 147,
+    "sections": 6,
+    "last_modified": "2025-06-24T16:55:33.638173",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "APPLICATION_RUNNING_GUIDE.md",
+    "title": "\ud83d\ude80 GoldenSignalsAI Application Running Guide",
+    "size": 1774,
+    "lines": 74,
+    "sections": 7,
+    "last_modified": "2025-06-17T22:44:41.921262",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "PROJECT_COMPLETION_SUMMARY.md",
+    "title": "GoldenSignalsAI V2 - Project Completion Summary",
+    "size": 6043,
+    "lines": 172,
+    "sections": 8,
+    "last_modified": "2025-06-26T12:15:16.300904",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "STREAMLINED_ARCHITECTURE.md",
+    "title": "GoldenSignalsAI v3 - Streamlined Architecture",
+    "size": 6064,
+    "lines": 236,
+    "sections": 11,
+    "last_modified": "2025-06-10T23:15:52.788454",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "COMPONENT_MAPPING.md",
+    "title": "Component Mapping for UI Redesign",
+    "size": 6952,
+    "lines": 47,
+    "sections": 3,
+    "last_modified": "2025-06-30T17:09:09.078154",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "PRODUCTION_DEPLOYMENT_GUIDE.md",
+    "title": "GoldenSignals AI V2 Production Deployment Guide",
+    "size": 8916,
+    "lines": 392,
+    "sections": 12,
+    "last_modified": "2025-06-24T16:38:53.664852",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "FINAL_IMPLEMENTATION_SUMMARY.md",
+    "title": "\ud83c\udf89 Final Implementation Summary - All Issues Complete!",
+    "size": 4490,
+    "lines": 177,
+    "sections": 8,
+    "last_modified": "2025-06-25T11:15:16.260869",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "RAG_AGENT_MCP_ANALYSIS_SUMMARY.md",
+    "title": "Executive Summary: RAG, Agent, and MCP Enhancement Analysis",
+    "size": 5079,
+    "lines": 136,
+    "sections": 9,
+    "last_modified": "2025-06-24T12:01:13.896740",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "FINAL_TEST_STATUS.md",
+    "title": "Final Test Status Report - GoldenSignalsAI V2",
+    "size": 4348,
+    "lines": 128,
+    "sections": 8,
+    "last_modified": "2025-06-25T15:55:47.996863",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "README.md",
+    "title": "GoldenSignalsAI V3 \ud83d\ude80",
+    "size": 11490,
+    "lines": 343,
+    "sections": 14,
+    "last_modified": "2025-06-25T13:08:32.260746",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "DOCUMENTATION_HUB.md",
+    "title": "\ud83d\udcda GoldenSignals AI Documentation Hub",
+    "size": 7122,
+    "lines": 165,
+    "sections": 7,
+    "last_modified": "2025-06-25T13:07:37.406246",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "TEST_IMPLEMENTATION_SUMMARY.md",
+    "title": "Test Implementation Summary",
+    "size": 4657,
+    "lines": 121,
+    "sections": 8,
+    "last_modified": "2025-06-25T16:52:07.427707",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "LIVE_DATA_QUICK_START.md",
+    "title": "GoldenSignalsAI V2 - Live Data Quick Start Guide",
+    "size": 8208,
+    "lines": 279,
+    "sections": 12,
+    "last_modified": "2025-06-10T21:56:26.799631",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "02-GETTING_STARTED/SETUP_GUIDE.md"
+  },
+  {
+    "path": "BACKTESTING_ENHANCEMENT_SUMMARY.md",
+    "title": "GoldenSignalsAI V2 - Backtesting Enhancement Summary",
+    "size": 6038,
+    "lines": 179,
+    "sections": 7,
+    "last_modified": "2025-06-24T10:49:29.917200",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "COMPLETE_IMPLEMENTATION_SUMMARY.md",
+    "title": "\ud83c\udf89 Complete Implementation Summary - GoldenSignals AI V2",
+    "size": 8292,
+    "lines": 230,
+    "sections": 13,
+    "last_modified": "2025-06-25T12:56:53.335764",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "RAG_AGENT_MCP_PRIORITY_IMPLEMENTATION.md",
+    "title": "Priority Implementation Plan for RAG, Agent, and MCP Enhancement",
+    "size": 7378,
+    "lines": 281,
+    "sections": 14,
+    "last_modified": "2025-06-24T12:00:25.856782",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "UNIFIED_IMPLEMENTATION_ROADMAP.md",
+    "title": "Unified Implementation Roadmap: Documentation & UI Redesign",
+    "size": 7470,
+    "lines": 270,
+    "sections": 10,
+    "last_modified": "2025-06-30T18:02:07.132088",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "FRONTEND_ENHANCEMENT_PLAN.md",
+    "title": "Frontend Enhancement Plan - GoldenSignalsAI V2",
+    "size": 8753,
+    "lines": 303,
+    "sections": 10,
+    "last_modified": "2025-06-24T17:18:47.089926",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "ISSUES_IMPLEMENTATION_STATUS.md",
+    "title": "GitHub Issues Implementation Status",
+    "size": 6573,
+    "lines": 173,
+    "sections": 10,
+    "last_modified": "2025-06-24T15:37:58.607938",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "COMPREHENSIVE_RAG_AGENT_MCP_ANALYSIS.md",
+    "title": "Comprehensive RAGify, Agentify, and MCPify Analysis for GoldenSignalsAI V2",
+    "size": 19514,
+    "lines": 662,
+    "sections": 11,
+    "last_modified": "2025-06-24T11:56:00.052045",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "TROUBLESHOOTING_GUIDE.md",
+    "title": "GoldenSignalsAI V2 Troubleshooting Guide",
+    "size": 12019,
+    "lines": 642,
+    "sections": 12,
+    "last_modified": "2025-06-23T11:46:50.613827",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "DEPLOYMENT_GUIDE.md",
+    "title": "GoldenSignalsAI V2 Deployment Guide",
+    "size": 16173,
+    "lines": 730,
+    "sections": 11,
+    "last_modified": "2025-06-28T10:56:35.894518",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "HYBRID_SENTIMENT_ARCHITECTURE.md",
+    "title": "Hybrid Sentiment & Dynamic Scoring Architecture",
+    "size": 6580,
+    "lines": 204,
+    "sections": 10,
+    "last_modified": "2025-06-10T20:19:58.976832",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "DEPLOYMENT.md",
+    "title": "GoldenSignalsAI AKS Deployment Guide",
+    "size": 2599,
+    "lines": 139,
+    "sections": 11,
+    "last_modified": "2025-05-29T20:51:36.243484",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "AI_LAB_CONSOLIDATION_PLAN.md",
+    "title": "AI Trading Lab Consolidation Plan",
+    "size": 7712,
+    "lines": 259,
+    "sections": 9,
+    "last_modified": "2025-06-25T00:28:36.108164",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "BACKTESTING_ENHANCEMENT_IMPLEMENTATION.md",
+    "title": "Backtesting Enhancement Implementation Status",
+    "size": 6817,
+    "lines": 160,
+    "sections": 6,
+    "last_modified": "2025-06-24T10:48:36.902502",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "AI_TRADING_LAB_MILESTONES.md",
+    "title": "AI Trading Lab Implementation Plan",
+    "size": 12469,
+    "lines": 473,
+    "sections": 12,
+    "last_modified": "2025-06-25T00:25:22.648742",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "API_DOCUMENTATION_SUMMARY.md",
+    "title": "API Documentation Summary - GoldenSignalsAI",
+    "size": 2498,
+    "lines": 86,
+    "sections": 4,
+    "last_modified": "2025-06-23T18:35:26.966142",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "CONTRIBUTING.md",
+    "title": "Contributing to GoldenSignalsAI",
+    "size": 1952,
+    "lines": 87,
+    "sections": 10,
+    "last_modified": "2025-05-29T12:31:57.384802",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "PRODUCTION_DEPLOYMENT_SUMMARY.md",
+    "title": "Production Deployment Implementation Summary",
+    "size": 3702,
+    "lines": 135,
+    "sections": 6,
+    "last_modified": "2025-06-24T16:45:19.468616",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "CLEANUP_REPORT.md",
+    "title": "\ud83e\uddf9 GoldenSignalsAI V4 - Duplicate Implementation Cleanup Report",
+    "size": 4890,
+    "lines": 147,
+    "sections": 7,
+    "last_modified": "2025-06-26T23:32:03.516762",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "AGENT_COMMUNICATION_ARCHITECTURE.md",
+    "title": "Agent Communication Architecture - GoldenSignalsAI V2",
+    "size": 6634,
+    "lines": 198,
+    "sections": 10,
+    "last_modified": "2025-06-10T20:06:11.207801",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "SETUP_API_KEYS_GUIDE.md",
+    "title": "API Keys Setup Guide for Enhanced Sentiment Analysis",
+    "size": 5426,
+    "lines": 216,
+    "sections": 9,
+    "last_modified": "2025-06-19T16:23:10.787136",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "02-GETTING_STARTED/SETUP_GUIDE.md"
+  },
+  {
+    "path": "TEST_RUNNER_GUIDE.md",
+    "title": "GoldenSignalsAI V2 - Comprehensive Test Runner Guide",
+    "size": 7441,
+    "lines": 316,
+    "sections": 13,
+    "last_modified": "2025-06-21T00:17:01.735459",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "RAPID_IMPLEMENTATION_REPORT.md",
+    "title": "GoldenSignalsAI V4 - Rapid Implementation Report",
+    "size": 8585,
+    "lines": 293,
+    "sections": 7,
+    "last_modified": "2025-06-25T00:19:48.009383",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "TEST_IMPLEMENTATION_PLAN.md",
+    "title": "\ud83e\uddea Test Implementation Plan for GoldenSignalsAI",
+    "size": 7426,
+    "lines": 287,
+    "sections": 9,
+    "last_modified": "2025-06-25T14:57:30.323327",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "ADAPTIVE_LEARNING_ARCHITECTURE.md",
+    "title": "Adaptive Learning Architecture for GoldenSignalsAI",
+    "size": 8721,
+    "lines": 299,
+    "sections": 12,
+    "last_modified": "2025-06-19T13:53:18.191916",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "BACKTESTING_MODULE_TEST_REPORT.md",
+    "title": "Backtesting Module Test Report",
+    "size": 4115,
+    "lines": 117,
+    "sections": 1,
+    "last_modified": "2025-06-23T19:24:04.811447",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/TESTING_GUIDE.md"
+  },
+  {
+    "path": "AI_PLATFORM_TRANSFORMATION_PLAN.md",
+    "title": "GoldenSignals AI Platform Transformation Plan",
+    "size": 7268,
+    "lines": 233,
+    "sections": 12,
+    "last_modified": "2025-06-25T00:38:57.253178",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "CLOSE_THESE_ISSUES.md",
+    "title": "GitHub Issues Ready to Close",
+    "size": 2676,
+    "lines": 75,
+    "sections": 4,
+    "last_modified": "2025-06-24T15:38:24.783114",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "02-GETTING_STARTED/TROUBLESHOOTING.md"
+  },
+  {
+    "path": "FINAL_COMPLETION_SUMMARY.md",
+    "title": "GoldenSignalsAIv4 - Final Completion Summary",
+    "size": 6528,
+    "lines": 244,
+    "sections": 12,
+    "last_modified": "2025-06-26T18:44:04.339836",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "RATE_LIMIT_SOLUTIONS.md",
+    "title": "\ud83d\ude80 GoldenSignalsAI - Rate Limit Solutions Guide",
+    "size": 6767,
+    "lines": 288,
+    "sections": 10,
+    "last_modified": "2025-06-14T11:58:54.292070",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "UI_REDESIGN_PLAN.md",
+    "title": "UI_REDESIGN_PLAN",
+    "size": 21352,
+    "lines": 150,
+    "sections": 0,
+    "last_modified": "2025-06-30T17:10:06.454142",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "PROJECT_BOARD_README.md",
+    "title": "Frontend Enhancement Project Board",
+    "size": 1891,
+    "lines": 71,
+    "sections": 6,
+    "last_modified": "2025-06-24T22:55:50.732690",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "REDESIGN_ROADMAP.md",
+    "title": "GoldenSignals AI Platform Redesign Roadmap",
+    "size": 2241,
+    "lines": 55,
+    "sections": 3,
+    "last_modified": "2025-06-25T00:37:46.318703",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "EPIC_IMPLEMENTATION_SUMMARY.md",
+    "title": "EPIC Implementation Summary",
+    "size": 1075,
+    "lines": 46,
+    "sections": 2,
+    "last_modified": "2025-06-25T12:54:31.173713",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "MCP_SERVERS_IMPLEMENTATION_SUMMARY.md",
+    "title": "MCP Servers Implementation Summary",
+    "size": 6106,
+    "lines": 227,
+    "sections": 11,
+    "last_modified": "2025-06-24T16:00:07.684824",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "OPTIONS_FLOW_INTELLIGENCE_IMPLEMENTATION.md",
+    "title": "Options Flow Intelligence RAG Implementation Summary",
+    "size": 4225,
+    "lines": 110,
+    "sections": 8,
+    "last_modified": "2025-06-24T13:56:31.704371",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "UI_REDESIGN_COMPREHENSIVE_PLAN.md",
+    "title": "GoldenSignalsAI Comprehensive UI Redesign Plan v2.0",
+    "size": 23054,
+    "lines": 875,
+    "sections": 13,
+    "last_modified": "2025-06-30T18:01:13.334989",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "STARTUP_GUIDE.md",
+    "title": "GoldenSignalsAI Startup Guide",
+    "size": 3504,
+    "lines": 203,
+    "sections": 9,
+    "last_modified": "2025-06-17T21:50:57.708918",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": false,
+      "deployment": true
+    },
+    "suggested_location": "05-DEPLOYMENT/DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "path": "frontend/UI_IMPROVEMENTS_GUIDE.md",
+    "title": "GoldenSignalsAI UI Improvements Guide",
+    "size": 7181,
+    "lines": 287,
+    "sections": 9,
+    "last_modified": "2025-06-13T11:02:25.568482",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "frontend/UI_IMPLEMENTATION_STATUS.md",
+    "title": "UI Implementation Status",
+    "size": 3141,
+    "lines": 106,
+    "sections": 6,
+    "last_modified": "2025-06-12T20:07:15.883619",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "frontend/README.md",
+    "title": "Golden Signals AI - Frontend Documentation",
+    "size": 7028,
+    "lines": 329,
+    "sections": 17,
+    "last_modified": "2025-06-25T12:53:08.806648",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "03-DEVELOPMENT/FRONTEND_GUIDE.md"
+  },
+  {
+    "path": "frontend/FINAL_UI_IMPLEMENTATION.md",
+    "title": "GoldenSignalsAI - Final UI Implementation",
+    "size": 7021,
+    "lines": 238,
+    "sections": 12,
+    "last_modified": "2025-06-12T20:25:10.022607",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "frontend/verify-ui.md",
+    "title": "UI Verification Guide",
+    "size": 2518,
+    "lines": 73,
+    "sections": 1,
+    "last_modified": "2025-06-12T19:36:35.829356",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "03-DEVELOPMENT/API_REFERENCE.md"
+  },
+  {
+    "path": "frontend/src/components/DesignSystem/STYLE_GUIDE.md",
+    "title": "Golden Signals AI - Style Guide",
+    "size": 2218,
+    "lines": 105,
+    "sections": 7,
+    "last_modified": "2025-06-25T12:53:08.805956",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": "frontend/src/components/AITradingLab/TRADINGVIEW_INTEGRATION_GUIDE.md",
+    "title": "TradingView Integration Guide for AI Signal Prophet",
+    "size": 3541,
+    "lines": 134,
+    "sections": 4,
+    "last_modified": "2025-06-17T00:31:58.374859",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/ARCHITECTURE.md"
+  },
+  {
+    "path": ".pytest_cache/README.md",
+    "title": "pytest cache directory #",
+    "size": 302,
+    "lines": 8,
+    "sections": 0,
+    "last_modified": "2025-06-19T14:37:48.607903",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "agents/README.md",
+    "title": "GoldenSignalsAI Agent Framework",
+    "size": 2273,
+    "lines": 73,
+    "sections": 4,
+    "last_modified": "2025-05-30T08:52:03.782987",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AGENTS.md"
+  },
+  {
+    "path": "agents/research/ml/README.md",
+    "title": "Machine Learning Research Agents",
+    "size": 2392,
+    "lines": 83,
+    "sections": 7,
+    "last_modified": "2025-05-30T08:54:45.790083",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AGENTS.md"
+  },
+  {
+    "path": "agents/core/sentiment/README.md",
+    "title": "Sentiment Analysis Agents",
+    "size": 2229,
+    "lines": 80,
+    "sections": 8,
+    "last_modified": "2025-05-30T08:55:12.571103",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AGENTS.md"
+  },
+  {
+    "path": "agents/core/technical/README.md",
+    "title": "Technical Analysis Agents",
+    "size": 1631,
+    "lines": 59,
+    "sections": 6,
+    "last_modified": "2025-05-30T08:54:17.717593",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AGENTS.md"
+  },
+  {
+    "path": "agents/strategy/README.md",
+    "title": "Advanced Trading Strategy Orchestration",
+    "size": 2068,
+    "lines": 81,
+    "sections": 8,
+    "last_modified": "2025-06-07T12:28:59.822322",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AGENTS.md"
+  },
+  {
+    "path": "docs/TEMPLATE.md",
+    "title": "Document Title",
+    "size": 1480,
+    "lines": 72,
+    "sections": 7,
+    "last_modified": "2025-06-30T18:07:51.644878",
+    "content_type": {
+      "api": false,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "02-GETTING_STARTED/SETUP_GUIDE.md"
+  },
+  {
+    "path": "docs/README.md",
+    "title": "GoldenSignalsAI Documentation",
+    "size": 3576,
+    "lines": 68,
+    "sections": 5,
+    "last_modified": "2025-06-30T18:07:34.001110",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": true
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "docs/DOMAIN.md",
+    "title": "Domain Components Documentation",
+    "size": 3747,
+    "lines": 142,
+    "sections": 7,
+    "last_modified": "2025-05-30T10:03:39.608308",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "04-MODULES/AI_INTEGRATION.md"
+  },
+  {
+    "path": "docs/FUTURE_ENHANCEMENTS.md",
+    "title": "Future Enhancements for Transformer Model Evaluation System",
+    "size": 3014,
+    "lines": 92,
+    "sections": 12,
+    "last_modified": "2025-06-11T12:14:06.055458",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "07-ARCHIVE/FUTURE_ENHANCEMENTS.md"
+  },
+  {
+    "path": "ml_training/README_LIVE_EVALUATION.md",
+    "title": "Live Transformer Model Evaluation",
+    "size": 2341,
+    "lines": 85,
+    "sections": 8,
+    "last_modified": "2025-06-11T11:17:58.787250",
+    "content_type": {
+      "api": true,
+      "setup": true,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "external/Stock-Prediction-Models/README.md",
+    "title": "README",
+    "size": 12667,
+    "lines": 337,
+    "sections": 3,
+    "last_modified": "2025-05-29T11:54:26.460198",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "external/Stock-Prediction-Models/stock-forecasting-js/README.md",
+    "title": "Stock forecasting JS",
+    "size": 1059,
+    "lines": 35,
+    "sections": 2,
+    "last_modified": "2025-05-29T11:54:26.561304",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": false,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "external/Stock-Prediction-Models/realtime-agent/README.md",
+    "title": "README",
+    "size": 2294,
+    "lines": 56,
+    "sections": 2,
+    "last_modified": "2025-05-29T11:54:26.539387",
+    "content_type": {
+      "api": true,
+      "setup": false,
+      "architecture": false,
+      "deployment": true
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  },
+  {
+    "path": "src/ml/research/README.md",
+    "title": "Machine Learning Research Agents",
+    "size": 2392,
+    "lines": 83,
+    "sections": 7,
+    "last_modified": "2025-06-23T13:54:16.463163",
+    "content_type": {
+      "api": false,
+      "setup": false,
+      "architecture": true,
+      "deployment": false
+    },
+    "suggested_location": "01-OVERVIEW/PROJECT_OVERVIEW.md"
+  }
+]

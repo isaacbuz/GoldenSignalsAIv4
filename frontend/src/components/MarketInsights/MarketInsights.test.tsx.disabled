@@ -1,0 +1,42 @@
+import { render, screen } from '@testing-library/react';
+import { MarketInsights } from './MarketInsights';
+import { TestProviders } from '../../test/TestProviders';
+
+const renderComponent = (props = {}) => {
+  return render(
+    <TestProviders>
+      <MarketInsights {...props} />
+    </TestProviders>
+  );
+};
+
+describe('MarketInsights', () => {
+  it('renders without crashing', () => {
+    renderComponent();
+    expect(screen.getByTestId('marketinsights')).toBeInTheDocument();
+  });
+
+  it('displays the component name', () => {
+    renderComponent();
+    expect(screen.getByText('MarketInsights Component')).toBeInTheDocument();
+  });
+
+  it('accepts custom className', () => {
+    const customClass = 'custom-class';
+    renderComponent({ className: customClass });
+    const element = screen.getByTestId('marketinsights');
+    expect(element).toHaveClass(customClass);
+  });
+
+  it('renders children when provided', () => {
+    const childText = 'Test child content';
+    render(
+      <TestProviders>
+        <MarketInsights>
+          <div>{childText}</div>
+        </MarketInsights>
+      </TestProviders>
+    );
+    expect(screen.getByText(childText)).toBeInTheDocument();
+  });
+});

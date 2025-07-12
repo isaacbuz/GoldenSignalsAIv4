@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GoldenSignalsAI Test Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background-color: #f0f0f0; padding: 20px; }
+        .passed { color: green; }
+        .failed { color: red; }
+        .phase { margin: 20px 0; padding: 10px; border: 1px solid #ddd; }
+        pre { background-color: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GoldenSignalsAI Test Report</h1>
+        <p>Generated: 2025-06-26 12:10:24.182428</p>
+        <p>Total Tests Passed: <span class="passed">0</span></p>
+        <p>Total Tests Failed: <span class="failed">0</span></p>
+    </div>
+    
+    <h2>Test Phases</h2>
+
+    <div class="phase">
+        <h3>Core Agent Tests - <span class="failed">FAILED</span></h3>
+        <p>Duration: 11.06s</p>
+        <p>Command: <code>python -m pytest tests/agents/test_rsi_agent.py tests/agents/test_macd_agent.py tests/agents/test_sentiment_agent.py tests/agents/test_orchestrator.py tests/agents/test_base_agent.py -v --tb=short</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... collected 22 items / 1 error
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/agents/test_rsi_agent.py ________________
+ImportError while importing test module '/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/tests/agents/test_rsi_agent.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+.venv/lib/python3.11/site-packages/_pytest/python.py:617: in _importtestmodule
+    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)
+.venv/lib/python3.11/site-packages/_pytest/pathlib.py:567: in import_path
+    importlib.import_module(module_name)
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+.venv/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/agents/test_rsi_agent.py:4: in <module>
+    from agents.technical.rsi_agent import SimpleRSIAgent
+E   ModuleNotFoundError: No module named 'agents.technical.rsi_agent'
+
+--------- coverage: platform darwin, python 3.11.12-final-0 ----------
+Name                                                          Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------------------
+agents/__init__.py                                                2      0   100%
+agents/adapters/__init__.py                                       0      0   100%
+agents/adapters/legacy/__init__.py                                3      3     0%   4-6
+agents/adapters/legacy/options/__init__.py                        1      1     0%   1
+agents/adapters/legacy/options/options_flow.py                   19     19     0%   1-57
+agents/adapters/legacy/technical/__init__.py                      2      2     0%   1-2
+agents/adapters/legacy/technical/macd.py                         17     17     0%   1-43
+agents/adapters/legacy/technical/rsi.py                          17     17     0%   1-54
+agents/adapters/legacy/volume/__init__.py                         1      1     0%   1
+agents/adapters/legacy/volume/obv.py                             19     19     0%   1-55
+agents/agent_factory.py                                          10     10     0%   3-22
+agents/arbitrage/__init__.py                                      5      5     0%   5-10
+agents/arbitrage/base.py                                         57     57     0%   4-132
+agents/arbitrage/cross_exchange.py                               65     65     0%   4-172
+agents/arbitrage/execution.py                                   112    112     0%   4-323
+agents/arbitrage/statistical.py                                  69     69     0%   4-214
+agents/base.py                                                  175    114    35%   50-52, 68-88, 101, 111, 123-164, 168-222, 226-227, 237-251, 259, 273-274, 278-280, 284-286, 290-293, 298, 301, 305-309, 314-321, 331-357, 367-397, 401-403, 407-408, 412-413, 419, 433
+agents/base_agent.py                                             20      8    60%   17-20, 25, 30, 34, 38
+agents/common/base/__init__.py                                    3      0   100%
+agents/common/base/agent_registry.py                             22     12    45%   20-25, 36, 44, 55-58
+agents/common/base/base_agent.py                                 14      4    71%   34-35, 51-52
+agents/common/utils/__init__.py                                   3      0   100%
+agents/common/utils/persistence.py                               61     49    20%   26-44, 57-76, 88-97, 108-116
+agents/common/utils/validation.py                                68     59    13%   22-55, 72-117, 128-149, 162-174
+agents/communication/__init__.py                                  2      2     0%   5-7
+agents/communication/agent_network.py                            74     74     0%   6-187
+agents/comprehensive_agent_registry.py                          283    283     0%   5-727
+agents/core/__init__.py                                           0      0   100%
+agents/core/flow/__init__.py                                      3      3     0%   5-8
+agents/core/flow/etf_arb_agent.py                               </pre>
+        </details>
+    </div>
+
+    <div class="phase">
+        <h3>Unit Tests - <span class="failed">FAILED</span></h3>
+        <p>Duration: 3.08s</p>
+        <p>Command: <code>python -m pytest tests/unit/ -v --tb=short -x</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... collected 162 items / 1 error
+
+==================================== ERRORS ====================================
+__________ ERROR collecting tests/unit/agents/test_rsi_agent_unit.py ___________
+.venv/lib/python3.11/site-packages/_pytest/python.py:617: in _importtestmodule
+    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)
+.venv/lib/python3.11/site-packages/_pytest/pathlib.py:567: in import_path
+    importlib.import_module(module_name)
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+.venv/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:177: in exec_module
+    source_stat, co = _rewrite_test(fn, self.config)
+.venv/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:359: in _rewrite_test
+    tree = ast.parse(source, filename=strfn)
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ast.py:50: in parse
+    return compile(source, filename, mode, flags,
+E     File "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/tests/unit/agents/test_rsi_agent_unit.py", line 43
+E       import pandas as pd
+E   IndentationError: unexpected indent
+=========================== short test summary info ============================
+ERROR tests/unit/agents/test_rsi_agent_unit.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 2.33s ===============================
+</pre>
+        </details>
+    </div>
+
+    <div class="phase">
+        <h3>Integration Tests - <span class="failed">FAILED</span></h3>
+        <p>Duration: 1.88s</p>
+        <p>Command: <code>python -m pytest tests/integration/ -v --tb=short -x</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... 
+----------------------------- live log collection ------------------------------
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:42 ✅ Data Quality Validator initialized
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: ConfidenceFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: QualityScoreFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: RiskFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: VolumeFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: TechnicalConsistencyFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: DuplicateSignalFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: MarketConditionFilter
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:53 ✅ Signal Generation Engine and Filtering Pipeline initialized
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:63 ✅ Signal Monitoring Service initialized
+collected 47 items / 1 error
+
+==================================== ERRORS ====================================
+_______ ERROR collecting tests/integration/complete/test_full_system.py ________
+tests/integration/complete/test_full_system.py:7: in <module>
+    from mcp_servers.client import MCPClient
+mcp_servers/client.py:11: in <module>
+    class MCPClient:
+mcp_servers/client.py:42: in MCPClient
+    async def get_capabilities(self) -> List[str]:
+E   NameError: name 'List' is not defined
+=========================== short test summary info ============================
+ERROR tests/integration/complete/test_full_system.py - NameError: name 'List'...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 1.31s ===============================
+</pre>
+        </details>
+    </div>
+
+    <div class="phase">
+        <h3>API Tests - <span class="failed">FAILED</span></h3>
+        <p>Duration: 4.84s</p>
+        <p>Command: <code>python -m pytest tests/test_api*.py -v --tb=short -x</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... 
+----------------------------- live log collection ------------------------------
+INFO     src.services.rate_limit_handler:rate_limit_handler.py:78 ✅ Redis cache initialized
+INFO     src.services.cache_service:cache_service.py:115 ✅ Redis cache initialized
+INFO     src.services.notifications.alert_manager:alert_manager.py:29 {'message': 'AlertManager initialized', 'channels': []}
+INFO     src.core.container:container.py:28 Registered service: data_validator (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: market_data (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_engine (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_filter (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_monitor (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: risk_manager (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: portfolio (singleton=True)
+INFO     src.core.container:container.py:112 All services registered
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: ConfidenceFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: QualityScoreFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: RiskFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: VolumeFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: TechnicalConsistencyFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: DuplicateSignalFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: MarketConditionFilter
+INFO     src.services.market_data_manager:market_data_manager.py:309 Initialized 2 data providers
+INFO     src.services.risk_manager:risk_manager.py:44 RiskManager initialized with max portfolio risk: 2.0%, max single trade risk: 1.0%
+collected 0 items / 1 error
+
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_api_analyze.py __________________
+ImportError while importing test module '/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/tests/test_api_analyze.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+.venv/lib/python3.11/site-packages/_pytest/python.py:617: in _importtestmodule
+    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)
+.venv/lib/python3.11/site-packages/_pytest/pathlib.py:567: in import_path
+    importlib.import_module(module_name)
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+.venv/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/test_api_analyze.py:8: in <module>
+    from src.main import app
+src/main.py:45: in <module>
+    from src.api.v1 import api_router
+src/api/__init__.py:7: in <module>
+    from .v1 import api_router
+src/api/v1/__init__.py:17: in <module>
+    from .websocket import router as websocket_router
+src/api/v1/websocket.py:18: in <module>
+    from src.core.auth import get_current_user_ws
+src/core/auth.py:10: in <module>
+    from passlib.context import CryptContext
+E   ModuleNotFoundError: No module named 'passlib'
+------------------------------- Captured stderr --------------------------------
+INFO:src.services.rate_limit_handler:✅ Redis cache initialized
+INFO:src.services.cache_service:✅ Redis cache initialized
+INFO:src.services.notifications.alert_manager:{'message': 'AlertManager initialized', 'channels': []}
+INFO:src.core.container:Registered service: data_validator (singleton=True)
+INFO:src.core.container:Registered service: market_data (singleton=True)
+INFO:src.core.container:Registered service: signal_engine (singleton=True)
+INFO:src.core.container:Registered service: signal_filter (singleton=True)
+INFO:src.core.container:Registered service: signal_m</pre>
+        </details>
+    </div>
+
+    <div class="phase">
+        <h3>All Tests - <span class="failed">FAILED</span></h3>
+        <p>Duration: 3.46s</p>
+        <p>Command: <code>python -m pytest tests/ -v --tb=short -x</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... 
+----------------------------- live log collection ------------------------------
+INFO     src.services.rate_limit_handler:rate_limit_handler.py:78 ✅ Redis cache initialized
+INFO     src.services.cache_service:cache_service.py:115 ✅ Redis cache initialized
+INFO     src.services.notifications.alert_manager:alert_manager.py:29 {'message': 'AlertManager initialized', 'channels': []}
+INFO     src.core.container:container.py:28 Registered service: data_validator (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: market_data (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_engine (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_filter (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_monitor (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: risk_manager (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: portfolio (singleton=True)
+INFO     src.core.container:container.py:112 All services registered
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: ConfidenceFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: QualityScoreFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: RiskFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: VolumeFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: TechnicalConsistencyFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: DuplicateSignalFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: MarketConditionFilter
+INFO     src.services.market_data_manager:market_data_manager.py:309 Initialized 2 data providers
+INFO     src.services.risk_manager:risk_manager.py:44 RiskManager initialized with max portfolio risk: 2.0%, max single trade risk: 1.0%
+collected 0 items / 1 error
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_agent_performance.py _______________
+ImportError while importing test module '/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/tests/test_agent_performance.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+.venv/lib/python3.11/site-packages/_pytest/python.py:617: in _importtestmodule
+    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)
+.venv/lib/python3.11/site-packages/_pytest/pathlib.py:567: in import_path
+    importlib.import_module(module_name)
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+.venv/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/test_agent_performance.py:9: in <module>
+    from src.main import app
+src/main.py:45: in <module>
+    from src.api.v1 import api_router
+src/api/__init__.py:7: in <module>
+    from .v1 import api_router
+src/api/v1/__init__.py:17: in <module>
+    from .websocket import router as websocket_router
+src/api/v1/websocket.py:18: in <module>
+    from src.core.auth import get_current_user_ws
+src/core/auth.py:10: in <module>
+    from passlib.context import CryptContext
+E   ModuleNotFoundError: No module named 'passlib'
+------------------------------- Captured stderr --------------------------------
+INFO:src.services.rate_limit_handler:✅ Redis cache initialized
+INFO:src.services.cache_service:✅ Redis cache initialized
+INFO:src.services.notifications.alert_manager:{'message': 'AlertManager initialized', 'channels': []}
+INFO:src.core.container:Registered service: data_validator (singleton=True)
+INFO:src.core.container:Registered service: market_data (singleton=True)
+INFO:src.core.container:Registered service: signal_engine (singleton=True)
+INFO:src.core.container:Registered service: signal_filter (singleton=True)
+INFO:src.core.container:Registered servi</pre>
+        </details>
+    </div>
+
+    <div class="phase">
+        <h3>Coverage Report - <span class="failed">FAILED</span></h3>
+        <p>Duration: 13.80s</p>
+        <p>Command: <code>python -m pytest tests/ --cov=. --cov-report=html --cov-report=term</code></p>
+        <details>
+            <summary>Output</summary>
+            <pre>============================= test session starts ==============================
+platform darwin -- Python 3.11.12, pytest-7.4.4, pluggy-1.6.0 -- /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2
+configfile: pytest.ini
+plugins: anyio-4.9.0, cov-4.1.0, asyncio-0.21.1, mock-3.11.1
+asyncio: mode=Mode.AUTO
+collecting ... 
+----------------------------- live log collection ------------------------------
+INFO     src.services.rate_limit_handler:rate_limit_handler.py:78 ✅ Redis cache initialized
+INFO     src.services.cache_service:cache_service.py:115 ✅ Redis cache initialized
+INFO     src.services.notifications.alert_manager:alert_manager.py:29 {'message': 'AlertManager initialized', 'channels': []}
+INFO     src.core.container:container.py:28 Registered service: data_validator (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: market_data (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_engine (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_filter (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: signal_monitor (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: risk_manager (singleton=True)
+INFO     src.core.container:container.py:28 Registered service: portfolio (singleton=True)
+INFO     src.core.container:container.py:112 All services registered
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: ConfidenceFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: QualityScoreFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: RiskFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: VolumeFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: TechnicalConsistencyFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: DuplicateSignalFilter
+INFO     src.services.signal_filtering_pipeline:signal_filtering_pipeline.py:253 Added filter: MarketConditionFilter
+INFO     src.services.market_data_manager:market_data_manager.py:309 Initialized 2 data providers
+INFO     src.services.risk_manager:risk_manager.py:44 RiskManager initialized with max portfolio risk: 2.0%, max single trade risk: 1.0%
+INFO     infrastructure.config_manager:config_manager.py:116 Configuration loaded for development environment
+INFO     infrastructure.config_manager:config_manager.py:144 Secrets loaded successfully
+INFO     infrastructure.config_manager:config_manager.py:164 Feature flags loaded successfully
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:42 ✅ Data Quality Validator initialized
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: ConfidenceFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: QualityScoreFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: RiskFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: VolumeFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: TechnicalConsistencyFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: DuplicateSignalFilter
+INFO     src.services.signals.signal_filter:signal_filter.py:253 Added filter: MarketConditionFilter
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:53 ✅ Signal Generation Engine and Filtering Pipeline initialized
+INFO     standalone_backend_optimized:standalone_backend_optimized.py:63 ✅ Signal Monitoring Service initialized
+collected 391 items / 17 errors
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_agent_performance.py _______________
+ImportError while importing test module '/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/tests/test_agent_performance.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.11/3.11.12/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_agent_performance.py:9: in <module>
+    from src.main import app
+src/main.py:45: in <module>
+    from src.api.v1 import api_router
+src/api/__init__.py:7: in <module>
+    from .v1 import api_router
+src/api/v1/__init__.py:17: in <module>
+    from .websocket import router as websocket_router
+src/api/v1/websocket.py:18: in <module>
+    from src.core.auth import get_current_user_ws
+src/core/auth.py:10: in <module>
+    from passlib.context import Crypt</pre>
+        </details>
+    </div>
+
+</body>
+</html>
