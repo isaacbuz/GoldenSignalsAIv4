@@ -1,105 +1,72 @@
-# Core dependencies
+# GoldenSignalsAI Backend Dependencies
+# Core Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
-python-dotenv==1.0.0
+python-multipart==0.0.6
 
 # Database
-asyncpg==0.29.0
 sqlalchemy==2.0.23
-redis==5.0.1
+alembic==1.12.1
+asyncpg==0.29.0
 psycopg2-binary==2.9.9
 
-# Market Data
-yfinance==0.2.33
-alpha-vantage==2.3.1
-finnhub-python==2.4.19
-pandas==2.1.4
-numpy==1.26.2
+# Redis & Caching
+redis==5.0.1
+aioredis==2.0.1
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
+bcrypt==4.1.2
+
+# HTTP Client & API
 httpx==0.25.2
+aiohttp==3.9.1
+requests==2.31.0
 
-# WebSocket
-websockets==12.0
-python-socketio==5.10.0
+# Data Processing
+pandas==2.1.4
+numpy==1.25.2
+yfinance==0.2.28
+alpha-vantage==2.3.1
 
-# ML/AI
+# AI & ML
+openai==1.3.7
+anthropic==0.7.8
 scikit-learn==1.3.2
-joblib==1.3.2
-ta==0.11.0
-tensorflow==2.15.0
-torch==2.1.2
-transformers==4.36.2
+torch==2.1.1
+transformers==4.36.0
 
-# Utilities
-pytz==2023.3
-zoneinfo==0.2.1
-aiofiles==23.2.1
-tenacity==8.2.3
+# Async & Concurrency
+asyncio-mqtt==0.13.0
+websockets==12.0
 
-# MCP Support
-mcp==0.1.0
-
-# Testing
-pytest==7.4.3
-pytest-asyncio==0.21.1
-pytest-cov==4.1.0
-
-# Development
-black==23.12.1
-flake8==6.1.0
-mypy==1.7.1
-pre-commit==3.6.0
-
-# ML & Data Processing
-pandas>=2.1.3
-numpy>=1.25.2
-scikit-learn>=1.3.2
-torch>=2.1.0
-transformers==4.35.0
-matplotlib>=3.8.2
-seaborn>=0.13.0
-
-# ta-lib==0.4.28  # Temporarily commented - needs separate installation
-pandas-ta==0.3.14b
-polygon-api-client>=1.12.0
-
-# API & HTTP
-aiohttp>=3.9.1
-requests>=2.31.0
-requests-cache>=1.1.1
-slowapi>=0.1.4
-
-# Configuration
-pydantic-settings==2.1.0
-pyyaml==6.0.1
-
-# Monitoring
-prometheus-fastapi-instrumentator==6.1.0
-sentry-sdk[fastapi]>=1.38.0
+# Monitoring & Logging
+prometheus-client==0.19.0
+structlog==23.2.0
+sentry-sdk[fastapi]==1.38.0
 
 # Development & Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
 black==23.11.0
-flake8==6.1.0
+isort==5.12.0
+mypy==1.7.1
 
 # Utilities
-loguru==0.7.2
-rich==13.7.0
-typer==0.9.0
+python-dotenv==1.0.0
 click==8.1.7
+rich==13.7.0
+pydantic-settings==2.1.0
 
-# Additional dependencies
-asyncio>=3.4.3
-tqdm>=4.62.2
-starlette>=0.14.2
+# Financial Data
+ccxt==4.1.58
+ta-lib==0.4.28
+plotly==5.17.0
 
-# Data Storage
-pyarrow==14.0.1  # For parquet file support
-fastparquet==2023.10.1  # Alternative parquet support 
+# Production
+gunicorn==21.2.0
+celery==5.3.4 
