@@ -1,0 +1,47 @@
+{
+  "name": "goldensignalsaiv4",
+  "version": "1.0.0",
+  "description": "[![Status](https://img.shields.io/badge/Status-Production%20Ready-green)](https://github.com/yourusername/GoldenSignalsAIv4) [![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)](https://reactjs.org/) [![Backend](https://img.shields.io/badge/Backend-FastAPI%20%2B%20Python-orange)](https://fastapi.tiangolo.com/) [![AI](https://img.shields.io/badge/AI-Multi--Agent%20System-purple)](https://github.com/joaomdmoura/crewAI) [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)",
+  "main": "kill-port.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaacbuz/GoldenSignalsAIv4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/isaacbuz/GoldenSignalsAIv4/issues"
+  },
+  "homepage": "https://github.com/isaacbuz/GoldenSignalsAIv4#readme",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.6.0",
+    "chart.js": "^4.5.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-chart-financial": "^0.2.1",
+    "chartjs-plugin-annotation": "^3.1.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "socket.io-client": "^4.8.1",
+    "vite": "^7.0.4"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/socket.io-client": "^1.4.36",
+    "typescript": "^5.8.3"
+  }
+}

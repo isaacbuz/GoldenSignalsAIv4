@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Check</title>
+</head>
+<body>
+    <h1>Checking for JavaScript Errors...</h1>
+    <div id="errors"></div>
+    <iframe src="http://localhost:3000" width="100%" height="600" id="app-frame"></iframe>
+    
+    <script>
+        const errors = [];
+        window.addEventListener('error', (e) => {
+            errors.push(`Error: ${e.message} at ${e.filename}:${e.lineno}:${e.colno}`);
+            document.getElementById('errors').innerHTML = '<pre>' + errors.join('\n') + '</pre>';
+        });
+        
+        // Check iframe for errors
+        const frame = document.getElementById('app-frame');
+        frame.onload = () => {
+            try {
+                console.log('App loaded successfully');
+            } catch(e) {
+                errors.push('Cross-origin error check failed');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -24,6 +24,7 @@ import { ErrorProvider } from './contexts/ErrorContext';
 
 // Main application component
 import TradingSignalsApp from './pages/TradingSignals/TradingSignalsApp';
+import TradingDashboard from './pages/TradingDashboard';
 
 // Create query client
 const queryClient = new QueryClient({
@@ -31,7 +32,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 3,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
     },
   },
 });
@@ -78,7 +79,8 @@ const App: React.FC = () => {
             <AlertProvider>
               <Router>
                 <Routes>
-                  <Route path="/" element={<TradingSignalsApp />} />
+                  <Route path="/" element={<TradingDashboard />} />
+                  <Route path="/dashboard" element={<TradingDashboard />} />
                   <Route path="/trading-signals" element={<TradingSignalsApp />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

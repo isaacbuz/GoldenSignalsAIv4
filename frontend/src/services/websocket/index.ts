@@ -1,14 +1,15 @@
-// Export all websocket-related functionality
+// Unified WebSocket exports - SignalWebSocketManager is the single source of truth
+export * from './unifiedWebSocket';
+
+// Direct exports from SignalWebSocketManager for convenience
 export {
     wsManager,
-    useWebSocket,
-    useWebSocketConnection,
-    useSignalUpdates,
-    useAgentStatus,
-    useConsensusUpdates,
     WebSocketTopic,
     type WebSocketMessage,
     type SignalUpdate,
     type AgentStatusUpdate,
     type ConsensusUpdate
-} from './SignalWebSocketManager'; 
+} from './SignalWebSocketManager';
+
+// Export the unified service as the default
+export { unifiedWebSocketService as default } from './unifiedWebSocket'; 
