@@ -55,7 +55,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({ signal }) => {
               <Box>
                 <Analytics />
                 <Typography>MACD: {signal.indicators?.macd}</Typography>
-              </Box>
+    </Box>
             </Stack>
           </Collapse>
         </CardContent>

@@ -28,13 +28,10 @@ import { motion } from 'framer-motion';
 import GridLayout from 'react-grid-layout';
 
 // Import existing components
-import { AdvancedSignalChart } from '../Chart/AdvancedSignalChart';
-import AgentConsensusFlow from '../Agents/AgentConsensusFlow';
-import SignalList from '../Signals/SignalList';
-import { SignalCard } from '../SignalCard';
-import { RealTimeFeed } from '../RealTimeFeed';
-import { FloatingOrbAssistant } from '../FloatingOrbAssistant';
-import { AdvancedChart } from '../AdvancedChart';
+import SignalCard from '../SignalCard/SignalCard';
+import RealTimeFeed from '../RealTimeFeed/RealTimeFeed';
+import { FloatingOrbAssistant } from '../FloatingOrbAssistant/FloatingOrbAssistant';
+import AdvancedChart from '../AdvancedChart/AdvancedChart';
 import { List as VirtualizedList } from 'react-virtualized';
 
 const DashboardContainer = styled(Box)(({ theme }) => ({

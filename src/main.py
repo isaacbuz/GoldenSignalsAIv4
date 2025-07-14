@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 import uvicorn
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, BackgroundTasks, Depends
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, BackgroundTasks, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -27,11 +27,26 @@ from models.agent import Agent
 from models.user import User
 from models.portfolio import Portfolio
 
+# Import Redis cache service
+from services.redis_cache_service import get_cache_service, cache_agent_result
+
+# Import error tracking
+from services.error_tracking import get_error_tracker, track_errors, create_sentry_exception_handler
+
+# Import rate limiting
+from middleware.rate_limiter import RateLimitMiddleware, rate_limit_low, rate_limit_medium
+
+# Import position sizing
+from services.position_sizing import get_position_sizer, PositionSizeResult
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+
+# Initialize error tracking
+error_tracker = get_error_tracker()
 
 # Create FastAPI app
 app = FastAPI(
@@ -42,6 +57,10 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# Add Sentry exception handler
+if error_tracker.enabled:
+    app.add_exception_handler(Exception, create_sentry_exception_handler(error_tracker))
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -50,6 +69,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add rate limiting middleware
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+app.add_middleware(RateLimitMiddleware, redis_url=redis_url)
 
 # Data Models for API
 class SignalResponse(BaseModel):
@@ -63,6 +86,7 @@ class SignalResponse(BaseModel):
     reasoning: str
     timestamp: datetime
     consensus_strength: float = Field(..., ge=0.0, le=1.0)
+    position_size: Optional[Dict] = None  # Position sizing recommendation
 
 class MarketDataResponse(BaseModel):
     symbol: str
@@ -79,15 +103,16 @@ class MarketDataResponse(BaseModel):
 # WebSocket connections storage
 websocket_connections: List[WebSocket] = []
 
-# Enhanced AI Signal Generation Engine with Database Integration
+# Enhanced AI Signal Generation Engine with Database Integration and Caching
 class DatabaseSignalGenerator:
-    """Enhanced signal generator with database storage and agent tracking"""
+    """Enhanced signal generator with database storage, agent tracking, and Redis caching"""
     
     def __init__(self):
         self.agents = [
             "RSI_Agent", "MACD_Agent", "Sentiment_Agent", 
             "Volume_Agent", "Momentum_Agent"
         ]
+        self.cache_service = get_cache_service()
     
     def calculate_rsi(self, prices: pd.Series, window: int = 14) -> float:
         """Calculate RSI indicator"""
@@ -161,9 +186,26 @@ class DatabaseSignalGenerator:
         df = pd.DataFrame(data, index=dates)
         return df
     
+    @track_errors("signal_generation")
     async def generate_signal(self, symbol: str, db: Session) -> Signal:
-        """Generate AI trading signal and store in database"""
+        """Generate AI trading signal and store in database with caching"""
         try:
+            # Check cache first
+            cached_signal = self.cache_service.get_agent_result(
+                agent_name="SignalGenerator",
+                symbol=symbol,
+                timeframe="30d"
+            )
+            
+            if cached_signal:
+                logger.info(f"🎯 Using cached signal for {symbol}")
+                # Convert cached data back to Signal object
+                signal_id = cached_signal['result'].get('id')
+                if signal_id:
+                    cached_db_signal = db.query(Signal).filter(Signal.id == signal_id).first()
+                    if cached_db_signal:
+                        return cached_db_signal
+            
             # Fetch market data
             ticker = yf.Ticker(symbol)
             hist = ticker.history(period="30d")
@@ -312,6 +354,23 @@ class DatabaseSignalGenerator:
             db.add(signal)
             db.commit()
             db.refresh(signal)
+            
+            # Cache the generated signal
+            self.cache_service.set_agent_result(
+                agent_name="SignalGenerator",
+                symbol=symbol,
+                timeframe="30d",
+                result={
+                    'id': str(signal.id),
+                    'action': final_action,
+                    'confidence': final_confidence,
+                    'price': current_price,
+                    'risk_level': risk_level.value,
+                    'consensus_strength': consensus_strength,
+                    'generated_at': datetime.now().isoformat()
+                },
+                ttl_seconds=300  # Cache for 5 minutes
+            )
             
             logger.info(f"✅ Generated signal for {symbol}: {final_action} with {final_confidence:.2f} confidence")
             
@@ -466,6 +525,7 @@ class MarketDataProvider:
                 # Add Polygon and Alpha Vantage logic here
                 # For example:
                 # if provider == 'polygon': ...
+                hist = yf.Ticker(symbol).history(period=period)
                 if not hist.empty:
                     return hist
             except:
@@ -503,7 +563,7 @@ def _generate_mock_market_data(symbol: str) -> MarketDataResponse:
     previous_close = base_price * (1 + random.uniform(-0.03, 0.03))
     change = current_price - previous_close
     change_percent = (change / previous_close * 100) if previous_close != 0 else 0
-    
+        
     return MarketDataResponse(
         symbol=symbol.upper(),
         price=round(current_price, 2),
@@ -527,9 +587,102 @@ async def get_agents(db: Session = Depends(get_db)):
         logger.error(f"Error fetching agents: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch agents")
 
+@app.post("/api/v1/position-size/calculate")
+async def calculate_position_size(
+    symbol: str,
+    entry_price: float,
+    stop_loss: float,
+    take_profit: float,
+    capital: float = 100000,
+    signal_confidence: float = 0.8,
+    db: Session = Depends(get_db)
+):
+    """Calculate optimal position size using Kelly Criterion"""
+    try:
+        # Get position sizer
+        sizer = get_position_sizer()
+        
+        # Get historical win rate for the symbol (if available)
+        recent_signals = db.query(Signal).filter(
+            Signal.symbol == symbol,
+            Signal.created_at >= datetime.now() - timedelta(days=30)
+        ).all()
+        
+        win_rate = None
+        if recent_signals:
+            wins = sum(1 for s in recent_signals if s.pnl and s.pnl > 0)
+            win_rate = wins / len(recent_signals)
+        
+        # Calculate current volatility
+        ticker = yf.Ticker(symbol)
+        hist = ticker.history(period="20d")
+        volatility = None
+        if not hist.empty:
+            returns = hist['Close'].pct_change().dropna()
+            volatility = returns.std()
+        
+        # Calculate position size
+        result = sizer.calculate_position_size(
+            capital=capital,
+            signal_confidence=signal_confidence,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            take_profit=take_profit,
+            historical_win_rate=win_rate,
+            volatility=volatility
+        )
+        
+        return {
+            "symbol": symbol,
+            "recommended_position_size": round(result.recommended_size * 100, 2),
+            "kelly_percentage": round(result.kelly_percentage * 100, 2),
+            "adjusted_size": round(result.adjusted_size * 100, 2),
+            "risk_amount": round(result.risk_amount, 2),
+            "shares": result.shares,
+            "position_value": round(result.shares * entry_price, 2),
+            "reasoning": result.reasoning,
+            "risk_reward_ratio": round((take_profit - entry_price) / (entry_price - stop_loss), 2),
+            "max_loss": round(result.shares * (entry_price - stop_loss), 2),
+            "max_profit": round(result.shares * (take_profit - entry_price), 2)
+        }
+        
+    except Exception as e:
+        logger.error(f"Position sizing error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to calculate position size: {str(e)}")
+
+@app.get("/api/v1/rate-limit/status")
+async def get_rate_limit_status(request: Request):
+    """Get current rate limit status for the requesting client"""
+    if not hasattr(app.state, 'rate_limiter') or not app.state.rate_limiter:
+        return {"rate_limiting": "disabled"}
+    
+    # Get the middleware instance
+    for middleware in app.middleware_stack:
+        if isinstance(middleware, RateLimitMiddleware):
+            identifier = middleware.rate_limiter._get_identifier(request)
+            
+            # Check current status without incrementing
+            limit, window = middleware._get_limits_for_endpoint(request.url.path)
+            key = middleware.rate_limiter._get_rate_limit_key(identifier, request.url.path)
+            
+            try:
+                count = middleware.redis_client.zcard(key) if middleware.redis_client else 0
+                return {
+                    "rate_limiting": "enabled",
+                    "identifier": identifier.split(':')[0],  # Type only, not full ID
+                    "current_usage": count,
+                    "limit": limit,
+                    "window_seconds": window,
+                    "remaining": max(0, limit - count)
+                }
+            except Exception as e:
+                logger.error(f"Rate limit status error: {e}")
+                
+    return {"rate_limiting": "enabled", "status": "unknown"}
+
 @app.get("/api/v1/stats")
 async def get_stats(db: Session = Depends(get_db)):
-    """Get platform statistics"""
+    """Get platform statistics including cache performance"""
     try:
         total_signals = db.query(Signal).count()
         active_signals = db.query(Signal).filter(Signal.status == SignalStatus.ACTIVE).count()
@@ -543,12 +696,16 @@ async def get_stats(db: Session = Depends(get_db)):
         profitable_signals = sum(1 for s in recent_signals if s.pnl > 0)
         win_rate = (profitable_signals / len(recent_signals) * 100) if recent_signals else 0
         
+        # Get cache statistics
+        cache_stats = signal_generator.cache_service.get_cache_stats()
+        
         return {
             "total_signals": total_signals,
             "active_signals": active_signals,
             "total_agents": total_agents,
             "recent_win_rate": round(win_rate, 2),
             "recent_signals_count": len(recent_signals),
+            "cache_stats": cache_stats,
             "timestamp": datetime.now().isoformat()
         }
     except Exception as e:
