@@ -1,6 +1,7 @@
 """Dependency Injection Container"""
 
-from typing import Dict, Type, Any
+from typing import Any, Dict, Type
+
 
 class DIContainer:
     def __init__(self):

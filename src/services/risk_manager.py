@@ -6,10 +6,11 @@ including position sizing, stop-loss calculations, and risk assessment.
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 import numpy as np
 import pandas as pd
+
 
 class RiskManager:
     """

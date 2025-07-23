@@ -1,6 +1,7 @@
-import boto3
-import os
 import json
+import os
+
+import boto3
 
 SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL")
 sqs = boto3.client("sqs")

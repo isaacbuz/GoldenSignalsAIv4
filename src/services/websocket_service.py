@@ -14,18 +14,19 @@ Features:
 
 import asyncio
 import json
-import time
 import logging
-from typing import Dict, List, Set, Optional, Callable, Any
-from dataclasses import dataclass, asdict
+import time
+import uuid
+from asyncio import Queue
+from dataclasses import asdict, dataclass
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Set
+
+import aiohttp
 import websockets
 from websockets.exceptions import WebSocketException
-import aiohttp
-from asyncio import Queue
-import uuid
 
-from src.services.rate_limit_handler import get_rate_limit_handler, RequestPriority
+from src.services.rate_limit_handler import RequestPriority, get_rate_limit_handler
 
 logger = logging.getLogger(__name__)
 

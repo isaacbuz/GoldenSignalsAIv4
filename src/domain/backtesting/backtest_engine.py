@@ -1,9 +1,11 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import yaml
 from strategies.advanced_strategies import AdvancedStrategies
+
+from src.infrastructure.error_handler import DataFetchError, ErrorHandler, ModelInferenceError
 from src.ml.models.factory import ModelFactory
-from src.infrastructure.error_handler import ErrorHandler, ModelInferenceError, DataFetchError
+
 
 class BacktestResult:
     def __init__(self, equity, metrics):

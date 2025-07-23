@@ -3,17 +3,19 @@ Notifications API Router
 Handles user notifications, alerts, and messaging
 """
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import List, Optional
 
-from src.core.dependencies import get_db_manager as get_db, get_current_user
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.core.dependencies import get_current_user
+from src.core.dependencies import get_db_manager as get_db
 from src.ml.models.users import User
 from src.services.notifications.alert_manager import AlertManager
-from pydantic import BaseModel, Field
-from enum import Enum
 
 logger = logging.getLogger(__name__)
 

@@ -3,9 +3,11 @@ event_publisher.py
 Purpose: Implements the EventPublisher for GoldenSignalsAI, responsible for publishing events to Kafka topics for asynchronous communication between services and components.
 """
 
-import os
 import json
+import os
+
 from kafka import KafkaProducer
+
 
 class EventPublisher:
     def __init__(self):

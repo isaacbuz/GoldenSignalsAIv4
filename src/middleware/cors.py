@@ -2,11 +2,13 @@
 CORS configuration for production security.
 """
 
+import os
+from typing import List, Optional
+from urllib.parse import urlparse
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
-import os
-from urllib.parse import urlparse
+
 
 def get_allowed_origins() -> List[str]:
     """Get allowed origins from environment or defaults."""

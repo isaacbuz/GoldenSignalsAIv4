@@ -1,10 +1,11 @@
 """
 Options chain analysis agent.
 """
-from typing import Dict, Any, List, Optional
-import pandas as pd
-import numpy as np
 import logging
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 from agents.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)

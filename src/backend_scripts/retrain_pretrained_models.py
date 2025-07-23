@@ -1,7 +1,8 @@
 import os
+
 import numpy as np
-from keras.models import load_model
 from keras.callbacks import ModelCheckpoint
+from keras.models import load_model
 
 # Example retraining script for LSTM, GRU, CNN, Attention models
 # Assumes you have new data in CSV format for each symbol

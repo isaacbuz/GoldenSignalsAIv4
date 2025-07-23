@@ -3,12 +3,13 @@ RAG (Retrieval-Augmented Generation) Core Engine
 Provides context-aware signal generation using historical data
 """
 
-import numpy as np
-from typing import List, Dict, Any, Optional
-from dataclasses import dataclass
 import asyncio
-from datetime import datetime, timedelta
 import logging
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,7 @@
+from typing import Dict, List
+
 import numpy as np
-from typing import List, Dict
+
 
 class EnsembleSignalEngine:
     def __init__(self, models: List):

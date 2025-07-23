@@ -1,11 +1,12 @@
 """
 Candlestick pattern recognition agent.
 """
-from typing import Dict, Any, List, Optional, Tuple
+import logging
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
 import talib
-import logging
 from agents.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)

@@ -2,6 +2,7 @@
 """Mock Redis module for testing"""
 from typing import Any, Dict, List, Optional
 
+
 class RedisManager:
     """Mock Redis manager"""
     def __init__(self, *args, **kwargs):

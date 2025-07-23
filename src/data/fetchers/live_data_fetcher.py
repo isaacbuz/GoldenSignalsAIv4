@@ -6,20 +6,22 @@ Connects to multiple data sources and provides unified data feed for agents
 import asyncio
 import json
 import logging
-from typing import Dict, List, Any, Optional, Callable
-from datetime import datetime, timedelta
+import os
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
-import pandas as pd
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List, Optional
+
+import aiohttp
 import numpy as np
+import pandas as pd
+import requests
 
 # Data source imports
 import yfinance as yf
+
 import websocket
-import requests
-import aiohttp
-from dataclasses import dataclass, asdict
-import os
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -452,7 +454,7 @@ class AgentDataAdapter:
 async def main():
     """Example of setting up live data feed"""
     from agents.common.data_bus import AgentDataBus
-    
+
     # Initialize components
     data_bus = AgentDataBus()
     adapter = AgentDataAdapter(data_bus)

@@ -4,10 +4,11 @@ Optimal bet sizing for trading signals based on win probability and payoff ratio
 """
 
 import logging
-from typing import Dict, Optional, Tuple, List
 from dataclasses import dataclass
-import numpy as np
 from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

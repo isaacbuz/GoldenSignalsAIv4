@@ -2,23 +2,25 @@
 Signal Engine: Professional-grade options trading signal generator.
 Combines AI predictions, technical analysis, and options-specific analysis.
 """
-from typing import Dict, List, Tuple, Optional
+from collections import deque
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 import talib
-from enum import Enum
 from loguru import logger
-from collections import deque
 
 from src.data.data_fetcher import MarketDataFetcher
-from src.ml.models.factory import ModelFactory
-from src.domain.risk_management.position_sizer import PositionSizer
 from src.domain.analytics.performance_tracker import PerformanceTracker
+from src.domain.risk_management.position_sizer import PositionSizer
 from src.domain.trading.indicators import Indicators
-from src.ml.models.signal import TradingSignal
 from src.domain.trading.options_analysis import OptionsAnalysis
 from src.domain.volatility_agent import VolatilityAgent
+from src.ml.models.factory import ModelFactory
+from src.ml.models.signal import TradingSignal
+
 
 class SignalType(Enum):
     CALL = "CALL"

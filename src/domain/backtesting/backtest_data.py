@@ -3,17 +3,18 @@ Backtesting Data Module - Handles data fetching and caching
 """
 
 import asyncio
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-import pandas as pd
-import numpy as np
+import json
 import logging
 from dataclasses import dataclass
-import asyncpg
-import redis
-import json
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
-from src.utils.timezone_utils import now_utc, make_aware
+import asyncpg
+import numpy as np
+import pandas as pd
+import redis
+
+from src.utils.timezone_utils import make_aware, now_utc
 
 logger = logging.getLogger(__name__)
 

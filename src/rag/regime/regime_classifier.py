@@ -3,15 +3,16 @@ Market Regime Classification System
 Identifies and classifies current market regime for context-aware trading
 """
 
-import numpy as np
-import pandas as pd
-from typing import Dict, List, Tuple, Optional
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+import talib
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-import talib
-import logging
 
 logger = logging.getLogger(__name__)
 

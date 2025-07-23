@@ -4,11 +4,12 @@ Works with simple_backend.py without complex dependencies
 """
 
 import asyncio
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
 import logging
-import numpy as np
 import random
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 
 from src.utils.technical_indicators import TechnicalIndicators
 from src.utils.timezone_utils import now_utc

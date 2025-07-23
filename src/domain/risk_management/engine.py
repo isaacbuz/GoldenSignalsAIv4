@@ -1,5 +1,7 @@
 from enum import Enum
+
 import numpy as np
+
 
 class RiskLevel(Enum):
     CONSERVATIVE = 1

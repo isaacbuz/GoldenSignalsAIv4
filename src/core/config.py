@@ -2,13 +2,13 @@
 Configuration management for GoldenSignalsAI V3
 """
 
+import os
 from functools import lru_cache
 from typing import Dict, List, Optional, Union
 
+from dotenv import load_dotenv
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 

@@ -16,8 +16,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 
 class MarketRegimeDetector:
     def __init__(self, volatility_window: int = 14, threshold: float = 0.02):

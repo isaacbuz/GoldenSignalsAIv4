@@ -1,8 +1,9 @@
 """Mock signal models for testing"""
-from enum import Enum
-from typing import Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, Optional
+
 
 class SignalType(Enum):
     BUY = "buy"

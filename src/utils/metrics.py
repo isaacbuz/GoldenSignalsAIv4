@@ -2,6 +2,7 @@
 """Mock metrics module for testing"""
 from typing import Any
 
+
 class MetricsCollector:
     def __init__(self, name: str):
         self.name = name

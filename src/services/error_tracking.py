@@ -3,16 +3,17 @@ Sentry Error Tracking Integration
 Provides comprehensive error tracking and monitoring for the application
 """
 
-import os
 import logging
-from typing import Optional, Dict, Any, Callable
+import os
 from functools import wraps
+from typing import Any, Callable, Dict, Optional
+
 import sentry_sdk
-from sentry_sdk import capture_exception, capture_message, set_tag, set_user, set_context
+from sentry_sdk import capture_exception, capture_message, set_context, set_tag, set_user
 from sentry_sdk.integrations.fastapi import FastApiIntegration
-from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 logger = logging.getLogger(__name__)
 

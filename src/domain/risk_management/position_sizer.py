@@ -2,7 +2,9 @@
 Position Sizer: Calculates optimal position sizes based on signal confidence and risk metrics.
 """
 from typing import Dict
+
 import numpy as np
+
 
 class PositionSizer:
     def __init__(self):

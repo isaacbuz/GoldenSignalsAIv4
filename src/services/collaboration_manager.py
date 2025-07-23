@@ -1,6 +1,7 @@
 import json
-from typing import List, Dict
 from pathlib import Path
+from typing import Dict, List
+
 
 class CollaborationManager:
     def __init__(self, storage_path: str = "data/shared_dashboards.json"):

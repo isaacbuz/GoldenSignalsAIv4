@@ -3,14 +3,15 @@ RAG-Enhanced Backtesting System
 Demonstrates how Retrieval-Augmented Generation improves backtesting accuracy
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import dataclass
 import asyncio
 import logging
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 # Vector store imports (install with: pip install chromadb langchain openai)
 try:
@@ -515,8 +516,8 @@ class RAGIntegratedBacktest:
     
     def __init__(self):
         # Import existing components
-        from .enhanced_data_manager import EnhancedDataManager
         from .adaptive_agent_framework import AdaptiveAgent
+        from .enhanced_data_manager import EnhancedDataManager
         
         self.data_manager = EnhancedDataManager()
         self.rag_system = RAGEnhancedBacktestSystem()

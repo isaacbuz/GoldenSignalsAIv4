@@ -1,4 +1,5 @@
 import os
+
 from notifications.alert_manager import AlertManager
 
 # Prepare a fake user config for testing

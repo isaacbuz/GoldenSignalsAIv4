@@ -1,5 +1,6 @@
 from src.domain.trading.strategies.backtest_strategy import BacktestStrategy
 
+
 class StrategyService:
     def __init__(self):
         self.backtest_strategy = BacktestStrategy()

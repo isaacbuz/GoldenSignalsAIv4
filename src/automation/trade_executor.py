@@ -1,6 +1,8 @@
 import logging
+
 from src.legacy_backend_agents.risk_management.position_sizer import PositionSizer
 from src.legacy_backend_agents.risk_management.risk_filter import RiskFilter
+
 
 class DummyBrokerAPI:
     def place_order(self, symbol, side, quantity):

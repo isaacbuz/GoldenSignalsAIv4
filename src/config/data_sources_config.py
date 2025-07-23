@@ -3,9 +3,9 @@ Data Sources Configuration for GoldenSignalsAI
 Comprehensive list of recommended data sources with details
 """
 
-from typing import Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Dict, List, Optional
 
 
 class DataSourceTier(Enum):

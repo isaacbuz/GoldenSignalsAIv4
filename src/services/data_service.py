@@ -1,9 +1,11 @@
 import pandas as pd
+
+from src.application.events.event_publisher import EventPublisher
 from src.data.fetchers.database_fetcher import fetch_stock_data
 from src.data.fetchers.news_fetcher import fetch_news_articles
 from src.data.fetchers.realtime_fetcher import fetch_realtime_data
 from src.data.preprocessors.stock_preprocessor import StockPreprocessor
-from src.application.events.event_publisher import EventPublisher
+
 
 class DataService:
     def __init__(self, use_numba=True):

@@ -1,11 +1,12 @@
 import logging
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
+from typing import Dict, List, Optional
+
+import numpy as np
+import pandas as pd
+import ta
 import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
-import ta
-from typing import Dict, List, Optional
 
 from config.settings import settings
 

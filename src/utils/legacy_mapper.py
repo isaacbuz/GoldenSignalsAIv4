@@ -1,6 +1,6 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from src.models.signals import Signal, SignalType, SignalStrength
+from src.models.signals import Signal, SignalStrength, SignalType
 
 
 def legacy_output_to_signal(legacy_out: Dict[str, Any], symbol: str, current_price: float, source: str) -> Signal:

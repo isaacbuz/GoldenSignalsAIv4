@@ -3,8 +3,9 @@ Repository interfaces
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, List, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 
 class IMarketRepository(ABC):
     @abstractmethod

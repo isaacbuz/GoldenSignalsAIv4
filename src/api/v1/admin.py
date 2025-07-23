@@ -5,7 +5,8 @@ REST API endpoints for system administration and management.
 """
 
 import logging
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 

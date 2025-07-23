@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class ModelFactory:
     """
     Factory and registry for all supported ML models. Allows runtime selection and config-driven instantiation.
@@ -24,7 +25,7 @@ class ModelFactory:
         try:
             return model_cls(**params)
         except Exception as e:
-            from src.infrastructure.error_handler import ModelInferenceError, ErrorHandler
+            from src.infrastructure.error_handler import ErrorHandler, ModelInferenceError
             ErrorHandler.handle_error(ModelInferenceError(f"Failed to instantiate model '{name}': {e}"))
             raise
 

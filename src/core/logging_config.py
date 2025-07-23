@@ -7,10 +7,11 @@ and performance monitoring.
 
 import logging
 import sys
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
 from loguru import logger
+
 from .config import settings
 
 

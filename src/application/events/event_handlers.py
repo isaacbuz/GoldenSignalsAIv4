@@ -1,6 +1,7 @@
 import logging
-from GoldenSignalsAI.application.services.alert_service import AlertService
+
 from GoldenSignalsAI.application.services.alert_factory import AlertFactory
+from GoldenSignalsAI.application.services.alert_service import AlertService
 from GoldenSignalsAI.domain.trading.entities.user_preferences import UserPreferences
 
 logger = logging.getLogger(__name__)

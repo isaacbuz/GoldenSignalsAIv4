@@ -2,14 +2,15 @@
 Backtesting Metrics Module - Handles performance metrics calculation
 """
 
+import logging
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Tuple
-from dataclasses import dataclass, field
-import logging
 
-from src.domain.backtesting.advanced_backtest_engine import BacktestTrade, BacktestMetrics
+from src.domain.backtesting.advanced_backtest_engine import BacktestMetrics, BacktestTrade
 
 logger = logging.getLogger(__name__)
 

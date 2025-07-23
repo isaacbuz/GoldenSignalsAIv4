@@ -4,10 +4,11 @@ Creates TradingView-style charts with various analysis overlays
 """
 
 import json
-from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
-import pandas as pd
+from typing import Any, Dict, List, Optional
+
 import numpy as np
+import pandas as pd
 
 
 class ChartGeneratorService:

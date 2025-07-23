@@ -1,16 +1,18 @@
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import loggi
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple, Optional, Any
-from datetime import datetime, timedelta
-import loggi, timezoneng
-from dataclasses import dataclass
+import talib
+import timezoneng
+import yfinance as yf
+from scipy import stats
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.ensemble import RandomForestRegressor
-from scipy import stats
-import yfinance as yf
-import talib
-from enum import Enum
 
 logger = logging.getLogger(__name__)
 

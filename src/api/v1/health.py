@@ -2,18 +2,20 @@
 Health check endpoints for monitoring service health.
 """
 
-from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict, Any, Optional
+import asyncio
+import logging
 from datetime import datetime
+from typing import Any, Dict, Optional
+
 import psutil
 import redis
-import asyncio
+from agents.orchestrator import AgentOrchestrator
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import text
+
 from src.core.database import get_db
 from src.core.redis_manager import get_redis
 from src.services.market_data_service import MarketDataService
-from agents.orchestrator import AgentOrchestrator
-import logging
 
 logger = logging.getLogger(__name__)
 

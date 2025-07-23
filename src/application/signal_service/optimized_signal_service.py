@@ -5,20 +5,22 @@ Optimized Signal Service with unified signal model and caching
 import asyncio
 import json
 import logging
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import List, Optional, Dict, Any, Set
-from dataclasses import dataclass, asdict
 from enum import Enum
-import redis.asyncio as redis
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func
-from sqlalchemy.orm import selectinload
-import numpy as np
+from typing import Any, Dict, List, Optional, Set
 
-from src.websocket.signal_websocket import ws_service
+import numpy as np
+import redis.asyncio as redis
+from agents.multi_agent_consensus import ConsensusResult, MultiAgentConsensus
+from agents.multi_agent_consensus import SignalType as AgentSignalType
+from sqlalchemy import and_, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from src.domain.trading.entities import Signal, SignalType
 from src.infrastructure.caching import CacheManager
-from agents.multi_agent_consensus import MultiAgentConsensus, ConsensusResult, SignalType as AgentSignalType
+from src.websocket.signal_websocket import ws_service
 
 logger = logging.getLogger(__name__)
 

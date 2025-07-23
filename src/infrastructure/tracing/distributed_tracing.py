@@ -3,17 +3,18 @@ Distributed Tracing with OpenTelemetry and Jaeger
 Provides comprehensive observability for the platform
 """
 
+import logging
+from functools import wraps
+from typing import Any, Dict, Optional
+
 from opentelemetry import trace
 from opentelemetry.exporter.jaeger.thrift import JaegerExporter
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
-import logging
-from functools import wraps
-from typing import Optional, Dict, Any
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 logger = logging.getLogger(__name__)
 

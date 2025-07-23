@@ -3,14 +3,15 @@ A/B Testing Framework for Agent Performance
 Allows controlled experiments to test new agents against existing ones
 """
 
+import hashlib
+import json
 import logging
 import random
-import hashlib
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
-import json
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 from scipy import stats
 

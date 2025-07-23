@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class UserPreferences:
     user_id: int

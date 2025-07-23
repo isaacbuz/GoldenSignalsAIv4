@@ -2,13 +2,14 @@
 LSTM-based forecasting agent with robust error handling and validation.
 """
 import logging
-from typing import Optional, Any, Dict
+from typing import Any, Dict, Optional
+
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-from sklearn.preprocessing import MinMaxScaler
 from agents.base.base_agent import BaseAgent
+from sklearn.preprocessing import MinMaxScaler
 
 logger = logging.getLogger(__name__)
 

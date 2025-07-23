@@ -3,13 +3,13 @@ Frontend Logging API
 Receives and stores frontend logs for debugging
 """
 
-from fastapi import APIRouter, Request, HTTPException
-from typing import List, Optional
-from datetime import datetime
-from pathlib import Path
 import json
 import logging
+from datetime import datetime
+from pathlib import Path
+from typing import List, Optional
 
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 # Configure logger

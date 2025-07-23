@@ -5,13 +5,19 @@ REST API endpoints for user authentication and authorization.
 """
 
 import logging
-from typing import Dict, Any
-from fastapi import APIRouter, HTTPException, status, Depends
+from typing import Any, Dict
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 
 from src.core.auth import (
-    AuthService, UserCreate, UserLogin, Token, User,
-    get_current_user, require_admin
+    AuthService,
+    Token,
+    User,
+    UserCreate,
+    UserLogin,
+    get_current_user,
+    require_admin,
 )
 from src.core.database import DatabaseManager
 
@@ -321,4 +327,4 @@ async def list_users(
 
 
 # Add this import at the top
-from datetime import datetime 
+from datetime import datetime

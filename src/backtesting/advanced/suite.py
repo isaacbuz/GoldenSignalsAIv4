@@ -1,8 +1,10 @@
 """Advanced Backtesting Suite with ML Integration"""
 
-import pandas as pd
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, List, Any
+import pandas as pd
+
 
 class AdvancedBacktestSuite:
     def __init__(self):

@@ -4,9 +4,10 @@ Performance metrics for GoldenSignalsAI V2.
 Provides Prometheus metrics for monitoring system performance.
 """
 
-from prometheus_client import Counter, Histogram, Gauge, Info
-from functools import wraps
 import time
+from functools import wraps
+
+from prometheus_client import Counter, Gauge, Histogram, Info
 
 # System metrics
 system_info = Info('goldensignals_system', 'System information')

@@ -4,12 +4,13 @@ Handles JWT tokens, user authentication, and authorization
 """
 
 import logging
-from typing import Optional, Dict, Any
 from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
+
 import jwt
-from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
+from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 
 from src.config.settings import settings

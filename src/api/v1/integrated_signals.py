@@ -3,20 +3,21 @@
 FastAPI endpoints for precise options and arbitrage signals
 """
 
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
-from typing import Dict, List, Optional
-from datetime import datetime
-from pydantic import BaseModel, Field
 import asyncio
-import sys
 import os
+import sys
+from datetime import datetime
+from typing import Dict, List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from pydantic import BaseModel, Field
 
 # Add project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
+from agents.signals.arbitrage_signals import ArbitrageSignal
 from agents.signals.integrated_signal_system import IntegratedSignalSystem
 from agents.signals.precise_options_signals import PreciseOptionsSignal
-from agents.signals.arbitrage_signals import ArbitrageSignal
 
 router = APIRouter(prefix="/api/v1/signals", tags=["signals"])
 
@@ -307,6 +308,7 @@ async def backtest_signals(
 
 # WebSocket endpoint for real-time updates
 from fastapi import WebSocket, WebSocketDisconnect
+
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

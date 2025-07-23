@@ -1,12 +1,13 @@
 """
 Market regime detection agent using statistical analysis.
 """
-from typing import Dict, Any, List, Optional
+import logging
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 import pandas as pd
-from sklearn.mixture import GaussianMixture
-import logging
 from agents.base.base_agent import BaseAgent
+from sklearn.mixture import GaussianMixture
 
 logger = logging.getLogger(__name__)
 

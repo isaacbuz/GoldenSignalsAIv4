@@ -2,11 +2,13 @@
 Portfolio model for tracking user portfolios and positions
 """
 
-from sqlalchemy import Column, String, Float, JSON, Integer, Boolean, DateTime, ForeignKey, Text
+import enum
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-import enum
+
 from .base import BaseModel
 
 

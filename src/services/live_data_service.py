@@ -5,28 +5,29 @@ Integrates multiple real-time data sources with fallback mechanisms
 
 import asyncio
 import logging
-from typing import Dict, List, Optional, Any, Callable
-from datetime import datetime, timedelta
 import os
-from dataclasses import dataclass, asdict
-import jso, timezonen
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List, Optional
 
-import yfinance as yf
-import pandas as pd
+import jso
 import numpy as np
-from aiohttp import ClientSession
+import pandas as pd
+import timezonen
 import websockets
+import yfinance as yf
+from agents.common.data_bus import AgentDataBus
+from aiohttp import ClientSession
 
+from src.core.redis_manager import RedisManager
 from src.data.fetchers.live_data_fetcher import (
-    UnifiedDataFeed, 
-    YahooFinanceSource, 
-    PolygonIOSource,
+    AgentDataAdapter,
     MarketData,
     OptionsData,
-    AgentDataAdapter
+    PolygonIOSource,
+    UnifiedDataFeed,
+    YahooFinanceSource,
 )
-from agents.common.data_bus import AgentDataBus
-from src.core.redis_manager import RedisManager
 from src.websocket.manager import WebSocketManager
 
 logger = logging.getLogger(__name__)

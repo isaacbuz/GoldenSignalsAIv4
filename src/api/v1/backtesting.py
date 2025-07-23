@@ -3,20 +3,22 @@ Backtesting API Router
 Handles backtesting operations, results, and analysis
 """
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
 import logging
 import uuid
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from src.core.dependencies import get_db_manager as get_db, get_current_user
-from src.ml.models.users import User
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.core.dependencies import get_current_user
+from src.core.dependencies import get_db_manager as get_db
 from src.domain.backtesting.backtest_data import BacktestDataManager
 from src.domain.backtesting.backtest_metrics import MetricsCalculator
 from src.domain.backtesting.backtest_reporting import BacktestReporter
-from pydantic import BaseModel, Field
-from enum import Enum
+from src.ml.models.users import User
 
 logger = logging.getLogger(__name__)
 

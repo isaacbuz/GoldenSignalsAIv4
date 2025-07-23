@@ -1,14 +1,15 @@
 """
 Simple mock server for development
 """
-from fastapi import FastAPI, WebSocket, Request
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+import asyncio
 import json
 import random
 from datetime import datetime, timedelta
-import asyncio
+
 import pytz
+import uvicorn
+from fastapi import FastAPI, Request, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 

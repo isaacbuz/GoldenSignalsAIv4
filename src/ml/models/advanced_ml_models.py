@@ -3,20 +3,22 @@ Advanced ML Models for GoldenSignalsAI
 Comprehensive implementation of cutting-edge financial ML models
 """
 
+import warnings
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
+
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple, Optional, Any
-from dataclasses import dataclass
 import torch
 import torch.nn as nn
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler
-import lightgbm as lgb
 import xgboost as xgb
 from arch import arch_model
-from statsmodels.tsa.arima.model import ARIMA
 from prophet import Prophet
-import warnings
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+from statsmodels.tsa.arima.model import ARIMA
+
 warnings.filterwarnings('ignore')
 
 
@@ -332,7 +334,7 @@ class HiddenMarkovRegime:
     def fit(self, returns: pd.Series):
         """Fit HMM to identify market regimes"""
         from hmmlearn import hmm
-        
+
         # Prepare data
         X = returns.values.reshape(-1, 1)
         

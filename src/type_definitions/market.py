@@ -2,9 +2,10 @@
 Market-related type definitions
 """
 
-from typing import TypedDict, Literal, Protocol, Optional, List, Dict, Any
 from datetime import datetime
 from decimal import Decimal
+from typing import Any, Dict, List, Literal, Optional, Protocol, TypedDict
+
 import pandas as pd
 
 # Type aliases

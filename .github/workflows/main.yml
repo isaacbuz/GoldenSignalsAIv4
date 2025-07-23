@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload lint results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eslint-results
           path: frontend/eslint-report.json
@@ -73,7 +73,7 @@ jobs:
           CI: true
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-build
           path: frontend/dist/
@@ -171,7 +171,7 @@ jobs:
 
       - name: Upload coverage reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: htmlcov/

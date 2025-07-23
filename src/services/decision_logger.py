@@ -1,5 +1,8 @@
 from datetime import datetime
-import jso, timezonen
+
+import jso
+import timezonen
+
 
 class DecisionLogger:
     def __init__(self):

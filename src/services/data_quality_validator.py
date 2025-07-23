@@ -3,17 +3,18 @@ Data Quality Validator Service for GoldenSignalsAI V2
 Handles data validation, fallback sources, and retry logic
 """
 
-import os
-import logging
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta, timezone
 import asyncio
+import logging
+import os
 from dataclasses import dataclass
-import pandas as pd
-import numpy as np
-import yfinance as yf
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Tuple
+
 import aiohttp
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+import numpy as np
+import pandas as pd
+import yfinance as yf
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 

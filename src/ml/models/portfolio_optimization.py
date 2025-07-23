@@ -3,13 +3,15 @@ Portfolio Optimization Models for GoldenSignalsAI
 Modern portfolio theory with ML enhancements
 """
 
+import warnings
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
+import cvxpy as cp
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple, Optional
-import cvxpy as cp
 from scipy.optimize import minimize
-from dataclasses import dataclass
-import warnings
+
 warnings.filterwarnings('ignore')
 
 

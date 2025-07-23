@@ -3,18 +3,16 @@ Signal Accuracy Validator - Comprehensive signal quality testing
 Tests signal accuracy, tracks false positives/negatives, and validates strategies
 """
 
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, field
-from enum import Enum
 import logging
 from collections import defaultdict
-from sklearn.metrics import (
-    precision_score, recall_score, f1_score, 
-    confusion_matrix, roc_auc_score
-)
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score, roc_auc_score
 
 logger = logging.getLogger(__name__)
 

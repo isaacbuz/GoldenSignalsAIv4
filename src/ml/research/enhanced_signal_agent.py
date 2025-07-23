@@ -1,14 +1,16 @@
 """
 Machine learning enhanced signal generation agent.
 """
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-import joblib
 from agents.base.base_agent import BaseAgent
 from agents.common.utils.validation import validate_market_data
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+
 
 class EnhancedSignalAgent(BaseAgent):
     """Agent that combines technical analysis with machine learning for signal generation."""

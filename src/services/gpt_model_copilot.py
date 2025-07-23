@@ -1,6 +1,7 @@
-import openai
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
+import openai
 
 logger = logging.getLogger(__name__)
 

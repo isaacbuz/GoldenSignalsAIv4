@@ -1,7 +1,9 @@
 import smtplib
-import requests
 from email.message import EmailMessage
 from typing import List
+
+import requests
+
 
 class AlertManager:
     def __init__(self, email_config: dict = None, slack_webhook: str = "", telegram_config: dict = None):

@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+
 class AuditLogger:
     def __init__(self, log_path: str = "logs/admin_audit.log"):
         self.log_file = Path(log_path)

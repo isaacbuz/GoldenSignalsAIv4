@@ -1,9 +1,11 @@
 """
 LSTM-based stock prediction agent using pretrained model.
 """
-from typing import Dict, Any
+from typing import Any, Dict
+
 import numpy as np
 from agents.ml.pretrained.base_pretrained_agent import BasePretrainedAgent
+
 
 class LSTMStockAgent(BasePretrainedAgent):
     """Agent using pretrained LSTM model for stock prediction."""

@@ -3,16 +3,19 @@ Backtesting Reporting Module - Handles report generation and visualization
 """
 
 import json
-import pandas as pd
-import numpy as np
-from datetime import datetime
-from typing import Dict, List, Optional, Any
-from pathlib import Path
 import logging
 from dataclasses import asdict
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 
 from src.domain.backtesting.advanced_backtest_engine import (
-    BacktestMetrics, BacktestTrade, BacktestSignal
+    BacktestMetrics,
+    BacktestSignal,
+    BacktestTrade,
 )
 
 logger = logging.getLogger(__name__)

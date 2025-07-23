@@ -2,8 +2,8 @@
 Common type definitions
 """
 
-from typing import TypeVar, Generic, Optional, List, Dict, Any, Union, Callable, Awaitable
 from datetime import datetime
+from typing import Any, Awaitable, Callable, Dict, Generic, List, Optional, TypeVar, Union
 
 # Type variables
 T = TypeVar('T')

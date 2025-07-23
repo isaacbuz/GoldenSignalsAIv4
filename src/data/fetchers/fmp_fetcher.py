@@ -1,6 +1,7 @@
 import os
-import requests
+
 import pandas as pd
+import requests
 
 FMP_API_KEY = os.getenv("FMP_API_KEY") or os.getenv("REACT_APP_FMP_API_KEY")
 FMP_BASE_URL = "https://financialmodelingprep.com/api/v3"

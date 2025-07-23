@@ -2,6 +2,7 @@
 """Mock settings module for testing"""
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     app_name: str = "GoldenSignalsAI"
     debug: bool = True

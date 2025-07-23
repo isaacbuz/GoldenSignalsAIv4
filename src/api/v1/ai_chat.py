@@ -4,17 +4,14 @@ AI Chat API Endpoints
 Provides REST API endpoints for the AI Trading Assistant chat functionality.
 """
 
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
-from fastapi.responses import JSONResponse
 import logging
+from typing import List, Optional
 
-from src.services.ai_chat_service import (
-    MultimodalAIChatService,
-    ChatSession,
-    AIResponse
-)
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import JSONResponse
+
 from src.config.settings import settings
+from src.services.ai_chat_service import AIResponse, ChatSession, MultimodalAIChatService
 
 logger = logging.getLogger(__name__)
 

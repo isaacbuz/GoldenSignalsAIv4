@@ -5,12 +5,13 @@ SQLAlchemy models for user management and authentication.
 """
 
 from datetime import datetime
-from typing import Optional, List
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, Table
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from typing import List, Optional
 
-from .base import BaseModel, Base
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
+from .base import Base, BaseModel
 
 # Association table for user roles (many-to-many)
 user_roles = Table(

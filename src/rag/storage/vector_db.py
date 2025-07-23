@@ -3,12 +3,13 @@ Vector Database Integration for RAG System
 Supports multiple vector database backends
 """
 
-import numpy as np
-from typing import List, Dict, Any, Optional, Tuple
-from abc import ABC, abstractmethod
 import asyncio
 import logging
+from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

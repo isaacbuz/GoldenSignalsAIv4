@@ -1,7 +1,9 @@
-from datetime import datetime, time
 import asyncio
+from datetime import datetime, time
+
 from GoldenSignalsAI.application.ai_service.autonomous_engine import Action
 from GoldenSignalsAI.infrastructure.external_services.alpaca_trader import AlpacaTrader
+
 
 class AutoExecutor:
     def __init__(self):

@@ -3,19 +3,20 @@ Signal Generation Engine for GoldenSignalsAI V2
 Implements high-quality signal generation based on best practices
 """
 
-import logging
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta, timezone
-from dataclasses import dataclass, field
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
 import asyncio
+import logging
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Tuple
 
-from src.services.market.quality_validator import DataQualityValidator, DataQualityReport
-from src.utils.timezone_utils import now_utc, make_aware
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+
+from src.services.market.quality_validator import DataQualityReport, DataQualityValidator
+from src.utils.timezone_utils import make_aware, now_utc
 
 logger = logging.getLogger(__name__)
 

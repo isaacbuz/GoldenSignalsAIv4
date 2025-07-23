@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+
 class StrategyVault:
     def __init__(self, vault_path: str = "data/strategy_vault.json"):
         self.vault_path = Path(vault_path)

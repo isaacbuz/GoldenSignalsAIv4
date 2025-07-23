@@ -4,15 +4,16 @@ Analyzes trading chart screenshots using computer vision and AI
 """
 
 import base64
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timezone
-import numpy as np
-from PIL import Image
 import io
+import json
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Tuple
+
 import cv2
 import matplotlib.pyplot as plt
-from dataclasses import dataclass
-import json
+import numpy as np
+from PIL import Image
 
 
 @dataclass

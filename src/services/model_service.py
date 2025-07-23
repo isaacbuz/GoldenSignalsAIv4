@@ -1,8 +1,11 @@
-import tensorflow as tf
 import numpy as np
-from src.ml.models.factory import ModelFactory
+import tensorflow as tf
+
 # Import the agentic foundation model abstraction layer
 from integration.external_model_service import ExternalModelService
+
+from src.ml.models.factory import ModelFactory
+
 
 class Validator:
     def __init__(self, models):

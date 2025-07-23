@@ -4,20 +4,22 @@ Implements LSTM, XGBoost, Transformer models, and ensemble methods for sophistic
 """
 
 import asyncio
+import json
 import logging
-from typing import List, Dict, Any, Optional, Tuple
+from collections import defaultdict
+from dataclasses import dataclass
 from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import joblib
 import numpy as np
 import pandas as pd
-from dataclasses import dataclass
-from enum import Enum
-import joblib
-import json
-from collections import defaultdict
+
+from src.utils.technical_indicators import TechnicalIndicators
 
 # Import utilities
 from src.utils.timezone_utils import now_utc
-from src.utils.technical_indicators import TechnicalIndicators
 
 # Try to import ML libraries (will use mock if not available)
 try:
@@ -27,9 +29,9 @@ except ImportError:
     HAS_XGBOOST = False
     
 try:
-    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-    from sklearn.preprocessing import StandardScaler
+    from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
     from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import StandardScaler
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False

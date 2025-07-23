@@ -1,7 +1,8 @@
 """RAG API Endpoints"""
 
+from typing import Any, Dict
+
 from fastapi import APIRouter, HTTPException
-from typing import Dict, Any
 
 router = APIRouter(prefix="/api/rag", tags=["rag"])
 

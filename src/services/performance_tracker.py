@@ -1,5 +1,7 @@
+from typing import Dict, List
+
 import pandas as pd
-from typing import List, Dict
+
 
 class PerformanceTracker:
     def __init__(self):

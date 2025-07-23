@@ -6,14 +6,15 @@ Implements multi-source data aggregation with fallback
 import asyncio
 import json
 import logging
-from typing import Dict, List, Callable, Optional, Any
+import time
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
+
 import aiohttp
-from collections import defaultdict
 import pytz
-import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

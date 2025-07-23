@@ -1,7 +1,9 @@
 """Mock market data models for testing"""
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
+
 import pandas as pd
+
 
 class MarketData:
     def __init__(self, 

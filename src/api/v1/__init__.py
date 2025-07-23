@@ -6,21 +6,21 @@ Main router that combines all API endpoints for version 1.
 
 from fastapi import APIRouter
 
+from .admin import router as admin_router
 from .agents import router as agents_router
+from .ai_chat import router as ai_chat_router
+from .ai_chat_enhanced import router as ai_chat_enhanced_router
 from .analytics import router as analytics_router
+from .auth import router as auth_router
 from .backtesting import router as backtesting_router
+from .hybrid_signals import router as hybrid_signals_router
+from .integrated_signals import router as integrated_signals_router
+from .logs import router as logs_router
 from .market_data import router as market_data_router
 from .notifications import router as notifications_router
 from .portfolio import router as portfolio_router
 from .signals import router as signals_router
-from .integrated_signals import router as integrated_signals_router
 from .websocket import router as websocket_router
-from .ai_chat import router as ai_chat_router
-from .ai_chat_enhanced import router as ai_chat_enhanced_router
-from .hybrid_signals import router as hybrid_signals_router
-from .auth import router as auth_router
-from .admin import router as admin_router
-from .logs import router as logs_router
 
 # Create main API router
 api_router = APIRouter()

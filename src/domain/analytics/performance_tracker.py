@@ -1,10 +1,12 @@
 """
 Performance Tracker: Tracks signal performance and accuracy metrics.
 """
-from typing import Dict, List
-import numpy as np
-from datetime import datetime, timedelta
 from collections import deque
+from datetime import datetime, timedelta
+from typing import Dict, List
+
+import numpy as np
+
 
 class PerformanceTracker:
     def __init__(self, max_signals: int = 1000):

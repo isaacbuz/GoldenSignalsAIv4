@@ -1,9 +1,12 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 import logging
 import time
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from src.legacy_backend_agents.ml.lstm_price_forecast_agent import LSTMPriceForecastAgent
-from src.legacy_backend_agents.ml.xgboost_price_forecast_agent import XGBoostPriceForecastAgent
 from src.legacy_backend_agents.ml.prophet_price_forecast_agent import ProphetPriceForecastAgent
+from src.legacy_backend_agents.ml.xgboost_price_forecast_agent import XGBoostPriceForecastAgent
+
 
 def retrain_all():
     logging.info("[Retrain] Starting model retraining...")

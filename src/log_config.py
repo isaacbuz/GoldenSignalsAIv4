@@ -1,5 +1,6 @@
-import os
 import logging.config
+import os
+
 import yaml
 
 LOGGING_CONFIG_PATH = os.path.abspath(

@@ -1,9 +1,10 @@
 """
 Forecast Ensemble Agent that combines predictions from multiple forecasting models.
 """
-import numpy as np
-from typing import Dict, Any, List, Optional
 import logging
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 from agents.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)

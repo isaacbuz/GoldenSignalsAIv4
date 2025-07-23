@@ -3,13 +3,13 @@ Hybrid Signal System API Endpoints
 Provides access to the enhanced hybrid sentiment trading system
 """
 
-from fastapi import APIRouter, HTTPException, Query
-from typing import Dict, Any, List, Optional
-from datetime import datetime
 import asyncio
 import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from agents.orchestration.hybrid_orchestrator import HybridOrchestrator
+from fastapi import APIRouter, HTTPException, Query
 
 logger = logging.getLogger(__name__)
 

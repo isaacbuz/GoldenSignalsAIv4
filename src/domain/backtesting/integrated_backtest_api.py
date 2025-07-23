@@ -3,24 +3,30 @@ Integrated Backtest API - Production-ready API for comprehensive backtesting
 Combines all enhancement phases into a unified interface
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse, StreamingResponse
-from pydantic import BaseModel, Field
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
 import asyncio
 import json
 import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
+
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import BaseModel, Field
+
+from .adaptive_agent_framework import AdaptiveAgent, AgentPerformanceTracker, TradingOutcome
 
 # Import all our enhanced components
 from .enhanced_data_manager import EnhancedDataManager
-from .market_simulator import MarketMicrostructureSimulator, Order, OrderType, OrderSide
-from .adaptive_agent_framework import AdaptiveAgent, AgentPerformanceTracker, TradingOutcome
-from .signal_accuracy_validator import SignalAccuracyValidator, SignalRecord
+from .market_simulator import MarketMicrostructureSimulator, Order, OrderSide, OrderType
 from .risk_management_simulator import (
-    RiskManagementSimulator, Portfolio, Position, StressScenario, CircuitBreaker
+    CircuitBreaker,
+    Portfolio,
+    Position,
+    RiskManagementSimulator,
+    StressScenario,
 )
+from .signal_accuracy_validator import SignalAccuracyValidator, SignalRecord
 
 logger = logging.getLogger(__name__)
 

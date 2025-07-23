@@ -3,14 +3,15 @@ Comprehensive Backtesting Engine for GoldenSignalsAI
 Combines the best features from all backtest implementations
 """
 
-import pandas as pd
-import numpy as np
-import yaml
-from typing import Dict, Any, List, Optional, Tuple, Callable, Union
-from datetime import datetime
-from dataclasses import dataclass, field
 import logging
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+import pandas as pd
+import yaml
 import yfinance as yf
 
 logger = logging.getLogger(__name__)

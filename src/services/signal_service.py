@@ -6,15 +6,15 @@ analytics, and performance tracking.
 """
 
 import asyncio
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
-import logging
 
 logger = logging.getLogger(__name__)
 
 from src.core.database import DatabaseManager
 from src.core.redis_manager import RedisManager
-from src.ml.models.signals import Signal, SignalType, SignalStrength
+from src.ml.models.signals import Signal, SignalStrength, SignalType
 
 
 class SignalService:

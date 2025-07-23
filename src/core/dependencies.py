@@ -4,21 +4,22 @@ Dependency Injection for GoldenSignalsAI V3
 FastAPI dependency providers for services, authentication, and shared resources.
 """
 
-from typing import Optional, Dict, Any
-from datetime import datetime, timedelta
-
-from fastapi import Depends, HTTPException, status, Request
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import jwt
-from loguru import logger
-import logging
 import json
+import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
+
+import jwt
+from fastapi import Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from loguru import logger
+
+from src.services.market_data_service import MarketDataService
+from src.services.signal_service import SignalService
 
 from .config import settings
 from .database import DatabaseManager
 from .redis_manager import RedisManager
-from src.services.signal_service import SignalService
-from src.services.market_data_service import MarketDataService
 
 # Global service instances (initialized in main.py lifespan)
 _db_manager: Optional[DatabaseManager] = None

@@ -4,21 +4,27 @@
 For demonstration and testing without API rate limits
 """
 
-import random
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta, time, timezone
-from typing import Dict, List, Any, Optional, Tuple
-import logging
-from dataclasses import dataclass, asdict
-import pytz
 import json
+import logging
 import os
+import random
+from dataclasses import asdict, dataclass
+from datetime import datetime, time, timedelta, timezone
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+import pytz
 
 # Import the real service classes
 from market_data_service import (
-    DataUnavailableReason, MarketHours, MarketDataError, 
-    MarketTick, SignalData, TechnicalIndicators, MarketDataCache
+    DataUnavailableReason,
+    MarketDataCache,
+    MarketDataError,
+    MarketHours,
+    MarketTick,
+    SignalData,
+    TechnicalIndicators,
 )
 
 logger = logging.getLogger(__name__)

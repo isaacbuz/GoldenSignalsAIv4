@@ -2,7 +2,7 @@
 # Provides mechanisms for sending alerts via various channels
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 # Configure logging with JSON-like format
 logging.basicConfig(
@@ -35,9 +35,10 @@ class AlertManager:
         Args:
             trading_decision (Dict[str, Any]): Details of the trading decision.
         """
-        import os
         import json
-        from .notify_channels import send_slack, send_discord, send_email, send_push, send_sms
+        import os
+
+        from .notify_channels import send_discord, send_email, send_push, send_slack, send_sms
         
         try:
             logger.info({

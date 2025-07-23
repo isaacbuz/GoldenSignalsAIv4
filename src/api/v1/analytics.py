@@ -5,10 +5,11 @@ REST API endpoints for analytics and reporting.
 """
 
 import logging
-from typing import Dict, List, Any, Optional
-from fastapi import APIRouter, HTTPException, status, Query
-from pydantic import BaseModel
 from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, HTTPException, Query, status
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,7 @@
-from typing import List, Dict
 import json
 from pathlib import Path
+from typing import Dict, List
+
 
 class WatchlistManager:
     def __init__(self, storage_path: str = "data/watchlists.json"):

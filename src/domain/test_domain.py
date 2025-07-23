@@ -1,5 +1,6 @@
 import pytest
 
+
 # Dummy domain object for illustration; replace with actual imports
 class Trade:
     def __init__(self, symbol, qty):

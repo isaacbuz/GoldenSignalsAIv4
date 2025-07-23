@@ -5,6 +5,7 @@ Purpose: Provides distributed computing utilities for GoldenSignalsAI using Ray,
 
 import ray
 
+
 class DistributedComputing:
     def __init__(self):
         ray.init()

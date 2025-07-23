@@ -1,5 +1,7 @@
-import pandas as pd
 from typing import Dict, List
+
+import pandas as pd
+
 
 class PortfolioSimulator:
     def __init__(self, allocation: Dict[str, float]):

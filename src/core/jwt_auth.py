@@ -2,16 +2,18 @@
 JWT Authentication implementation for GoldenSignalsAI.
 """
 
+import json
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 import jwt
-from passlib.context import CryptContext
+import redis
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
 from pydantic import BaseModel
+
 from src.core.config import settings
-import redis
-import json
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

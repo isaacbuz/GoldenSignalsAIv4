@@ -1,7 +1,8 @@
+from GoldenSignalsAI.domain.trading.entities.user_preferences import UserPreferences
 from GoldenSignalsAI.infrastructure.external_services.twilio_sms import TwilioSMSClient
 from GoldenSignalsAI.infrastructure.external_services.twilio_whatsapp import TwilioWhatsAppClient
 from GoldenSignalsAI.infrastructure.external_services.x_api import XClient
-from GoldenSignalsAI.domain.trading.entities.user_preferences import UserPreferences
+
 
 class AlertService:
     def __init__(self, twilio_sms_client, twilio_whatsapp_client, x_client):

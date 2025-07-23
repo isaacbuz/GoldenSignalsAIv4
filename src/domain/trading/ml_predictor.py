@@ -2,17 +2,18 @@
 Machine learning predictor module leveraging multiple frameworks.
 Integrates scikit-learn, XGBoost, LightGBM, and Keras for market predictions.
 """
-import numpy as np
-import pandas as pd
 import logging
 from typing import Dict, List, Optional, Tuple, Union
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import TimeSeriesSplit
-import xgboost as xgb
-import lightgbm as lgb
-from tensorflow import keras
-from sklearn.ensemble import RandomForestClassifier
+
 import joblib
+import lightgbm as lgb
+import numpy as np
+import pandas as pd
+import xgboost as xgb
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.preprocessing import StandardScaler
+from tensorflow import keras
 
 logger = logging.getLogger(__name__)
 

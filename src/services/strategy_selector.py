@@ -1,4 +1,5 @@
-from typing import Dict, Any
+from typing import Any, Dict
+
 
 class StrategySelector:
     def __init__(self, regime_map: Dict[str, str] = None):

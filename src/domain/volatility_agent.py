@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 class VolatilityAgent:
     def __init__(self, window=14):
         self.window = window

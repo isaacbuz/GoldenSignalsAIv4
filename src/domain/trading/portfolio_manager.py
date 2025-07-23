@@ -2,10 +2,11 @@
 Portfolio management module with advanced risk management features.
 Inspired by AlphaPy's portfolio management approach.
 """
-import numpy as np
-import pandas as pd
 import logging
 from typing import Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 

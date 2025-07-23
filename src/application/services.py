@@ -3,13 +3,13 @@ Application Services Facade
 Provides a clean interface to all application services
 """
 
-from typing import List, Dict, Any, Optional
 import logging
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from src.core.container import get_container, initialize_container
-from src.services.signal_generation_engine import TradingSignal
 from src.models.domain.signal import Signal
+from src.services.signal_generation_engine import TradingSignal
 
 logger = logging.getLogger(__name__)
 

@@ -9,37 +9,39 @@ This service provides a comprehensive AI-powered chat interface that can:
 """
 
 import asyncio
+import base64
+import io
 import json
 import logging
-from typing import Dict, List, Optional, Any, Union
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from enum import Enum
-import io
-import base64
+from typing import Any, Dict, List, Optional, Union
 
-import pandas as pd
-import numpy as np
-from PIL import Image
-import pytesseract
-import cv2
-from pydantic import BaseModel, Field
 import aiofiles
-from fastapi import UploadFile, HTTPException
+import anthropic
+import cv2
+import numpy as np
 
 # AI/ML imports
 import openai
-import anthropic
-from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
+import pandas as pd
+import pytesseract
 import torch
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader, CSVLoader, UnstructuredExcelLoader
 
 # Local imports
 from agents.common.models import MarketData, Signal
+from fastapi import HTTPException, UploadFile
+from langchain.document_loaders import CSVLoader, PyPDFLoader, UnstructuredExcelLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
+from PIL import Image
+from pydantic import BaseModel, Field
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+
 from src.utils.logger import get_logger
+
 
 # For now, we'll use mock implementations
 # In production, you would use actual AI services

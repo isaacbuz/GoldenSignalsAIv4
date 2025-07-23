@@ -4,9 +4,9 @@ Purpose: Implements a ReversionAgent that identifies mean-reversion opportunitie
 """
 
 import logging
+from typing import Any, Dict
 
 import pandas as pd
-from typing import Dict, Any
 
 from src.base_agent import BaseAgent
 

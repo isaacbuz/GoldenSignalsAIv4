@@ -3,15 +3,16 @@ Market Microstructure Simulator - Realistic market simulation
 Simulates order books, bid-ask spreads, market impact, and execution dynamics
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, field
-from enum import Enum
+import asyncio
 import logging
 from collections import deque
-import asyncio
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 

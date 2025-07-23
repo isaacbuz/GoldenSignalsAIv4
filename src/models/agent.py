@@ -2,8 +2,9 @@
 Agent model for tracking AI agent performance
 """
 
-from sqlalchemy import Column, String, Float, JSON, Integer, Boolean, DateTime
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, Integer, String
 from sqlalchemy.sql import func
+
 from .base import BaseModel
 
 

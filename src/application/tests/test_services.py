@@ -1,5 +1,6 @@
 import pytest
 
+
 # Dummy service for illustration; replace with actual imports
 class RiskManager:
     def assess(self, risk):

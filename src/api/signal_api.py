@@ -3,12 +3,14 @@
 Pure signal generation for options trading
 """
 
+import sys
+from datetime import datetime
+from typing import Dict, List, Optional
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Dict
-from datetime import datetime
-import sys
+
 sys.path.append('..')
 from demo_signal_system import DemoSignalGenerator
 

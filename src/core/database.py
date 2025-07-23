@@ -1,7 +1,8 @@
 
 """Mock database module for testing"""
-from typing import Any, Dict, List, Optional
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 
 class DatabaseManager:
     """Mock database manager"""

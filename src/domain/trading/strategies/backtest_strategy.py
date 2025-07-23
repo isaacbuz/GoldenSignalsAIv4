@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class BacktestStrategy:
     def run(self, symbol, historical_df, predictions):
         returns = pd.Series(predictions).pct_change().fillna(0)

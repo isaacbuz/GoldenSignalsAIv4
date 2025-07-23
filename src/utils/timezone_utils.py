@@ -2,10 +2,11 @@
 Timezone utilities for consistent datetime handling across the application
 """
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Union
-import pytz
 from zoneinfo import ZoneInfo
+
+import pytz
 
 # Default timezone for the application (UTC)
 DEFAULT_TIMEZONE = timezone.utc

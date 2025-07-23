@@ -3,21 +3,22 @@ Adaptive Agent Framework - Online learning and performance optimization
 Enables agents to learn from trading outcomes and adapt their strategies
 """
 
+import asyncio
+import json
+import logging
+import pickle
+from abc import ABC, abstractmethod
+from collections import deque
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple, Callable
-from dataclasses import dataclass, field
-from collections import deque
-from abc import ABC, abstractmethod
-import logging
-import json
-import pickle
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import SGDRegressor, SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import SGDClassifier, SGDRegressor
 from sklearn.metrics import accuracy_score, mean_squared_error
-import asyncio
+from sklearn.preprocessing import StandardScaler
 
 logger = logging.getLogger(__name__)
 

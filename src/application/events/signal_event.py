@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+
 @dataclass
 class SignalEvent:
     type: str = "SignalEvent"

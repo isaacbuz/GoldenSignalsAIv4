@@ -2,8 +2,9 @@
 Performance configuration for GoldenSignalsAI
 """
 
-from typing import Dict, Any
 import multiprocessing
+from typing import Any, Dict
+
 from src.utils.performance import ResourceOptimizer
 
 

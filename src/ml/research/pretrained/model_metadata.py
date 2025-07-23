@@ -1,9 +1,10 @@
 """
 Metadata for pretrained models in GoldenSignalsAI.
 """
-from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict
+
 
 @dataclass
 class PretrainedModelInfo:

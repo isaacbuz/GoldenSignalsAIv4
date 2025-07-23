@@ -2,7 +2,7 @@
 API Documentation configuration for GoldenSignalsAI
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 # API Metadata
 API_TITLE = "GoldenSignalsAI API"

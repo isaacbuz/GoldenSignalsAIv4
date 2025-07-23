@@ -7,29 +7,30 @@ import asyncio
 import json
 import logging
 import os
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple, Callable
-from dataclasses import dataclass, field, asdict
-from collections import defaultdict
-import numpy as np
-import pandas as pd
-from pathlib import Path
 import pickle
+from collections import defaultdict
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 # Database
 import asyncpg
+import joblib
+import numpy as np
+import pandas as pd
 import redis.asyncio as redis
 
 # Machine Learning
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.model_selection import cross_val_score
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import cross_val_score
-import joblib
+
+from src.domain.backtesting.advanced_backtest_engine import BacktestMetrics, BacktestTrade
 
 # Local imports
 from src.utils.timezone_utils import now_utc
-from src.domain.backtesting.advanced_backtest_engine import BacktestMetrics, BacktestTrade
 
 logger = logging.getLogger(__name__)
 

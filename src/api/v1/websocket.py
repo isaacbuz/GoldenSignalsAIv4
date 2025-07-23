@@ -3,19 +3,20 @@ WebSocket API for GoldenSignalsAI V3
 Real-time data streaming and bidirectional communication
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query
-from typing import Dict, Set, Optional, List, Any
-import json
 import asyncio
+import json
 import logging
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set
 from uuid import uuid4
 
-from src.websocket.manager import WebSocketManager, ConnectionInfo
-from src.services.market_data_service import MarketDataService
 from agents.orchestration.simple_orchestrator import SimpleOrchestrator
-from src.core.redis_manager import RedisManager
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+
 from src.core.auth import get_current_user_ws
+from src.core.redis_manager import RedisManager
+from src.services.market_data_service import MarketDataService
+from src.websocket.manager import ConnectionInfo, WebSocketManager
 
 logger = logging.getLogger(__name__)
 

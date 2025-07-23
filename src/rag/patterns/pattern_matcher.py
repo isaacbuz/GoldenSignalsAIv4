@@ -3,15 +3,16 @@ Historical Pattern Matching System
 Identifies and matches trading patterns from historical data
 """
 
-import numpy as np
-import pandas as pd
-from typing import List, Dict, Any, Tuple, Optional
+import asyncio
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-import asyncio
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+from scipy.spatial.distance import cosine, euclidean
 from sklearn.preprocessing import StandardScaler
-from scipy.spatial.distance import euclidean, cosine
-import logging
 
 logger = logging.getLogger(__name__)
 

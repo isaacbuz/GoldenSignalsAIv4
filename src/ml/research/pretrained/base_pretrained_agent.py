@@ -1,12 +1,13 @@
 """
 Base class for pretrained model agents.
 """
-from typing import Dict, Any, Optional
-import numpy as np
-from keras.models import load_model
 import logging
+from typing import Any, Dict, Optional
+
+import numpy as np
 from agents.common.base_agent import BaseAgent
-from agents.ml.pretrained.model_metadata import get_model_info, PretrainedModelInfo
+from agents.ml.pretrained.model_metadata import PretrainedModelInfo, get_model_info
+from keras.models import load_model
 
 logger = logging.getLogger(__name__)
 

@@ -4,17 +4,18 @@ Generates real trading signals using ML models and agents
 """
 
 import asyncio
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
 import logging
-import numpy as np
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
-from agents.orchestrator import AgentOrchestrator
-from agents.momentum import MomentumAgent
+import numpy as np
 from agents.mean_reversion import MeanReversionAgent
-from agents.technical_analysis import TechnicalAnalysisAgent
+from agents.momentum import MomentumAgent
+from agents.orchestrator import AgentOrchestrator
 from agents.sentiment_analysis import SentimentAnalysisAgent
+from agents.technical_analysis import TechnicalAnalysisAgent
 from agents.volume_analysis import VolumeAnalysisAgent
+
 from src.utils.technical_indicators import TechnicalIndicators
 from src.utils.timezone_utils import now_utc
 

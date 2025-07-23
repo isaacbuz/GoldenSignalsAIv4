@@ -6,14 +6,15 @@ Provides robust real-time data streaming with auto-reconnection and failover
 import asyncio
 import json
 import logging
-from typing import Dict, Set, Optional, Callable, Any
+import traceback
+from collections import defaultdict
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, Optional, Set
+
+import aiohttp
 import websockets
 from websockets.exceptions import WebSocketException
-from dataclasses import dataclass, asdict
-import aiohttp
-from collections import defaultdict
-import traceback
 
 logger = logging.getLogger(__name__)
 

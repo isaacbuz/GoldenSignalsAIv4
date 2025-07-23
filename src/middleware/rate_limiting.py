@@ -2,17 +2,18 @@
 Rate limiting middleware for API protection.
 """
 
-from fastapi import Request, HTTPException, status
+import json
+import logging
+import time
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, Optional
+
+import redis
+from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from typing import Callable, Optional, Dict, Any
-import redis
-import time
-import json
-from datetime import datetime, timedelta
-import logging
+from slowapi.util import get_remote_address
 
 logger = logging.getLogger(__name__)
 

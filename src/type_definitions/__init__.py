@@ -2,8 +2,9 @@
 Type definitions and protocols for GoldenSignalsAI
 """
 
-from typing import TypedDict, Protocol, Dict, List, Any, Optional, Union
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Protocol, TypedDict, Union
+
 import pandas as pd
 
 

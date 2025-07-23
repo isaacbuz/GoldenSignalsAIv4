@@ -1,17 +1,18 @@
 """
 Ensemble classifier agent combining multiple ML models for robust market predictions.
 """
-from typing import Dict, Any, List, Optional
+import os
+from typing import Any, Dict, List, Optional
+
+import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
-from sklearn.preprocessing import StandardScaler
-import joblib
-import os
-
 from agents.common.base_agent import BaseAgent
+from lightgbm import LGBMClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+
 
 class EnsembleClassifierAgent(BaseAgent):
     """Agent that combines multiple ML classifiers for market prediction."""

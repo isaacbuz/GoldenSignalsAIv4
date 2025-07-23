@@ -7,7 +7,8 @@ SQLAlchemy models for risk management and tracking.
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, Boolean, Text, ForeignKey, JSON
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import relationship
 
 from .base import BaseModel

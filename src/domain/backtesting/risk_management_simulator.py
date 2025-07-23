@@ -3,15 +3,16 @@ Risk Management Simulator - Comprehensive risk testing framework
 Tests portfolio risk, VaR calculations, stress scenarios, and circuit breakers
 """
 
+import logging
+from collections import defaultdict
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, field
-from enum import Enum
-import logging
 from scipy import stats
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 

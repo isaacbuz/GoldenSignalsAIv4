@@ -5,11 +5,12 @@ REST API endpoints for managing and monitoring AI trading agents.
 """
 
 import logging
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
+from agents.orchestrator import AgentOrchestrator
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from agents.orchestrator import AgentOrchestrator
 from src.core.dependencies import get_agent_orchestrator
 
 logger = logging.getLogger(__name__)

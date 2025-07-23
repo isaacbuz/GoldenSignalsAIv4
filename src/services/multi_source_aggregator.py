@@ -4,25 +4,26 @@ Integrates multiple data sources for comprehensive market intelligence
 """
 
 import asyncio
-import aiohttp
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta, timezone
-import numpy as np
-from dataclasses import dataclass
 import logging
 import os
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
+
+import aiohttp
+import discord
+import numpy as np
+import pandas as pd
+import praw  # Reddit API
+import pyEX
+import requests
+import tweepy  # Twitter API
 
 # Import for various APIs
 import yfinance as yf
-import pyEX
-import requests
 from fredapi import Fred
-import praw  # Reddit API
-import tweepy  # Twitter API
-import discord
 from textblob import TextBlob
-import pandas as pd
 
 logger = logging.getLogger(__name__)
 

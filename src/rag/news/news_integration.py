@@ -4,14 +4,15 @@ Integrates news feeds and analyzes sentiment for trading signals
 """
 
 import asyncio
-import aiohttp
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
-from dataclasses import dataclass
-import feedparser
-from textblob import TextBlob
-import yfinance as yf
 import logging
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+import aiohttp
+import feedparser
+import yfinance as yf
+from textblob import TextBlob
 
 logger = logging.getLogger(__name__)
 

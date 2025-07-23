@@ -3,13 +3,14 @@ Live Data Connector for Model Training
 Connects to PostgreSQL, Redis, and live market data sources
 """
 
-import os
 import asyncio
 import logging
+import os
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-import pandas as pd
+from typing import Any, Dict, List, Optional
+
 import numpy as np
+import pandas as pd
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -18,21 +19,21 @@ load_dotenv()
 # Database imports
 import asyncpg
 import redis.asyncio as redis
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text
+import requests
 
 # Market data imports
 import yfinance as yf
-from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.techindicators import TechIndicators
-import requests
+from alpha_vantage.timeseries import TimeSeries
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 # Configuration
 from config.settings import settings
 
 # Import timezone utilities
-from src.utils.timezone_utils import now_utc, make_aware, to_utc, ensure_timezone_aware
+from src.utils.timezone_utils import ensure_timezone_aware, make_aware, now_utc, to_utc
 
 logger = logging.getLogger(__name__)
 

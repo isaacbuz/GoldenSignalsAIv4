@@ -5,9 +5,9 @@ Purpose: Implements a BreakoutAgent that identifies breakout patterns in stock p
 
 import asyncio
 import logging
+from typing import Any, Dict
 
 import pandas as pd
-from typing import Dict, Any
 
 from src.base_agent import BaseAgent
 

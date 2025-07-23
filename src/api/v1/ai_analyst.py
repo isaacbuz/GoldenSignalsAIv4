@@ -2,16 +2,16 @@
 AI Trading Analyst API endpoints
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException, Depends
-from typing import Dict, Any, Optional, List
-import json
 import asyncio
+import json
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 
 from src.services.ai_trading_analyst import AITradingAnalyst
-from src.services.websocket_manager import WebSocketManager
 from src.services.chart_vision_analyzer import ChartVisionAnalyzer, analyze_chart_screenshot
-
+from src.services.websocket_manager import WebSocketManager
 
 router = APIRouter(prefix="/ai-analyst", tags=["AI Analyst"])
 

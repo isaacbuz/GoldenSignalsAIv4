@@ -1,5 +1,7 @@
-from typing import List, Dict
+from typing import Dict, List
+
 import pandas as pd
+
 
 class StrategyComposer:
     def __init__(self, strategy_logic: List[Dict]):

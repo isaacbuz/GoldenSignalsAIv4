@@ -8,11 +8,11 @@ import asyncio
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 
-from src.websocket.scalable_manager import ScalableWebSocketManager
 from src.utils.logger import get_logger
+from src.websocket.scalable_manager import ScalableWebSocketManager
 
 logger = get_logger(__name__)
 

@@ -6,11 +6,11 @@ Implements circuit breakers, retry logic, and fallback mechanisms
 import asyncio
 import functools
 import logging
-from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
-from enum import Enum
 import traceback
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
 
 logger = logging.getLogger(__name__)
 

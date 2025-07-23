@@ -5,9 +5,11 @@ Purpose: Implements the AutonomousEngine for GoldenSignalsAI, responsible for an
 
 from dataclasses import dataclass
 from enum import Enum, auto
+
 import numpy as np
 import pandas as pd
 import ta
+
 
 class Action(Enum):
     LONG = auto()

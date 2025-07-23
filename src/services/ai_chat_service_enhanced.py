@@ -14,59 +14,60 @@ This service provides a comprehensive AI-powered chat interface with:
 """
 
 import asyncio
+import base64
+import io
 import json
 import logging
-from typing import Dict, List, Optional, Any, Union, Tuple
-from datetime import datetime, timedelta
-import uuid
-from enum import Enum
-import io
-import base64
 import tempfile
+import uuid
+from datetime import datetime, timedelta
+from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-import pandas as pd
-import numpy as np
-from PIL import Image
-import pytesseract
+import aiofiles
+import anthropic
 import cv2
 import matplotlib.pyplot as plt
-import seaborn as sns
-from pydantic import BaseModel, Field
-import aiofiles
-from fastapi import UploadFile, HTTPException
-import yfinance as yf
-import ta
+import numpy as np
 
 # AI/ML imports
 import openai
-import anthropic
-from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
-import torch
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader, CSVLoader, UnstructuredExcelLoader
-from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
-from langchain.llms import OpenAI, Anthropic
+import pandas as pd
+import pygame
+import pytesseract
+import seaborn as sns
 
 # Audio processing
 import speech_recognition as sr
-from gtts import gTTS
-import pygame
-
-# Chart pattern recognition
-from scipy.signal import find_peaks
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
+import ta
+import torch
+import yfinance as yf
 
 # Local imports
 from agents.common.models import MarketData, Signal
-from src.utils.logger import get_logger
-from src.services.market_data_service import MarketDataService
+from fastapi import HTTPException, UploadFile
+from gtts import gTTS
+from langchain.chains import ConversationalRetrievalChain
+from langchain.document_loaders import CSVLoader, PyPDFLoader, UnstructuredExcelLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.llms import Anthropic, OpenAI
+from langchain.memory import ConversationBufferMemory
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
+from PIL import Image
+from pydantic import BaseModel, Field
+
+# Chart pattern recognition
+from scipy.signal import find_peaks
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+
 from src.services.backtesting_service import BacktestingService
+from src.services.market_data_service import MarketDataService
 from src.services.portfolio_optimizer import PortfolioOptimizer
+from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -771,7 +772,7 @@ class EnhancedMultimodalAIChatService:
     def _extract_symbols(self, text: str) -> List[str]:
         """Extract stock symbols from text"""
         import re
-        
+
         # Common pattern for stock symbols
         pattern = r'\b[A-Z]{1,5}\b'
         potential_symbols = re.findall(pattern, text)

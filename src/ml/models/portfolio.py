@@ -4,12 +4,13 @@ Portfolio Models - GoldenSignalsAI V3
 SQLAlchemy models for portfolio management and tracking.
 """
 
+import enum
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, Boolean, Text, ForeignKey, Enum
+
+from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import relationship
-import enum
 
 from .base import BaseModel
 

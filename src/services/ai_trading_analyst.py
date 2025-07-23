@@ -4,16 +4,18 @@ A sophisticated AI analyst that provides comprehensive market analysis
 """
 
 import asyncio
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timedelta
-import pa, timezonendas as pd
-import numpy as np
 import json
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
+import numpy as np
+import pa
+import timezonendas as pd
 from agents.core.agent_factory import get_agent_factory
 from agents.orchestration.meta_orchestrator import MetaOrchestrator, MetaStrategy
+
 from src.services.chart_generator_service import ChartGeneratorService
 from src.services.nlp_service import NLPService
 

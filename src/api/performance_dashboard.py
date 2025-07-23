@@ -3,11 +3,12 @@ Performance Dashboard API
 Provides real-time performance metrics and analytics
 """
 
-from fastapi import APIRouter, HTTPException
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
 import json
 import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, HTTPException
 
 logger = logging.getLogger(__name__)
 

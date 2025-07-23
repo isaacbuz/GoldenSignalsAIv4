@@ -3,14 +3,15 @@ Performance optimization utilities for GoldenSignalsAI
 """
 
 import asyncio
-import time
 import functools
 import logging
-from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+import time
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from contextlib import contextmanager
-import psutil
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
+
 import numpy as np
+import psutil
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +197,7 @@ class ResourceOptimizer:
         """Optimize pandas DataFrame memory usage"""
         try:
             import pandas as pd
-            
+
             # Downcast numeric columns
             for col in df.select_dtypes(include=['float']).columns:
                 df[col] = pd.to_numeric(df[col], downcast='float')

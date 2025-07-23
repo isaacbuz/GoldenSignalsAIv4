@@ -2,6 +2,7 @@ import pandas as pd
 
 from .fmp_fetcher import fetch_fmp_ohlcv
 
+
 async def fetch_stock_data(symbol, timeframe="1d", source="mock"):
     """
     Fetch OHLCV data for a symbol from the specified source.

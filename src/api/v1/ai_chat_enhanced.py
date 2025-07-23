@@ -2,28 +2,29 @@
 Enhanced AI Chat API Endpoints - Production Ready
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends, BackgroundTasks
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+import asyncio
+import base64
+import io
+import json
 import uuid
 from datetime import datetime
-import json
-import asyncio
-from PIL import Image
-import io
-import base64
+from typing import Any, Dict, List, Optional
 
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
+from PIL import Image
+from pydantic import BaseModel
+
+from src.core.auth import get_current_user
 from src.services.ai_chat_service_enhanced import (
-    EnhancedMultimodalAIChatService,
-    EnhancedMessageType,
     AnalysisType,
     ChartPattern,
     EnhancedAIResponse,
-    VisionAnalysis
+    EnhancedMessageType,
+    EnhancedMultimodalAIChatService,
+    VisionAnalysis,
 )
 from src.utils.logger import get_logger
-from src.core.auth import get_current_user
 
 logger = get_logger(__name__)
 
@@ -407,9 +408,11 @@ async def log_interaction(
         logger.error(f"Error logging interaction: {e}")
 
 
+from typing import Set
+
 # WebSocket endpoint for real-time chat
 from fastapi import WebSocket, WebSocketDisconnect
-from typing import Set
+
 
 class ConnectionManager:
     def __init__(self):

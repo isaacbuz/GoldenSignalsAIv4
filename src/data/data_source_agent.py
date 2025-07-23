@@ -2,11 +2,12 @@
 Data source agents for fetching market data from various providers.
 """
 
-import os
 import logging
-import requests
-import pandas as pd
+import os
 from typing import Dict, List, Optional
+
+import pandas as pd
+import requests
 
 logging.basicConfig(
     level=logging.INFO,
