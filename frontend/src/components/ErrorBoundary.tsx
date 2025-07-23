@@ -1,6 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Button, Typography, Paper, Stack } from '@mui/material';
 import { Refresh, Warning } from '@mui/icons-material';
+import logger from '../services/logger';
+
 
 interface Props {
   children: ReactNode;
@@ -28,9 +30,9 @@ class ErrorBoundary extends Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Only log errors in development mode to prevent console spam
     if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      logger.error('ErrorBoundary caught an error:', error, errorInfo);
     }
-    
+
     this.setState({ errorInfo });
 
     // Call optional error handler
@@ -43,7 +45,7 @@ class ErrorBoundary extends Component<Props, State> {
       // Send to error tracking service (e.g., Sentry, LogRocket)
       // Only log critical errors to avoid console spam
       if (error.name !== 'ChunkLoadError' && error.name !== 'NetworkError') {
-        console.error('Production error:', {
+        logger.error('Production error:', {
           error: error.toString(),
           stack: errorInfo.componentStack,
           timestamp: new Date().toISOString(),
@@ -141,4 +143,4 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

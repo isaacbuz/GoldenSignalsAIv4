@@ -7,7 +7,7 @@
 [![AI](https://img.shields.io/badge/AI-Multi--Agent%20System-purple)](https://github.com/joaomdmoura/crewAI)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-> **Enterprise-Grade AI-Powered Trading Signal Intelligence Platform**  
+> **Enterprise-Grade AI-Powered Trading Signal Intelligence Platform**
 > A sophisticated multi-agent system leveraging advanced machine learning, real-time data processing, and professional trading interfaces to generate high-quality trading signals for retail and institutional traders.
 
 ---
@@ -145,17 +145,17 @@ graph TB
         Mobile["📱 Mobile App<br/>(Planned)"]
         Desktop["🖥️ Desktop App<br/>(Planned)"]
     end
-    
+
     subgraph "Load Balancer Layer"
         LB["⚖️ Load Balancer<br/>Nginx/HAProxy"]
     end
-    
+
     subgraph "API Gateway Layer"
         Gateway["🚪 API Gateway<br/>FastAPI + Middleware"]
         Auth["🔐 Authentication<br/>JWT + RBAC"]
         RateLimit["⏱️ Rate Limiting<br/>Redis-based"]
     end
-    
+
     subgraph "Application Layer"
         SignalService["📊 Signal Service<br/>Multi-Agent System"]
         MarketService["📈 Market Data Service<br/>Real-time Processing"]
@@ -163,7 +163,7 @@ graph TB
         BacktestService["🔬 Backtesting Service<br/>Historical Analysis"]
         NotificationService["🔔 Notification Service<br/>Multi-channel Alerts"]
     end
-    
+
     subgraph "Agent System"
         AgentOrchestrator["🎭 Agent Orchestrator<br/>CrewAI Framework"]
         TechnicalAgents["📊 Technical Agents<br/>RSI, MACD, BB"]
@@ -171,21 +171,21 @@ graph TB
         RiskAgents["⚠️ Risk Agents<br/>Portfolio Risk"]
         FlowAgents["💰 Options Flow Agents<br/>Unusual Activity"]
     end
-    
+
     subgraph "Data Layer"
         PostgreSQL["🗄️ PostgreSQL<br/>Primary Database"]
         Redis["⚡ Redis<br/>Cache + Sessions"]
         ChromaDB["🧠 ChromaDB<br/>Vector Database"]
         FileStorage["📁 File Storage<br/>Models + Assets"]
     end
-    
+
     subgraph "External APIs"
         YahooFinance["📊 Yahoo Finance<br/>Market Data"]
         PolygonIO["📈 Polygon.io<br/>Real-time Data"]
         AlphaVantage["📉 Alpha Vantage<br/>Technical Data"]
         NewsAPIs["📰 News APIs<br/>Sentiment Data"]
     end
-    
+
     WebApp --> LB
     LB --> Gateway
     Gateway --> SignalService
@@ -216,7 +216,7 @@ graph TB
         ConsensusEngine["🤝 Consensus Engine<br/>Byzantine Fault Tolerance"]
         AgentRegistry["📋 Agent Registry<br/>30+ Specialized Agents"]
     end
-    
+
     subgraph "Technical Analysis Agents"
         RSIAgent["📊 RSI Agent<br/>Relative Strength Index"]
         MACDAgent["📈 MACD Agent<br/>Moving Average Convergence"]
@@ -225,7 +225,7 @@ graph TB
         MomentumAgent["🚀 Momentum Agent<br/>Price Momentum"]
         SupportResistanceAgent["📏 S/R Agent<br/>Key Levels"]
     end
-    
+
     subgraph "Sentiment Analysis Agents"
         NewsAgent["📰 News Sentiment Agent<br/>Financial News Analysis"]
         SocialAgent["🐦 Social Media Agent<br/>Twitter/Reddit Sentiment"]
@@ -233,7 +233,7 @@ graph TB
         AnalystAgent["👔 Analyst Agent<br/>Analyst Ratings"]
         MarketSentimentAgent["😊 Market Sentiment Agent<br/>Overall Market Mood"]
     end
-    
+
     subgraph "Risk Management Agents"
         PortfolioRiskAgent["⚠️ Portfolio Risk Agent<br/>Risk Assessment"]
         VolatilityAgent["🌊 Volatility Agent<br/>VIX Analysis"]
@@ -241,24 +241,24 @@ graph TB
         DrawdownAgent["📉 Drawdown Agent<br/>Risk Control"]
         PositionSizeAgent["📏 Position Size Agent<br/>Kelly Criterion"]
     end
-    
+
     subgraph "Signal Output"
         SignalAggregator["📊 Signal Aggregator<br/>Multi-Agent Consensus"]
         ConfidenceScorer["🎯 Confidence Scorer<br/>AI Confidence Metrics"]
         RiskAdjuster["⚖️ Risk Adjuster<br/>Risk-Adjusted Signals"]
         SignalOutput["📤 Signal Output<br/>Final Trading Signals"]
     end
-    
+
     Orchestrator --> RSIAgent
     Orchestrator --> MACDAgent
     Orchestrator --> NewsAgent
     Orchestrator --> PortfolioRiskAgent
-    
+
     RSIAgent --> ConsensusEngine
     MACDAgent --> ConsensusEngine
     NewsAgent --> ConsensusEngine
     PortfolioRiskAgent --> ConsensusEngine
-    
+
     ConsensusEngine --> SignalAggregator
     SignalAggregator --> ConfidenceScorer
     ConfidenceScorer --> RiskAdjuster
@@ -299,7 +299,7 @@ sequenceDiagram
     participant Cache as ⚡ Redis Cache
     participant External as 📊 External APIs
     participant WebSocket as 🌐 WebSocket
-    
+
     Client->>+Gateway: Request signals for AAPL
     Gateway->>+MarketService: Get market data
     MarketService->>+External: Fetch AAPL data
@@ -307,10 +307,10 @@ sequenceDiagram
     MarketService->>+Cache: Store market data
     Cache-->>-MarketService: Cached
     MarketService-->>-Gateway: Market data response
-    
+
     Gateway->>+AgentOrchestrator: Trigger signal generation
     AgentOrchestrator->>+Agents: Distribute market data
-    
+
     par Technical Analysis
         Agents->>Agents: RSI calculation
         Agents->>Agents: MACD analysis
@@ -324,19 +324,19 @@ sequenceDiagram
         Agents->>Agents: Risk calculations
         Agents->>Agents: Correlation analysis
     end
-    
+
     Agents-->>-AgentOrchestrator: Individual signals
     AgentOrchestrator->>+ConsensusEngine: Run consensus algorithm
     ConsensusEngine->>ConsensusEngine: Byzantine fault tolerance
     ConsensusEngine->>ConsensusEngine: Weight by accuracy
     ConsensusEngine->>ConsensusEngine: Calculate confidence
     ConsensusEngine-->>-AgentOrchestrator: Consensus signal
-    
+
     AgentOrchestrator->>+Database: Store signal & metrics
     Database-->>-AgentOrchestrator: Stored
     AgentOrchestrator-->>-Gateway: Final signal
     Gateway-->>-Client: Signal response
-    
+
     Gateway->>+WebSocket: Broadcast signal update
     WebSocket-->>-Client: Real-time signal
 ```
@@ -564,7 +564,7 @@ graph TB
     subgraph "Root Directory"
         Root["📁 GoldenSignalsAIv4/"]
     end
-    
+
     subgraph "Backend Components"
         Agents["📁 agents/<br/>Multi-Agent System"]
         Infrastructure["📁 infrastructure/<br/>Core Infrastructure"]
@@ -573,7 +573,7 @@ graph TB
         API["📁 src/api/<br/>API Endpoints"]
         Utils["📁 src/utils/<br/>Utilities"]
     end
-    
+
     subgraph "Frontend Components"
         Frontend["📁 frontend/<br/>React Application"]
         Components["📁 src/components/<br/>UI Components"]
@@ -582,14 +582,14 @@ graph TB
         Services2["📁 src/services/<br/>API Clients"]
         Hooks["📁 src/hooks/<br/>Custom Hooks"]
     end
-    
+
     subgraph "AI/ML Components"
         MLTraining["📁 ml_training/<br/>Model Training"]
         MLModels["📁 ml_training/models/<br/>Trained Models"]
         RAG["📁 src/rag/<br/>RAG System"]
         Transformers["📁 agents/transformer/<br/>Transformer Agents"]
     end
-    
+
     subgraph "Infrastructure & DevOps"
         Docker["📁 Docker Files<br/>Containerization"]
         K8s["📁 k8s/<br/>Kubernetes Configs"]
@@ -597,23 +597,23 @@ graph TB
         Helm["📁 helm/<br/>Helm Charts"]
         Monitoring["📁 monitoring/<br/>Observability"]
     end
-    
+
     Root --> Agents
     Root --> Infrastructure
     Root --> Services
     Root --> Frontend
     Root --> MLTraining
     Root --> Docker
-    
+
     Agents --> TechnicalAgents["📁 core/technical/<br/>Technical Analysis"]
     Agents --> SentimentAgents2["📁 core/sentiment/<br/>Sentiment Analysis"]
     Agents --> RiskAgents2["📁 core/risk/<br/>Risk Management"]
-    
+
     Frontend --> Components
     Frontend --> Pages
     Frontend --> Store
     Frontend --> Services2
-    
+
     Components --> CoreComponents["📁 Core/<br/>Basic Components"]
     Components --> LayoutComponents["📁 Layout/<br/>Layout Components"]
     Components --> ChartComponents["📁 Charts/<br/>Chart Components"]
@@ -1002,16 +1002,16 @@ agent_orchestrator = AgentOrchestrator()
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
     logger.info("Starting GoldenSignalsAI application...")
-    
+
     # Initialize services
     await agent_orchestrator.initialize()
-    
+
     # Start background tasks
     asyncio.create_task(agent_orchestrator.run_continuous_analysis())
     asyncio.create_task(websocket_manager.start_heartbeat())
-    
+
     yield
-    
+
     # Cleanup
     logger.info("Shutting down GoldenSignalsAI application...")
     await agent_orchestrator.cleanup()
@@ -1102,12 +1102,12 @@ class Signal:
 
 class AgentOrchestrator:
     """Orchestrates multiple AI agents for signal generation"""
-    
+
     def __init__(self):
         self.agents = {}
         self.consensus_engine = ConsensusEngine()
         self.logger = logging.getLogger(__name__)
-        
+
     async def initialize(self):
         """Initialize all agents"""
         self.agents = {
@@ -1116,26 +1116,26 @@ class AgentOrchestrator:
             'news': NewsAgent(),
             'risk': PortfolioRiskAgent()
         }
-        
+
         for name, agent in self.agents.items():
             await agent.initialize()
             self.logger.info(f"Initialized {name} agent")
-    
+
     async def generate_signal(self, symbol: str) -> Signal:
         """Generate consensus signal for a symbol"""
         # Collect signals from all agents
         agent_signals = {}
-        
+
         for name, agent in self.agents.items():
             try:
                 signal = await agent.analyze(symbol)
                 agent_signals[name] = signal
             except Exception as e:
                 self.logger.error(f"Error in {name} agent: {e}")
-        
+
         # Run consensus algorithm
         consensus_signal = await self.consensus_engine.process(agent_signals)
-        
+
         return Signal(
             symbol=symbol,
             action=consensus_signal.action,
@@ -1145,11 +1145,11 @@ class AgentOrchestrator:
             indicators=consensus_signal.indicators,
             risk_level=consensus_signal.risk_level
         )
-    
+
     async def run_continuous_analysis(self):
         """Continuously analyze market and generate signals"""
         symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN']
-        
+
         while True:
             for symbol in symbols:
                 try:
@@ -1157,9 +1157,9 @@ class AgentOrchestrator:
                     await self._broadcast_signal(signal)
                 except Exception as e:
                     self.logger.error(f"Error generating signal for {symbol}: {e}")
-            
+
             await asyncio.sleep(30)  # Generate signals every 30 seconds
-    
+
     async def _broadcast_signal(self, signal: Signal):
         """Broadcast signal to WebSocket clients"""
         from src.services.websocket_service import websocket_manager
@@ -1261,8 +1261,8 @@ const App: React.FC = () => {
         styleOverrides: {
           root: {
             borderRadius: 12,
-            boxShadow: isDarkMode 
-              ? '0 4px 20px rgba(0,0,0,0.25)' 
+            boxShadow: isDarkMode
+              ? '0 4px 20px rgba(0,0,0,0.25)'
               : '0 4px 20px rgba(0,0,0,0.1)',
           },
         },
@@ -1458,22 +1458,22 @@ class AgentSignal:
 
 class BaseAgent(ABC):
     """Base class for all trading agents"""
-    
+
     def __init__(self, name: str):
         self.name = name
         self.logger = logging.getLogger(f"agent.{name}")
         self.performance_history = []
         self.accuracy_score = 0.0
-        
+
     @abstractmethod
     async def analyze(self, symbol: str, data: Dict[str, Any]) -> AgentSignal:
         """Analyze market data and generate a signal"""
         pass
-    
+
     async def initialize(self):
         """Initialize the agent"""
         self.logger.info(f"{self.name} agent initialized")
-    
+
     def update_performance(self, prediction: str, actual_outcome: str):
         """Update agent's performance metrics"""
         is_correct = prediction == actual_outcome
@@ -1483,12 +1483,12 @@ class BaseAgent(ABC):
             'actual': actual_outcome,
             'correct': is_correct
         })
-        
+
         # Calculate rolling accuracy
         recent_predictions = self.performance_history[-100:]  # Last 100 predictions
         correct_predictions = sum(1 for p in recent_predictions if p['correct'])
         self.accuracy_score = correct_predictions / len(recent_predictions)
-    
+
     def get_weight(self) -> float:
         """Get the agent's weight for consensus calculation"""
         # Higher accuracy agents get higher weight
@@ -1509,24 +1509,24 @@ from agents.common.base_agent import BaseAgent, AgentSignal
 
 class MomentumAgent(BaseAgent):
     """Agent that analyzes price momentum using RSI and MACD"""
-    
+
     def __init__(self):
         super().__init__("momentum")
-        
+
     async def analyze(self, symbol: str, data: Dict[str, Any]) -> AgentSignal:
         """Analyze momentum indicators"""
         prices = pd.Series(data['prices'])
-        
+
         # Calculate RSI
         rsi = self._calculate_rsi(prices)
-        
+
         # Calculate MACD
         macd_line, signal_line, histogram = self._calculate_macd(prices)
-        
+
         # Generate signal
         action = self._determine_action(rsi, macd_line, signal_line)
         confidence = self._calculate_confidence(rsi, macd_line, signal_line)
-        
+
         return AgentSignal(
             action=action,
             confidence=confidence,
@@ -1540,7 +1540,7 @@ class MomentumAgent(BaseAgent):
             },
             timestamp=datetime.utcnow()
         )
-    
+
     def _calculate_rsi(self, prices: pd.Series, period: int = 14) -> float:
         """Calculate Relative Strength Index"""
         delta = prices.diff()
@@ -1549,7 +1549,7 @@ class MomentumAgent(BaseAgent):
         rs = gain / loss
         rsi = 100 - (100 / (1 + rs))
         return rsi.iloc[-1]
-    
+
     def _calculate_macd(self, prices: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9):
         """Calculate MACD indicator"""
         ema_fast = prices.ewm(span=fast).mean()
@@ -1557,9 +1557,9 @@ class MomentumAgent(BaseAgent):
         macd_line = ema_fast - ema_slow
         signal_line = macd_line.ewm(span=signal).mean()
         histogram = macd_line - signal_line
-        
+
         return macd_line.iloc[-1], signal_line.iloc[-1], histogram.iloc[-1]
-    
+
     def _determine_action(self, rsi: float, macd: float, signal: float) -> str:
         """Determine trading action based on indicators"""
         if rsi < 30 and macd > signal:
@@ -1568,12 +1568,12 @@ class MomentumAgent(BaseAgent):
             return "SELL"
         else:
             return "HOLD"
-    
+
     def _calculate_confidence(self, rsi: float, macd: float, signal: float) -> float:
         """Calculate confidence score"""
         rsi_strength = abs(50 - rsi) / 50  # Distance from neutral
         macd_strength = abs(macd - signal) / max(abs(macd), abs(signal))
-        
+
         return min(1.0, (rsi_strength + macd_strength) / 2)
 ```
 
@@ -1599,43 +1599,43 @@ class ConsensusSignal:
 
 class ConsensusEngine:
     """Byzantine Fault Tolerance consensus mechanism for agent signals"""
-    
+
     def __init__(self, min_consensus_threshold: float = 0.67):
         self.min_consensus_threshold = min_consensus_threshold
         self.logger = logging.getLogger(__name__)
-        
+
     async def process(self, agent_signals: Dict[str, Any]) -> ConsensusSignal:
         """Process agent signals using Byzantine Fault Tolerance"""
         if len(agent_signals) < 3:
             raise ValueError("Need at least 3 agents for consensus")
-        
+
         # Extract actions and weights
         actions = []
         confidences = []
         weights = []
         agents = []
-        
+
         for agent_name, signal in agent_signals.items():
             actions.append(signal.action)
             confidences.append(signal.confidence)
             weights.append(signal.get_weight() if hasattr(signal, 'get_weight') else 1.0)
             agents.append(agent_name)
-        
+
         # Calculate weighted consensus
         consensus_action = self._calculate_action_consensus(actions, weights)
         consensus_confidence = self._calculate_confidence_consensus(confidences, weights)
         consensus_strength = self._calculate_consensus_strength(actions, weights)
-        
+
         # Determine risk level
         risk_level = self._calculate_risk_level(agent_signals)
-        
+
         # Aggregate indicators
         indicators = self._aggregate_indicators(agent_signals)
-        
+
         # Calculate price (weighted average)
         prices = [signal.price for signal in agent_signals.values()]
         consensus_price = np.average(prices, weights=weights)
-        
+
         return ConsensusSignal(
             action=consensus_action,
             confidence=consensus_confidence,
@@ -1645,41 +1645,41 @@ class ConsensusEngine:
             consensus_strength=consensus_strength,
             participating_agents=agents
         )
-    
+
     def _calculate_action_consensus(self, actions: List[str], weights: List[float]) -> str:
         """Calculate consensus action using weighted voting"""
         action_weights = {'BUY': 0, 'SELL': 0, 'HOLD': 0}
-        
+
         for action, weight in zip(actions, weights):
             action_weights[action] += weight
-        
+
         return max(action_weights, key=action_weights.get)
-    
+
     def _calculate_confidence_consensus(self, confidences: List[float], weights: List[float]) -> float:
         """Calculate weighted average confidence"""
         return np.average(confidences, weights=weights)
-    
+
     def _calculate_consensus_strength(self, actions: List[str], weights: List[float]) -> float:
         """Calculate how strong the consensus is (0-1)"""
         action_weights = {'BUY': 0, 'SELL': 0, 'HOLD': 0}
         total_weight = sum(weights)
-        
+
         for action, weight in zip(actions, weights):
             action_weights[action] += weight
-        
+
         max_weight = max(action_weights.values())
         return max_weight / total_weight
-    
+
     def _calculate_risk_level(self, agent_signals: Dict[str, Any]) -> str:
         """Determine overall risk level"""
         risk_scores = []
         for signal in agent_signals.values():
             if hasattr(signal, 'risk_score'):
                 risk_scores.append(signal.risk_score)
-        
+
         if not risk_scores:
             return "medium"
-        
+
         avg_risk = np.mean(risk_scores)
         if avg_risk < 0.3:
             return "low"
@@ -1687,18 +1687,18 @@ class ConsensusEngine:
             return "high"
         else:
             return "medium"
-    
+
     def _aggregate_indicators(self, agent_signals: Dict[str, Any]) -> Dict[str, Any]:
         """Aggregate technical indicators from all agents"""
         indicators = {}
-        
+
         for agent_name, signal in agent_signals.items():
             if hasattr(signal, 'indicators'):
                 for key, value in signal.indicators.items():
                     if key not in indicators:
                         indicators[key] = []
                     indicators[key].append(value)
-        
+
         # Calculate averages for numeric indicators
         aggregated = {}
         for key, values in indicators.items():
@@ -1706,7 +1706,7 @@ class ConsensusEngine:
                 aggregated[key] = np.mean(values)
             else:
                 aggregated[key] = values[0]  # Use first value for non-numeric
-        
+
         return aggregated
 ```
 
@@ -1722,19 +1722,19 @@ from datetime import datetime
 
 class ConnectionManager:
     """Manages WebSocket connections"""
-    
+
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.subscriptions: Dict[WebSocket, Set[str]] = {}
         self.logger = logging.getLogger(__name__)
-    
+
     async def connect(self, websocket: WebSocket):
         """Accept new WebSocket connection"""
         await websocket.accept()
         self.active_connections.append(websocket)
         self.subscriptions[websocket] = set()
         self.logger.info(f"New WebSocket connection: {websocket.client}")
-    
+
     def disconnect(self, websocket: WebSocket):
         """Remove WebSocket connection"""
         if websocket in self.active_connections:
@@ -1742,7 +1742,7 @@ class ConnectionManager:
         if websocket in self.subscriptions:
             del self.subscriptions[websocket]
         self.logger.info(f"WebSocket disconnected: {websocket.client}")
-    
+
     async def send_personal_message(self, message: str, websocket: WebSocket):
         """Send message to specific WebSocket"""
         try:
@@ -1750,17 +1750,17 @@ class ConnectionManager:
         except Exception as e:
             self.logger.error(f"Error sending message: {e}")
             self.disconnect(websocket)
-    
+
     async def broadcast(self, message: Dict[str, Any]):
         """Broadcast message to all connected clients"""
         if not self.active_connections:
             return
-        
+
         message_str = json.dumps({
             **message,
             'timestamp': datetime.utcnow().isoformat()
         })
-        
+
         disconnected = []
         for connection in self.active_connections:
             try:
@@ -1768,11 +1768,11 @@ class ConnectionManager:
             except Exception as e:
                 self.logger.error(f"Error broadcasting to {connection.client}: {e}")
                 disconnected.append(connection)
-        
+
         # Clean up disconnected clients
         for connection in disconnected:
             self.disconnect(connection)
-    
+
     async def subscribe(self, websocket: WebSocket, channels: List[str]):
         """Subscribe WebSocket to specific channels"""
         if websocket in self.subscriptions:
@@ -1784,7 +1784,7 @@ class ConnectionManager:
                 }),
                 websocket
             )
-    
+
     async def unsubscribe(self, websocket: WebSocket, channels: List[str]):
         """Unsubscribe WebSocket from channels"""
         if websocket in self.subscriptions:
@@ -1793,16 +1793,16 @@ class ConnectionManager:
 
 class WebSocketManager:
     """High-level WebSocket service manager"""
-    
+
     def __init__(self):
         self.connection_manager = ConnectionManager()
         self.heartbeat_interval = 30  # seconds
         self.logger = logging.getLogger(__name__)
-    
+
     async def connect(self, websocket: WebSocket):
         """Handle new WebSocket connection"""
         await self.connection_manager.connect(websocket)
-        
+
         # Send welcome message
         await self.connection_manager.send_personal_message(
             json.dumps({
@@ -1812,31 +1812,31 @@ class WebSocketManager:
             }),
             websocket
         )
-    
+
     def disconnect(self, websocket: WebSocket):
         """Handle WebSocket disconnection"""
         self.connection_manager.disconnect(websocket)
-    
+
     async def handle_message(self, websocket: WebSocket, data: str):
         """Handle incoming WebSocket messages"""
         try:
             message = json.loads(data)
             message_type = message.get('type')
-            
+
             if message_type == 'subscribe':
                 channels = message.get('channels', [])
                 await self.connection_manager.subscribe(websocket, channels)
-            
+
             elif message_type == 'unsubscribe':
                 channels = message.get('channels', [])
                 await self.connection_manager.unsubscribe(websocket, channels)
-            
+
             elif message_type == 'ping':
                 await self.connection_manager.send_personal_message(
                     json.dumps({'type': 'pong'}),
                     websocket
                 )
-            
+
             elif message_type == 'get_signals':
                 symbol = message.get('symbol', 'AAPL')
                 # Trigger signal generation for specific symbol
@@ -1850,7 +1850,7 @@ class WebSocketManager:
                     }),
                     websocket
                 )
-            
+
         except json.JSONDecodeError:
             await self.connection_manager.send_personal_message(
                 json.dumps({'type': 'error', 'message': 'Invalid JSON'}),
@@ -1858,11 +1858,11 @@ class WebSocketManager:
             )
         except Exception as e:
             self.logger.error(f"Error handling message: {e}")
-    
+
     async def broadcast(self, message: Dict[str, Any]):
         """Broadcast message to all clients"""
         await self.connection_manager.broadcast(message)
-    
+
     async def start_heartbeat(self):
         """Start heartbeat to keep connections alive"""
         while True:
@@ -1871,7 +1871,7 @@ class WebSocketManager:
                 'type': 'heartbeat',
                 'active_connections': len(self.connection_manager.active_connections)
             })
-    
+
     async def cleanup(self):
         """Cleanup on shutdown"""
         for connection in self.connection_manager.active_connections[:]:
@@ -2001,7 +2001,7 @@ async def generate_signal(
             symbol=symbol.upper(),
             force_refresh=force_refresh
         )
-        
+
         # Queue background tasks
         background_tasks.add_task(
             signal_service.update_performance_metrics,
@@ -2011,7 +2011,7 @@ async def generate_signal(
             signal_service.notify_subscribers,
             signal
         )
-        
+
         return signal
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating signal: {str(e)}")
@@ -2054,7 +2054,7 @@ async def generate_batch_signals(
         signals = await signal_service.generate_batch_signals(
             symbols=[s.upper() for s in symbols]
         )
-        
+
         # Queue background notifications
         if background_tasks:
             for signal in signals.values():
@@ -2062,7 +2062,7 @@ async def generate_batch_signals(
                     signal_service.notify_subscribers,
                     signal
                 )
-        
+
         return signals
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating batch signals: {str(e)}")
@@ -2315,7 +2315,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False, index=True)
     username = Column(String(100), unique=True, nullable=False, index=True)
@@ -2325,14 +2325,14 @@ class User(Base):
     subscription_tier = Column(String(50), default="free")
     api_key = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     # Relationships
     signals = relationship("Signal", back_populates="user")
     portfolios = relationship("Portfolio", back_populates="user")
 
 class Signal(Base):
     __tablename__ = "signals"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     symbol = Column(String(20), nullable=False, index=True)
     action = Column(String(10), nullable=False)  # BUY, SELL, HOLD
@@ -2344,10 +2344,10 @@ class Signal(Base):
     consensus_strength = Column(Float)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    
+
     # Relationships
     user = relationship("User", back_populates="signals")
-    
+
     __table_args__ = (
         Index('idx_signal_symbol_created', 'symbol', 'created_at'),
         Index('idx_signal_action_confidence', 'action', 'confidence'),
@@ -2355,7 +2355,7 @@ class Signal(Base):
 
 class Agent(Base):
     __tablename__ = "agents"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(100), unique=True, nullable=False)
     type = Column(String(50), nullable=False)  # technical, sentiment, risk, flow, ml
@@ -2366,7 +2366,7 @@ class Agent(Base):
     is_active = Column(Boolean, default=True)
     configuration = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     __table_args__ = (
         Index('idx_agent_type_active', 'type', 'is_active'),
         Index('idx_agent_accuracy', 'accuracy_score'),
@@ -2374,7 +2374,7 @@ class Agent(Base):
 
 class Portfolio(Base):
     __tablename__ = "portfolios"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     name = Column(String(100), nullable=False)
@@ -2384,7 +2384,7 @@ class Portfolio(Base):
     total_pnl_percentage = Column(Float, default=0.0)
     is_paper_trading = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     # Relationships
     user = relationship("User", back_populates="portfolios")
     positions = relationship("Position", back_populates="portfolio")
@@ -2402,7 +2402,7 @@ class DatabaseManager:
         self.engine = None
         self.async_session = None
         self._initialized = False
-    
+
     async def initialize(self):
         self.engine = create_async_engine(
             settings.DATABASE_URL,
@@ -2410,15 +2410,15 @@ class DatabaseManager:
             max_overflow=0,
             pool_pre_ping=True
         )
-        
+
         self.async_session = async_sessionmaker(
             self.engine,
             class_=AsyncSession,
             expire_on_commit=False
         )
-        
+
         self._initialized = True
-    
+
     @asynccontextmanager
     async def get_session(self):
         async with self.async_session() as session:
@@ -2470,7 +2470,7 @@ def upgrade():
         sa.UniqueConstraint('username'),
         sa.UniqueConstraint('api_key')
     )
-    
+
     # Create signals table
     op.create_table('signals',
         sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
@@ -2487,7 +2487,7 @@ def upgrade():
         sa.ForeignKeyConstraint(['user_id'], ['users.id']),
         sa.PrimaryKeyConstraint('id')
     )
-    
+
     # Create indexes
     op.create_index('idx_signal_symbol_created', 'signals', ['symbol', 'created_at'])
     op.create_index('idx_signal_action_confidence', 'signals', ['action', 'confidence'])
@@ -2668,7 +2668,7 @@ const StyledButton = styled(MuiButton)<ButtonProps>(({ theme, variant, size }) =
   textTransform: 'none',
   borderRadius: 8,
   transition: 'all 0.2s ease-in-out',
-  
+
   ...(size === 'small' && {
     padding: '6px 12px',
     fontSize: '0.75rem',
@@ -2684,7 +2684,7 @@ const StyledButton = styled(MuiButton)<ButtonProps>(({ theme, variant, size }) =
     fontSize: '1rem',
     minHeight: 48,
   }),
-  
+
   ...(variant === 'primary' && {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -2693,7 +2693,7 @@ const StyledButton = styled(MuiButton)<ButtonProps>(({ theme, variant, size }) =
       boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
     },
   }),
-  
+
   ...(variant === 'secondary' && {
     backgroundColor: theme.palette.grey[100],
     color: theme.palette.text.primary,
@@ -2701,7 +2701,7 @@ const StyledButton = styled(MuiButton)<ButtonProps>(({ theme, variant, size }) =
       backgroundColor: theme.palette.grey[200],
     },
   }),
-  
+
   ...(variant === 'danger' && {
     backgroundColor: theme.palette.error.main,
     color: theme.palette.error.contrastText,
@@ -2730,7 +2730,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             sx={{ position: 'absolute' }}
           />
         )}
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, visibility: loading ? 'hidden' : 'visible' }}>
           {leftIcon}
           {children}
@@ -2759,7 +2759,7 @@ interface SignalStore {
   error: string | null;
   filters: SignalFilters;
   selectedSymbol: string | null;
-  
+
   // Actions
   fetchSignals: () => Promise<void>;
   generateSignal: (symbol: string) => Promise<void>;
@@ -2783,26 +2783,26 @@ export const useSignalStore = create<SignalStore>()(
       riskLevels: [],
     },
     selectedSymbol: null,
-    
+
     // Actions
     fetchSignals: async () => {
       const { filters } = get();
       set({ loading: true, error: null });
-      
+
       try {
         const signals = await signalApi.getSignals(filters);
         set({ signals, loading: false });
       } catch (error) {
-        set({ 
+        set({
           error: error instanceof Error ? error.message : 'Failed to fetch signals',
-          loading: false 
+          loading: false
         });
       }
     },
-    
+
     generateSignal: async (symbol: string) => {
       set({ loading: true, error: null });
-      
+
       try {
         const signal = await signalApi.generateSignal(symbol);
         set(state => ({
@@ -2810,27 +2810,27 @@ export const useSignalStore = create<SignalStore>()(
           loading: false
         }));
       } catch (error) {
-        set({ 
+        set({
           error: error instanceof Error ? error.message : 'Failed to generate signal',
-          loading: false 
+          loading: false
         });
       }
     },
-    
+
     setFilters: (newFilters) => {
       set(state => ({
         filters: { ...state.filters, ...newFilters }
       }));
     },
-    
+
     setSelectedSymbol: (symbol) => {
       set({ selectedSymbol: symbol });
     },
-    
+
     clearError: () => {
       set({ error: null });
     },
-    
+
     reset: () => {
       set({
         signals: [],
@@ -2906,28 +2906,7 @@ describe('${componentName}', () => {
 });
 `;
 
-// Storybook template
-const storyTemplate = `import type { Meta, StoryObj } from '@storybook/react';
-import ${componentName} from './${componentName}';
 
-const meta: Meta<typeof ${componentName}> = {
-  title: 'Components/${componentName}',
-  component: ${componentName},
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-};
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-  args: {
-    children: 'Default ${componentName}',
-  },
-};
-`;
 
 // Index template
 const indexTemplate = `export { default } from './${componentName}';
@@ -2936,14 +2915,14 @@ const indexTemplate = `export { default } from './${componentName}';
 // Write files
 fs.writeFileSync(componentPath, componentTemplate);
 fs.writeFileSync(testPath, testTemplate);
-fs.writeFileSync(storyPath, storyTemplate);
+
 fs.writeFileSync(indexPath, indexTemplate);
 
 console.log(`Component ${componentName} created successfully!`);
 console.log(`Files created:`);
 console.log(`  - ${componentPath}`);
 console.log(`  - ${testPath}`);
-console.log(`  - ${storyPath}`);
+
 console.log(`  - ${indexPath}`);
 ```
 
@@ -2953,8 +2932,7 @@ Add to `frontend/package.json`:
 {
   "scripts": {
     "generate:component": "node scripts/generate-component.js",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+
   }
 }
 ```
@@ -3091,7 +3069,7 @@ export const handlers = [
 
   rest.post(`${API_BASE_URL}/signals/generate/:symbol`, (req, res, ctx) => {
     const { symbol } = req.params;
-    
+
     const mockSignal: Signal = {
       id: Math.random().toString(36),
       symbol: symbol as string,
@@ -3110,7 +3088,7 @@ export const handlers = [
   // Market data endpoints
   rest.get(`${API_BASE_URL}/market-data/:symbol`, (req, res, ctx) => {
     const { symbol } = req.params;
-    
+
     return res(ctx.json({
       symbol,
       price: 150.25 + Math.random() * 10,
@@ -3152,14 +3130,14 @@ describe('Button Component', () => {
   it('handles click events', () => {
     const handleClick = jest.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
   it('shows loading state correctly', () => {
     render(<Button loading>Loading</Button>);
-    
+
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeDisabled();
   });
@@ -3178,13 +3156,13 @@ describe('Button Component', () => {
   it('renders with icons', () => {
     const LeftIcon = () => <span data-testid="left-icon">←</span>;
     const RightIcon = () => <span data-testid="right-icon">→</span>;
-    
+
     render(
       <Button leftIcon={<LeftIcon />} rightIcon={<RightIcon />}>
         With Icons
       </Button>
     );
-    
+
     expect(screen.getByTestId('left-icon')).toBeInTheDocument();
     expect(screen.getByTestId('right-icon')).toBeInTheDocument();
   });
@@ -3237,17 +3215,17 @@ class TestSignalService:
         mock_signal = Mock()
         for key, value in sample_signal_data.items():
             setattr(mock_signal, key, value)
-        
+
         mock_agent_orchestrator.generate_signal.return_value = mock_signal
-        
+
         with patch.object(signal_service, 'agent_orchestrator', mock_agent_orchestrator):
             with patch('src.services.signal_service.get_db_session') as mock_session:
                 # Mock database session
                 mock_db = AsyncMock()
                 mock_session.return_value.__aenter__.return_value = mock_db
-                
+
                 result = await signal_service.generate_signal("AAPL", "user123")
-                
+
                 # Assertions
                 assert result.symbol == "AAPL"
                 assert result.action == "BUY"
@@ -3260,7 +3238,7 @@ class TestSignalService:
     async def test_generate_signal_agent_failure(self, signal_service, mock_agent_orchestrator):
         # Mock agent orchestrator to raise exception
         mock_agent_orchestrator.generate_signal.side_effect = Exception("Agent failed")
-        
+
         with patch.object(signal_service, 'agent_orchestrator', mock_agent_orchestrator):
             with pytest.raises(Exception, match="Agent failed"):
                 await signal_service.generate_signal("AAPL", "user123")
@@ -3272,16 +3250,16 @@ class TestSignalService:
             Mock(symbol="AAPL", action="BUY", created_at=datetime.utcnow()),
             Mock(symbol="AAPL", action="SELL", created_at=datetime.utcnow() - timedelta(hours=1))
         ]
-        
+
         with patch('src.services.signal_service.get_db_session') as mock_session:
             mock_db = AsyncMock()
             mock_query = AsyncMock()
             mock_query.filter.return_value.order_by.return_value.limit.return_value.all.return_value = mock_signals
             mock_db.query.return_value = mock_query
             mock_session.return_value.__aenter__.return_value = mock_db
-            
+
             results = await signal_service.get_signals(symbol="AAPL", limit=10)
-            
+
             assert len(results) == 2
             assert all(signal.symbol == "AAPL" for signal in results)
 
@@ -3294,16 +3272,16 @@ class TestSignalService:
             Mock(confidence=0.9, action="SELL"),
             Mock(confidence=0.6, action="HOLD"),
         ]
-        
+
         with patch('src.services.signal_service.get_db_session') as mock_session:
             mock_db = AsyncMock()
             mock_query = AsyncMock()
             mock_query.filter.return_value.all.return_value = mock_signals
             mock_db.query.return_value = mock_query
             mock_session.return_value.__aenter__.return_value = mock_db
-            
+
             metrics = await signal_service.get_performance_metrics(days=30)
-            
+
             assert metrics["total_signals"] == 4
             assert metrics["average_confidence"] == 0.75
             assert metrics["by_action"]["BUY"] == 2
@@ -3319,9 +3297,9 @@ class TestSignalService:
             mock_query.filter.return_value.all.return_value = []
             mock_db.query.return_value = mock_query
             mock_session.return_value.__aenter__.return_value = mock_db
-            
+
             metrics = await signal_service.get_performance_metrics(days=30)
-            
+
             assert metrics["total_signals"] == 0
 
 # Integration tests
@@ -3340,18 +3318,18 @@ class TestSignalServicePerformance:
     async def test_generate_signal_performance(self, signal_service):
         # Test signal generation performance
         start_time = asyncio.get_event_loop().time()
-        
+
         # Mock fast operation
         with patch.object(signal_service, 'agent_orchestrator') as mock_orchestrator:
             mock_signal = Mock(symbol="AAPL", action="BUY", confidence=0.8)
             mock_orchestrator.generate_signal.return_value = mock_signal
-            
+
             with patch('src.services.signal_service.get_db_session'):
                 await signal_service.generate_signal("AAPL", "user123")
-        
+
         end_time = asyncio.get_event_loop().time()
         execution_time = end_time - start_time
-        
+
         # Assert performance requirement (should be under 100ms)
         assert execution_time < 0.1
 ```
@@ -3452,7 +3430,7 @@ testpaths = tests
 python_files = test_*.py
 python_classes = Test*
 python_functions = test_*
-addopts = 
+addopts =
     -v
     --tb=short
     --strict-markers
@@ -3890,24 +3868,24 @@ data:
       pool_size: 20
       max_overflow: 10
       pool_recycle: 3600
-    
+
     redis:
       max_connections: 50
       socket_timeout: 30
-    
+
     logging:
       level: INFO
       format: json
       handlers:
         - console
         - file
-    
+
     features:
       rate_limiting: true
       caching: true
       metrics: true
       tracing: true
-    
+
     agents:
       max_concurrent: 10
       timeout: 30
@@ -3926,17 +3904,17 @@ data:
     effective_cache_size = 1GB
     work_mem = 4MB
     maintenance_work_mem = 64MB
-    
+
     # Logging
     log_destination = 'stderr'
     log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
     log_statement = 'all'
     log_duration = on
-    
+
     # Checkpoints
     checkpoint_completion_target = 0.9
     wal_buffers = 16MB
-    
+
     # Replication
     max_wal_senders = 3
     wal_level = replica
@@ -3962,37 +3940,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-    
+
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-test.txt
-    
+
     - name: Install Node.js dependencies
       run: |
         cd frontend
         npm ci
-    
+
     - name: Run Python tests
       run: |
         python -m pytest tests/ --cov=src --cov-report=xml
-    
+
     - name: Run Frontend tests
       run: |
         cd frontend
         npm run test:coverage
-    
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -4002,20 +3980,20 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    
+
     - name: Log in to Container Registry
       uses: docker/login-action@v2
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Build and push backend image
       uses: docker/build-push-action@v4
       with:
@@ -4025,7 +4003,7 @@ jobs:
         tags: ${{ env.REGISTRY }}/goldensignals/backend:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    
+
     - name: Build and push frontend image
       uses: docker/build-push-action@v4
       with:
@@ -4041,39 +4019,39 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up kubectl
       uses: azure/setup-kubectl@v3
       with:
         version: 'latest'
-    
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
-    
+
     - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig --name goldensignals-production --region us-west-2
-    
+
     - name: Deploy to Kubernetes
       run: |
         # Update image tags
         sed -i "s|goldensignals/backend:v1.0.0|${{ env.REGISTRY }}/goldensignals/backend:${{ github.sha }}|g" k8s/production/backend-deployment.yaml
         sed -i "s|goldensignals/frontend:v1.0.0|${{ env.REGISTRY }}/goldensignals/frontend:${{ github.sha }}|g" k8s/production/frontend-deployment.yaml
-        
+
         # Apply manifests
         kubectl apply -f k8s/production/
-        
+
         # Wait for rollout
         kubectl rollout status deployment/goldensignals-backend -n production
         kubectl rollout status deployment/goldensignals-frontend -n production
-    
+
     - name: Verify deployment
       run: |
         kubectl get pods -n production
@@ -4189,7 +4167,7 @@ class AuthService:
         self.algorithm = "HS256"
         self.access_token_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         self.refresh_token_expire = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    
+
     def create_access_token(self, user_id: str, email: str) -> str:
         """Create JWT access token"""
         expire = datetime.utcnow() + self.access_token_expire
@@ -4200,7 +4178,7 @@ class AuthService:
             "type": "access"
         }
         return jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
-    
+
     def create_refresh_token(self, user_id: str) -> str:
         """Create JWT refresh token"""
         expire = datetime.utcnow() + self.refresh_token_expire
@@ -4210,16 +4188,16 @@ class AuthService:
             "type": "refresh"
         }
         token = jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
-        
+
         # Store in Redis for revocation capability
         redis_client.setex(
             f"refresh_token:{user_id}",
             self.refresh_token_expire,
             token
         )
-        
+
         return token
-    
+
     def verify_token(self, token: str) -> Dict[str, Any]:
         """Verify JWT token"""
         try:
@@ -4235,36 +4213,36 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token"
             )
-    
+
     def hash_password(self, password: str) -> str:
         """Hash password using bcrypt"""
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    
+
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """Verify password against hash"""
         return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-    
+
     async def authenticate_user(self, email: str, password: str, db: Session) -> Optional[User]:
         """Authenticate user credentials"""
         user = db.query(User).filter(User.email == email).first()
         if not user:
             return None
-        
+
         if not self.verify_password(password, user.hashed_password):
             return None
-        
+
         if not user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Account is deactivated"
             )
-        
+
         # Update last login
         user.last_login = datetime.utcnow()
         db.commit()
-        
+
         return user
-    
+
     async def revoke_token(self, user_id: str, token: str):
         """Revoke token by adding to blacklist"""
         # Add to blacklist
@@ -4273,10 +4251,10 @@ class AuthService:
             self.access_token_expire,
             "revoked"
         )
-        
+
         # Remove refresh token
         redis_client.delete(f"refresh_token:{user_id}")
-    
+
     def is_token_blacklisted(self, token: str) -> bool:
         """Check if token is blacklisted"""
         return redis_client.exists(f"blacklist:{token}")
@@ -4289,24 +4267,24 @@ async def get_current_user(
 ) -> User:
     """Get current authenticated user"""
     token = credentials.credentials
-    
+
     # Check if token is blacklisted
     if auth_service.is_token_blacklisted(token):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token has been revoked"
         )
-    
+
     # Verify token
     payload = auth_service.verify_token(token)
     user_id = payload.get("user_id")
-    
+
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token payload"
         )
-    
+
     # Get user from database
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -4314,7 +4292,7 @@ async def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found"
         )
-    
+
     return user
 
 async def get_current_active_user(
@@ -4332,18 +4310,18 @@ def require_subscription(min_tier: str = "premium"):
     """Require minimum subscription tier"""
     def decorator(current_user: User = Depends(get_current_active_user)):
         tier_hierarchy = {"free": 0, "premium": 1, "enterprise": 2}
-        
+
         user_tier = tier_hierarchy.get(current_user.subscription_tier, 0)
         required_tier = tier_hierarchy.get(min_tier, 1)
-        
+
         if user_tier < required_tier:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Subscription tier '{min_tier}' required"
             )
-        
+
         return current_user
-    
+
     return decorator
 ```
 
@@ -4367,21 +4345,21 @@ redis_client = redis.Redis.from_url(settings.REDIS_URL)
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Rate limiting middleware"""
-    
+
     def __init__(self, app, calls: int = 100, period: int = 60):
         super().__init__(app)
         self.calls = calls
         self.period = period
-    
+
     async def dispatch(self, request: Request, call_next):
         # Get client IP
         client_ip = request.client.host
         if "x-forwarded-for" in request.headers:
             client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
-        
+
         # Create rate limit key
         key = f"rate_limit:{client_ip}"
-        
+
         # Check current usage
         current = redis_client.get(key)
         if current is None:
@@ -4396,16 +4374,16 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                 )
             # Increment counter
             redis_client.incr(key)
-        
+
         response = await call_next(request)
         return response
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """Security headers middleware"""
-    
+
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
-        
+
         # Add security headers
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -4431,25 +4409,25 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "payment=(), "
             "usb=()"
         )
-        
+
         return response
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """Request logging middleware"""
-    
+
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
-        
+
         # Log request
         client_ip = request.client.host
         method = request.method
         url = str(request.url)
-        
+
         response = await call_next(request)
-        
+
         # Log response
         process_time = time.time() - start_time
-        
+
         log_data = {
             "client_ip": client_ip,
             "method": method,
@@ -4458,50 +4436,50 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             "process_time": process_time,
             "timestamp": time.time()
         }
-        
+
         # Store in Redis for monitoring
         redis_client.lpush("request_logs", str(log_data))
         redis_client.ltrim("request_logs", 0, 9999)  # Keep last 10K requests
-        
+
         return response
 
 class IPWhitelistMiddleware(BaseHTTPMiddleware):
     """IP whitelist middleware for admin endpoints"""
-    
+
     def __init__(self, app, whitelist: list = None):
         super().__init__(app)
         self.whitelist = whitelist or []
-    
+
     async def dispatch(self, request: Request, call_next):
         # Only apply to admin endpoints
         if not request.url.path.startswith("/admin"):
             return await call_next(request)
-        
+
         client_ip = request.client.host
         if "x-forwarded-for" in request.headers:
             client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
-        
+
         if client_ip not in self.whitelist:
             return JSONResponse(
                 status_code=status.HTTP_403_FORBIDDEN,
                 content={"detail": "IP not whitelisted"}
             )
-        
+
         return await call_next(request)
 
 def setup_security_middleware(app):
     """Setup all security middleware"""
-    
+
     # HTTPS redirect (production only)
     if settings.ENVIRONMENT == "production":
         app.add_middleware(HTTPSRedirectMiddleware)
-    
+
     # Trusted host
     app.add_middleware(
         TrustedHostMiddleware,
         allowed_hosts=settings.ALLOWED_HOSTS
     )
-    
+
     # CORS
     app.add_middleware(
         CORSMiddleware,
@@ -4511,12 +4489,12 @@ def setup_security_middleware(app):
         allow_headers=["*"],
         expose_headers=["X-Total-Count"]
     )
-    
+
     # Custom security middleware
     app.add_middleware(SecurityHeadersMiddleware)
     app.add_middleware(RequestLoggingMiddleware)
     app.add_middleware(RateLimitMiddleware, calls=100, period=60)
-    
+
     # IP whitelist for admin (if configured)
     if settings.ADMIN_IP_WHITELIST:
         app.add_middleware(
@@ -4536,20 +4514,20 @@ import bleach
 
 class InputValidator:
     """Input validation and sanitization utilities"""
-    
+
     @staticmethod
     def sanitize_html(text: str) -> str:
         """Sanitize HTML content"""
         allowed_tags = ['b', 'i', 'u', 'strong', 'em', 'p', 'br']
         allowed_attributes = {}
-        
+
         return bleach.clean(
             text,
             tags=allowed_tags,
             attributes=allowed_attributes,
             strip=True
         )
-    
+
     @staticmethod
     def validate_email(email: str) -> str:
         """Validate email format"""
@@ -4560,7 +4538,7 @@ class InputValidator:
                 detail="Invalid email format"
             )
         return email.lower()
-    
+
     @staticmethod
     def validate_symbol(symbol: str) -> str:
         """Validate trading symbol"""
@@ -4569,16 +4547,16 @@ class InputValidator:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid symbol format"
             )
-        
+
         # Only allow alphanumeric characters
         if not re.match(r'^[A-Z0-9]+$', symbol.upper()):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Symbol must contain only letters and numbers"
             )
-        
+
         return symbol.upper()
-    
+
     @staticmethod
     def validate_sql_injection(text: str) -> str:
         """Check for SQL injection patterns"""
@@ -4597,16 +4575,16 @@ class InputValidator:
             r'<script',
             r'javascript:'
         ]
-        
+
         for pattern in dangerous_patterns:
             if re.search(pattern, text, re.IGNORECASE):
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Invalid input detected"
                 )
-        
+
         return text
-    
+
     @staticmethod
     def validate_file_upload(filename: str, content_type: str, max_size: int = 5 * 1024 * 1024):
         """Validate file upload"""
@@ -4619,7 +4597,7 @@ class InputValidator:
             'text/csv',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ]
-        
+
         # Check extension
         ext = filename.lower().split('.')[-1]
         if f'.{ext}' not in allowed_extensions:
@@ -4627,25 +4605,25 @@ class InputValidator:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="File type not allowed"
             )
-        
+
         # Check MIME type
         if content_type not in allowed_mime_types:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid file type"
             )
-        
+
         return True
 
 class SecurityConfig:
     """Security configuration"""
-    
+
     PASSWORD_MIN_LENGTH = 8
     PASSWORD_REQUIRE_UPPERCASE = True
     PASSWORD_REQUIRE_LOWERCASE = True
     PASSWORD_REQUIRE_NUMBERS = True
     PASSWORD_REQUIRE_SYMBOLS = True
-    
+
     @classmethod
     def validate_password_strength(cls, password: str) -> bool:
         """Validate password strength"""
@@ -4654,31 +4632,31 @@ class SecurityConfig:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Password must be at least {cls.PASSWORD_MIN_LENGTH} characters"
             )
-        
+
         if cls.PASSWORD_REQUIRE_UPPERCASE and not re.search(r'[A-Z]', password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must contain at least one uppercase letter"
             )
-        
+
         if cls.PASSWORD_REQUIRE_LOWERCASE and not re.search(r'[a-z]', password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must contain at least one lowercase letter"
             )
-        
+
         if cls.PASSWORD_REQUIRE_NUMBERS and not re.search(r'\d', password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must contain at least one number"
             )
-        
+
         if cls.PASSWORD_REQUIRE_SYMBOLS and not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must contain at least one symbol"
             )
-        
+
         return True
 ```
 
@@ -4744,7 +4722,7 @@ def monitor_performance(func):
         finally:
             duration = time.time() - start_time
             REQUEST_DURATION.observe(duration)
-            
+
             if duration > 1.0:
                 logger.warning(f"Slow operation: {func.__name__} took {duration:.2f}s")
     return wrapper
@@ -4858,17 +4836,17 @@ class WebSocketManager {
   connect() {
     try {
       this.ws = new WebSocket(process.env.REACT_APP_WS_URL);
-      
+
       this.ws.onopen = () => {
         console.log('✅ WebSocket connected');
         this.reconnectAttempts = 0;
       };
-      
+
       this.ws.onclose = () => {
         console.log('🔌 WebSocket disconnected');
         this.handleReconnect();
       };
-      
+
     } catch (error) {
       console.error('❌ WebSocket connection failed:', error);
       this.handleReconnect();
@@ -4946,21 +4924,21 @@ class MemoryMonitor:
     def __init__(self, threshold_mb: int = 1000):
         self.threshold_mb = threshold_mb
         self.logger = logging.getLogger(__name__)
-    
+
     def check_memory(self):
         process = psutil.Process()
         memory_mb = process.memory_info().rss / 1024 / 1024
-        
+
         if memory_mb > self.threshold_mb:
             self.logger.warning(f"🚨 High memory usage: {memory_mb:.2f} MB")
-            
+
             # Force garbage collection
             gc.collect()
-            
+
             # Log memory usage after GC
             memory_after_gc = process.memory_info().rss / 1024 / 1024
             self.logger.info(f"🧹 Memory after GC: {memory_after_gc:.2f} MB")
-        
+
         return memory_mb
 
 # Background task to monitor memory
@@ -4981,7 +4959,7 @@ class EnhancedConsensusEngine:
         self.min_agents = min_agents
         self.timeout = timeout
         self.fallback_agent = DefaultAgent()
-    
+
     async def generate_signal_with_fallback(self, symbol: str):
         try:
             # Try consensus with timeout
@@ -4995,7 +4973,7 @@ class EnhancedConsensusEngine:
         except Exception as e:
             logger.error(f"❌ Consensus failed for {symbol}: {e}")
             return await self.fallback_agent.generate_signal(symbol)
-    
+
     async def generate_consensus_signal(self, symbol: str):
         # Collect agent responses with individual timeouts
         agent_tasks = []
@@ -5004,17 +4982,17 @@ class EnhancedConsensusEngine:
                 asyncio.wait_for(agent.generate_signal(symbol), timeout=10)
             )
             agent_tasks.append(task)
-        
+
         # Wait for at least minimum number of agents
         completed, pending = await asyncio.wait(
             agent_tasks,
             return_when=asyncio.FIRST_COMPLETED
         )
-        
+
         # Cancel pending tasks
         for task in pending:
             task.cancel()
-        
+
         # Process completed responses
         responses = []
         for task in completed:
@@ -5023,10 +5001,10 @@ class EnhancedConsensusEngine:
                 responses.append(response)
             except Exception as e:
                 logger.warning(f"Agent failed: {e}")
-        
+
         if len(responses) < self.min_agents:
             raise ValueError(f"Not enough agent responses: {len(responses)}")
-        
+
         return self.calculate_consensus(responses)
 ```
 
@@ -5069,7 +5047,7 @@ DATABASE_CONFIG = {
 # Query optimization
 async def get_signals_optimized(symbol: str = None, limit: int = 50):
     query = """
-    SELECT s.*, u.username 
+    SELECT s.*, u.username
     FROM signals s
     LEFT JOIN users u ON s.user_id = u.id
     WHERE ($1::text IS NULL OR s.symbol = $1)
@@ -5091,13 +5069,13 @@ class CacheManager:
             'market_data': 60,   # 1 minute
             'user_profile': 3600 # 1 hour
         }
-    
+
     async def get_cached_signal(self, symbol: str):
         # Try local cache first
         local_key = f"signal:{symbol}"
         if local_key in self.local_cache:
             return self.local_cache[local_key]
-        
+
         # Try Redis cache
         redis_key = f"signal:{symbol}"
         cached_data = self.redis_client.get(redis_key)
@@ -5105,9 +5083,9 @@ class CacheManager:
             data = json.loads(cached_data)
             self.local_cache[local_key] = data
             return data
-        
+
         return None
-    
+
     async def cache_signal(self, symbol: str, signal_data: dict):
         # Cache in Redis
         redis_key = f"signal:{symbol}"
@@ -5116,7 +5094,7 @@ class CacheManager:
             self.cache_ttl['signals'],
             json.dumps(signal_data)
         )
-        
+
         # Cache locally
         local_key = f"signal:{symbol}"
         self.local_cache[local_key] = signal_data
@@ -5135,7 +5113,7 @@ class AgentPool:
             'failed_requests': 0,
             'average_response_time': 0
         }
-    
+
     async def process_signal_generation(self, symbol: str):
         async with self.semaphore:
             start_time = time.time()
@@ -5143,7 +5121,7 @@ class AgentPool:
                 # Use fastest available agent
                 agent = await self.get_fastest_agent()
                 result = await agent.generate_signal(symbol)
-                
+
                 self.metrics['successful_requests'] += 1
                 return result
             except Exception as e:
@@ -5153,7 +5131,7 @@ class AgentPool:
                 duration = time.time() - start_time
                 self.update_metrics(duration)
                 self.metrics['total_requests'] += 1
-    
+
     async def get_fastest_agent(self):
         # Return agent with best response time
         return min(self.agents, key=lambda a: a.average_response_time)
@@ -5257,7 +5235,7 @@ This **ultra-comprehensive README** now provides everything needed to rebuild Go
 
 This README serves as the **definitive blueprint** for rebuilding the entire GoldenSignalsAI project from scratch. Every architectural decision, implementation detail, and configuration option is documented with working code examples.
 
-**The system is now ready for immediate deployment and scaling to serve thousands of users with enterprise-grade reliability and performance.** 
+**The system is now ready for immediate deployment and scaling to serve thousands of users with enterprise-grade reliability and performance.**
 
 ## Troubleshooting Common Issues
 

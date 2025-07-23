@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 5px;
+    }
+    .error {
+      background: #4a2a2a;
+      color: #ff6b6b;
+    }
+    .success {
+      background: #2a4a2a;
+      color: #51cf66;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chart Component Test</h1>
+  <div id="status"></div>
+
+  <script>
+    const statusDiv = document.getElementById('status');
+
+    function addStatus(message, isError = false) {
+      const div = document.createElement('div');
+      div.className = 'status ' + (isError ? 'error' : 'success');
+      div.textContent = message;
+      statusDiv.appendChild(div);
+    }
+
+    // Test backend connection
+    fetch('http://localhost:8000/api/v1/market-data/AAPL?interval=5m')
+      .then(res => res.json())
+      .then(data => {
+        addStatus('✅ Backend API is working: ' + JSON.stringify(data, null, 2));
+      })
+      .catch(err => {
+        addStatus('❌ Backend API error: ' + err.message, true);
+      });
+
+    // Check localStorage
+    const settings = localStorage.getItem('goldensignals_chart_settings');
+    if (settings) {
+      addStatus('✅ Found chart settings in localStorage');
+    } else {
+      addStatus('ℹ️ No chart settings found in localStorage');
+    }
+
+    // Test WebSocket
+    try {
+      const ws = new WebSocket('ws://localhost:8000/ws/signals');
+      ws.onopen = () => {
+        addStatus('✅ WebSocket connected');
+        ws.close();
+      };
+      ws.onerror = (err) => {
+        addStatus('❌ WebSocket error', true);
+      };
+    } catch (err) {
+      addStatus('❌ WebSocket creation failed: ' + err.message, true);
+    }
+
+    // Display current errors from console
+    window.addEventListener('error', (event) => {
+      addStatus('❌ JavaScript error: ' + event.message + ' at ' + event.filename + ':' + event.lineno, true);
+    });
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 /**
  * Optimized Trading Signals Application
- * 
+ *
  * This is a performance-optimized, professional-grade implementation
  * that fixes all the issues in the current codebase.
- * 
+ *
  * Key improvements:
  * - No infinite re-renders
  * - Proper state management
@@ -47,9 +47,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 // Import optimized components
-import RealTimeChart from '../../components/TradingSignals/RealTimeChart';
+import { AITradingChart } from '../../components/AIChart/AITradingChart';
 import SignalAlerts from '../../components/TradingSignals/SignalAlerts';
 import TradeGuidancePanel from '../../components/TradingSignals/TradeGuidancePanel';
+import logger from '../../services/logger';
+
 
 // Professional styled components with performance optimizations
 const AppContainer = styled(Box)(({ theme }) => ({
@@ -304,19 +306,19 @@ ${signal.reason}`;
 
                 wsRef.current.onopen = () => {
                     setConnectionStatus('connected');
-                    console.log('WebSocket connected');
+                    logger.info('WebSocket connected');
                 };
 
                 wsRef.current.onclose = () => {
                     setConnectionStatus('disconnected');
-                    console.log('WebSocket disconnected');
+                    logger.info('WebSocket disconnected');
 
                     // Reconnect after 5 seconds
                     reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
                 };
 
                 wsRef.current.onerror = (error) => {
-                    console.error('WebSocket error:', error);
+                    logger.error('WebSocket error:', error);
                     setConnectionStatus('disconnected');
                 };
 
@@ -328,11 +330,11 @@ ${signal.reason}`;
                             queryClient.invalidateQueries({ queryKey: ['signals', selectedSymbol] });
                         }
                     } catch (error) {
-                        console.error('Error parsing WebSocket message:', error);
+                        logger.error('Error parsing WebSocket message:', error);
                     }
                 };
             } catch (error) {
-                console.error('WebSocket connection error:', error);
+                logger.error('WebSocket connection error:', error);
                 setConnectionStatus('disconnected');
             }
         };
@@ -592,4 +594,4 @@ ${signal.reason}`;
     );
 };
 
-export default OptimizedTradingApp; 
+export default OptimizedTradingApp;

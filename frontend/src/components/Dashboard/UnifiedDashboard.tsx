@@ -31,8 +31,10 @@ import GridLayout from 'react-grid-layout';
 import SignalCard from '../SignalCard/SignalCard';
 import RealTimeFeed from '../RealTimeFeed/RealTimeFeed';
 import { FloatingOrbAssistant } from '../FloatingOrbAssistant/FloatingOrbAssistant';
-import AdvancedChart from '../AdvancedChart/AdvancedChart';
+import ProfessionalChart from '../ProfessionalChart/ProfessionalChart';
 import { List as VirtualizedList } from 'react-virtualized';
+import logger from '../../services/logger';
+
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
     minHeight: '100vh',
@@ -91,9 +93,12 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
     const theme = useTheme();
     const [refreshing, setRefreshing] = useState(false);
     const [timeframe, setTimeframe] = useState('1d');
+    const [chartData, setChartData] = useState<any[]>([]);
+    const [selectedSymbol, setSelectedSymbol] = useState('AAPL');
     const [layout, setLayout] = useState([
         { i: 'signals', x: 0, y: 0, w: 6, h: 10 },
-        { i: 'chart', x: 6, y: 0, w: 6, h: 10 },
+        { i: 'professionalChart', x: 6, y: 0, w: 6, h: 8 },
+        { i: 'realtime', x: 0, y: 10, w: 12, h: 4 },
     ]);
 
     const handleRefresh = useCallback(async () => {
@@ -107,6 +112,23 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
         setLayout(newLayout);
         localStorage.setItem('dashboardLayout', JSON.stringify(newLayout));
     };
+
+    // Fetch chart data
+    useEffect(() => {
+        const fetchChartData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/v1/market-data/${selectedSymbol}/history?period=30d&interval=1d`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setChartData(data.data || []);
+                }
+            } catch (error) {
+                logger.error('Failed to fetch chart data:', error);
+            }
+        };
+
+        fetchChartData();
+    }, [selectedSymbol, timeframe]);
 
     const mockSignals = useMemo(() => [
         {
@@ -216,7 +238,14 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
                     </DashboardCard>
                 </div>
                 <div key="realtime"><RealTimeFeed /></div>
-                <div key="advancedChart"><AdvancedChart data={[]} signals={[]} timeframe={timeframe} onTimeframeChange={setTimeframe} /></div>
+                <div key="professionalChart">
+                    <DashboardCard>
+                        <ProfessionalChart
+                            symbol={selectedSymbol}
+                            timeframe={timeframe}
+                        />
+                    </DashboardCard>
+                </div>
                 {/* Add more widgets here */}
             </GridLayout>
 
@@ -232,9 +261,9 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
                     }}
                 />
             )}
-            <FloatingOrbAssistant onClick={() => console.log('Open AI Chat')} />
+            <FloatingOrbAssistant onClick={() => logger.info('Open AI Chat')} />
         </DashboardContainer>
     );
 };
 
-export default UnifiedDashboard; 
+export default UnifiedDashboard;

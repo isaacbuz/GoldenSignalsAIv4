@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+        }
+        #log {
+            white-space: pre-wrap;
+            background: #111;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+    </style>
+</head>
+<body>
+    <h1>Simple Direct Test</h1>
+    <div id="log"></div>
+
+    <script type="module">
+        const log = document.getElementById('log');
+
+        function addLog(message, isError = false) {
+            const span = document.createElement('span');
+            span.textContent = message + '\n';
+            if (isError) span.className = 'error';
+            else span.className = 'success';
+            log.appendChild(span);
+        }
+
+        // Test direct import of React app
+        addLog('Testing direct import of React app...');
+
+        try {
+            // Import React and ReactDOM
+            const React = await import('http://localhost:3000/node_modules/.vite/deps/react.js?v=a85c1e12');
+            const ReactDOM = await import('http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=a85c1e12');
+
+            addLog('✓ React modules loaded');
+
+            // Try to import the App
+            const AppModule = await import('http://localhost:3000/src/App.tsx');
+            addLog('✓ App module loaded');
+
+            // Create a test div
+            const testDiv = document.createElement('div');
+            testDiv.id = 'test-root';
+            document.body.appendChild(testDiv);
+
+            // Try to render
+            const root = ReactDOM.createRoot(testDiv);
+            root.render(React.createElement(AppModule.default));
+
+            addLog('✓ React app rendered successfully!');
+
+        } catch (error) {
+            addLog('✗ Error: ' + error.message, true);
+            addLog('Stack: ' + error.stack, true);
+        }
+
+        // Also test API
+        addLog('\nTesting backend API...');
+
+        try {
+            const response = await fetch('http://localhost:8000/health');
+            const data = await response.json();
+            addLog('✓ Backend health: ' + JSON.stringify(data));
+        } catch (error) {
+            addLog('✗ Backend error: ' + error.message, true);
+        }
+
+        // Test market data
+        try {
+            const response = await fetch('http://localhost:8000/api/v1/market-data/AAPL/history?period=1d&interval=1h');
+            const data = await response.json();
+            addLog('✓ Market data: ' + data.data.length + ' candles');
+        } catch (error) {
+            addLog('✗ Market data error: ' + error.message, true);
+        }
+    </script>
+</body>
+</html>

@@ -31,9 +31,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 // Import our new trading components
-import RealTimeChart from '../../components/TradingSignals/RealTimeChart';
+import { AITradingChart } from '../../components/AIChart/AITradingChart';
 import SignalAlerts from '../../components/TradingSignals/SignalAlerts';
 import TradeGuidancePanel from '../../components/TradingSignals/TradeGuidancePanel';
+import logger from '../../services/logger';
+
 
 // Professional styled components
 const TradingContainer = styled(Box)(({ theme }) => ({
@@ -230,7 +232,7 @@ const TradingSignalsApp: React.FC = () => {
 
     const handleDismissAlert = useCallback((signalId: string) => {
         // Mark signal as dismissed or remove from active alerts
-        console.log('Dismissed signal:', signalId);
+        logger.info('Dismissed signal:', signalId);
     }, []);
 
     const handleCopyTradeInfo = useCallback((signal: Signal) => {
@@ -366,12 +368,9 @@ ${signal.reason}
                     {/* Chart Section */}
                     <Grid item xs={12} lg={8}>
                         <Box sx={{ height: '100%', position: 'relative' }}>
-                            <RealTimeChart
+                            <AITradingChart
                                 symbol={selectedStock.symbol}
-                                data={[]}
-                                signals={signals}
-                                onSignalClick={handleSignalClick}
-                                height={600}
+                                height="600px"
                             />
 
                             {/* Analysis Loading Overlay */}
@@ -450,4 +449,4 @@ ${signal.reason}
     );
 };
 
-export default TradingSignalsApp; 
+export default TradingSignalsApp;

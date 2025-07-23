@@ -1,6 +1,6 @@
 /**
  * Live Data Service - Unified Real-time Data Management
- * 
+ *
  * Orchestrates all live data connections including:
  * - WebSocket signals
  * - Market data updates
@@ -121,9 +121,9 @@ class LiveDataService extends EventEmitter {
             this.isConnected = true;
             this.emit('connected');
 
-            console.log('✅ Live Data Service initialized successfully');
+            logger.info('✅ Live Data Service initialized successfully');
         } catch (error) {
-            console.error('❌ Failed to initialize Live Data Service:', error);
+            logger.error('❌ Failed to initialize Live Data Service:', error);
             this.emit('error', error);
         }
     }
@@ -170,7 +170,7 @@ class LiveDataService extends EventEmitter {
                 const metrics = await apiClient.getSystemHealth();
                 this.handleMetricsUpdate(metrics);
             } catch (error) {
-                console.warn('Failed to fetch system metrics:', error);
+                logger.warn('Failed to fetch system metrics:', error);
             }
         }, 30000));
 
@@ -178,7 +178,7 @@ class LiveDataService extends EventEmitter {
         this.updateIntervals.set('market', setInterval(async () => {
             if (this.subscribedSymbols.size === 0) return;
 
-            console.log(`Fetching live market data for ${this.subscribedSymbols.size} symbols:`, Array.from(this.subscribedSymbols));
+            logger.info(`Fetching live market data for ${this.subscribedSymbols.size} symbols:`, Array.from(this.subscribedSymbols));
 
             for (const symbol of this.subscribedSymbols) {
                 try {
@@ -198,10 +198,10 @@ class LiveDataService extends EventEmitter {
                             timestamp: marketData.timestamp,
                         });
 
-                        console.log(`Updated market data for ${symbol}: $${marketData.price} (${marketData.change_percent > 0 ? '+' : ''}${marketData.change_percent.toFixed(2)}%)`);
+                        logger.info(`Updated market data for ${symbol}: $${marketData.price} (${marketData.change_percent > 0 ? '+' : ''}${marketData.change_percent.toFixed(2)}%)`);
                     }
                 } catch (error) {
-                    console.warn(`Failed to fetch market data for ${symbol}:`, error);
+                    logger.warn(`Failed to fetch market data for ${symbol}:`, error);
                 }
             }
         }, 10000));
@@ -219,7 +219,7 @@ class LiveDataService extends EventEmitter {
                     });
                 });
             } catch (error) {
-                console.warn('Failed to fetch agent performance:', error);
+                logger.warn('Failed to fetch agent performance:', error);
             }
         }, 60000));
     }
@@ -498,7 +498,7 @@ class LiveDataService extends EventEmitter {
 
             this.emit('refreshed');
         } catch (error) {
-            console.error('Failed to refresh live data:', error);
+            logger.error('Failed to refresh live data:', error);
             this.emit('error', error);
         }
     }
@@ -579,4 +579,5 @@ export const useLiveMetrics = (callback: (metrics: LiveMetrics) => void) => {
 };
 
 // Import React for hooks
-import React from 'react'; 
+import React from 'react';
+import logger from './logger';

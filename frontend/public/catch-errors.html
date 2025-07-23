@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Catcher</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; font-family: monospace; padding: 20px; }
+        iframe { width: 100%; height: 400px; border: 1px solid #333; }
+        #errors { background: #111; padding: 20px; margin-top: 20px; border-radius: 8px; }
+        .error { color: #ff6b6b; margin: 10px 0; }
+        .success { color: #51cf66; }
+    </style>
+</head>
+<body>
+    <h1>Error Catcher for GoldenSignalsAI</h1>
+    <iframe id="app-frame" src="about:blank"></iframe>
+    <div id="errors">
+        <h3>Console Output:</h3>
+    </div>
+
+    <script>
+        const errorsDiv = document.getElementById('errors');
+        const iframe = document.getElementById('app-frame');
+
+        function addError(msg, isError = true) {
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            errorsDiv.appendChild(div);
+        }
+
+        // Load the app after a delay
+        setTimeout(() => {
+            addError('Loading app...', false);
+            iframe.src = 'http://localhost:3000';
+
+            iframe.onload = () => {
+                addError('Iframe loaded', false);
+
+                try {
+                    // Try to inject error catching
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const script = iframeDoc.createElement('script');
+                    script.textContent = `
+                        window.addEventListener('error', (e) => {
+                            window.parent.postMessage({
+                                type: 'error',
+                                message: e.message,
+                                filename: e.filename,
+                                lineno: e.lineno,
+                                colno: e.colno,
+                                stack: e.error ? e.error.stack : ''
+                            }, '*');
+                        });
+
+                        window.addEventListener('unhandledrejection', (e) => {
+                            window.parent.postMessage({
+                                type: 'rejection',
+                                reason: e.reason
+                            }, '*');
+                        });
+
+                        // Override console.error
+                        const originalError = console.error;
+                        console.error = (...args) => {
+                            window.parent.postMessage({
+                                type: 'console-error',
+                                args: args.map(a => String(a))
+                            }, '*');
+                            originalError.apply(console, args);
+                        };
+
+                        console.log('Error catching injected');
+                    `;
+                    iframeDoc.head.appendChild(script);
+                    addError('Error catching injected', false);
+                } catch (e) {
+                    addError('Cannot inject error catching (CORS): ' + e.message);
+                }
+            };
+        }, 1000);
+
+        // Listen for messages
+        window.addEventListener('message', (e) => {
+            if (e.data.type === 'error') {
+                addError(`JS Error: ${e.data.message} at ${e.data.filename}:${e.data.lineno}:${e.data.colno}`);
+                if (e.data.stack) {
+                    addError(`Stack: ${e.data.stack}`);
+                }
+            } else if (e.data.type === 'rejection') {
+                addError(`Promise Rejection: ${e.data.reason}`);
+            } else if (e.data.type === 'console-error') {
+                addError(`Console Error: ${e.data.args.join(' ')}`);
+            }
+        });
+    </script>
+</body>
+</html>

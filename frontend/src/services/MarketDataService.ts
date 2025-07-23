@@ -1,5 +1,7 @@
 import axios from 'axios';
 import yahooFinance from 'yahoo-finance2';
+import logger from './logger';
+
 
 export interface MarketBar {
     time: number;
@@ -75,7 +77,7 @@ export class MarketDataService {
                 supported_resolutions: ['1', '5', '15', '30', '60', '240', '1D', '1W', '1M']
             };
         } catch (error) {
-            console.error(`Error fetching symbol info for ${symbol}:`, error);
+            logger.error(`Error fetching symbol info for ${symbol}:`, error);
             // Fallback symbol info
             return {
                 symbol: symbol.toUpperCase(),
@@ -105,7 +107,7 @@ export class MarketDataService {
         countback?: number
     ): Promise<MarketBar[]> {
         try {
-            console.log(`Fetching historical data for ${symbol}, resolution: ${resolution}`);
+            logger.info(`Fetching historical data for ${symbol}, resolution: ${resolution}`);
 
             // Convert TradingView resolution to Yahoo Finance interval
             const interval = this.convertResolutionToInterval(resolution);
@@ -132,11 +134,11 @@ export class MarketDataService {
             // Sort by time ascending
             bars.sort((a, b) => a.time - b.time);
 
-            console.log(`Retrieved ${bars.length} bars for ${symbol}`);
+            logger.info(`Retrieved ${bars.length} bars for ${symbol}`);
             return bars;
 
         } catch (error) {
-            console.error(`Error fetching historical data for ${symbol}:`, error);
+            logger.error(`Error fetching historical data for ${symbol}:`, error);
 
             // Fallback: Generate sample data if API fails
             return this.generateSampleData(symbol, resolution, from, to);
@@ -161,7 +163,7 @@ export class MarketDataService {
                 timestamp: Math.floor(Date.now() / 1000),
             };
         } catch (error) {
-            console.error(`Error fetching real-time quote for ${symbol}:`, error);
+            logger.error(`Error fetching real-time quote for ${symbol}:`, error);
             throw error;
         }
     }
@@ -186,7 +188,7 @@ export class MarketDataService {
                             const symbolInfo = await this.getSymbolInfo(quote.symbol);
                             symbols.push(symbolInfo);
                         } catch (error) {
-                            console.warn(`Failed to get info for ${quote.symbol}:`, error);
+                            logger.warn(`Failed to get info for ${quote.symbol}:`, error);
                         }
                     }
                 }
@@ -194,7 +196,7 @@ export class MarketDataService {
 
             return symbols;
         } catch (error) {
-            console.error('Error searching symbols:', error);
+            logger.error('Error searching symbols:', error);
             return [];
         }
     }
@@ -222,7 +224,7 @@ export class MarketDataService {
      */
     unsubscribeFromRealTimeData(subscriptionId: string): void {
         // Implementation for unsubscribing
-        console.log(`Unsubscribed from ${subscriptionId}`);
+        logger.info(`Unsubscribed from ${subscriptionId}`);
     }
 
     /**
@@ -270,7 +272,7 @@ export class MarketDataService {
                     callbacks.forEach(callback => callback(quote));
                 }
             } catch (error) {
-                console.error(`Error polling ${symbol}:`, error);
+                logger.error(`Error polling ${symbol}:`, error);
             }
         }, 5000); // Poll every 5 seconds
 
@@ -279,7 +281,7 @@ export class MarketDataService {
     }
 
     private generateSampleData(symbol: string, resolution: string, from: number, to: number): MarketBar[] {
-        console.log(`Generating sample data for ${symbol} as fallback`);
+        logger.info(`Generating sample data for ${symbol} as fallback`);
 
         const bars: MarketBar[] = [];
         const intervalMs = this.getIntervalMs(resolution);
@@ -332,4 +334,4 @@ export class MarketDataService {
 }
 
 // Export singleton instance
-export const marketDataService = MarketDataService.getInstance(); 
+export const marketDataService = MarketDataService.getInstance();

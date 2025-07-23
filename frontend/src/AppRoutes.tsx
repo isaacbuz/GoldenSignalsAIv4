@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import Layout from './components/Layout/Layout';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import SignalsDashboard from './pages/SignalsDashboard/SignalsDashboard';
+import { SignalsPage } from './pages/Signals/SignalsPage';
 import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import PortfolioPage from './pages/Portfolio/PortfolioPage';
 import SettingsPage from './pages/Settings/SettingsPage';
@@ -29,8 +29,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
 
         {/* Signals & Trading */}
-        <Route path="/signals" element={<SignalsDashboard />} />
-        <Route path="/signals/:symbol" element={<SignalsDashboard />} />
+        <Route path="/signals" element={<SignalsPage />} />
+        <Route path="/signals/:symbol" element={<SignalsPage />} />
 
         {/* AI Features */}
         <Route path="/ai-command" element={<AICommandCenter />} />
@@ -56,4 +56,4 @@ const AppRoutes: React.FC = () => {
   );
 };
 
-export default AppRoutes; 
+export default AppRoutes;

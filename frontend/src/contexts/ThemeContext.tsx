@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { tradingTheme } from '../theme/tradingTheme';
+import logger from '../services/logger';
+
 
 interface ThemeContextType {
     isDarkMode: boolean;
@@ -27,7 +29,7 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ childr
 
     const toggleTheme = () => {
         // Theme toggle disabled - always use professional dark theme
-        console.log('Professional trading theme is always dark');
+        logger.info('Professional trading theme is always dark');
     };
 
     return (
@@ -38,4 +40,4 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ childr
             </ThemeProvider>
         </ThemeContext.Provider>
     );
-}; 
+};

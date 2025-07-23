@@ -1,0 +1,2684 @@
+[
+  {
+    "id": "ba2def44-bea6-4ab5-95cc-aaf0e86f1599",
+    "timestamp": "2025-07-16T13:16:45.218535",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=68.1, MACD histogram=0.111, Volume ratio=0.6, Price momentum=-0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence.",
+    "market_conditions": {
+      "rsi": 68.14901759405299,
+      "macd_histogram": 0.1111189168479978,
+      "volume_ratio": 0.602499480713224,
+      "price_momentum": -0.8427138618995207,
+      "volatility": 1.1483039913177449,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=68.1, MACD histogram=0.111, Volume ratio=0.6, Price momentum=-0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. rsi: 68.14901759405299 macd_histogram: 0.1111189168479978 volume_ratio: 0.602499480713224 price_momentum: -0.8427138618995207 volatility: 1.1483039913177449 regime: ranging"
+  },
+  {
+    "id": "be8f3ea1-943f-45af-a791-0fb0e1b784a0",
+    "timestamp": "2025-07-16T13:49:25.135277",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1254.980224609375,
+    "reasoning": "Based on multi-agent analysis: RSI=45.6, MACD histogram=-4.793, Volume ratio=0.6, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 45.63696386286744,
+      "macd_histogram": -4.793382982974266,
+      "volume_ratio": 0.6041435272928304,
+      "price_momentum": 0.35105501475719514,
+      "volatility": 1.4108867917092058,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=45.6, MACD histogram=-4.793, Volume ratio=0.6, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 45.63696386286744 macd_histogram: -4.793382982974266 volume_ratio: 0.6041435272928304 price_momentum: 0.35105501475719514 volatility: 1.4108867917092058 regime: ranging"
+  },
+  {
+    "id": "6451badb-5fdc-4e0c-b644-9e30b17997a5",
+    "timestamp": "2025-07-16T14:00:37.466321",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 319.9100036621094,
+    "reasoning": "Based on multi-agent analysis: RSI=46.4, MACD histogram=0.600, Volume ratio=0.8, Price momentum=3.2%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.381211388645646,
+      "macd_histogram": 0.6001353125259037,
+      "volume_ratio": 0.7963316740474398,
+      "price_momentum": 3.2400712244258814,
+      "volatility": 4.394199362410615,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=46.4, MACD histogram=0.600, Volume ratio=0.8, Price momentum=3.2%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 46.381211388645646 macd_histogram: 0.6001353125259037 volume_ratio: 0.7963316740474398 price_momentum: 3.2400712244258814 volatility: 4.394199362410615 regime: trending"
+  },
+  {
+    "id": "73c2bc64-5913-4d63-8e5a-6b770719d3e2",
+    "timestamp": "2025-07-16T14:01:07.531324",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1257.2900390625,
+    "reasoning": "Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.659, Volume ratio=0.6, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.09532079685944,
+      "macd_histogram": -4.659215057387925,
+      "volume_ratio": 0.6214939061288373,
+      "price_momentum": 0.5357529986091525,
+      "volatility": 1.4088241357039444,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.659, Volume ratio=0.6, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 46.09532079685944 macd_histogram: -4.659215057387925 volume_ratio: 0.6214939061288373 price_momentum: 0.5357529986091525 volatility: 1.4088241357039444 regime: ranging"
+  },
+  {
+    "id": "e446d5b7-93b4-4927-af4e-2a87b3174ca3",
+    "timestamp": "2025-07-16T14:02:07.636919",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 710.3900146484375,
+    "reasoning": "Based on multi-agent analysis: RSI=49.2, MACD histogram=-1.077, Volume ratio=1.1, Price momentum=-3.1%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 49.155706942762315,
+      "macd_histogram": -1.0765434232804383,
+      "volume_ratio": 1.1363791249003683,
+      "price_momentum": -3.055489199114966,
+      "volatility": 1.52643488878685,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=49.2, MACD histogram=-1.077, Volume ratio=1.1, Price momentum=-3.1%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 49.155706942762315 macd_histogram: -1.0765434232804383 volume_ratio: 1.1363791249003683 price_momentum: -3.055489199114966 volatility: 1.52643488878685 regime: trending"
+  },
+  {
+    "id": "1b343f8d-01b1-45f5-94a8-a666581824a4",
+    "timestamp": "2025-07-16T14:02:37.743943",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.25,
+    "reasoning": "Based on multi-agent analysis: RSI=66.7, MACD histogram=0.512, Volume ratio=0.5, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.69235955708805,
+      "macd_histogram": 0.5119380235924575,
+      "volume_ratio": 0.5489542387409064,
+      "price_momentum": 0.7517725394990183,
+      "volatility": 0.7190686233903404,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.7, MACD histogram=0.512, Volume ratio=0.5, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 66.69235955708805 macd_histogram: 0.5119380235924575 volume_ratio: 0.5489542387409064 price_momentum: 0.7517725394990183 volatility: 0.7190686233903404 regime: ranging"
+  },
+  {
+    "id": "c15a94f9-770f-4d0a-a220-33ad0ba32f92",
+    "timestamp": "2025-07-16T14:04:07.862268",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 226.35000610351562,
+    "reasoning": "Based on multi-agent analysis: RSI=70.7, MACD histogram=0.560, Volume ratio=0.9, Price momentum=1.7%. Consensus from 5 AI agents suggests HOLD with 44% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 70.68859306343924,
+      "macd_histogram": 0.5604452425824804,
+      "volume_ratio": 0.9376833746011666,
+      "price_momentum": 1.7120575772122244,
+      "volatility": 1.3642697285698488,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=70.7, MACD histogram=0.560, Volume ratio=0.9, Price momentum=1.7%. Consensus from 5 AI agents suggests HOLD with 44% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 70.68859306343924 macd_histogram: 0.5604452425824804 volume_ratio: 0.9376833746011666 price_momentum: 1.7120575772122244 volatility: 1.3642697285698488 regime: ranging"
+  },
+  {
+    "id": "db94fa3d-cc9e-4986-8504-a7e846397953",
+    "timestamp": "2025-07-16T14:04:37.960072",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.7957000732422,
+    "reasoning": "Based on multi-agent analysis: RSI=77.7, MACD histogram=1.074, Volume ratio=0.7, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.6924760716924,
+      "macd_histogram": 1.0741337417536068,
+      "volume_ratio": 0.7124027061817098,
+      "price_momentum": 4.080252114983386,
+      "volatility": 1.6207949172846754,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.7, MACD histogram=1.074, Volume ratio=0.7, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 77.6924760716924 macd_histogram: 1.0741337417536068 volume_ratio: 0.7124027061817098 price_momentum: 4.080252114983386 volatility: 1.6207949172846754 regime: trending"
+  },
+  {
+    "id": "509eb1f0-57ed-48c7-a8a5-bc32fd53cade",
+    "timestamp": "2025-07-16T14:06:08.188912",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 320.09600830078125,
+    "reasoning": "Based on multi-agent analysis: RSI=46.5, MACD histogram=0.611, Volume ratio=0.8, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.47552555724479,
+      "macd_histogram": 0.6109395814515968,
+      "volume_ratio": 0.8022921455022796,
+      "price_momentum": 3.3000978941915458,
+      "volatility": 4.39571832552934,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=46.5, MACD histogram=0.611, Volume ratio=0.8, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 46.47552555724479 macd_histogram: 0.6109395814515968 volume_ratio: 0.8022921455022796 price_momentum: 3.3000978941915458 volatility: 4.39571832552934 regime: trending"
+  },
+  {
+    "id": "7951c405-79ea-44b3-aefc-cfd2bad536b9",
+    "timestamp": "2025-07-16T14:07:08.276746",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1258.9100341796875,
+    "reasoning": "Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.565, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.42232289620334,
+      "macd_histogram": -4.5651159906688275,
+      "volume_ratio": 0.6311631559277575,
+      "price_momentum": 0.665291469368022,
+      "volatility": 1.4078666401335882,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.565, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 46.42232289620334 macd_histogram: -4.5651159906688275 volume_ratio: 0.6311631559277575 price_momentum: 0.665291469368022 volatility: 1.4078666401335882 regime: ranging"
+  },
+  {
+    "id": "131e6c4b-c43b-425f-af6a-769d1ec22bc7",
+    "timestamp": "2025-07-16T14:09:08.386101",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.7899932861328,
+    "reasoning": "Based on multi-agent analysis: RSI=72.7, MACD histogram=0.706, Volume ratio=0.6, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.73673218471654,
+      "macd_histogram": 0.7058481378379362,
+      "volume_ratio": 0.6302260256265307,
+      "price_momentum": 3.473706980385042,
+      "volatility": 1.5287203947473187,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.7, MACD histogram=0.706, Volume ratio=0.6, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.73673218471654 macd_histogram: 0.7058481378379362 volume_ratio: 0.6302260256265307 price_momentum: 3.473706980385042 volatility: 1.5287203947473187 regime: trending"
+  },
+  {
+    "id": "b7f678e2-4aa5-4364-aff2-2a257fe40869",
+    "timestamp": "2025-07-16T14:09:38.492062",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 703.8150024414062,
+    "reasoning": "Based on multi-agent analysis: RSI=47.8, MACD histogram=-1.971, Volume ratio=0.9, Price momentum=-3.2%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.793557502369545,
+      "macd_histogram": -1.9710319452780025,
+      "volume_ratio": 0.8788750203641286,
+      "price_momentum": -3.221080813421625,
+      "volatility": 1.514476902796561,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.8, MACD histogram=-1.971, Volume ratio=0.9, Price momentum=-3.2%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 47.793557502369545 macd_histogram: -1.9710319452780025 volume_ratio: 0.8788750203641286 price_momentum: -3.221080813421625 volatility: 1.514476902796561 regime: trending"
+  },
+  {
+    "id": "3f301150-9b1c-469e-8041-0445137b54e1",
+    "timestamp": "2025-07-16T14:10:08.579461",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 222.99049377441406,
+    "reasoning": "Based on multi-agent analysis: RSI=65.5, MACD histogram=0.329, Volume ratio=0.7, Price momentum=0.3%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.53761642522406,
+      "macd_histogram": 0.32897826663625773,
+      "volume_ratio": 0.6938614802640577,
+      "price_momentum": 0.32866880483777633,
+      "volatility": 1.3823520804495562,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.5, MACD histogram=0.329, Volume ratio=0.7, Price momentum=0.3%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 65.53761642522406 macd_histogram: 0.32897826663625773 volume_ratio: 0.6938614802640577 price_momentum: 0.32866880483777633 volatility: 1.3823520804495562 regime: ranging"
+  },
+  {
+    "id": "e0abcdc7-2dd7-4229-8f56-509dc0a4f001",
+    "timestamp": "2025-07-16T14:11:08.730858",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.0299987792969,
+    "reasoning": "Based on multi-agent analysis: RSI=66.3, MACD histogram=0.499, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.31710728423892,
+      "macd_histogram": 0.49915902856619265,
+      "volume_ratio": 0.555986643386101,
+      "price_momentum": 0.7079021526673639,
+      "volatility": 0.7200141322074051,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.3, MACD histogram=0.499, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 66.31710728423892 macd_histogram: 0.49915902856619265 volume_ratio: 0.555986643386101 price_momentum: 0.7079021526673639 volatility: 0.7200141322074051 regime: ranging"
+  },
+  {
+    "id": "6aae145c-a077-4d8d-b938-f46f097fb332",
+    "timestamp": "2025-07-16T14:12:08.812449",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1259.0050048828125,
+    "reasoning": "Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.560, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.44163711591826,
+      "macd_histogram": -4.559599520628284,
+      "volume_ratio": 0.6375295001012711,
+      "price_momentum": 0.6728855414236621,
+      "volatility": 1.407823046314868,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.560, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 46.44163711591826 macd_histogram: -4.559599520628284 volume_ratio: 0.6375295001012711 price_momentum: 0.6728855414236621 volatility: 1.407823046314868 regime: ranging"
+  },
+  {
+    "id": "bddc1ae8-3b2d-44c9-837e-6711e8c342e2",
+    "timestamp": "2025-07-16T14:14:38.952989",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.73500061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=77.6, MACD histogram=1.071, Volume ratio=0.7, Price momentum=4.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.64689263360121,
+      "macd_histogram": 1.0706079516152567,
+      "volume_ratio": 0.7208407248221254,
+      "price_momentum": 4.04326280320217,
+      "volatility": 1.6212898621488818,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.6, MACD histogram=1.071, Volume ratio=0.7, Price momentum=4.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 77.64689263360121 macd_histogram: 1.0706079516152567 volume_ratio: 0.7208407248221254 price_momentum: 4.04326280320217 volatility: 1.6212898621488818 regime: trending"
+  },
+  {
+    "id": "34106a11-fb3e-4e91-ba7a-3a08704dd41c",
+    "timestamp": "2025-07-16T14:15:39.113407",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16009521484375,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55113225878777,
+      "macd_histogram": 0.08440516250665375,
+      "volume_ratio": 0.6520154670679658,
+      "price_momentum": -1.0592290421710366,
+      "volatility": 1.1449678112445072,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55113225878777 macd_histogram: 0.08440516250665375 volume_ratio: 0.6520154670679658 price_momentum: -1.0592290421710366 volatility: 1.1449678112445072 regime: ranging"
+  },
+  {
+    "id": "1aa8b5b6-d560-4e25-93ce-f164b624e7c3",
+    "timestamp": "2025-07-16T14:17:09.199812",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.27999877929688,
+    "reasoning": "Based on multi-agent analysis: RSI=66.1, MACD histogram=0.346, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.07801662863201,
+      "macd_histogram": 0.34579445977221734,
+      "volume_ratio": 0.7029703328061359,
+      "price_momentum": 0.4589239168858009,
+      "volatility": 1.3766892728316498,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.1, MACD histogram=0.346, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 66.07801662863201 macd_histogram: 0.34579445977221734 volume_ratio: 0.7029703328061359 price_momentum: 0.4589239168858009 volatility: 1.3766892728316498 regime: ranging"
+  },
+  {
+    "id": "a86a41e5-5638-4c92-b657-3d85c2ae10d6",
+    "timestamp": "2025-07-16T14:17:39.284398",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.97998046875,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.020, Volume ratio=0.9, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.43427931845993,
+      "macd_histogram": -2.0195350472214466,
+      "volume_ratio": 0.9047164369922873,
+      "price_momentum": -3.3359015031346777,
+      "volatility": 1.5177502661217177,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.020, Volume ratio=0.9, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 47.43427931845993 macd_histogram: -2.0195350472214466 volume_ratio: 0.9047164369922873 price_momentum: -3.3359015031346777 volatility: 1.5177502661217177 regime: trending"
+  },
+  {
+    "id": "112c736e-26d0-4ad1-b712-6508c22cca06",
+    "timestamp": "2025-07-16T14:18:42.155664",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6300048828125,
+    "reasoning": "Based on multi-agent analysis: RSI=67.4, MACD histogram=0.534, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.35062870024754,
+      "macd_histogram": 0.5340109943329061,
+      "volume_ratio": 0.5647730856875366,
+      "price_momentum": 0.8275492154357309,
+      "volatility": 0.7176466555544049,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.4, MACD histogram=0.534, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 67.35062870024754 macd_histogram: 0.5340109943329061 volume_ratio: 0.5647730856875366 price_momentum: 0.8275492154357309 volatility: 0.7176466555544049 regime: ranging"
+  },
+  {
+    "id": "b7bb3e9f-aedd-4ad7-9c17-bf157f5149a2",
+    "timestamp": "2025-07-16T14:19:42.245935",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 319.3656005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.1, MACD histogram=0.569, Volume ratio=0.8, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.10325036688317,
+      "macd_histogram": 0.5685131052468448,
+      "volume_ratio": 0.8157505300691478,
+      "price_momentum": 3.064383650685161,
+      "volatility": 4.389912300131346,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=46.1, MACD histogram=0.569, Volume ratio=0.8, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.10325036688317 macd_histogram: 0.5685131052468448 volume_ratio: 0.8157505300691478 price_momentum: 3.064383650685161 volatility: 4.389912300131346 regime: trending"
+  },
+  {
+    "id": "fce85c03-09c6-4743-9a21-8ad33aa97431",
+    "timestamp": "2025-07-16T14:20:42.466957",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.8249969482422,
+    "reasoning": "Based on multi-agent analysis: RSI=72.8, MACD histogram=0.708, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.76979347115315,
+      "macd_histogram": 0.7078813612108521,
+      "volume_ratio": 0.659727784881626,
+      "price_momentum": 3.4934140308701407,
+      "volatility": 1.5290031667434998,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.8, MACD histogram=0.708, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 72.76979347115315 macd_histogram: 0.7078813612108521 volume_ratio: 0.659727784881626 price_momentum: 3.4934140308701407 volatility: 1.5290031667434998 regime: trending"
+  },
+  {
+    "id": "053f1d99-a066-471d-9948-f4197eb00d4d",
+    "timestamp": "2025-07-16T14:21:42.578054",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1259.2850341796875,
+    "reasoning": "Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.543, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.49868042939454,
+      "macd_histogram": -4.54333373364514,
+      "volume_ratio": 0.6472474103728312,
+      "price_momentum": 0.6952773168679274,
+      "volatility": 1.407702596179838,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.543, Volume ratio=0.6, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.49868042939454 macd_histogram: -4.54333373364514 volume_ratio: 0.6472474103728312 price_momentum: 0.6952773168679274 volatility: 1.407702596179838 regime: ranging"
+  },
+  {
+    "id": "1d95cdad-1b2d-43bd-aa3b-4bff95d2be2c",
+    "timestamp": "2025-07-16T14:24:25.052908",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.1300048828125,
+    "reasoning": "Based on multi-agent analysis: RSI=67.5, MACD histogram=0.083, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.51123050406943,
+      "macd_histogram": 0.08265733491670102,
+      "volume_ratio": 0.6602699431350575,
+      "price_momentum": -1.0733951979605334,
+      "volatility": 1.14479997558688,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.5, MACD histogram=0.083, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 67.51123050406943 macd_histogram: 0.08265733491670102 volume_ratio: 0.6602699431350575 price_momentum: -1.0733951979605334 volatility: 1.14479997558688 regime: ranging"
+  },
+  {
+    "id": "7773be44-e0e4-44d5-bc11-3737b8a332ef",
+    "timestamp": "2025-07-16T14:35:04.835766",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.07969665527344,
+    "reasoning": "Based on multi-agent analysis: RSI=67.4, MACD histogram=0.080, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.44429885320342,
+      "macd_histogram": 0.07973513026959789,
+      "volume_ratio": 0.6662936064963646,
+      "price_momentum": -1.0970796886491594,
+      "volatility": 1.1445332493146938,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.4, MACD histogram=0.080, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 67.44429885320342 macd_histogram: 0.07973513026959789 volume_ratio: 0.6662936064963646 price_momentum: -1.0970796886491594 volatility: 1.1445332493146938 regime: ranging"
+  },
+  {
+    "id": "df7cb91b-ff1f-4ba9-92ab-a898c04aa46c",
+    "timestamp": "2025-07-16T14:35:34.912101",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.86000061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=72.8, MACD histogram=0.710, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.80277466999578,
+      "macd_histogram": 0.7099145845837223,
+      "volume_ratio": 0.6764198388587501,
+      "price_momentum": 3.5131210813552403,
+      "volatility": 1.529294227035277,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.8, MACD histogram=0.710, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 72.80277466999578 macd_histogram: 0.7099145845837223 volume_ratio: 0.6764198388587501 price_momentum: 3.5131210813552403 volatility: 1.529294227035277 regime: trending"
+  },
+  {
+    "id": "406e1d1a-23a5-4cfb-8ac4-ceb5c51eda77",
+    "timestamp": "2025-07-16T14:36:04.983605",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1259.6474609375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.6, MACD histogram=-4.522, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.57271687857031,
+      "macd_histogram": -4.5222818062027645,
+      "volume_ratio": 0.6802348742050662,
+      "price_momentum": 0.7242577795069964,
+      "volatility": 1.407564646165181,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.6, MACD histogram=-4.522, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.57271687857031 macd_histogram: -4.5222818062027645 volume_ratio: 0.6802348742050662 price_momentum: 0.7242577795069964 volatility: 1.407564646165181 regime: ranging"
+  },
+  {
+    "id": "d15ddf9f-8f13-46dc-a64d-cea08356be02",
+    "timestamp": "2025-07-16T14:39:05.183773",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.03729248046875,
+    "reasoning": "Based on multi-agent analysis: RSI=77.9, MACD histogram=1.088, Volume ratio=0.7, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.87207686941028,
+      "macd_histogram": 1.0881668828447388,
+      "volume_ratio": 0.7441467609475763,
+      "price_momentum": 4.227474783015564,
+      "volatility": 1.6190903862479993,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.9, MACD histogram=1.088, Volume ratio=0.7, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 77.87207686941028 macd_histogram: 1.0881668828447388 volume_ratio: 0.7441467609475763 price_momentum: 4.227474783015564 volatility: 1.6190903862479993 regime: trending"
+  },
+  {
+    "id": "68cb3712-3cc1-4821-8d62-cc2986ce2d71",
+    "timestamp": "2025-07-16T14:39:35.285308",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.9031066894531,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.550, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.75460467955628,
+      "macd_histogram": 0.5498743909885828,
+      "volume_ratio": 0.5830201525253409,
+      "price_momentum": 0.8820083764506391,
+      "volatility": 0.7167906789752433,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.550, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.75460467955628 macd_histogram: 0.5498743909885828 volume_ratio: 0.5830201525253409 price_momentum: 0.8820083764506391 volatility: 0.7167906789752433 regime: ranging"
+  },
+  {
+    "id": "71afe9dd-289e-45f9-ac8a-fde7f755c5a5",
+    "timestamp": "2025-07-16T14:40:05.458703",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 703.4099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.6, MACD histogram=-1.995, Volume ratio=0.9, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.618611588555744,
+      "macd_histogram": -1.9945584846023454,
+      "volume_ratio": 0.9325679755899935,
+      "price_momentum": -3.2767748487213706,
+      "volatility": 1.51602629010887,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.6, MACD histogram=-1.995, Volume ratio=0.9, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 47.618611588555744 macd_histogram: -1.9945584846023454 volume_ratio: 0.9325679755899935 price_momentum: -3.2767748487213706 volatility: 1.51602629010887 regime: trending"
+  },
+  {
+    "id": "e0363bda-ac02-4b12-9a94-d621d68a6ffa",
+    "timestamp": "2025-07-16T14:41:05.519116",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 320.55999755859375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.7, MACD histogram=0.638, Volume ratio=0.8, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.709352789194455,
+      "macd_histogram": 0.6378908701712698,
+      "volume_ratio": 0.8442567994348452,
+      "price_momentum": 3.4498346435134755,
+      "volatility": 4.3996274683896965,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=46.7, MACD histogram=0.638, Volume ratio=0.8, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.709352789194455 macd_histogram: 0.6378908701712698 volume_ratio: 0.8442567994348452 price_momentum: 3.4498346435134755 volatility: 4.3996274683896965 regime: trending"
+  },
+  {
+    "id": "756787fc-d278-43ac-923a-ff4ec86026c2",
+    "timestamp": "2025-07-16T14:41:35.755143",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1258.4200439453125,
+    "reasoning": "Based on multi-agent analysis: RSI=46.3, MACD histogram=-4.594, Volume ratio=0.7, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.3229281515987,
+      "macd_histogram": -4.593577572600101,
+      "volume_ratio": 0.6883075332737698,
+      "price_momentum": 0.6261107428495907,
+      "volatility": 1.4081136324636379,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.3, MACD histogram=-4.594, Volume ratio=0.7, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.3229281515987 macd_histogram: -4.593577572600101 volume_ratio: 0.6883075332737698 price_momentum: 0.6261107428495907 volatility: 1.4081136324636379 regime: ranging"
+  },
+  {
+    "id": "8c5049b6-792d-4615-895e-65e1d360cc42",
+    "timestamp": "2025-07-16T14:42:05.840163",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.80999755859375,
+    "reasoning": "Based on multi-agent analysis: RSI=72.8, MACD histogram=0.707, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.7556362305457,
+      "macd_histogram": 0.7070101063827858,
+      "volume_ratio": 0.6822710168645839,
+      "price_momentum": 3.4849693793327163,
+      "volatility": 1.5288809812268767,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.8, MACD histogram=0.707, Volume ratio=0.7, Price momentum=3.5%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 72.7556362305457 macd_histogram: 0.7070101063827858 volume_ratio: 0.6822710168645839 price_momentum: 3.4849693793327163 volatility: 1.5288809812268767 regime: trending"
+  },
+  {
+    "id": "ebd04138-2bfb-4b46-8ec2-9878b9193f41",
+    "timestamp": "2025-07-16T14:42:36.717914",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.2899932861328,
+    "reasoning": "Based on multi-agent analysis: RSI=67.7, MACD histogram=0.092, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.72226672440593,
+      "macd_histogram": 0.09195042430848588,
+      "volume_ratio": 0.6715430475407682,
+      "price_momentum": -0.9980746384002531,
+      "volatility": 1.1457635858211108,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.7, MACD histogram=0.092, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.72226672440593 macd_histogram: 0.09195042430848588 volume_ratio: 0.6715430475407682 price_momentum: -0.9980746384002531 volatility: 1.1457635858211108 regime: ranging"
+  },
+  {
+    "id": "43b4ef8e-bbb9-45eb-a432-a338bee4f55f",
+    "timestamp": "2025-07-16T14:43:05.894357",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.39920043945312,
+    "reasoning": "Based on multi-agent analysis: RSI=66.3, MACD histogram=0.353, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.30312158903939,
+      "macd_histogram": 0.3527184096366809,
+      "volume_ratio": 0.732149611438855,
+      "price_momentum": 0.5125555479045734,
+      "volatility": 1.3744701557997228,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.3, MACD histogram=0.353, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 66.30312158903939 macd_histogram: 0.3527184096366809 volume_ratio: 0.732149611438855 price_momentum: 0.5125555479045734 volatility: 1.3744701557997228 regime: ranging"
+  },
+  {
+    "id": "8a983545-b659-45a0-a394-e6578dfba1ef",
+    "timestamp": "2025-07-16T14:47:06.023894",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1257.4599609375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.649, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.12940374077608,
+      "macd_histogram": -4.649344972173882,
+      "volume_ratio": 0.6926451998485844,
+      "price_momentum": 0.5493403357575473,
+      "volatility": 1.4087047469892113,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.649, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.12940374077608 macd_histogram: -4.649344972173882 volume_ratio: 0.6926451998485844 price_momentum: 0.5493403357575473 volatility: 1.4087047469892113 regime: ranging"
+  },
+  {
+    "id": "d062688e-1d40-4e49-bc33-2ef14f0a2f09",
+    "timestamp": "2025-07-16T14:47:36.085586",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 320.5,
+    "reasoning": "Based on multi-agent analysis: RSI=46.7, MACD histogram=0.634, Volume ratio=0.9, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.679232112495626,
+      "macd_histogram": 0.6344058508590509,
+      "volume_ratio": 0.8532630293332453,
+      "price_momentum": 3.4304724724290954,
+      "volatility": 4.399112344469387,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=46.7, MACD histogram=0.634, Volume ratio=0.9, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.679232112495626 macd_histogram: 0.6344058508590509 volume_ratio: 0.8532630293332453 price_momentum: 3.4304724724290954 volatility: 4.399112344469387 regime: trending"
+  },
+  {
+    "id": "ea4b2628-a0d1-41af-93c9-f09b4ac73d10",
+    "timestamp": "2025-07-16T14:48:36.219901",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.1300048828125,
+    "reasoning": "Based on multi-agent analysis: RSI=67.5, MACD histogram=0.083, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.51123050406943,
+      "macd_histogram": 0.08265733491670102,
+      "volume_ratio": 0.6757404544335407,
+      "price_momentum": -1.0733951979605334,
+      "volatility": 1.14479997558688,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.5, MACD histogram=0.083, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.51123050406943 macd_histogram: 0.08265733491670102 volume_ratio: 0.6757404544335407 price_momentum: -1.0733951979605334 volatility: 1.14479997558688 regime: ranging"
+  },
+  {
+    "id": "e0482cfd-604f-4cbc-b100-1a9b3e7c9dcd",
+    "timestamp": "2025-07-16T14:49:06.279809",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.6599731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.038, Volume ratio=0.9, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.298019921322826,
+      "macd_histogram": -2.03812299864963,
+      "volume_ratio": 0.9430414815934018,
+      "price_momentum": -3.3799044909400675,
+      "volatility": 1.5190859853501644,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.038, Volume ratio=0.9, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 47.298019921322826 macd_histogram: -2.03812299864963 volume_ratio: 0.9430414815934018 price_momentum: -3.3799044909400675 volatility: 1.5190859853501644 regime: trending"
+  },
+  {
+    "id": "a4decf3e-3acd-4215-a1d5-9fc5bab3b274",
+    "timestamp": "2025-07-16T14:49:36.351013",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.64999389648438,
+    "reasoning": "Based on multi-agent analysis: RSI=72.6, MACD histogram=0.698, Volume ratio=0.7, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.60369487104755,
+      "macd_histogram": 0.6977161306686939,
+      "volume_ratio": 0.6979888285377053,
+      "price_momentum": 3.394887369137969,
+      "volatility": 1.5276723867289186,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.6, MACD histogram=0.698, Volume ratio=0.7, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 72.60369487104755 macd_histogram: 0.6977161306686939 volume_ratio: 0.6979888285377053 price_momentum: 3.394887369137969 volatility: 1.5276723867289186 regime: trending"
+  },
+  {
+    "id": "379b10b8-3d65-44ee-906b-f258ade1ab95",
+    "timestamp": "2025-07-16T14:50:06.489065",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.18490600585938,
+    "reasoning": "Based on multi-agent analysis: RSI=65.9, MACD histogram=0.340, Volume ratio=0.7, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.89953289762539,
+      "macd_histogram": 0.3402708991532619,
+      "volume_ratio": 0.7404531906092717,
+      "price_momentum": 0.4161394411422027,
+      "volatility": 1.378506752360795,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.9, MACD histogram=0.340, Volume ratio=0.7, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 65.89953289762539 macd_histogram: 0.3402708991532619 volume_ratio: 0.7404531906092717 price_momentum: 0.4161394411422027 volatility: 1.378506752360795 regime: ranging"
+  },
+  {
+    "id": "ebadf1ef-38ef-48b0-ace5-28091d3d95cd",
+    "timestamp": "2025-07-16T14:52:36.611855",
+    "symbol": "TSLA",
+    "action": "HOLD",
+    "price": 310.7799987792969,
+    "reasoning": "Based on multi-agent analysis: RSI=36.4, MACD histogram=-0.091, Volume ratio=0.8, Price momentum=5.0%. Consensus from 5 AI agents suggests HOLD with 47% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 36.42432141282325,
+      "macd_histogram": -0.09050723017331164,
+      "volume_ratio": 0.7937239027845265,
+      "price_momentum": 5.035823188655729,
+      "volatility": 4.433606753968858,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: HOLD Reasoning: Based on multi-agent analysis: RSI=36.4, MACD histogram=-0.091, Volume ratio=0.8, Price momentum=5.0%. Consensus from 5 AI agents suggests HOLD with 47% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 36.42432141282325 macd_histogram: -0.09050723017331164 volume_ratio: 0.7937239027845265 price_momentum: 5.035823188655729 volatility: 4.433606753968858 regime: trending"
+  },
+  {
+    "id": "64143633-ce98-4eca-a1c7-1dbc63c629ec",
+    "timestamp": "2025-07-16T14:53:06.671031",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1257.239990234375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.662, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.08529159851964,
+      "macd_histogram": -4.662122194555715,
+      "volume_ratio": 0.7081635440123594,
+      "price_momentum": 0.5317509812019385,
+      "volatility": 1.4088601468279225,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.662, Volume ratio=0.7, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.08529159851964 macd_histogram: -4.662122194555715 volume_ratio: 0.7081635440123594 price_momentum: 0.5317509812019385 volatility: 1.4088601468279225 regime: ranging"
+  },
+  {
+    "id": "ef969801-fdc3-489f-a335-ded922d3b8d6",
+    "timestamp": "2025-07-16T14:53:36.775481",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.9200134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.551, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.76879793933365,
+      "macd_histogram": 0.5508564361050032,
+      "volume_ratio": 0.5927647084797656,
+      "price_momentum": 0.8853797447825489,
+      "volatility": 0.7167422648547322,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.551, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.76879793933365 macd_histogram: 0.5508564361050032 volume_ratio: 0.5927647084797656 price_momentum: 0.8853797447825489 volatility: 0.7167422648547322 regime: ranging"
+  },
+  {
+    "id": "aa3a50e8-2b8f-4e4b-847a-1aab18c7cfa5",
+    "timestamp": "2025-07-16T14:54:36.835308",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.54820251464844,
+    "reasoning": "Based on multi-agent analysis: RSI=72.5, MACD histogram=0.692, Volume ratio=0.7, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.50614739770394,
+      "macd_histogram": 0.6918034745568333,
+      "volume_ratio": 0.7051738678323533,
+      "price_momentum": 3.33757885397402,
+      "volatility": 1.5269938433235004,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.5, MACD histogram=0.692, Volume ratio=0.7, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.50614739770394 macd_histogram: 0.6918034745568333 volume_ratio: 0.7051738678323533 price_momentum: 3.33757885397402 volatility: 1.5269938433235004 regime: trending"
+  },
+  {
+    "id": "a2ec42dd-6566-4ea3-a301-ab3df80f9593",
+    "timestamp": "2025-07-16T14:55:06.965338",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.25999450683594,
+    "reasoning": "Based on multi-agent analysis: RSI=67.7, MACD histogram=0.090, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.6829052709146,
+      "macd_histogram": 0.09020791465239908,
+      "volume_ratio": 0.6793885921779953,
+      "price_momentum": -1.0121976922958669,
+      "volatility": 1.1455695431032837,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.7, MACD histogram=0.090, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.6829052709146 macd_histogram: 0.09020791465239908 volume_ratio: 0.6793885921779953 price_momentum: -1.0121976922958669 volatility: 1.1455695431032837 regime: ranging"
+  },
+  {
+    "id": "97c69aef-10c7-400f-8c2f-097e3f3859af",
+    "timestamp": "2025-07-16T14:55:37.114344",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.99000549316406,
+    "reasoning": "Based on multi-agent analysis: RSI=77.8, MACD histogram=1.085, Volume ratio=0.8, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.83715151388597,
+      "macd_histogram": 1.0854201700144608,
+      "volume_ratio": 0.7628327619866279,
+      "price_momentum": 4.1986588259492015,
+      "volatility": 1.6193905842042338,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.8, MACD histogram=1.085, Volume ratio=0.8, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 77.83715151388597 macd_histogram: 1.0854201700144608 volume_ratio: 0.7628327619866279 price_momentum: 4.1986588259492015 volatility: 1.6193905842042338 regime: trending"
+  },
+  {
+    "id": "27f8d080-a9f9-4fda-80ca-3f4f0e982c2b",
+    "timestamp": "2025-07-16T14:56:07.178530",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 703.3200073242188,
+    "reasoning": "Based on multi-agent analysis: RSI=47.6, MACD histogram=-2.000, Volume ratio=1.0, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.579925990676635,
+      "macd_histogram": -1.9997842409260373,
+      "volume_ratio": 0.950613212768136,
+      "price_momentum": -3.289145705869023,
+      "volatility": 1.5163802613137745,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.6, MACD histogram=-2.000, Volume ratio=1.0, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.579925990676635 macd_histogram: -1.9997842409260373 volume_ratio: 0.950613212768136 price_momentum: -3.289145705869023 volatility: 1.5163802613137745 regime: trending"
+  },
+  {
+    "id": "1ebe81bd-2b48-4ac9-bc08-b938e223204f",
+    "timestamp": "2025-07-16T14:57:37.255273",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.26480102539062,
+    "reasoning": "Based on multi-agent analysis: RSI=66.0, MACD histogram=0.345, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.04942642531367,
+      "macd_histogram": 0.34491168275420314,
+      "volume_ratio": 0.754052613320096,
+      "price_momentum": 0.45208608988955196,
+      "volatility": 1.3769769365355227,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.0, MACD histogram=0.345, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 66.04942642531367 macd_histogram: 0.34491168275420314 volume_ratio: 0.754052613320096 price_momentum: 0.45208608988955196 volatility: 1.3769769365355227 regime: ranging"
+  },
+  {
+    "id": "9ce607fe-736e-4888-af08-cff1eb731f7b",
+    "timestamp": "2025-07-16T14:58:07.315500",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1259.43505859375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.535, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.52929880884515,
+      "macd_histogram": -4.534619412720046,
+      "volume_ratio": 0.7133950537227949,
+      "price_momentum": 0.707273608071503,
+      "volatility": 1.4076430368419843,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.535, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.52929880884515 macd_histogram: -4.534619412720046 volume_ratio: 0.7133950537227949 price_momentum: 0.707273608071503 volatility: 1.4076430368419843 regime: ranging"
+  },
+  {
+    "id": "fd4dcdf7-6321-4fd0-a478-d4977deddfc2",
+    "timestamp": "2025-07-16T15:00:07.539690",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 506.1000061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=67.9, MACD histogram=0.561, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.91913137000601,
+      "macd_histogram": 0.5613114940416608,
+      "volume_ratio": 0.597756610206647,
+      "price_momentum": 0.9212720379623377,
+      "volatility": 0.7162599791841034,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.9, MACD histogram=0.561, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.91913137000601 macd_histogram: 0.5613114940416608 volume_ratio: 0.597756610206647 price_momentum: 0.9212720379623377 volatility: 0.7162599791841034 regime: ranging"
+  },
+  {
+    "id": "fd274737-cbb0-4e0b-8feb-2a40954031fa",
+    "timestamp": "2025-07-16T15:00:25.426072",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.44000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=67.9, MACD histogram=0.101, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.91766421344053,
+      "macd_histogram": 0.10066385891134066,
+      "volume_ratio": 0.6837542462825942,
+      "price_momentum": -0.9274521852732035,
+      "volatility": 1.1468262490548797,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.9, MACD histogram=0.101, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.91766421344053 macd_histogram: 0.10066385891134066 volume_ratio: 0.6837542462825942 price_momentum: -0.9274521852732035 volatility: 1.1468262490548797 regime: ranging"
+  },
+  {
+    "id": "6d385b57-29e2-4642-9d66-a451008844be",
+    "timestamp": "2025-07-16T15:00:37.613961",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.9949951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=77.8, MACD histogram=1.086, Volume ratio=0.8, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.84084196632624,
+      "macd_histogram": 1.08570999740896,
+      "volume_ratio": 0.7676806450948241,
+      "price_momentum": 4.201699425484762,
+      "volatility": 1.6193581394123826,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.8, MACD histogram=1.086, Volume ratio=0.8, Price momentum=4.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 77.84084196632624 macd_histogram: 1.08570999740896 volume_ratio: 0.7676806450948241 price_momentum: 4.201699425484762 volatility: 1.6193581394123826 regime: trending"
+  },
+  {
+    "id": "fdd316c1-4f20-4d75-b070-0122a3f203cf",
+    "timestamp": "2025-07-16T15:03:37.775510",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.226806640625,
+    "reasoning": "Based on multi-agent analysis: RSI=47.0, MACD histogram=0.677, Volume ratio=0.9, Price momentum=3.7%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.04183558728982,
+      "macd_histogram": 0.6766231549993043,
+      "volume_ratio": 0.8724396749786312,
+      "price_momentum": 3.665024591730009,
+      "volatility": 4.405544847962065,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.0, MACD histogram=0.677, Volume ratio=0.9, Price momentum=3.7%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.04183558728982 macd_histogram: 0.6766231549993043 volume_ratio: 0.8724396749786312 price_momentum: 3.665024591730009 volatility: 4.405544847962065 regime: trending"
+  },
+  {
+    "id": "760bf80f-5f79-437b-86d7-6ca3a2aba1f8",
+    "timestamp": "2025-07-16T15:05:44.586438",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.38999938964844,
+    "reasoning": "Based on multi-agent analysis: RSI=67.9, MACD histogram=0.098, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.85279510732045,
+      "macd_histogram": 0.0977593807103816,
+      "volume_ratio": 0.6882742377738785,
+      "price_momentum": -0.95099300298222,
+      "volatility": 1.1464549391331607,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.9, MACD histogram=0.098, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.85279510732045 macd_histogram: 0.0977593807103816 volume_ratio: 0.6882742377738785 price_momentum: -0.95099300298222 volatility: 1.1464549391331607 regime: ranging"
+  },
+  {
+    "id": "de780555-2bcb-43d7-af79-2645b50f884d",
+    "timestamp": "2025-07-16T15:06:07.933266",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 703.3200073242188,
+    "reasoning": "Based on multi-agent analysis: RSI=47.6, MACD histogram=-2.000, Volume ratio=1.0, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.579925990676635,
+      "macd_histogram": -1.9997842409260373,
+      "volume_ratio": 1.0341283181046639,
+      "price_momentum": -3.289145705869023,
+      "volatility": 1.5163802613137745,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.6, MACD histogram=-2.000, Volume ratio=1.0, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.579925990676635 macd_histogram: -1.9997842409260373 volume_ratio: 1.0341283181046639 price_momentum: -3.289145705869023 volatility: 1.5163802613137745 regime: trending"
+  },
+  {
+    "id": "64cf82b7-e24d-47a4-be90-9915e894837e",
+    "timestamp": "2025-07-16T15:06:38.019828",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 506.260009765625,
+    "reasoning": "Based on multi-agent analysis: RSI=68.1, MACD histogram=0.571, Volume ratio=0.6, Price momentum=1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 68.05159703031195,
+      "macd_histogram": 0.5706054697557983,
+      "volume_ratio": 0.6057991253643786,
+      "price_momentum": 0.9531783270673957,
+      "volatility": 0.7158821911379916,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=68.1, MACD histogram=0.571, Volume ratio=0.6, Price momentum=1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 68.05159703031195 macd_histogram: 0.5706054697557983 volume_ratio: 0.6057991253643786 price_momentum: 0.9531783270673957 volatility: 0.7158821911379916 regime: ranging"
+  },
+  {
+    "id": "262afddd-3bc4-4502-baee-9b159c324ddf",
+    "timestamp": "2025-07-16T15:07:08.104320",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.3300018310547,
+    "reasoning": "Based on multi-agent analysis: RSI=66.2, MACD histogram=0.349, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.17225792468449,
+      "macd_histogram": 0.34869893797317664,
+      "volume_ratio": 0.7683165883976144,
+      "price_momentum": 0.48142146614956405,
+      "volatility": 1.3757503633611914,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.2, MACD histogram=0.349, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 66.17225792468449 macd_histogram: 0.34869893797317664 volume_ratio: 0.7683165883976144 price_momentum: 0.48142146614956405 volatility: 1.3757503633611914 regime: ranging"
+  },
+  {
+    "id": "6efd14ab-b94f-467c-bacf-1dc6c76afe14",
+    "timestamp": "2025-07-16T15:08:38.235134",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.63999938964844,
+    "reasoning": "Based on multi-agent analysis: RSI=72.6, MACD histogram=0.697, Volume ratio=0.7, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.59414771333701,
+      "macd_histogram": 0.6971355895574114,
+      "volume_ratio": 0.7224785239484556,
+      "price_momentum": 3.389260465010793,
+      "volatility": 1.5276026503540914,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.6, MACD histogram=0.697, Volume ratio=0.7, Price momentum=3.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.59414771333701 macd_histogram: 0.6971355895574114 volume_ratio: 0.7224785239484556 price_momentum: 3.389260465010793 volatility: 1.5276026503540914 regime: trending"
+  },
+  {
+    "id": "2efc77e6-31b6-483f-94f7-796744a08059",
+    "timestamp": "2025-07-16T15:09:08.326548",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.8099060058594,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.710, Volume ratio=0.9, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.329197485548434,
+      "macd_histogram": 0.7104930756495977,
+      "volume_ratio": 0.8828001242556528,
+      "price_momentum": 3.8532000764244394,
+      "volatility": 4.411007826774235,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.710, Volume ratio=0.9, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.329197485548434 macd_histogram: 0.7104930756495977 volume_ratio: 0.8828001242556528 price_momentum: 3.8532000764244394 volatility: 4.411007826774235 regime: trending"
+  },
+  {
+    "id": "aeda5485-7c40-49c3-9c25-fec8a6bc3b19",
+    "timestamp": "2025-07-16T15:10:08.407608",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1258.9100341796875,
+    "reasoning": "Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.565, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.42232289620334,
+      "macd_histogram": -4.5651159906688275,
+      "volume_ratio": 0.742598286633477,
+      "price_momentum": 0.665291469368022,
+      "volatility": 1.4078666401335882,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.4, MACD histogram=-4.565, Volume ratio=0.7, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.42232289620334 macd_histogram: -4.5651159906688275 volume_ratio: 0.742598286633477 price_momentum: 0.665291469368022 volatility: 1.4078666401335882 regime: ranging"
+  },
+  {
+    "id": "dc375fd2-ab23-4d1e-824d-42009959015f",
+    "timestamp": "2025-07-16T15:10:45.566321",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.3542938232422,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.096, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.80631340110124,
+      "macd_histogram": 0.09568538651135738,
+      "volume_ratio": 0.6912302213273567,
+      "price_momentum": -0.9678027415965315,
+      "volatility": 1.1462002525591148,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.096, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.80631340110124 macd_histogram: 0.09568538651135738 volume_ratio: 0.6912302213273567 price_momentum: -0.9678027415965315 volatility: 1.1462002525591148 regime: ranging"
+  },
+  {
+    "id": "f2848bd1-676b-4c79-928d-873228441a8c",
+    "timestamp": "2025-07-16T15:12:08.519669",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.2899932861328,
+    "reasoning": "Based on multi-agent analysis: RSI=66.1, MACD histogram=0.346, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.0968319135284,
+      "macd_histogram": 0.34637500088350004,
+      "volume_ratio": 0.7760315732238029,
+      "price_momentum": 0.463420680623294,
+      "volatility": 1.3765006791828758,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.1, MACD histogram=0.346, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 66.0968319135284 macd_histogram: 0.34637500088350004 volume_ratio: 0.7760315732238029 price_momentum: 0.463420680623294 volatility: 1.3765006791828758 regime: ranging"
+  },
+  {
+    "id": "0fcd0d6c-36ee-490f-8565-4fd1161405eb",
+    "timestamp": "2025-07-16T15:14:40.037733",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.7949981689453,
+    "reasoning": "Based on multi-agent analysis: RSI=77.7, MACD histogram=1.074, Volume ratio=0.8, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.69195002555523,
+      "macd_histogram": 1.0740929709274756,
+      "volume_ratio": 0.7856847097874824,
+      "price_momentum": 4.079824385385112,
+      "volatility": 1.620800487752772,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.7, MACD histogram=1.074, Volume ratio=0.8, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 77.69195002555523 macd_histogram: 1.0740929709274756 volume_ratio: 0.7856847097874824 price_momentum: 4.079824385385112 volatility: 1.620800487752772 regime: trending"
+  },
+  {
+    "id": "be502f9c-975b-4bec-bc34-83242f390467",
+    "timestamp": "2025-07-16T15:15:07.319116",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.89990234375,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.550, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.75191321207382,
+      "macd_histogram": 0.5496882633040263,
+      "volume_ratio": 0.6146676927308227,
+      "price_momentum": 0.8813693986982014,
+      "volatility": 0.716799915151955,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.550, Volume ratio=0.6, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.75191321207382 macd_histogram: 0.5496882633040263 volume_ratio: 0.6146676927308227 price_momentum: 0.8813693986982014 volatility: 0.716799915151955 regime: ranging"
+  },
+  {
+    "id": "ae817757-d412-4242-9745-8f64fc47d957",
+    "timestamp": "2025-07-16T15:15:46.567349",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.24000549316406,
+    "reasoning": "Based on multi-agent analysis: RSI=67.7, MACD histogram=0.089, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.65662431085676,
+      "macd_histogram": 0.08904683242985656,
+      "volume_ratio": 0.6953259551571482,
+      "price_momentum": -1.021608272460289,
+      "volatility": 1.1454436684157288,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.7, MACD histogram=0.089, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.65662431085676 macd_histogram: 0.08904683242985656 volume_ratio: 0.6953259551571482 price_momentum: -1.021608272460289 volatility: 1.1454436684157288 regime: ranging"
+  },
+  {
+    "id": "16969770-e2ae-4750-88b7-932a83483702",
+    "timestamp": "2025-07-16T15:16:07.430398",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.13999938964844,
+    "reasoning": "Based on multi-agent analysis: RSI=72.1, MACD histogram=0.668, Volume ratio=0.7, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.10788361521655,
+      "macd_histogram": 0.6680925801925475,
+      "volume_ratio": 0.7327218736834216,
+      "price_momentum": 3.1077606261722,
+      "volatility": 1.524980454059366,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.1, MACD histogram=0.668, Volume ratio=0.7, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.10788361521655 macd_histogram: 0.6680925801925475 volume_ratio: 0.7327218736834216 price_momentum: 3.1077606261722 volatility: 1.524980454059366 regime: trending"
+  },
+  {
+    "id": "3d3034a9-d65c-4151-bd27-6cdc8300c03f",
+    "timestamp": "2025-07-16T15:16:56.666246",
+    "symbol": "NVIDA",
+    "action": "SELL",
+    "price": 132.58993628758802,
+    "reasoning": "Based on multi-agent analysis: RSI=72.4, MACD histogram=0.929, Volume ratio=1.9, Price momentum=-1.4%. Consensus from 5 AI agents suggests SELL with 47% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.43844950751848,
+      "macd_histogram": 0.9286566880934988,
+      "volume_ratio": 1.868844128044719,
+      "price_momentum": -1.4284686582718908,
+      "volatility": 2.882139559178264,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NVIDA Action: SELL Reasoning: Based on multi-agent analysis: RSI=72.4, MACD histogram=0.929, Volume ratio=1.9, Price momentum=-1.4%. Consensus from 5 AI agents suggests SELL with 47% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.43844950751848 macd_histogram: 0.9286566880934988 volume_ratio: 1.868844128044719 price_momentum: -1.4284686582718908 volatility: 2.882139559178264 regime: ranging"
+  },
+  {
+    "id": "797278d3-c6d4-4a36-8288-bbbd69c944be",
+    "timestamp": "2025-07-16T15:17:05.103924",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 322.4150085449219,
+    "reasoning": "Based on multi-agent analysis: RSI=47.6, MACD histogram=0.746, Volume ratio=0.9, Price momentum=4.0%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.62412410023742,
+      "macd_histogram": 0.7456410730670067,
+      "volume_ratio": 0.90310665584424,
+      "price_momentum": 4.048476336984504,
+      "volatility": 4.416960392703697,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.6, MACD histogram=0.746, Volume ratio=0.9, Price momentum=4.0%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.62412410023742 macd_histogram: 0.7456410730670067 volume_ratio: 0.90310665584424 price_momentum: 4.048476336984504 volatility: 4.416960392703697 regime: trending"
+  },
+  {
+    "id": "abe21631-662c-4393-9d01-2ab8fcb84c82",
+    "timestamp": "2025-07-16T15:17:07.520570",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.6500854492188,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.039, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.29382219879891,
+      "macd_histogram": -2.0386973355046942,
+      "volume_ratio": 1.0507327770678834,
+      "price_momentum": -3.3812641102466614,
+      "volatility": 1.5191279717454227,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.039, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.29382219879891 macd_histogram: -2.0386973355046942 volume_ratio: 1.0507327770678834 price_momentum: -3.3812641102466614 volatility: 1.5191279717454227 regime: trending"
+  },
+  {
+    "id": "86fd5605-b25e-4a75-90ff-b9a5c8a7e39e",
+    "timestamp": "2025-07-16T15:18:37.617618",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1259.5150146484375,
+    "reasoning": "Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.530, Volume ratio=0.8, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.54563346266338,
+      "macd_histogram": -4.529975083829966,
+      "volume_ratio": 0.7598373233837092,
+      "price_momentum": 0.7136670749049789,
+      "volatility": 1.4076127115389192,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.5, MACD histogram=-4.530, Volume ratio=0.8, Price momentum=0.7%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.54563346266338 macd_histogram: -4.529975083829966 volume_ratio: 0.7598373233837092 price_momentum: 0.7136670749049789 volatility: 1.4076127115389192 regime: ranging"
+  },
+  {
+    "id": "e51e3bc4-3a96-47e4-9bbe-6a185aaf2f53",
+    "timestamp": "2025-07-16T15:20:50.901085",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.1737060546875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.085, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.56914894941403,
+      "macd_histogram": 0.0851957620047421,
+      "volume_ratio": 0.6995165487207226,
+      "price_momentum": -1.052821227280453,
+      "volatility": 1.1450457689393023,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.085, Volume ratio=0.7, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.56914894941403 macd_histogram: 0.0851957620047421 volume_ratio: 0.6995165487207226 price_momentum: -1.052821227280453 volatility: 1.1450457689393023 regime: ranging"
+  },
+  {
+    "id": "9e11f146-7e7f-4a44-8bb3-f0605bc632b5",
+    "timestamp": "2025-07-16T15:21:07.692106",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.25,
+    "reasoning": "Based on multi-agent analysis: RSI=72.2, MACD histogram=0.674, Volume ratio=0.7, Price momentum=3.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.21633709346315,
+      "macd_histogram": 0.674482077705703,
+      "volume_ratio": 0.7405310249579888,
+      "price_momentum": 3.1696909343444233,
+      "volatility": 1.5254113475981272,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.2, MACD histogram=0.674, Volume ratio=0.7, Price momentum=3.2%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.21633709346315 macd_histogram: 0.674482077705703 volume_ratio: 0.7405310249579888 price_momentum: 3.1696909343444233 volatility: 1.5254113475981272 regime: trending"
+  },
+  {
+    "id": "1d2db2a9-30d2-43b7-832c-f3ea144e300d",
+    "timestamp": "2025-07-16T15:22:37.806420",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.02499389648438,
+    "reasoning": "Based on multi-agent analysis: RSI=65.6, MACD histogram=0.331, Volume ratio=0.8, Price momentum=0.3%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.60155120437092,
+      "macd_histogram": 0.33098224137301324,
+      "volume_ratio": 0.79568539714605,
+      "price_momentum": 0.3441912213423135,
+      "volatility": 1.3816570377259736,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.6, MACD histogram=0.331, Volume ratio=0.8, Price momentum=0.3%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 65.60155120437092 macd_histogram: 0.33098224137301324 volume_ratio: 0.79568539714605 price_momentum: 0.3441912213423135 volatility: 1.3816570377259736 regime: ranging"
+  },
+  {
+    "id": "c7c0b75b-9383-40b1-8ed1-bc17463734cc",
+    "timestamp": "2025-07-16T15:23:37.882476",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1258.0899658203125,
+    "reasoning": "Based on multi-agent analysis: RSI=46.3, MACD histogram=-4.613, Volume ratio=0.8, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.256211240501045,
+      "macd_histogram": -4.612750496751036,
+      "volume_ratio": 0.76957934898943,
+      "price_momentum": 0.5997169499981112,
+      "volatility": 1.408300857560536,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.3, MACD histogram=-4.613, Volume ratio=0.8, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.256211240501045 macd_histogram: -4.612750496751036 volume_ratio: 0.76957934898943 price_momentum: 0.5997169499981112 volatility: 1.408300857560536 regime: ranging"
+  },
+  {
+    "id": "a0dbf7d8-2ccd-4c92-855b-5b82d4beff06",
+    "timestamp": "2025-07-16T15:24:07.963253",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 322.57000732421875,
+    "reasoning": "Based on multi-agent analysis: RSI=47.7, MACD histogram=0.755, Volume ratio=0.9, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.699139799986014,
+      "macd_histogram": 0.7546443350643379,
+      "volume_ratio": 0.9164945848033113,
+      "price_momentum": 4.098496920370855,
+      "volatility": 4.418531467794643,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.7, MACD histogram=0.755, Volume ratio=0.9, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.699139799986014 macd_histogram: 0.7546443350643379 volume_ratio: 0.9164945848033113 price_momentum: 4.098496920370855 volatility: 4.418531467794643 regime: trending"
+  },
+  {
+    "id": "c79847d7-96a5-498a-bfec-8f0aa30f592b",
+    "timestamp": "2025-07-16T15:25:38.055729",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.6900024414062,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.036, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.310773129433635,
+      "macd_histogram": -2.0363787163488833,
+      "volume_ratio": 1.065596915331782,
+      "price_momentum": -3.3757752767496707,
+      "volatility": 1.5189587336076513,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.036, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.310773129433635 macd_histogram: -2.0363787163488833 volume_ratio: 1.065596915331782 price_momentum: -3.3757752767496707 volatility: 1.5189587336076513 regime: trending"
+  },
+  {
+    "id": "187bcc60-136b-4862-a65f-fe1713174737",
+    "timestamp": "2025-07-16T15:26:08.191212",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.7349853515625,
+    "reasoning": "Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.53477976458731,
+      "macd_histogram": 0.5401088918069714,
+      "volume_ratio": 0.6283158608034911,
+      "price_momentum": 0.8484833437060721,
+      "volatility": 0.7173011578177153,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.53477976458731 macd_histogram: 0.5401088918069714 volume_ratio: 0.6283158608034911 price_momentum: 0.8484833437060721 volatility: 0.7173011578177153 regime: ranging"
+  },
+  {
+    "id": "b221ab33-a2d1-4393-a8ac-faf1f12a7a2a",
+    "timestamp": "2025-07-16T15:26:38.277789",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.1999969482422,
+    "reasoning": "Based on multi-agent analysis: RSI=72.2, MACD histogram=0.672, Volume ratio=0.7, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.16714206286468,
+      "macd_histogram": 0.6715775995047664,
+      "volume_ratio": 0.7462631739437777,
+      "price_momentum": 3.1415392323218994,
+      "volatility": 1.525205252781627,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.2, MACD histogram=0.672, Volume ratio=0.7, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.16714206286468 macd_histogram: 0.6715775995047664 volume_ratio: 0.7462631739437777 price_momentum: 3.1415392323218994 volatility: 1.525205252781627 regime: trending"
+  },
+  {
+    "id": "0c45964e-56c1-4693-ab3f-663c2d3bf321",
+    "timestamp": "2025-07-16T15:27:08.417618",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.18499755859375,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.086, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.58408035478749,
+      "macd_histogram": 0.08585164051211391,
+      "volume_ratio": 0.704583559597538,
+      "price_momentum": -1.0475053270349015,
+      "volatility": 1.1451114065394452,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.086, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.58408035478749 macd_histogram: 0.08585164051211391 volume_ratio: 0.704583559597538 price_momentum: -1.0475053270349015 volatility: 1.1451114065394452 regime: ranging"
+  },
+  {
+    "id": "26fb44a3-fcb4-442b-90d0-8db1fa122737",
+    "timestamp": "2025-07-16T15:28:08.501496",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 170.8350067138672,
+    "reasoning": "Based on multi-agent analysis: RSI=77.7, MACD histogram=1.076, Volume ratio=0.8, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 77.72189511180828,
+      "macd_histogram": 1.0764169080171522,
+      "volume_ratio": 0.7985579438898202,
+      "price_momentum": 4.104204972486759,
+      "volatility": 1.6204886827115172,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=77.7, MACD histogram=1.076, Volume ratio=0.8, Price momentum=4.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 77.72189511180828 macd_histogram: 1.0764169080171522 volume_ratio: 0.7985579438898202 price_momentum: 4.104204972486759 volatility: 1.6204886827115172 regime: trending"
+  },
+  {
+    "id": "4e6ba6be-8ebb-4e19-acb2-66a15cb8d60a",
+    "timestamp": "2025-07-16T15:29:38.595047",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1257.9000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=46.2, MACD histogram=-4.624, Volume ratio=0.8, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.2179064491253,
+      "macd_histogram": -4.623783436832122,
+      "volume_ratio": 0.7778652646025601,
+      "price_momentum": 0.5845288058868309,
+      "volatility": 1.4084161967701447,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.2, MACD histogram=-4.624, Volume ratio=0.8, Price momentum=0.6%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.2179064491253 macd_histogram: -4.623783436832122 volume_ratio: 0.7778652646025601 price_momentum: 0.5845288058868309 volatility: 1.4084161967701447 regime: ranging"
+  },
+  {
+    "id": "c948c5e9-b76c-4661-a37a-e747bcfbcded",
+    "timestamp": "2025-07-16T15:31:38.753883",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.7349853515625,
+    "reasoning": "Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.53477976458731,
+      "macd_histogram": 0.5401088918069714,
+      "volume_ratio": 0.6361079833393382,
+      "price_momentum": 0.8484833437060721,
+      "volatility": 0.7173011578177153,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.53477976458731 macd_histogram: 0.5401088918069714 volume_ratio: 0.6361079833393382 price_momentum: 0.8484833437060721 volatility: 0.7173011578177153 regime: ranging"
+  },
+  {
+    "id": "c984f5f3-9f55-4e74-83e9-48d439184b81",
+    "timestamp": "2025-07-16T15:33:10.678165",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.31500244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.093, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.7550080703457,
+      "macd_histogram": 0.09340310657011908,
+      "volume_ratio": 0.7103187560638984,
+      "price_momentum": -0.9863006377212546,
+      "volatility": 1.1459300623489859,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.093, Volume ratio=0.7, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.7550080703457 macd_histogram: 0.09340310657011908 volume_ratio: 0.7103187560638984 price_momentum: -0.9863006377212546 volatility: 1.1459300623489859 regime: ranging"
+  },
+  {
+    "id": "3d5a0098-e24c-4d59-8051-bb28477e9bd5",
+    "timestamp": "2025-07-16T15:34:10.741601",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.9685974121094,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=0.720, Volume ratio=0.9, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.406864420117145,
+      "macd_histogram": 0.7197108276453164,
+      "volume_ratio": 0.9353582876598764,
+      "price_momentum": 3.9044123295469095,
+      "volatility": 4.412541036921047,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=0.720, Volume ratio=0.9, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.406864420117145 macd_histogram: 0.7197108276453164 volume_ratio: 0.9353582876598764 price_momentum: 3.9044123295469095 volatility: 4.412541036921047 regime: trending"
+  },
+  {
+    "id": "8227c33f-8f37-4e7c-b878-c790b0c619b6",
+    "timestamp": "2025-07-16T15:34:40.800778",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.60498046875,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.041, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.27468277694144,
+      "macd_histogram": -2.0413173042450428,
+      "volume_ratio": 1.0795675508690432,
+      "price_momentum": -3.387466324244026,
+      "volatility": 1.519320045332177,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=-2.041, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.27468277694144 macd_histogram: -2.0413173042450428 volume_ratio: 1.0795675508690432 price_momentum: -3.387466324244026 volatility: 1.519320045332177 regime: trending"
+  },
+  {
+    "id": "cbd30f09-d38b-434a-9a4f-1142e7b4bfc1",
+    "timestamp": "2025-07-16T15:35:10.882498",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.22909545898438,
+    "reasoning": "Based on multi-agent analysis: RSI=66.0, MACD histogram=0.343, Volume ratio=0.8, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.98235391377972,
+      "macd_histogram": 0.3428376885551563,
+      "volume_ratio": 0.8197246352000196,
+      "price_momentum": 0.436021315621256,
+      "volatility": 1.3776569763054418,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.0, MACD histogram=0.343, Volume ratio=0.8, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 65.98235391377972 macd_histogram: 0.3428376885551563 volume_ratio: 0.8197246352000196 price_momentum: 0.436021315621256 volatility: 1.3776569763054418 regime: ranging"
+  },
+  {
+    "id": "b3089e70-46a3-4228-a849-61318dfefd73",
+    "timestamp": "2025-07-16T15:36:41.001746",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.94500732421875,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.657, Volume ratio=0.8, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.91353884841328,
+      "macd_histogram": 0.6567662674278467,
+      "volume_ratio": 0.760668425397135,
+      "price_momentum": 2.9979801561856774,
+      "volatility": 1.524419409973487,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.657, Volume ratio=0.8, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 71.91353884841328 macd_histogram: 0.6567662674278467 volume_ratio: 0.760668425397135 price_momentum: 2.9979801561856774 volatility: 1.524419409973487 regime: trending"
+  },
+  {
+    "id": "0ee65ecb-c33a-4426-874b-83137ecb6cd0",
+    "timestamp": "2025-07-16T15:37:11.094343",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.7290954589844,
+    "reasoning": "Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.52442137319164,
+      "macd_histogram": 0.5397667713963932,
+      "volume_ratio": 0.6426339133538058,
+      "price_momentum": 0.8473088417420677,
+      "volatility": 0.7173199979686417,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.5, MACD histogram=0.540, Volume ratio=0.6, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.52442137319164 macd_histogram: 0.5397667713963932 volume_ratio: 0.6426339133538058 price_momentum: 0.8473088417420677 volatility: 0.7173199979686417 regime: ranging"
+  },
+  {
+    "id": "95567241-d413-4f27-bf6e-3fde2e80bece",
+    "timestamp": "2025-07-16T15:38:19.485524",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.4149932861328,
+    "reasoning": "Based on multi-agent analysis: RSI=67.9, MACD histogram=0.099, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.88525252027159,
+      "macd_histogram": 0.09921117664973034,
+      "volume_ratio": 0.7148156839829787,
+      "price_momentum": -0.939226185952202,
+      "volatility": 1.146638403014266,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.9, MACD histogram=0.099, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.88525252027159 macd_histogram: 0.09921117664973034 volume_ratio: 0.7148156839829787 price_momentum: -0.939226185952202 volatility: 1.146638403014266 regime: ranging"
+  },
+  {
+    "id": "6e8b6d1c-bf0c-4900-94d5-c84c9b95cda0",
+    "timestamp": "2025-07-16T15:40:41.250608",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.24549865722656,
+    "reasoning": "Based on multi-agent analysis: RSI=78.0, MACD histogram=1.100, Volume ratio=0.8, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.02455407304612,
+      "macd_histogram": 1.1002607507275406,
+      "volume_ratio": 0.8178989191974493,
+      "price_momentum": 4.354352399721121,
+      "volatility": 1.6179624939844108,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.0, MACD histogram=1.100, Volume ratio=0.8, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 78.02455407304612 macd_histogram: 1.1002607507275406 volume_ratio: 0.8178989191974493 price_momentum: 4.354352399721121 volatility: 1.6179624939844108 regime: trending"
+  },
+  {
+    "id": "c4b2cac2-3b96-43de-8824-2aaf0125da4c",
+    "timestamp": "2025-07-16T15:41:41.330752",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.40499877929688,
+    "reasoning": "Based on multi-agent analysis: RSI=66.3, MACD histogram=0.353, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 66.31411051828371,
+      "macd_histogram": 0.3530552121134618,
+      "volume_ratio": 0.8332222696603041,
+      "price_momentum": 0.5151643574011342,
+      "volatility": 1.3743638943459955,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=66.3, MACD histogram=0.353, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 66.31411051828371 macd_histogram: 0.3530552121134618 volume_ratio: 0.8332222696603041 price_momentum: 0.5151643574011342 volatility: 1.3743638943459955 regime: ranging"
+  },
+  {
+    "id": "b6e12109-726b-4719-8139-84db771d0491",
+    "timestamp": "2025-07-16T15:42:41.422557",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 506.3500061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=68.1, MACD histogram=0.576, Volume ratio=0.7, Price momentum=1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 68.12562465035295,
+      "macd_histogram": 0.5758329987241044,
+      "volume_ratio": 0.653909264871895,
+      "price_momentum": 0.9711244736572903,
+      "volatility": 0.7156907961131326,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=68.1, MACD histogram=0.576, Volume ratio=0.7, Price momentum=1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 68.12562465035295 macd_histogram: 0.5758329987241044 volume_ratio: 0.653909264871895 price_momentum: 0.9711244736572903 volatility: 0.7156907961131326 regime: ranging"
+  },
+  {
+    "id": "b87204e8-7767-4c3b-8cdb-3bc9d78facbb",
+    "timestamp": "2025-07-16T15:43:31.706948",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 209.11000061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.171, Volume ratio=0.9, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.82676998090646,
+      "macd_histogram": 0.17099617833992342,
+      "volume_ratio": 0.8652034244597018,
+      "price_momentum": -0.961446805515336,
+      "volatility": 1.1635898212931308,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.171, Volume ratio=0.9, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.82676998090646 macd_histogram: 0.17099617833992342 volume_ratio: 0.8652034244597018 price_momentum: -0.961446805515336 volatility: 1.1635898212931308 regime: ranging"
+  },
+  {
+    "id": "060d66e5-6a9d-448e-a638-416cc2cd7876",
+    "timestamp": "2025-07-16T15:43:41.495683",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 703.2100219726562,
+    "reasoning": "Based on multi-agent analysis: RSI=47.5, MACD histogram=-2.006, Volume ratio=1.1, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.532717237612374,
+      "macd_histogram": -2.0061728521168627,
+      "volume_ratio": 1.1029423859492922,
+      "price_momentum": -3.304269372476941,
+      "volatility": 1.5168178407062154,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.5, MACD histogram=-2.006, Volume ratio=1.1, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.532717237612374 macd_histogram: -2.0061728521168627 volume_ratio: 1.1029423859492922 price_momentum: -3.304269372476941 volatility: 1.5168178407062154 regime: trending"
+  },
+  {
+    "id": "70015ce8-7f5c-4633-b356-bcc6dfc188ac",
+    "timestamp": "2025-07-16T15:44:11.553075",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.47000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=72.4, MACD histogram=0.687, Volume ratio=0.8, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.43073336359043,
+      "macd_histogram": 0.6872610727320141,
+      "volume_ratio": 0.8063917976943588,
+      "price_momentum": 3.2935515506888704,
+      "volatility": 1.5265203427371765,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.4, MACD histogram=0.687, Volume ratio=0.8, Price momentum=3.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.43073336359043 macd_histogram: 0.6872610727320141 volume_ratio: 0.8063917976943588 price_momentum: 3.2935515506888704 volatility: 1.5265203427371765 regime: trending"
+  },
+  {
+    "id": "79b5ad23-05aa-45ca-978c-0e0d3dd2c391",
+    "timestamp": "2025-07-16T15:45:11.712632",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1257.1099853515625,
+    "reasoning": "Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.670, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 46.0592605242934,
+      "macd_histogram": -4.669673660613766,
+      "volume_ratio": 0.8164980506099567,
+      "price_momentum": 0.5213554969612486,
+      "volatility": 1.408955487090315,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=46.1, MACD histogram=-4.670, Volume ratio=0.8, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 46.0592605242934 macd_histogram: -4.669673660613766 volume_ratio: 0.8164980506099567 price_momentum: 0.5213554969612486 volatility: 1.408955487090315 regime: ranging"
+  },
+  {
+    "id": "e9638cc4-b5d9-4642-b93b-b16e987daa97",
+    "timestamp": "2025-07-16T15:45:41.796295",
+    "symbol": "TSLA",
+    "action": "HOLD",
+    "price": 310.7799987792969,
+    "reasoning": "Based on multi-agent analysis: RSI=36.4, MACD histogram=-0.091, Volume ratio=0.8, Price momentum=5.0%. Consensus from 5 AI agents suggests HOLD with 47% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 36.42432141282325,
+      "macd_histogram": -0.09050723017331164,
+      "volume_ratio": 0.798048413062235,
+      "price_momentum": 5.035823188655729,
+      "volatility": 4.433606753968858,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: HOLD Reasoning: Based on multi-agent analysis: RSI=36.4, MACD histogram=-0.091, Volume ratio=0.8, Price momentum=5.0%. Consensus from 5 AI agents suggests HOLD with 47% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 36.42432141282325 macd_histogram: -0.09050723017331164 volume_ratio: 0.798048413062235 price_momentum: 5.035823188655729 volatility: 4.433606753968858 regime: trending"
+  },
+  {
+    "id": "503a2e00-f993-4188-ad03-2731dbd41c05",
+    "timestamp": "2025-07-16T15:46:11.882725",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.22000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=78.0, MACD histogram=1.099, Volume ratio=0.8, Price momentum=4.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.00599434934017,
+      "macd_histogram": 1.0987797061520772,
+      "volume_ratio": 0.8300118230983751,
+      "price_momentum": 4.338814657140323,
+      "volatility": 1.6180836250624497,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.0, MACD histogram=1.099, Volume ratio=0.8, Price momentum=4.3%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 1 similar setups with 0% win rate. rsi: 78.00599434934017 macd_histogram: 1.0987797061520772 volume_ratio: 0.8300118230983751 price_momentum: 4.338814657140323 volatility: 1.6180836250624497 regime: trending"
+  },
+  {
+    "id": "e577314b-3400-4e95-8314-0083488183c4",
+    "timestamp": "2025-07-16T15:48:42.038739",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.4499969482422,
+    "reasoning": "Based on multi-agent analysis: RSI=67.9, MACD histogram=0.101, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.93059873608846,
+      "macd_histogram": 0.10124440002260049,
+      "volume_ratio": 0.7289137702641008,
+      "price_momentum": -0.9227468951909923,
+      "volatility": 1.1469025128383916,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.9, MACD histogram=0.101, Volume ratio=0.7, Price momentum=-0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.93059873608846 macd_histogram: 0.10124440002260049 volume_ratio: 0.7289137702641008 price_momentum: -0.9227468951909923 volatility: 1.1469025128383916 regime: ranging"
+  },
+  {
+    "id": "b09d7d3b-be68-49be-8368-ad9f71cb51f8",
+    "timestamp": "2025-07-16T15:49:12.173640",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 506.1850891113281,
+    "reasoning": "Based on multi-agent analysis: RSI=68.0, MACD histogram=0.566, Volume ratio=0.7, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.98970731661127,
+      "macd_histogram": 0.5662536272270486,
+      "volume_ratio": 0.6861740311164329,
+      "price_momentum": 0.9382384186651608,
+      "volatility": 0.7160531137219959,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=68.0, MACD histogram=0.566, Volume ratio=0.7, Price momentum=0.9%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.98970731661127 macd_histogram: 0.5662536272270486 volume_ratio: 0.6861740311164329 price_momentum: 0.9382384186651608 volatility: 0.7160531137219959 regime: ranging"
+  },
+  {
+    "id": "fbd84999-ba99-4797-94e2-f6e35edbecdd",
+    "timestamp": "2025-07-16T15:50:42.279951",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 183.1300048828125,
+    "reasoning": "Based on multi-agent analysis: RSI=72.1, MACD histogram=0.668, Volume ratio=0.8, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 72.09798770414105,
+      "macd_histogram": 0.6675120390812876,
+      "volume_ratio": 0.8208463662508314,
+      "price_momentum": 3.102133722045025,
+      "volatility": 1.5249453911742488,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=72.1, MACD histogram=0.668, Volume ratio=0.8, Price momentum=3.1%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 72.09798770414105 macd_histogram: 0.6675120390812876 volume_ratio: 0.8208463662508314 price_momentum: 3.102133722045025 volatility: 1.5249453911742488 regime: trending"
+  },
+  {
+    "id": "43c78aef-c369-48cb-9e02-107ca287fdff",
+    "timestamp": "2025-07-16T15:51:12.342643",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.5100708007812,
+    "reasoning": "Based on multi-agent analysis: RSI=47.2, MACD histogram=-2.047, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.234460253573474,
+      "macd_histogram": -2.046830228996358,
+      "volume_ratio": 1.1211195949123391,
+      "price_momentum": -3.4005169910449764,
+      "volatility": 1.5197271137288992,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.2, MACD histogram=-2.047, Volume ratio=1.1, Price momentum=-3.4%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.234460253573474 macd_histogram: -2.046830228996358 volume_ratio: 1.1211195949123391 price_momentum: -3.4005169910449764 volatility: 1.5197271137288992 regime: trending"
+  },
+  {
+    "id": "c05363ad-b6d4-49c8-97eb-9d9754b978ea",
+    "timestamp": "2025-07-16T15:51:42.426138",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.2418975830078,
+    "reasoning": "Based on multi-agent analysis: RSI=78.0, MACD histogram=1.100, Volume ratio=0.8, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.0219347311695,
+      "macd_histogram": 1.1000515786630194,
+      "volume_ratio": 0.8408592831671815,
+      "price_momentum": 4.352157960912582,
+      "volatility": 1.6179793138543705,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.0, MACD histogram=1.100, Volume ratio=0.8, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 78.0219347311695 macd_histogram: 1.1000515786630194 volume_ratio: 0.8408592831671815 price_momentum: 4.352157960912582 volatility: 1.6179793138543705 regime: trending"
+  },
+  {
+    "id": "4e01e004-123c-4ded-ad0e-d0021c9b497e",
+    "timestamp": "2025-07-16T15:53:42.593140",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 209.11000061035156,
+    "reasoning": "Based on multi-agent analysis: RSI=67.8, MACD histogram=0.171, Volume ratio=0.9, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.82676998090646,
+      "macd_histogram": 0.17099617833992342,
+      "volume_ratio": 0.8652034244597018,
+      "price_momentum": -0.961446805515336,
+      "volatility": 1.1635898212931308,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.8, MACD histogram=0.171, Volume ratio=0.9, Price momentum=-1.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.82676998090646 macd_histogram: 0.17099617833992342 volume_ratio: 0.8652034244597018 price_momentum: -0.961446805515336 volatility: 1.1635898212931308 regime: ranging"
+  },
+  {
+    "id": "22d0e911-dbeb-4f72-b620-e2dd11af6f77",
+    "timestamp": "2025-07-16T15:55:42.704922",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.82000732421875,
+    "reasoning": "Based on multi-agent analysis: RSI=69.4, MACD histogram=0.601, Volume ratio=1.0, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 69.40942174336638,
+      "macd_histogram": 0.6011293089514078,
+      "volume_ratio": 0.965068068486783,
+      "price_momentum": 0.45877887505533665,
+      "volatility": 0.7276952478360689,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=69.4, MACD histogram=0.601, Volume ratio=1.0, Price momentum=0.5%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 69.40942174336638 macd_histogram: 0.6011293089514078 volume_ratio: 0.965068068486783 price_momentum: 0.45877887505533665 volatility: 0.7276952478360689 regime: ranging"
+  },
+  {
+    "id": "d896a0db-160d-40d3-b481-bb4cd9ce85e0",
+    "timestamp": "2025-07-16T15:56:12.781522",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.8399963378906,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.712, Volume ratio=1.0, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.34394195042858,
+      "macd_histogram": 0.7122409032395733,
+      "volume_ratio": 0.9883420441448075,
+      "price_momentum": 3.8629107074972766,
+      "volatility": 4.411297022022712,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.712, Volume ratio=1.0, Price momentum=3.9%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.34394195042858 macd_histogram: 0.7122409032395733 volume_ratio: 0.9883420441448075 price_momentum: 3.8629107074972766 volatility: 4.411297022022712 regime: trending"
+  },
+  {
+    "id": "659fbf01-0ca9-4fc9-8646-3e7de706fc3a",
+    "timestamp": "2025-07-16T15:56:42.882865",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.239990234375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.069, Volume ratio=0.9, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.72429509463114,
+      "macd_histogram": -5.068724325663764,
+      "volume_ratio": 0.8816917519125737,
+      "price_momentum": -0.02798483879629858,
+      "volatility": 1.417671647345779,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.069, Volume ratio=0.9, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 44.72429509463114 macd_histogram: -5.068724325663764 volume_ratio: 0.8816917519125737 price_momentum: -0.02798483879629858 volatility: 1.417671647345779 regime: ranging"
+  },
+  {
+    "id": "62c93511-158a-46cb-bde7-2c387b95c86c",
+    "timestamp": "2025-07-16T16:00:43.141994",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.9696220732174887,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.9696220732174887 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "b3379a33-0b8e-4cb0-8d2b-8a70a38b7ede",
+    "timestamp": "2025-07-16T16:01:43.264454",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.19000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.9090741606914,
+      "macd_histogram": 0.3405669308039112,
+      "volume_ratio": 1.0051482012083324,
+      "price_momentum": 0.4184324473839167,
+      "volatility": 1.378408286740609,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 65.9090741606914 macd_histogram: 0.3405669308039112 volume_ratio: 1.0051482012083324 price_momentum: 0.4184324473839167 volatility: 1.378408286740609 regime: ranging"
+  },
+  {
+    "id": "d5ebf6c6-b5e3-4ffd-9c3d-d197a3e14761",
+    "timestamp": "2025-07-16T16:02:13.375565",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.6700134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.26054060940193,
+      "macd_histogram": 0.7023672727365287,
+      "volume_ratio": 1.0307078732953086,
+      "price_momentum": 3.8080545055949386,
+      "volatility": 4.4096727100985795,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.26054060940193 macd_histogram: 0.7023672727365287 volume_ratio: 1.0307078732953086 price_momentum: 3.8080545055949386 volatility: 4.4096727100985795 regime: trending"
+  },
+  {
+    "id": "405036f6-3bf4-4360-a527-572d913c58a4",
+    "timestamp": "2025-07-16T16:03:13.472982",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.3699951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.11472771530306,
+      "macd_histogram": 1.1074922544326018,
+      "volume_ratio": 0.9264334882702736,
+      "price_momentum": 4.4302186125976775,
+      "volatility": 1.6174392314880233,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 78.11472771530306 macd_histogram: 1.1074922544326018 volume_ratio: 0.9264334882702736 price_momentum: 4.4302186125976775 volatility: 1.6174392314880233 regime: trending"
+  },
+  {
+    "id": "7d07ce0f-e06a-4102-a783-4bb3d96a972a",
+    "timestamp": "2025-07-16T16:03:43.676577",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.33312253991801,
+      "macd_histogram": 0.533429566899339,
+      "volume_ratio": 0.9623515802919875,
+      "price_momentum": 0.8255531706471633,
+      "volatility": 0.7176806704479517,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.33312253991801 macd_histogram: 0.533429566899339 volume_ratio: 0.9623515802919875 price_momentum: 0.8255531706471633 volatility: 0.7176806704479517 regime: ranging"
+  },
+  {
+    "id": "892c14d1-5ab8-4231-88aa-f724a6303cf9",
+    "timestamp": "2025-07-16T16:05:13.910711",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.9099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.40440309178489,
+      "macd_histogram": -2.0236014939672327,
+      "volume_ratio": 1.2513239328667596,
+      "price_momentum": -3.345527943533835,
+      "volatility": 1.5180386400894443,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.40440309178489 macd_histogram: -2.0236014939672327 volume_ratio: 1.2513239328667596 price_momentum: -3.345527943533835 volatility: 1.5180386400894443 regime: trending"
+  },
+  {
+    "id": "7d79f10d-5e36-4a2b-b0ff-9aa183255561",
+    "timestamp": "2025-07-16T16:07:14.018011",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.9696220732174887,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.9696220732174887 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "3a9a1066-4fba-4f47-8a40-fafa24545fe4",
+    "timestamp": "2025-07-16T16:08:14.104360",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.19000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.9090741606914,
+      "macd_histogram": 0.3405669308039112,
+      "volume_ratio": 1.0051482012083324,
+      "price_momentum": 0.4184324473839167,
+      "volatility": 1.378408286740609,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 65.9090741606914 macd_histogram: 0.3405669308039112 volume_ratio: 1.0051482012083324 price_momentum: 0.4184324473839167 volatility: 1.378408286740609 regime: ranging"
+  },
+  {
+    "id": "a56c10fa-8273-492d-9404-91be626e0ecf",
+    "timestamp": "2025-07-16T16:08:44.250718",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16000366210938,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55101100250742,
+      "macd_histogram": 0.08439984457281069,
+      "volume_ratio": 0.9507290358472508,
+      "price_momentum": -1.0592721440649195,
+      "volatility": 1.1449672911675541,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55101100250742 macd_histogram: 0.08439984457281069 volume_ratio: 0.9507290358472508 price_momentum: -1.0592721440649195 volatility: 1.1449672911675541 regime: ranging"
+  },
+  {
+    "id": "1d0dd662-2b65-487a-b199-6e268116f8da",
+    "timestamp": "2025-07-16T16:09:14.320043",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.31005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.0, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.73751993636847,
+      "macd_histogram": -5.0646543336287495,
+      "volume_ratio": 1.0350468985662986,
+      "price_momentum": -0.02238201442619904,
+      "volatility": 1.4175465339633269,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.0, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 2 similar setups with 0% win rate. rsi: 44.73751993636847 macd_histogram: -5.0646543336287495 volume_ratio: 1.0350468985662986 price_momentum: -0.02238201442619904 volatility: 1.4175465339633269 regime: ranging"
+  },
+  {
+    "id": "f8eb15e3-fc6f-4a1e-807d-9364b5721570",
+    "timestamp": "2025-07-16T16:10:14.377950",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.3699951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.11472771530306,
+      "macd_histogram": 1.1074922544326018,
+      "volume_ratio": 0.9264334882702736,
+      "price_momentum": 4.4302186125976775,
+      "volatility": 1.6174392314880233,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 78.11472771530306 macd_histogram: 1.1074922544326018 volume_ratio: 0.9264334882702736 price_momentum: 4.4302186125976775 volatility: 1.6174392314880233 regime: trending"
+  },
+  {
+    "id": "cb6c80a2-1fee-45d3-bd6d-e6b78ff694e9",
+    "timestamp": "2025-07-16T16:13:14.529178",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.6700134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.26054060940193,
+      "macd_histogram": 0.7023672727365287,
+      "volume_ratio": 1.0307078732953086,
+      "price_momentum": 3.8080545055949386,
+      "volatility": 4.4096727100985795,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.26054060940193 macd_histogram: 0.7023672727365287 volume_ratio: 1.0307078732953086 price_momentum: 3.8080545055949386 volatility: 4.4096727100985795 regime: trending"
+  },
+  {
+    "id": "685ff045-b5fc-4001-9d7d-5545bb803579",
+    "timestamp": "2025-07-16T16:13:45.717261",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16000366210938,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55101100250742,
+      "macd_histogram": 0.08439984457281069,
+      "volume_ratio": 0.9507290358472508,
+      "price_momentum": -1.0592721440649195,
+      "volatility": 1.1449672911675541,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55101100250742 macd_histogram: 0.08439984457281069 volume_ratio: 0.9507290358472508 price_momentum: -1.0592721440649195 volatility: 1.1449672911675541 regime: ranging"
+  },
+  {
+    "id": "f0c3b5de-a7d9-4ebf-afe0-612306befdf4",
+    "timestamp": "2025-07-16T16:14:45.841344",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.19000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.9090741606914,
+      "macd_histogram": 0.3405669308039112,
+      "volume_ratio": 1.0051482012083324,
+      "price_momentum": 0.4184324473839167,
+      "volatility": 1.378408286740609,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.0, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 65.9090741606914 macd_histogram: 0.3405669308039112 volume_ratio: 1.0051482012083324 price_momentum: 0.4184324473839167 volatility: 1.378408286740609 regime: ranging"
+  },
+  {
+    "id": "e7bd4dbc-530c-45d0-afda-6157fa5cd118",
+    "timestamp": "2025-07-16T16:15:15.918181",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.9099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.40440309178489,
+      "macd_histogram": -2.0236014939672327,
+      "volume_ratio": 1.2905026167627114,
+      "price_momentum": -3.345527943533835,
+      "volatility": 1.5180386400894443,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.40440309178489 macd_histogram: -2.0236014939672327 volume_ratio: 1.2905026167627114 price_momentum: -3.345527943533835 volatility: 1.5180386400894443 regime: trending"
+  },
+  {
+    "id": "2602b671-a49a-4e79-a3ce-85ba03711935",
+    "timestamp": "2025-07-16T16:16:16.006678",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.33312253991801,
+      "macd_histogram": 0.533429566899339,
+      "volume_ratio": 1.007847837683263,
+      "price_momentum": 0.8255531706471633,
+      "volatility": 0.7176806704479517,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.33312253991801 macd_histogram: 0.533429566899339 volume_ratio: 1.007847837683263 price_momentum: 0.8255531706471633 volatility: 0.7176806704479517 regime: ranging"
+  },
+  {
+    "id": "a9082ae9-62dd-4af2-921e-39b759eee93d",
+    "timestamp": "2025-07-16T16:17:16.092497",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.31005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.73751993636847,
+      "macd_histogram": -5.0646543336287495,
+      "volume_ratio": 1.0639381426578112,
+      "price_momentum": -0.02238201442619904,
+      "volatility": 1.4175465339633269,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 44.73751993636847 macd_histogram: -5.0646543336287495 volume_ratio: 1.0639381426578112 price_momentum: -0.02238201442619904 volatility: 1.4175465339633269 regime: ranging"
+  },
+  {
+    "id": "70608cea-42af-401e-857f-4c0ddfd6a6cf",
+    "timestamp": "2025-07-16T16:17:46.168040",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.996616925160062,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 3 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.996616925160062 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "408b52ec-1664-445c-bd10-605d68d45e06",
+    "timestamp": "2025-07-16T16:18:16.254050",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.6700134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.26054060940193,
+      "macd_histogram": 0.7023672727365287,
+      "volume_ratio": 1.0420353475271074,
+      "price_momentum": 3.8080545055949386,
+      "volatility": 4.4096727100985795,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.26054060940193 macd_histogram: 0.7023672727365287 volume_ratio: 1.0420353475271074 price_momentum: 3.8080545055949386 volatility: 4.4096727100985795 regime: trending"
+  },
+  {
+    "id": "2f5e82f9-0012-4362-b890-84d1b85cf42e",
+    "timestamp": "2025-07-16T16:19:16.360097",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.3699951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.11472771530306,
+      "macd_histogram": 1.1074922544326018,
+      "volume_ratio": 0.9466603501861365,
+      "price_momentum": 4.4302186125976775,
+      "volatility": 1.6174392314880233,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 78.11472771530306 macd_histogram: 1.1074922544326018 volume_ratio: 0.9466603501861365 price_momentum: 4.4302186125976775 volatility: 1.6174392314880233 regime: trending"
+  },
+  {
+    "id": "3caeea0a-0a56-421a-a692-c5bc7f8fc2cc",
+    "timestamp": "2025-07-16T16:19:46.478632",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16000366210938,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55101100250742,
+      "macd_histogram": 0.08439984457281069,
+      "volume_ratio": 1.0312027961725498,
+      "price_momentum": -1.0592721440649195,
+      "volatility": 1.1449672911675541,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55101100250742 macd_histogram: 0.08439984457281069 volume_ratio: 1.0312027961725498 price_momentum: -1.0592721440649195 volatility: 1.1449672911675541 regime: ranging"
+  },
+  {
+    "id": "7684d7c0-8c76-41e4-8155-d71ee1e6cf75",
+    "timestamp": "2025-07-16T16:22:46.666335",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.31005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.73751993636847,
+      "macd_histogram": -5.0646543336287495,
+      "volume_ratio": 1.0639381426578112,
+      "price_momentum": -0.02238201442619904,
+      "volatility": 1.4175465339633269,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 44.73751993636847 macd_histogram: -5.0646543336287495 volume_ratio: 1.0639381426578112 price_momentum: -0.02238201442619904 volatility: 1.4175465339633269 regime: ranging"
+  },
+  {
+    "id": "11494ae8-d176-4b37-85fc-db3f7bf0f590",
+    "timestamp": "2025-07-16T16:23:16.759496",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.996616925160062,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 4 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.996616925160062 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "294311cb-b204-465b-99bc-ef2693e76c40",
+    "timestamp": "2025-07-16T16:23:46.833455",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.6700134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.26054060940193,
+      "macd_histogram": 0.7023672727365287,
+      "volume_ratio": 1.0420353475271074,
+      "price_momentum": 3.8080545055949386,
+      "volatility": 4.4096727100985795,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.26054060940193 macd_histogram: 0.7023672727365287 volume_ratio: 1.0420353475271074 price_momentum: 3.8080545055949386 volatility: 4.4096727100985795 regime: trending"
+  },
+  {
+    "id": "d4004cba-a946-4c40-a4e8-eca18d3a1d87",
+    "timestamp": "2025-07-16T16:24:16.913683",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.9099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.40440309178489,
+      "macd_histogram": -2.0236014939672327,
+      "volume_ratio": 1.2905026167627114,
+      "price_momentum": -3.345527943533835,
+      "volatility": 1.5180386400894443,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.40440309178489 macd_histogram: -2.0236014939672327 volume_ratio: 1.2905026167627114 price_momentum: -3.345527943533835 volatility: 1.5180386400894443 regime: trending"
+  },
+  {
+    "id": "c0f74434-4ed5-44e5-aed3-92778a592aa6",
+    "timestamp": "2025-07-16T16:24:47.019972",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.3699951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.11472771530306,
+      "macd_histogram": 1.1074922544326018,
+      "volume_ratio": 0.9466603501861365,
+      "price_momentum": 4.4302186125976775,
+      "volatility": 1.6174392314880233,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 78.11472771530306 macd_histogram: 1.1074922544326018 volume_ratio: 0.9466603501861365 price_momentum: 4.4302186125976775 volatility: 1.6174392314880233 regime: trending"
+  },
+  {
+    "id": "c2bdbec1-6338-49b1-bc54-da774a51a099",
+    "timestamp": "2025-07-16T16:28:17.160242",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.33312253991801,
+      "macd_histogram": 0.533429566899339,
+      "volume_ratio": 1.007847837683263,
+      "price_momentum": 0.8255531706471633,
+      "volatility": 0.7176806704479517,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.33312253991801 macd_histogram: 0.533429566899339 volume_ratio: 1.007847837683263 price_momentum: 0.8255531706471633 volatility: 0.7176806704479517 regime: ranging"
+  },
+  {
+    "id": "9b9e7dfd-015d-4fe5-9a0d-8f5f47f0e2a1",
+    "timestamp": "2025-07-16T16:29:17.298609",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.996616925160062,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.996616925160062 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "8534efad-6601-4e20-98d0-3bba7be66635",
+    "timestamp": "2025-07-16T16:29:47.449561",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16000366210938,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55101100250742,
+      "macd_histogram": 0.08439984457281069,
+      "volume_ratio": 1.0312027961725498,
+      "price_momentum": -1.0592721440649195,
+      "volatility": 1.1449672911675541,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55101100250742 macd_histogram: 0.08439984457281069 volume_ratio: 1.0312027961725498 price_momentum: -1.0592721440649195 volatility: 1.1449672911675541 regime: ranging"
+  },
+  {
+    "id": "24564014-b206-4f85-b90f-066882dfcd85",
+    "timestamp": "2025-07-16T16:30:17.559867",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.31005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.73751993636847,
+      "macd_histogram": -5.0646543336287495,
+      "volume_ratio": 1.0639381426578112,
+      "price_momentum": -0.02238201442619904,
+      "volatility": 1.4175465339633269,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 44.73751993636847 macd_histogram: -5.0646543336287495 volume_ratio: 1.0639381426578112 price_momentum: -0.02238201442619904 volatility: 1.4175465339633269 regime: ranging"
+  },
+  {
+    "id": "2d21580c-d5dc-49ff-a530-c6c88bc4fe9d",
+    "timestamp": "2025-07-16T16:32:17.719568",
+    "symbol": "NVDA",
+    "action": "BUY",
+    "price": 171.3699951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 78.11472771530306,
+      "macd_histogram": 1.1074922544326018,
+      "volume_ratio": 0.9466603501861365,
+      "price_momentum": 4.4302186125976775,
+      "volatility": 1.6174392314880233,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: NVDA Action: BUY Reasoning: Based on multi-agent analysis: RSI=78.1, MACD histogram=1.107, Volume ratio=0.9, Price momentum=4.4%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 78.11472771530306 macd_histogram: 1.1074922544326018 volume_ratio: 0.9466603501861365 price_momentum: 4.4302186125976775 volatility: 1.6174392314880233 regime: trending"
+  },
+  {
+    "id": "337d58fd-3a86-4978-a368-983aa69032c4",
+    "timestamp": "2025-07-16T16:32:47.811586",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.9099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.40440309178489,
+      "macd_histogram": -2.0236014939672327,
+      "volume_ratio": 1.2905026167627114,
+      "price_momentum": -3.345527943533835,
+      "volatility": 1.5180386400894443,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.40440309178489 macd_histogram: -2.0236014939672327 volume_ratio: 1.2905026167627114 price_momentum: -3.345527943533835 volatility: 1.5180386400894443 regime: trending"
+  },
+  {
+    "id": "99a41984-d590-4e22-8d04-39aedc6f1b61",
+    "timestamp": "2025-07-16T16:33:38.092405",
+    "symbol": "TSLA",
+    "action": "BUY",
+    "price": 321.6700134277344,
+    "reasoning": "Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.26054060940193,
+      "macd_histogram": 0.7023672727365287,
+      "volume_ratio": 1.0420353475271074,
+      "price_momentum": 3.8080545055949386,
+      "volatility": 4.4096727100985795,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: TSLA Action: BUY Reasoning: Based on multi-agent analysis: RSI=47.3, MACD histogram=0.702, Volume ratio=1.0, Price momentum=3.8%. Consensus from 5 AI agents suggests BUY with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.26054060940193 macd_histogram: 0.7023672727365287 volume_ratio: 1.0420353475271074 price_momentum: 3.8080545055949386 volatility: 4.4096727100985795 regime: trending"
+  },
+  {
+    "id": "7d807f94-cb09-413e-bff0-a0377930e0b6",
+    "timestamp": "2025-07-16T16:33:47.561206",
+    "symbol": "AMD",
+    "action": "BUY",
+    "price": 160.0800018310547,
+    "reasoning": "Based on multi-agent analysis: RSI=70.9, MACD histogram=1.538, Volume ratio=1.2, Price momentum=11.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 70.91275360378026,
+      "macd_histogram": 1.5379409482999296,
+      "volume_ratio": 1.2080708840263479,
+      "price_momentum": 11.043283687935755,
+      "volatility": 2.9747213282180773,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: AMD Action: BUY Reasoning: Based on multi-agent analysis: RSI=70.9, MACD histogram=1.538, Volume ratio=1.2, Price momentum=11.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 70.91275360378026 macd_histogram: 1.5379409482999296 volume_ratio: 1.2080708840263479 price_momentum: 11.043283687935755 volatility: 2.9747213282180773 regime: trending"
+  },
+  {
+    "id": "177463a2-3324-42a4-b09f-03bccbc5681c",
+    "timestamp": "2025-07-16T16:34:48.032717",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.33312253991801,
+      "macd_histogram": 0.533429566899339,
+      "volume_ratio": 1.007847837683263,
+      "price_momentum": 0.8255531706471633,
+      "volatility": 0.7176806704479517,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.33312253991801 macd_histogram: 0.533429566899339 volume_ratio: 1.007847837683263 price_momentum: 0.8255531706471633 volatility: 0.7176806704479517 regime: ranging"
+  },
+  {
+    "id": "1e9778a3-2b96-44de-ac14-8181b0ec5d87",
+    "timestamp": "2025-07-16T16:35:18.117913",
+    "symbol": "NFLX",
+    "action": "HOLD",
+    "price": 1250.31005859375,
+    "reasoning": "Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 44.73751993636847,
+      "macd_histogram": -5.0646543336287495,
+      "volume_ratio": 1.0639381426578112,
+      "price_momentum": -0.02238201442619904,
+      "volatility": 1.4175465339633269,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: NFLX Action: HOLD Reasoning: Based on multi-agent analysis: RSI=44.7, MACD histogram=-5.065, Volume ratio=1.1, Price momentum=-0.0%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 44.73751993636847 macd_histogram: -5.0646543336287495 volume_ratio: 1.0639381426578112 price_momentum: -0.02238201442619904 volatility: 1.4175465339633269 regime: ranging"
+  },
+  {
+    "id": "95a91cc5-ba77-4c3e-9dc2-3b9780cf86aa",
+    "timestamp": "2025-07-16T16:35:48.322020",
+    "symbol": "AAPL",
+    "action": "HOLD",
+    "price": 210.16000366210938,
+    "reasoning": "Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.55101100250742,
+      "macd_histogram": 0.08439984457281069,
+      "volume_ratio": 1.0312027961725498,
+      "price_momentum": -1.0592721440649195,
+      "volatility": 1.1449672911675541,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AAPL Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.6, MACD histogram=0.084, Volume ratio=1.0, Price momentum=-1.1%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.55101100250742 macd_histogram: 0.08439984457281069 volume_ratio: 1.0312027961725498 price_momentum: -1.0592721440649195 volatility: 1.1449672911675541 regime: ranging"
+  },
+  {
+    "id": "28883671-aee1-443f-99cf-71e74f4bcc98",
+    "timestamp": "2025-07-16T16:36:18.388856",
+    "symbol": "AMZN",
+    "action": "HOLD",
+    "price": 223.19000244140625,
+    "reasoning": "Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.1, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 65.9090741606914,
+      "macd_histogram": 0.3405669308039112,
+      "volume_ratio": 1.0538556321692703,
+      "price_momentum": 0.4184324473839167,
+      "volatility": 1.378408286740609,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: AMZN Action: HOLD Reasoning: Based on multi-agent analysis: RSI=65.9, MACD histogram=0.341, Volume ratio=1.1, Price momentum=0.4%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 65.9090741606914 macd_histogram: 0.3405669308039112 volume_ratio: 1.0538556321692703 price_momentum: 0.4184324473839167 volatility: 1.378408286740609 regime: ranging"
+  },
+  {
+    "id": "b29ea773-9b85-4acc-8108-1bdc4e6927ee",
+    "timestamp": "2025-07-16T16:37:13.607675",
+    "symbol": "GOOGL",
+    "action": "BUY",
+    "price": 182.97000122070312,
+    "reasoning": "Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 71.93860096401085,
+      "macd_histogram": 0.6582180633671728,
+      "volume_ratio": 0.996616925160062,
+      "price_momentum": 3.0120517118502774,
+      "volatility": 1.5244768283729764,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: GOOGL Action: BUY Reasoning: Based on multi-agent analysis: RSI=71.9, MACD histogram=0.658, Volume ratio=1.0, Price momentum=3.0%. Consensus from 5 AI agents suggests BUY with 48% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 71.93860096401085 macd_histogram: 0.6582180633671728 volume_ratio: 0.996616925160062 price_momentum: 3.0120517118502774 volatility: 1.5244768283729764 regime: trending"
+  },
+  {
+    "id": "11c64fd4-c44b-41c1-85d7-ede9ad828409",
+    "timestamp": "2025-07-16T16:45:36.419248",
+    "symbol": "META",
+    "action": "SELL",
+    "price": 702.9099731445312,
+    "reasoning": "Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 47.40440309178489,
+      "macd_histogram": -2.0236014939672327,
+      "volume_ratio": 1.2905026167627114,
+      "price_momentum": -3.345527943533835,
+      "volatility": 1.5180386400894443,
+      "regime": "trending"
+    },
+    "outcome": null,
+    "context": "Symbol: META Action: SELL Reasoning: Based on multi-agent analysis: RSI=47.4, MACD histogram=-2.024, Volume ratio=1.3, Price momentum=-3.3%. Consensus from 5 AI agents suggests SELL with 53% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 47.40440309178489 macd_histogram: -2.0236014939672327 volume_ratio: 1.2905026167627114 price_momentum: -3.345527943533835 volatility: 1.5180386400894443 regime: trending"
+  },
+  {
+    "id": "4a4433aa-03bc-43d2-b84d-745c3abcdb92",
+    "timestamp": "2025-07-16T16:46:06.583451",
+    "symbol": "MSFT",
+    "action": "HOLD",
+    "price": 505.6199951171875,
+    "reasoning": "Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate.",
+    "market_conditions": {
+      "rsi": 67.33312253991801,
+      "macd_histogram": 0.533429566899339,
+      "volume_ratio": 1.007847837683263,
+      "price_momentum": 0.8255531706471633,
+      "volatility": 0.7176806704479517,
+      "regime": "ranging"
+    },
+    "outcome": null,
+    "context": "Symbol: MSFT Action: HOLD Reasoning: Based on multi-agent analysis: RSI=67.3, MACD histogram=0.533, Volume ratio=1.0, Price momentum=0.8%. Consensus from 5 AI agents suggests HOLD with 71% confidence. Historical data shows 5 similar setups with 0% win rate. rsi: 67.33312253991801 macd_histogram: 0.533429566899339 volume_ratio: 1.007847837683263 price_momentum: 0.8255531706471633 volatility: 0.7176806704479517 regime: ranging"
+  }
+]

@@ -1,9 +1,9 @@
 /**
  * Backtesting Interface Component
- * 
+ *
  * Provides a comprehensive interface for running and analyzing backtests
  * using the backend's advanced backtesting capabilities.
- * 
+ *
  * Features:
  * - Agent-specific backtesting
  * - Strategy comparison
@@ -64,6 +64,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Line, Bar } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -77,6 +78,8 @@ import {
 } from 'chart.js';
 
 import { apiClient, BacktestRequest, BacktestResult } from '../../services/api/apiClient';
+import logger from '../../services/logger';
+
 
 // Register Chart.js components
 ChartJS.register(
@@ -189,7 +192,7 @@ export const BacktestingInterface: React.FC<BacktestingInterfaceProps> = ({
             queryClient.invalidateQueries({ queryKey: ['backtest-history'] });
         },
         onError: (error) => {
-            console.error('Backtest failed:', error);
+            logger.error('Backtest failed:', error);
             setIsRunning(false);
         }
     });
@@ -691,4 +694,4 @@ export const BacktestingInterface: React.FC<BacktestingInterfaceProps> = ({
             )}
         </Box>
     );
-}; 
+};

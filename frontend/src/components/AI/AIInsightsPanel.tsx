@@ -66,6 +66,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../services/api/apiClient';
 import { ChartSignal } from '../Chart/UnifiedChart';
+import logger from '../../services/logger';
+
 
 // Enhanced AI Insight interface
 export interface EnhancedAIInsight {
@@ -165,17 +167,17 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                     } else if (Array.isArray((response as any).data)) {
                         insights = (response as any).data;
                     } else {
-                        console.warn('API returned non-array insights:', response);
+                        logger.warn('API returned non-array insights:', response);
                         return [];
                     }
                 } else {
-                    console.warn('API returned unexpected response format:', response);
+                    logger.warn('API returned unexpected response format:', response);
                     return [];
                 }
 
                 return insights.map(insight => enhanceInsight(insight));
             } catch (error) {
-                console.error('Failed to fetch AI insights:', error);
+                logger.error('Failed to fetch AI insights:', error);
                 return [];
             }
         },
@@ -684,4 +686,4 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
 };
 
 export default AIInsightsPanel;
-export { AIInsightsPanel }; 
+export { AIInsightsPanel };

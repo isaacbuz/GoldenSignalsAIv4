@@ -1,6 +1,6 @@
 # GoldenSignalsAI Master Documentation
 
-**Last Updated:** December 2024  
+**Last Updated:** December 2024
 **Version:** 4.0
 
 ## Table of Contents
@@ -258,8 +258,7 @@ cd frontend
 # Install Node dependencies
 npm install
 
-# Install Storybook (for component development)
-npm install --save-dev @storybook/react-vite@^8.6.0
+
 ```
 
 ##### Database Setup (Optional)
@@ -371,7 +370,7 @@ npm run preview
 - **Frontend**: http://localhost:5173 (Vite dev server)
 - **Backend API**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
-- **Storybook**: http://localhost:6006 (run `npm run storybook`)
+
 
 ---
 
@@ -406,18 +405,7 @@ Create `.vscode/settings.json`:
 }
 ```
 
-#### 10.2 Component Development with Storybook
-```bash
-cd frontend
-
-# Start Storybook
-npm run storybook
-
-# Build Storybook
-npm run build-storybook
-```
-
-#### 10.3 Generating Components
+#### 10.2 Generating Components
 Use the component generator for consistent component creation:
 
 ```bash
@@ -429,7 +417,7 @@ This creates:
 - Component file with TypeScript and logging
 - CSS module
 - Test file with standard setup
-- Storybook story
+
 - Proper exports
 
 ### 11. Component Library
@@ -461,8 +449,8 @@ A versatile button component with multiple variants and states.
 ```tsx
 import { Button } from '@/components/Core/Button';
 
-<Button 
-  variant="primary" 
+<Button
+  variant="primary"
   size="medium"
   loading={isLoading}
   onClick={handleClick}
@@ -727,8 +715,8 @@ Comprehensive integration tests cover:
 
 ### 14. API Overview
 
-**Base URL**: `http://localhost:8000/api/v1`  
-**API Version**: v1  
+**Base URL**: `http://localhost:8000/api/v1`
+**API Version**: v1
 **Authentication**: Currently no authentication required (development mode)
 
 #### 14.1 Health Check
@@ -1582,4 +1570,4 @@ ERROR:__main__:Error fetching market data for AAPL: HTTP Error 401
 
 *This comprehensive documentation consolidates all project information into a single, searchable resource. For the most up-to-date information, please refer to the individual source files if they still exist.*
 
-*Last updated: December 2024* 
+*Last updated: December 2024*

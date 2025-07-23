@@ -6,6 +6,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { API_CONFIG } from '../../config/api.config';
 import { createAPIInterceptor } from '../monitoring/performance';
+import logger from '../logger';
+
 
 // Types
 export interface MarketData {
@@ -267,7 +269,7 @@ class APIClient {
 
     async getLatestSignals(limit: number = 10): Promise<Signal[]> {
         return this.makeRequest(`latest-signals-${limit}`, () =>
-            this.client.get(`/api/v1/signals/latest?limit=${limit}`)
+            this.client.get(`/api/v1/signals?limit=${limit}`)
         );
     }
 
@@ -482,7 +484,7 @@ class APIClient {
             if (result.status === 'fulfilled') {
                 return result.value.data;
             } else {
-                console.error('Batch request failed:', result.reason);
+                logger.error('Batch request failed:', result.reason);
                 return null;
             }
         }).filter(Boolean) as T[];
@@ -729,4 +731,4 @@ export const apiClient = new APIClient();
 // Legacy exports for backward compatibility
 export const fetchMarketData = (symbol: string) => apiClient.getMarketData(symbol);
 export const fetchAIInsights = (symbol: string) => apiClient.getAIInsights(symbol);
-export const fetchSignals = (filters?: any) => apiClient.getSignals(filters); 
+export const fetchSignals = (filters?: any) => apiClient.getSignals(filters);

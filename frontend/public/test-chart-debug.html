@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        pre {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #FFD700;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #FFA500;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            background: #333;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GoldenSignalsAI Chart Debug Test</h1>
+
+    <div class="test-section">
+        <h2>API Connection Tests</h2>
+        <button onclick="testHealthCheck()">Test Health Check</button>
+        <button onclick="testMarketData()">Test Market Data</button>
+        <button onclick="testHistoricalData()">Test Historical Data</button>
+        <button onclick="testWebSocket()">Test WebSocket</button>
+        <button onclick="testAllEndpoints()">Run All Tests</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        const WS_URL = 'ws://localhost:8000';
+        const resultsDiv = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `[${timestamp}] ${message}`;
+            resultsDiv.appendChild(entry);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearLogs() {
+            resultsDiv.innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+
+        async function testHealthCheck() {
+            log('Testing health check endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                log(`✅ Health check successful: ${JSON.stringify(data)}`, 'success');
+            } catch (error) {
+                log(`❌ Health check failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testMarketData() {
+            log('Testing market data endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/api/v1/market-data/AAPL`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                log(`✅ Market data received: ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ Market data failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testHistoricalData() {
+            log('Testing historical data endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/api/v1/market-data/AAPL/history?period=1d&interval=5m`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                log(`✅ Historical data received: ${data.data.length} candles`, 'success');
+                if (data.data.length > 0) {
+                    log(`Sample candle: ${JSON.stringify(data.data[0])}`, 'info');
+                }
+            } catch (error) {
+                log(`❌ Historical data failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testWebSocket() {
+            log('Testing WebSocket connection...', 'info');
+            try {
+                const ws = new WebSocket(`${WS_URL}/ws/signals/AAPL`);
+
+                ws.onopen = () => {
+                    log('✅ WebSocket connected', 'success');
+                    ws.send(JSON.stringify({ type: 'subscribe', symbol: 'AAPL' }));
+                };
+
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    log(`📨 WebSocket message: ${JSON.stringify(data)}`, 'info');
+                };
+
+                ws.onerror = (error) => {
+                    log(`❌ WebSocket error: ${error}`, 'error');
+                };
+
+                ws.onclose = () => {
+                    log('🔌 WebSocket closed', 'warning');
+                };
+
+                // Close after 10 seconds
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.close();
+                        log('WebSocket test completed', 'info');
+                    }
+                }, 10000);
+
+            } catch (error) {
+                log(`❌ WebSocket connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAllEndpoints() {
+            log('Running all tests...', 'info');
+            await testHealthCheck();
+            await testMarketData();
+            await testHistoricalData();
+            await testWebSocket();
+
+            // Test additional endpoints
+            log('Testing signals endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/api/v1/signals/symbol/AAPL`);
+                const data = await response.json();
+                log(`✅ Signals received: ${data.signals.length} signals`, 'success');
+            } catch (error) {
+                log(`❌ Signals failed: ${error.message}`, 'error');
+            }
+
+            log('Testing AI prediction endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/api/v1/ai/predict/AAPL`);
+                const data = await response.json();
+                log(`✅ AI prediction received: ${data.prediction.direction} with ${data.prediction.confidence} confidence`, 'success');
+            } catch (error) {
+                log(`❌ AI prediction failed: ${error.message}`, 'error');
+            }
+
+            log('Testing workflow analysis endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/api/v1/workflow/analyze/AAPL`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                log(`✅ Workflow analysis received: ${data.consensus.action} with ${data.consensus.confidence} confidence`, 'success');
+            } catch (error) {
+                log(`❌ Workflow analysis failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Check frontend configuration
+        async function checkFrontendConfig() {
+            log('Checking frontend configuration...', 'info');
+            try {
+                // Check if frontend env variables are accessible
+                const response = await fetch('http://localhost:3000/');
+                if (response.ok) {
+                    log('✅ Frontend is accessible', 'success');
+                } else {
+                    log(`⚠️ Frontend returned status ${response.status}`, 'warning');
+                }
+            } catch (error) {
+                log(`❌ Cannot reach frontend: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run basic tests on load
+        window.onload = () => {
+            log('Debug page loaded. Click buttons to run tests.', 'info');
+            checkFrontendConfig();
+        };
+
+        // Intercept console errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            log(`🚨 Console Error: ${args.join(' ')}`, 'error');
+            originalError.apply(console, args);
+        };
+    </script>
+</body>
+</html>

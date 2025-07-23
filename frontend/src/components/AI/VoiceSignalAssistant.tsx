@@ -1,6 +1,6 @@
 /**
  * Voice Signal Assistant - Natural language interface for signal analysis
- * 
+ *
  * Features:
  * - Voice-activated signal queries
  * - Natural language processing
@@ -39,6 +39,8 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiClient } from '../../services/api';
+import logger from '../../services/logger';
+
 
 interface VoiceCommand {
     transcript: string;
@@ -113,7 +115,7 @@ export const VoiceSignalAssistant: React.FC<VoiceSignalAssistantProps> = ({
             };
 
             recognitionRef.current.onerror = (event: any) => {
-                console.error('Speech recognition error:', event.error);
+                logger.error('Speech recognition error:', event.error);
                 setError(`Error: ${event.error}`);
                 setIsListening(false);
             };
@@ -220,7 +222,7 @@ export const VoiceSignalAssistant: React.FC<VoiceSignalAssistantProps> = ({
                 onCommand(command);
             }
         } catch (error) {
-            console.error('Error processing command:', error);
+            logger.error('Error processing command:', error);
             setError('Sorry, I had trouble processing that command.');
         } finally {
             setIsProcessing(false);
@@ -427,4 +429,4 @@ export const VoiceSignalAssistant: React.FC<VoiceSignalAssistantProps> = ({
     );
 };
 
-export default VoiceSignalAssistant; 
+export default VoiceSignalAssistant;

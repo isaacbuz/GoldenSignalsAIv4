@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Test</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, sans-serif;
+        }
+        #console {
+            padding: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="console"></div>
+
+    <script type="module">
+        const consoleDiv = document.getElementById('console');
+
+        function log(msg, type = '') {
+            const span = document.createElement('span');
+            span.className = type;
+            span.textContent = msg + '\n';
+            consoleDiv.appendChild(span);
+        }
+
+        // Override console methods to capture errors
+        const originalError = console.error;
+        console.error = (...args) => {
+            log('Console Error: ' + args.join(' '), 'error');
+            originalError.apply(console, args);
+        };
+
+        window.addEventListener('error', (e) => {
+            log(`Window Error: ${e.message} at ${e.filename}:${e.lineno}:${e.colno}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`Unhandled Promise Rejection: ${e.reason}`, 'error');
+        });
+
+        log('Loading React app...');
+
+        try {
+            // Load the app directly
+            import('/src/main.tsx').then(() => {
+                log('App loaded successfully!', 'success');
+            }).catch(err => {
+                log('Failed to load app: ' + err.message, 'error');
+                log('Stack: ' + err.stack, 'error');
+            });
+        } catch (err) {
+            log('Immediate error: ' + err.message, 'error');
+        }
+    </script>
+</body>
+</html>

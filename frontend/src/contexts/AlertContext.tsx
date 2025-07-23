@@ -6,6 +6,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { Howl } from 'howler';
 import toast from 'react-hot-toast';
+import logger from '../services/logger';
+
 
 // Alert types
 export interface Alert {
@@ -138,7 +140,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         sound.play();
       }
     } catch (error) {
-      console.error('Error playing alert sound:', error);
+      logger.error('Error playing alert sound:', error);
     }
   };
 
@@ -182,7 +184,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Show toast
     const toastId = toast.custom((t) => (
       <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} w-full`}>
-        <div 
+        <div
           className={`
             bg-gray-900 border-2 rounded-lg p-4 shadow-xl
             ${alert.type === 'CALL' ? 'border-green-500' : 'border-red-500'}
@@ -227,7 +229,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Dismiss alert
   const dismissAlert = useCallback((id: string) => {
     setActiveAlerts(prev => prev.filter(a => a.id !== id));
-    
+
     // Clear auto-dismiss timer if exists
     const timerId = dismissTimers.current.get(id);
     if (timerId) {
@@ -239,7 +241,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Clear all alerts
   const clearAllAlerts = useCallback(() => {
     setActiveAlerts([]);
-    
+
     // Clear all timers
     dismissTimers.current.forEach(timerId => clearTimeout(timerId));
     dismissTimers.current.clear();
@@ -279,4 +281,4 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {children}
     </AlertContext.Provider>
   );
-}; 
+};

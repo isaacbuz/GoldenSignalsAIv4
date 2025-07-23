@@ -1,4 +1,6 @@
 import { alpha } from '@mui/material/styles';
+import logger from '../services/logger';
+
 
 /**
  * Validates if a color string is in a valid format for MUI
@@ -20,7 +22,7 @@ export const validateColor = (color: string): string => {
     }
 
     // Fallback to a default color if invalid
-    console.warn(`Invalid color format: ${color}, falling back to default`);
+    logger.warn(`Invalid color format: ${color}, falling back to default`);
     return '#000000';
 };
 
@@ -31,7 +33,7 @@ export const safeAlpha = (color: string, opacity: number): string => {
     try {
         // Validate inputs
         if (typeof color !== 'string' || typeof opacity !== 'number') {
-            console.warn('Invalid alpha function inputs:', { color, opacity });
+            logger.warn('Invalid alpha function inputs:', { color, opacity });
             return 'rgba(0, 0, 0, 0.1)';
         }
 
@@ -43,13 +45,13 @@ export const safeAlpha = (color: string, opacity: number): string => {
 
         // Validate result
         if (typeof result !== 'string') {
-            console.warn('Alpha function returned invalid result:', result);
+            logger.warn('Alpha function returned invalid result:', result);
             return 'rgba(0, 0, 0, 0.1)';
         }
 
         return result;
     } catch (error) {
-        console.warn('Error in alpha function:', error);
+        logger.warn('Error in alpha function:', error);
         return 'rgba(0, 0, 0, 0.1)';
     }
 };
@@ -76,7 +78,7 @@ export const getThemeColor = (theme: any, colorPath: string): string => {
 
         throw new Error(`Color path ${colorPath} does not resolve to a string`);
     } catch (error) {
-        console.warn(`Error getting theme color ${colorPath}:`, error);
+        logger.warn(`Error getting theme color ${colorPath}:`, error);
         return '#000000';
     }
 };
@@ -87,4 +89,4 @@ export const getThemeColor = (theme: any, colorPath: string): string => {
 export const getAlphaColor = (theme: any, colorPath: string, opacity: number): string => {
     const color = getThemeColor(theme, colorPath);
     return safeAlpha(color, opacity);
-}; 
+};

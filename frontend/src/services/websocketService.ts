@@ -5,6 +5,8 @@
 
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import logger from './logger';
+
 
 export interface WebSocketConfig {
     url: string;
@@ -66,7 +68,7 @@ export class RobustWebSocketService {
                 this.ws = new WebSocket(this.config.url);
 
                 this.ws.onopen = (event) => {
-                    console.log('WebSocket connected');
+                    logger.info('WebSocket connected');
                     this.reconnectAttempts = 0;
                     this.connectionPromise = null;
 
@@ -87,18 +89,18 @@ export class RobustWebSocketService {
                         const message: WebSocketMessage = JSON.parse(event.data);
                         this.handleMessage(message);
                     } catch (error) {
-                        console.error('Failed to parse WebSocket message:', error);
+                        logger.error('Failed to parse WebSocket message:', error);
                     }
                 };
 
                 this.ws.onerror = (event) => {
-                    console.error('WebSocket error:', event);
+                    logger.error('WebSocket error:', event);
                     this.errorHandlers.forEach(handler => handler(event));
                     reject(event);
                 };
 
                 this.ws.onclose = (event) => {
-                    console.log('WebSocket closed:', event.code, event.reason);
+                    logger.info('WebSocket closed:', event.code, event.reason);
                     this.stopHeartbeat();
                     this.connectionPromise = null;
 
@@ -142,7 +144,7 @@ export class RobustWebSocketService {
             try {
                 this.ws!.send(JSON.stringify(message));
             } catch (error) {
-                console.error('Failed to send message:', error);
+                logger.error('Failed to send message:', error);
                 this.queueMessage(message);
             }
         } else {
@@ -235,7 +237,7 @@ export class RobustWebSocketService {
                 try {
                     handler(message);
                 } catch (error) {
-                    console.error(`Error in message handler for type ${message.type}:`, error);
+                    logger.error(`Error in message handler for type ${message.type}:`, error);
                 }
             });
         }
@@ -247,7 +249,7 @@ export class RobustWebSocketService {
                 try {
                     handler(message);
                 } catch (error) {
-                    console.error('Error in wildcard message handler:', error);
+                    logger.error('Error in wildcard message handler:', error);
                 }
             });
         }
@@ -260,11 +262,11 @@ export class RobustWebSocketService {
             30000 // Max 30 seconds
         );
 
-        console.log(`Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms`);
+        logger.info(`Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms`);
 
         this.reconnectTimer = setTimeout(() => {
             this.connect().catch(error => {
-                console.error('Reconnection failed:', error);
+                logger.error('Reconnection failed:', error);
             });
         }, delay);
     }
@@ -301,7 +303,7 @@ export class RobustWebSocketService {
             try {
                 this.ws!.send(JSON.stringify(message));
             } catch (error) {
-                console.error('Failed to send queued message:', error);
+                logger.error('Failed to send queued message:', error);
                 this.messageQueue.unshift(message);
                 break;
             }
@@ -378,4 +380,4 @@ export const useWebSocket = (messageType?: string) => {
             ws.send({ type: messageType || 'message', data });
         }
     };
-}; 
+};

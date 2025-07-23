@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache - GoldenSignalsAI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #0a0a0a;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        button {
+            background: #FFD700;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #FFA500;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background: rgba(0,255,0,0.1);
+            border: 1px solid rgba(0,255,0,0.3);
+            color: #00FF88;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Cache Management</h1>
+        <p>Clear all cached data for GoldenSignalsAI</p>
+
+        <button onclick="clearAllCaches()">Clear All Caches</button>
+        <button onclick="clearLocalStorage()">Clear LocalStorage</button>
+        <button onclick="clearSessionStorage()">Clear SessionStorage</button>
+
+        <div id="status"></div>
+
+        <script>
+            function showStatus(message, isSuccess = true) {
+                const status = document.getElementById('status');
+                status.textContent = message;
+                status.className = isSuccess ? 'success' : 'error';
+                status.style.display = 'block';
+            }
+
+            async function clearAllCaches() {
+                try {
+                    // Clear localStorage
+                    localStorage.clear();
+
+                    // Clear sessionStorage
+                    sessionStorage.clear();
+
+                    // Clear all caches
+                    if ('caches' in window) {
+                        const cacheNames = await caches.keys();
+                        await Promise.all(
+                            cacheNames.map(cacheName => caches.delete(cacheName))
+                        );
+                    }
+
+                    // Clear IndexedDB
+                    if ('indexedDB' in window) {
+                        const databases = await indexedDB.databases();
+                        databases.forEach(db => {
+                            if (db.name) indexedDB.deleteDatabase(db.name);
+                        });
+                    }
+
+                    showStatus('✅ All caches cleared successfully! Refreshing...');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } catch (error) {
+                    showStatus('❌ Error clearing caches: ' + error.message, false);
+                }
+            }
+
+            function clearLocalStorage() {
+                localStorage.clear();
+                showStatus('✅ LocalStorage cleared!');
+            }
+
+            function clearSessionStorage() {
+                sessionStorage.clear();
+                showStatus('✅ SessionStorage cleared!');
+            }
+        </script>
+    </div>
+</body>
+</html>

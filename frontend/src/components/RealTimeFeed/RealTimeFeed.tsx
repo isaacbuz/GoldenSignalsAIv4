@@ -3,6 +3,8 @@ import { List, ListItem, ListItemText, Typography, Box, Chip, Stack, useTheme } 
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Signal } from '../../../types/signals';
+import logger from '../../services/logger';
+
 
 export const RealTimeFeed: React.FC = () => {
   const theme = useTheme();
@@ -11,12 +13,12 @@ export const RealTimeFeed: React.FC = () => {
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8000/ws');
-    socket.onopen = () => console.log('WebSocket connected');
+    socket.onopen = () => logger.info('WebSocket connected');
     socket.onmessage = (event) => {
       const newSignal = JSON.parse(event.data);
       setSignals(prev => [newSignal, ...prev.slice(0, 49)]);
     };
-    socket.onclose = () => console.log('WebSocket disconnected');
+    socket.onclose = () => logger.info('WebSocket disconnected');
     setWs(socket);
 
     return () => socket.close();

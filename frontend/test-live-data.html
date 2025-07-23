@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Data Test</title>
+</head>
+<body>
+    <h1>Testing Live Data Connection</h1>
+    <div id="status"></div>
+    <div id="data"></div>
+    <script>
+        const statusEl = document.getElementById('status');
+        const dataEl = document.getElementById('data');
+
+        // Test backend connection
+        async function testBackend() {
+            try {
+                statusEl.innerHTML = '<h2>Testing Backend...</h2>';
+
+                // Test market data
+                const marketResp = await fetch('http://localhost:8000/api/v1/market-data/AAPL');
+                const marketData = await marketResp.json();
+
+                statusEl.innerHTML += '<p style="color: green">✓ Market Data API: Connected</p>';
+                statusEl.innerHTML += `<p>Current AAPL Price: $${marketData.price}</p>`;
+
+                // Test historical data
+                const histResp = await fetch('http://localhost:8000/api/v1/market-data/AAPL/history?period=1d&interval=5m');
+                const histData = await histResp.json();
+
+                statusEl.innerHTML += `<p style="color: green">✓ Historical Data: ${histData.data.length} data points</p>`;
+
+                // Test WebSocket
+                const ws = new WebSocket('ws://localhost:8000/ws/signals');
+
+                ws.onopen = () => {
+                    statusEl.innerHTML += '<p style="color: green">✓ WebSocket: Connected</p>';
+                    ws.send(JSON.stringify({
+                        type: 'subscribe',
+                        symbol: 'AAPL'
+                    }));
+                };
+
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    dataEl.innerHTML = '<h3>Live WebSocket Message:</h3><pre>' + JSON.stringify(msg, null, 2) + '</pre>';
+                };
+
+                ws.onerror = (error) => {
+                    statusEl.innerHTML += '<p style="color: red">✗ WebSocket Error</p>';
+                };
+
+                // Display latest data
+                if (histData.data.length > 0) {
+                    const latest = histData.data[histData.data.length - 1];
+                    dataEl.innerHTML = '<h3>Latest Data Point:</h3><pre>' + JSON.stringify(latest, null, 2) + '</pre>';
+                }
+
+            } catch (error) {
+                statusEl.innerHTML += `<p style="color: red">✗ Error: ${error.message}</p>`;
+            }
+        }
+
+        testBackend();
+    </script>
+</body>
+</html>

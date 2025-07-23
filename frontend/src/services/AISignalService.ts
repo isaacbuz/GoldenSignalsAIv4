@@ -1,5 +1,7 @@
 import { AISignal } from '../types/TradingViewTypes';
 import { marketDataService, MarketBar } from './MarketDataService';
+import logger from './logger';
+
 
 export class AISignalService {
     private static instance: AISignalService;
@@ -18,7 +20,7 @@ export class AISignalService {
      */
     async generateSignalsForSymbol(symbol: string): Promise<AISignal[]> {
         try {
-            console.log(`🤖 Generating AI signals for ${symbol}`);
+            logger.info(`🤖 Generating AI signals for ${symbol}`);
 
             // Get historical data
             const to = Math.floor(Date.now() / 1000);
@@ -114,7 +116,7 @@ export class AISignalService {
 
             return signals;
         } catch (error) {
-            console.error(`Error generating signals for ${symbol}:`, error);
+            logger.error(`Error generating signals for ${symbol}:`, error);
             return [];
         }
     }
@@ -188,4 +190,4 @@ export class AISignalService {
     }
 }
 
-export const aiSignalService = AISignalService.getInstance(); 
+export const aiSignalService = AISignalService.getInstance();

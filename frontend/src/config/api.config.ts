@@ -29,7 +29,7 @@ export const API_CONFIG = {
         // Signals
         SIGNALS: '/api/v1/signals',
         SIGNAL_BY_ID: (id: string) => `/api/v1/signals/${id}`,
-        SIGNALS_LATEST: '/api/v1/signals/latest',
+        SIGNALS_LATEST: '/api/v1/signals',
 
         // Agents
         AGENTS: '/api/v1/agents',
@@ -69,4 +69,4 @@ export const shouldUseLiveData = () => API_CONFIG.USE_LIVE_DATA;
 // Helper to get full API URL
 export const getApiUrl = (endpoint: string) => {
     return `${API_CONFIG.API_BASE_URL}${endpoint}`;
-}; 
+};

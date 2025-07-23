@@ -1,14 +1,20 @@
 /**
  * Golden Signals AI - Main Entry Point
- * 
+ *
  * Fixed entry point with proper App import and error handling.
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
+
+// Chart.js no longer needed - using lightweight-charts
+// import './utils/initializeChart';
+
 import App from './App';
 import './index.css';
+import logger from './services/logger';
+
 
 // Error fallback component
 const ErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({
@@ -57,15 +63,14 @@ const ErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> 
 );
 
 // Clean, stable startup
+// Note: Temporarily disabling StrictMode due to Chart.js compatibility issues
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <ErrorBoundary
-            FallbackComponent={ErrorFallback}
-            onError={(error, errorInfo) => {
-                console.error('App Error:', error, errorInfo);
-            }}
-        >
-            <App />
-        </ErrorBoundary>
-    </React.StrictMode>
-); 
+    <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={(error, errorInfo) => {
+            logger.error('App Error:', error, errorInfo);
+        }}
+    >
+        <App />
+    </ErrorBoundary>
+);

@@ -1,0 +1,20 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+#
+# Type should be one of: feat, fix, docs, style, refactor, perf, test, chore, revert, security
+# Scope is optional and can be anything specifying the place of the commit change
+# Subject is a short description of the change (imperative, present tense)
+# Body should include motivation for the change and contrast with previous behavior
+# Footer should contain any breaking changes or issues closed
+#
+# Example:
+# feat(api): add new endpoint for agent analysis
+#
+# Added /api/v1/agents/analyze endpoint that triggers comprehensive
+# multi-agent analysis for a given symbol. This endpoint orchestrates
+# all 9 specialized agents and returns consensus recommendations.
+#
+# Closes #123

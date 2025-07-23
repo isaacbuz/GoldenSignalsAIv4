@@ -24,16 +24,18 @@ import {
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import debounce from 'lodash/debounce';
+import logger from '../../services/logger';
+
 
 // Styled components
 const SearchContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(
     theme.palette.primary.main,
     0.02
   )} 100%)`,
   border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-  borderRadius: theme.spacing(2),
+  borderRadius: theme.spacing(1.5),
   transition: 'all 0.3s ease',
   '&:hover': {
     boxShadow: theme.shadows[4],
@@ -97,6 +99,9 @@ export interface TradeSearchProps {
   onTimeframeChange?: (timeframe: string) => void;
   defaultSymbol?: string;
   defaultTimeframe?: string;
+  isAnalyzing?: boolean;
+  compact?: boolean;
+  hideTimeframe?: boolean;
 }
 
 // Mock data - replace with API call
@@ -129,6 +134,9 @@ export const TradeSearch: React.FC<TradeSearchProps> = ({
   onTimeframeChange,
   defaultSymbol = '',
   defaultTimeframe = '1d',
+  isAnalyzing = false,
+  compact = false,
+  hideTimeframe = false,
 }) => {
   const theme = useTheme();
   const [selectedStock, setSelectedStock] = useState<StockOption | null>(null);
@@ -137,6 +145,9 @@ export const TradeSearch: React.FC<TradeSearchProps> = ({
   const [options, setOptions] = useState<StockOption[]>(mockStockOptions);
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+
+  // Use external analyzing state if provided
+  const isCurrentlyAnalyzing = isAnalyzing || analyzing;
 
   // Debounced search function
   const searchStocks = useCallback(
@@ -150,16 +161,16 @@ export const TradeSearch: React.FC<TradeSearchProps> = ({
       try {
         // Simulate API call - replace with actual API
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
         const filtered = mockStockOptions.filter(
           stock =>
             stock.symbol.toLowerCase().includes(query.toLowerCase()) ||
             stock.name.toLowerCase().includes(query.toLowerCase())
         );
-        
+
         setOptions(filtered);
       } catch (error) {
-        console.error('Error searching stocks:', error);
+        logger.error('Error searching stocks:', error);
       } finally {
         setLoading(false);
       }
@@ -209,6 +220,93 @@ export const TradeSearch: React.FC<TradeSearchProps> = ({
     }
   };
 
+  // Compact mode for header display
+  if (compact) {
+    return (
+      <Box display="flex" gap={1} alignItems="center">
+        <Autocomplete
+          sx={{ width: 250 }}
+          size="small"
+          value={selectedStock}
+          onChange={(event, newValue) => {
+            setSelectedStock(newValue);
+            if (newValue) {
+              onSymbolChange?.(newValue.symbol);
+              // Auto-analyze when symbol changes in compact mode
+              onSubmit(newValue.symbol, timeframe);
+            }
+          }}
+          inputValue={inputValue}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          options={options}
+          loading={loading}
+          getOptionLabel={(option) => option.symbol}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Search symbol..."
+              size="small"
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <>
+                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+          renderOption={(props, option) => (
+            <Box component="li" {...props}>
+              <Box>
+                <Typography variant="body2" fontWeight="bold">
+                  {option.symbol}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {option.name}
+                </Typography>
+              </Box>
+            </Box>
+          )}
+        />
+
+        {!hideTimeframe && (
+          <ToggleButtonGroup
+            size="small"
+            value={timeframe}
+            exclusive
+            onChange={handleTimeframeChange}
+          >
+            {timeframes.slice(0, 5).map((tf) => (
+              <TimeframeButton key={tf.value} value={tf.value} size="small">
+                {tf.label}
+              </TimeframeButton>
+            ))}
+          </ToggleButtonGroup>
+        )}
+
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={isCurrentlyAnalyzing ? <CircularProgress size={16} color="inherit" /> : <AnalyticsIcon />}
+          onClick={handleAnalyze}
+          disabled={!selectedStock || isCurrentlyAnalyzing}
+        >
+          {isCurrentlyAnalyzing ? 'Analyzing...' : 'Analyze'}
+        </Button>
+      </Box>
+    );
+  }
+
+  // Full mode for standalone display
   return (
     <SearchContainer elevation={0}>
       <motion.div
@@ -300,35 +398,37 @@ export const TradeSearch: React.FC<TradeSearchProps> = ({
             <AnalyzeButton
               variant="contained"
               size="large"
-              startIcon={analyzing ? <CircularProgress size={20} color="inherit" /> : <AnalyticsIcon />}
+              startIcon={isCurrentlyAnalyzing ? <CircularProgress size={20} color="inherit" /> : <AnalyticsIcon />}
               onClick={handleAnalyze}
-              disabled={!selectedStock || analyzing}
+              disabled={!selectedStock || isCurrentlyAnalyzing}
             >
-              {analyzing ? 'Analyzing...' : 'Analyze'}
+              {isCurrentlyAnalyzing ? 'Analyzing...' : 'Analyze'}
             </AnalyzeButton>
           </Box>
 
           {/* Timeframe Selector */}
-          <Box>
-            <Box display="flex" alignItems="center" gap={1} mb={2}>
-              <ScheduleIcon fontSize="small" color="action" />
-              <Typography variant="subtitle2" color="text.secondary">
-                Select Timeframe
-              </Typography>
+          {!hideTimeframe && (
+            <Box>
+              <Box display="flex" alignItems="center" gap={1} mb={2}>
+                <ScheduleIcon fontSize="small" color="action" />
+                <Typography variant="subtitle2" color="text.secondary">
+                  Select Timeframe
+                </Typography>
+              </Box>
+              <ToggleButtonGroup
+                value={timeframe}
+                exclusive
+                onChange={handleTimeframeChange}
+                aria-label="timeframe selection"
+              >
+                {timeframes.map((tf) => (
+                  <TimeframeButton key={tf.value} value={tf.value} aria-label={tf.description}>
+                    {tf.label}
+                  </TimeframeButton>
+                ))}
+              </ToggleButtonGroup>
             </Box>
-            <ToggleButtonGroup
-              value={timeframe}
-              exclusive
-              onChange={handleTimeframeChange}
-              aria-label="timeframe selection"
-            >
-              {timeframes.map((tf) => (
-                <TimeframeButton key={tf.value} value={tf.value} aria-label={tf.description}>
-                  {tf.label}
-                </TimeframeButton>
-              ))}
-            </ToggleButtonGroup>
-          </Box>
+          )}
 
           {/* Popular Searches */}
           <Box>

@@ -1,12 +1,14 @@
 /**
  * Simplified App Store using Zustand
- * 
+ *
  * Single source of truth for the entire application.
  * Fast, simple, and TypeScript-friendly.
  */
 
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import logger from '../services/logger';
+
 
 // Types
 export interface Signal {
@@ -217,8 +219,8 @@ if (process.env.NODE_ENV === 'development') {
         state => state.signals.length,
         (signalCount) => {
             if (signalCount % 10 === 0 && signalCount > 0) {
-                console.log(`📊 Store performance: ${signalCount} signals in store`);
+                logger.info(`📊 Store performance: ${signalCount} signals in store`);
             }
         }
     );
-} 
+}

@@ -1,6 +1,6 @@
 /**
  * Unified Components Index
- * 
+ *
  * Centralized exports for all consolidated components after cleanup and reorganization.
  * This replaces the need to import from multiple files and provides a single source of truth.
  */
@@ -30,14 +30,27 @@ export { MainTradingChart } from './Dashboard/MainTradingChart';
 export { SentimentGauge } from './Dashboard/SentimentGauge';
 export { SymbolCard } from './Dashboard/SymbolCard';
 
+// === NEW ENHANCED COMPONENTS ===
+// Enhanced dashboard and signal components
+export { default as SignalAnalysisPanel } from './SignalAnalysisPanel';
+export { default as WatchlistPanel } from './WatchlistPanel';
+export { default as SignalSuggestions } from './SignalSuggestions';
+export { default as AgentConsensusVisualizer } from './AgentConsensusVisualizer';
+
 // === CHART COMPONENTS ===
 // Consolidated chart components
-export { UnifiedChart } from './Chart/UnifiedChart';
+export { ChartWrapper, FullChart, CompactChart, MiniChartWrapper } from './Chart/ChartWrapper';
+export { default as ProfessionalChart } from './ProfessionalChart/ProfessionalChart';
+export { default as MultiTimeframeChart } from './ProfessionalChart/MultiTimeframeChart';
+export { default as ComparisonChart } from './ProfessionalChart/ComparisonChart';
+export { default as AdvancedChartContainer } from './ProfessionalChart/AdvancedChartContainer';
 export { MiniChart } from './Chart/MiniChart';
-export { ChartShowcase } from './Chart/ChartShowcase';
-export { AdvancedSignalChart } from './Chart/AdvancedSignalChart';
-export { MassiveOptionsChart } from './Chart/MassiveOptionsChart';
 export { TradingViewDatafeed } from './Chart/TradingViewDatafeed';
+
+// === CUSTOM CHART COMPONENTS ===
+// Beautiful custom canvas-based charts
+export { CustomChart, EnhancedCustomChart, GoldenSignalsChart } from './CustomChart';
+export { default as AITradingChart } from './AIChart/AITradingChart';
 
 // === SIGNAL COMPONENTS ===
 // All signal-related components
@@ -60,7 +73,6 @@ export { LoadingStates } from './Common/LoadingStates';
 export { LoadingSkeletons } from './Common/LoadingSkeletons';
 export { LoadingScreen } from './Common/LoadingScreen';
 export { MetricCard } from './Common/MetricCard';
-export { MiniChart as CommonMiniChart } from './Common/MiniChart';
 export { NotificationCenter } from './Common/NotificationCenter';
 export { WebSocketStatus } from './Common/WebSocketStatus';
 export { Breadcrumbs } from './Common/Breadcrumbs';
@@ -103,13 +115,12 @@ export { AISignalProphet } from './GoldenEyeAI/AISignalProphet';
 export type { DashboardMode, DashboardLayout } from './Dashboard/UnifiedDashboard';
 export type { AIChatMode, AIModel } from './AI/UnifiedAIChat';
 export type { SearchMode, SearchVariant } from './Common/UnifiedSearchBar';
-export type { ChartType, ChartMode, ChartTheme } from './Chart/UnifiedChart';
 export type { SignalData } from './Signals/SignalCard';
 export type { EnhancedSignalData } from './Signals/SignalList';
 
 /**
  * CONSOLIDATION SUMMARY:
- * 
+ *
  * ✅ REMOVED:
  * - AITradingLab/ (placeholder components)
  * - Charts/ (merged with Chart/)
@@ -119,14 +130,14 @@ export type { EnhancedSignalData } from './Signals/SignalList';
  * - AISignalProphet.disabled/ (moved to GoldenEyeAI/)
  * - Alert.disabled/ (removed)
  * - Empty directories
- * 
+ *
  * ✅ PRESERVED:
  * - Golden Eye AI Prophet theme and components
  * - All functional components
  * - Design system components
  * - Chart components (consolidated)
  * - Dashboard components (consolidated)
- * 
+ *
  * ✅ ORGANIZED:
  * - AI components in AI/
  * - Dashboard components in Dashboard/
@@ -134,7 +145,7 @@ export type { EnhancedSignalData } from './Signals/SignalList';
  * - Signal components in Signals/
  * - Common utilities in Common/
  * - Golden Eye components in GoldenEyeAI/
- * 
+ *
  * Migration Guide:
  * Use the unified components for better maintainability:
  * - Single source of truth for all components
@@ -146,8 +157,6 @@ export type { EnhancedSignalData } from './Signals/SignalList';
 export { SignalCard } from './SignalCard/SignalCard';
 export { RealTimeFeed } from './RealTimeFeed/RealTimeFeed';
 export { FloatingOrbAssistant } from './FloatingOrbAssistant/FloatingOrbAssistant';
-export { AdvancedChart } from './AdvancedChart/AdvancedChart';
-export { CentralChart } from './CentralChart/CentralChart';
 export { FloatingOrb } from './FloatingOrb/FloatingOrb';
 export { OptionsChainTable } from './OptionsChainTable/OptionsChainTable';
 export { PredictionTimeline } from './PredictionTimeline/PredictionTimeline';

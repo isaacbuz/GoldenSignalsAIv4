@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { transformerService, TransformerPredictionData } from '../../services/transformerService';
 import TransformerPredictionChart from '../../components/AI/TransformerPredictionChart';
+import logger from '../../services/logger';
+
 
 const TransformerAnalytics: React.FC = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<string>('EURUSD');
@@ -25,7 +27,7 @@ const TransformerAnalytics: React.FC = () => {
       setPredictionData(data);
     } catch (err) {
       setError('Failed to fetch prediction data. Please try again later.');
-      console.error('Error fetching prediction data:', err);
+      logger.error('Error fetching prediction data:', err);
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,7 @@ const TransformerAnalytics: React.FC = () => {
           <div className="lg:col-span-1">
             <div className="bg-gray-800 rounded-lg p-4">
               <h2 className="text-xl font-semibold text-white mb-4">Settings</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -139,4 +141,4 @@ const TransformerAnalytics: React.FC = () => {
   );
 };
 
-export default TransformerAnalytics; 
+export default TransformerAnalytics;

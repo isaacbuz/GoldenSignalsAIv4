@@ -1,4 +1,6 @@
 import axios from 'axios';
+import logger from './logger';
+
 
 interface TechnicalIndicators {
   rsi: number[];
@@ -45,7 +47,7 @@ class TransformerService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching transformer prediction:', error);
+      logger.error('Error fetching transformer prediction:', error);
       throw error;
     }
   }
@@ -60,7 +62,7 @@ class TransformerService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching historical predictions:', error);
+      logger.error('Error fetching historical predictions:', error);
       throw error;
     }
   }
@@ -75,7 +77,7 @@ class TransformerService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching technical indicators:', error);
+      logger.error('Error fetching technical indicators:', error);
       throw error;
     }
   }
@@ -163,4 +165,4 @@ class TransformerService {
 }
 
 export const transformerService = new TransformerService();
-export type { TransformerPredictionData, TechnicalIndicators, HistoricalData, TransformerPrediction }; 
+export type { TransformerPredictionData, TechnicalIndicators, HistoricalData, TransformerPrediction };

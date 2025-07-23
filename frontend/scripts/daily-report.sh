@@ -35,14 +35,14 @@ echo "📈 Code Changes:"
 if git diff --stat HEAD~1 >/dev/null 2>&1; then
     STATS=$(git diff --stat HEAD~1 | tail -1)
     echo "   $STATS"
-    
+
     FILES_CHANGED=$(git diff --name-only HEAD~1 | wc -l | xargs)
     echo "   Files modified: $FILES_CHANGED"
-    
+
     # Component analysis
     COMPONENTS_MODIFIED=$(git diff --name-only HEAD~1 | grep -E "\.(tsx|ts)$" | grep -v test | wc -l | xargs)
     echo "   Components modified: $COMPONENTS_MODIFIED"
-    
+
     TESTS_MODIFIED=$(git diff --name-only HEAD~1 | grep -E "\.test\.(tsx|ts)$" | wc -l | xargs)
     echo "   Tests modified: $TESTS_MODIFIED"
 else
@@ -71,17 +71,17 @@ echo ""
 # Component inventory
 echo "📦 Component Inventory:"
 if [ -d "src/components" ]; then
-    TOTAL_COMPONENTS=$(find src/components -name "*.tsx" -not -name "*.test.tsx" -not -name "*.stories.tsx" | wc -l | xargs)
+    TOTAL_COMPONENTS=$(find src/components -name "*.tsx" -not -name "*.test.tsx" | wc -l | xargs)
     echo "   Total components: $TOTAL_COMPONENTS"
-    
+
     UNIFIED_COMPONENTS=$(find src/components -name "Unified*.tsx" | wc -l | xargs)
     echo "   Unified components: $UNIFIED_COMPONENTS"
-    
+
     TEST_FILES=$(find src/components -name "*.test.tsx" | wc -l | xargs)
     echo "   Test files: $TEST_FILES"
-    
-    STORY_FILES=$(find src/components -name "*.stories.tsx" | wc -l | xargs)
-    echo "   Storybook stories: $STORY_FILES"
+
+
+
 else
     echo "   ⚠️  src/components directory not found"
 fi
@@ -92,10 +92,10 @@ echo "🏪 Redux Store Status:"
 if [ -d "src/store" ]; then
     SLICES=$(find src/store -name "*Slice.ts" | wc -l | xargs)
     echo "   Redux slices: $SLICES"
-    
+
     SELECTORS=$(find src/store -name "selectors.ts" | wc -l | xargs)
     echo "   Selector files: $SELECTORS"
-    
+
     HOOKS=$(find src/store -name "hooks.ts" | wc -l | xargs)
     echo "   Custom hooks: $HOOKS"
 else
@@ -108,7 +108,7 @@ echo "📦 Bundle Status:"
 if [ -d "dist" ]; then
     BUNDLE_SIZE=$(du -sh dist 2>/dev/null | cut -f1)
     echo "   Bundle size: $BUNDLE_SIZE"
-    
+
     JS_FILES=$(find dist -name "*.js" | wc -l | xargs)
     echo "   JavaScript files: $JS_FILES"
 else
@@ -162,4 +162,4 @@ echo "   🤖 Use prompt templates from frontend/PROMPT_TEMPLATES.md"
 echo ""
 
 echo "Report generated at: $(date '+%Y-%m-%d %H:%M:%S')"
-echo "==========================================" 
+echo "=========================================="

@@ -8,6 +8,8 @@ import { vi, expect, describe, it, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from './test-utils'
+import logger from '../services/logger';
+
 
 export interface TDDTestCase<T = any> {
     name: string
@@ -146,9 +148,9 @@ export class BehaviorTestSuite {
                     it('should behave as expected', async () => {
                         // This is a simplified BDD runner
                         // In a real implementation, you'd parse and execute the steps
-                        console.log('Given:', spec.given.join(', '))
-                        console.log('When:', spec.when.join(', '))
-                        console.log('Then:', spec.then.join(', '))
+                        logger.info('Given:', spec.given.join(', '))
+                        logger.info('When:', spec.when.join(', '))
+                        logger.info('Then:', spec.then.join(', '))
                     })
                 })
             })
@@ -366,4 +368,4 @@ export const createBehaviorSuite = () => new BehaviorTestSuite()
 export const apiMock = new APIMockHelper()
 export const componentTDD = ComponentTDDHelper
 export const stateTDD = StateTDDHelper
-export const performanceTDD = PerformanceTDDHelper 
+export const performanceTDD = PerformanceTDDHelper

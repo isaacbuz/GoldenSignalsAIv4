@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from transformers import pipeline, Pipeline
 import logging
-from .....base import BaseAgent
+from agents.base import BaseAgent
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class FinBERTSentimentAgent(BaseAgent):
         if not texts or not isinstance(texts, list):
             logger.warning("No texts provided or input is not a list.")
             return {"action": "hold", "confidence": 0.0, "metadata": {"error": "No texts provided."}}
-            
+
         try:
             results = self.classifier(texts)
             sentiment_scores = []
@@ -37,9 +37,9 @@ class FinBERTSentimentAgent(BaseAgent):
                 else:
                     score = 0
                 sentiment_scores.append(score)
-            
+
             avg_score = sum(sentiment_scores) / len(sentiment_scores) if sentiment_scores else 0
-            
+
             # Convert to trading signal
             if avg_score > 0.2:
                 action = "buy"
@@ -50,7 +50,7 @@ class FinBERTSentimentAgent(BaseAgent):
             else:
                 action = "hold"
                 confidence = 0.0
-                
+
             return {
                 "action": action,
                 "confidence": confidence,
@@ -62,4 +62,4 @@ class FinBERTSentimentAgent(BaseAgent):
             }
         except Exception as e:
             logger.error(f"FinBERT analysis failed: {e}")
-            return {"action": "hold", "confidence": 0.0, "metadata": {"error": str(e)}} 
+            return {"action": "hold", "confidence": 0.0, "metadata": {"error": str(e)}}
