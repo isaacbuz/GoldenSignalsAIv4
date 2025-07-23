@@ -1,0 +1,28 @@
+# Default owners for everything
+* @isaacbuz
+
+# Frontend
+/frontend/ @isaacbuz
+/frontend/src/components/ @isaacbuz
+/frontend/src/services/ @isaacbuz
+
+# Backend
+/src/ @isaacbuz
+/src/api/ @isaacbuz
+/src/services/ @isaacbuz
+/agents/ @isaacbuz
+
+# Documentation
+/docs/ @isaacbuz
+*.md @isaacbuz
+
+# Configuration
+/.github/ @isaacbuz
+/scripts/ @isaacbuz
+*.yml @isaacbuz
+*.yaml @isaacbuz
+
+# Dependencies
+package.json @isaacbuz
+package-lock.json @isaacbuz
+requirements.txt @isaacbuz
