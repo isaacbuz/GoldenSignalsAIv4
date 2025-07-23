@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import logger from '../services/logger';
+
 
 export interface Notification {
     id: string;
@@ -23,7 +25,7 @@ export const useNotifications = () => {
         return {
             notifications: [],
             addNotification: (type: Notification['type'], message: string) => {
-                console.log(`${type.toUpperCase()}: ${message}`);
+                logger.info(`${type.toUpperCase()}: ${message}`);
             },
             removeNotification: () => { },
             clearNotifications: () => { },
@@ -76,4 +78,4 @@ export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({ ch
             {children}
         </NotificationsContext.Provider>
     );
-}; 
+};

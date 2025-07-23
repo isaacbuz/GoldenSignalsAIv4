@@ -1,4 +1,6 @@
 import { apiClient } from '../api/apiClient';
+import logger from './';
+
 
 export interface LogEntry {
     level: 'debug' | 'info' | 'warn' | 'error';
@@ -112,7 +114,7 @@ class FrontendLogger {
         } catch (error) {
             // If sending fails, put logs back
             this.logs.unshift(...logsToSend);
-            console.warn('Failed to send logs to backend:', error);
+            logger.warn('Failed to send logs to backend:', error);
         }
     }
 
@@ -139,4 +141,4 @@ class FrontendLogger {
     }
 }
 
-export const frontendLogger = new FrontendLogger(); 
+export const frontendLogger = new FrontendLogger();

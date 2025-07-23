@@ -20,6 +20,8 @@ export const WS_CONFIG = {
 // Initialize WebSocket service on app start
 import { getWebSocketService } from '../websocketService';
 import { wsManager } from './SignalWebSocketManager';
+import logger from '../logger';
+
 
 export const initializeWebSocket = () => {
     // Initialize the robust WebSocket service
@@ -31,12 +33,12 @@ export const initializeWebSocket = () => {
 
         // Connect automatically
         wsService.connect().catch(error => {
-            console.error('Failed to connect WebSocket:', error);
+            logger.error('Failed to connect WebSocket:', error);
         });
     } catch (error) {
-        console.error('Failed to initialize WebSocket service:', error);
+        logger.error('Failed to initialize WebSocket service:', error);
     }
 
     // Also initialize the signal WebSocket manager
     wsManager.connect();
-}; 
+};

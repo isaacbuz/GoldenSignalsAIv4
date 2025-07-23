@@ -45,7 +45,10 @@ import {
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import { motion } from 'framer-motion';
+import logger from '../../services/logger';
+
 
 // Styled components
 const DashboardContainer = styled(Box)(({ theme }) => ({
@@ -149,7 +152,7 @@ const AgentPerformanceDashboard: React.FC = () => {
       const mockData = generateMockAgentData();
       setAgents(mockData);
     } catch (error) {
-      console.error('Failed to fetch agent data:', error);
+      logger.error('Failed to fetch agent data:', error);
     } finally {
       setLoading(false);
     }
@@ -207,7 +210,7 @@ const AgentPerformanceDashboard: React.FC = () => {
     datasets: [
       {
         data: agents.map(a => a.consensusWeight),
-        backgroundColor: agents.map((_, i) => 
+        backgroundColor: agents.map((_, i) =>
           `hsl(${(i * 360) / agents.length}, 70%, 60%)`
         ),
         borderWidth: 1,
@@ -467,9 +470,9 @@ const AgentPerformanceDashboard: React.FC = () => {
                       {(agent.winRate * 100).toFixed(1)}%
                     </TableCell>
                     <TableCell align="right">{agent.totalSignals}</TableCell>
-                    <TableCell 
+                    <TableCell
                       align="right"
-                      sx={{ 
+                      sx={{
                         color: agent.profitLoss >= 0 ? 'success.main' : 'error.main',
                         fontWeight: 'medium'
                       }}

@@ -1,6 +1,6 @@
 /**
  * Professional Trading Dashboard
- * 
+ *
  * A reimagined professional trading interface inspired by Bloomberg Terminal
  * Features the AI Prophet with golden eye dock and professional layout
  */
@@ -72,6 +72,8 @@ import { FloatingAIProphetWidget } from '../AI/FloatingAIProphetWidget';
 import { AIInsightsPanel } from '../AI/AIInsightsPanel';
 import { utilityClasses } from '../../theme/goldenTheme';
 import { liveDataService, LiveSignalData, LiveMarketData, LiveMetrics } from '../../services/LiveDataService';
+import logger from '../../services/logger';
+
 
 // Professional color scheme
 const PROFESSIONAL_COLORS = {
@@ -285,7 +287,7 @@ export const ProfessionalTradingDashboard: React.FC<ProfessionalTradingDashboard
         // Subscribe to selected symbol
         symbolUnsubscribers.push(
             liveDataService.subscribeToSymbol(selectedSymbol, (data) => {
-                console.log('Symbol update:', data);
+                logger.info('Symbol update:', data);
             })
         );
 
@@ -293,7 +295,7 @@ export const ProfessionalTradingDashboard: React.FC<ProfessionalTradingDashboard
         TRENDING_STOCKS.forEach(stock => {
             symbolUnsubscribers.push(
                 liveDataService.subscribeToSymbol(stock.symbol, (data) => {
-                    console.log(`Trending stock update for ${stock.symbol}:`, data);
+                    logger.info(`Trending stock update for ${stock.symbol}:`, data);
                 })
             );
         });
@@ -311,7 +313,7 @@ export const ProfessionalTradingDashboard: React.FC<ProfessionalTradingDashboard
         watchlist.forEach(symbol => {
             watchlistUnsubscribers.push(
                 liveDataService.subscribeToSymbol(symbol, (data) => {
-                    console.log(`Watchlist update for ${symbol}:`, data);
+                    logger.info(`Watchlist update for ${symbol}:`, data);
                 })
             );
         });
@@ -326,7 +328,7 @@ export const ProfessionalTradingDashboard: React.FC<ProfessionalTradingDashboard
         try {
             await liveDataService.refreshAll();
         } catch (error) {
-            console.error('Failed to refresh data:', error);
+            logger.error('Failed to refresh data:', error);
         }
         setRefreshing(false);
     }, []);
@@ -997,4 +999,4 @@ export const ProfessionalTradingDashboard: React.FC<ProfessionalTradingDashboard
     );
 };
 
-export default ProfessionalTradingDashboard; 
+export default ProfessionalTradingDashboard;

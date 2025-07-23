@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldenSignalsAI - Status Check</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .status-card h3 {
+            color: #007AFF;
+            margin-top: 0;
+        }
+        .success {
+            color: #00D964;
+        }
+        .error {
+            color: #FF3B30;
+        }
+        .warning {
+            color: #FF9500;
+        }
+        .code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .api-test {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        .api-test button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .api-test button:hover {
+            background: #0051D5;
+        }
+        .api-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GoldenSignalsAI - System Status</h1>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>Frontend Status</h3>
+                <p><span class="success">✓</span> Development server: <span class="code">http://localhost:3000</span></p>
+                <p><span class="success">✓</span> Dark theme active</p>
+                <p><span class="success">✓</span> Watermark implemented</p>
+                <p><span class="success">✓</span> Single chart component (AITradingChart)</p>
+            </div>
+
+            <div class="status-card">
+                <h3>Backend Status</h3>
+                <p id="backend-status"><span class="warning">⟳</span> Checking backend...</p>
+                <p id="api-endpoint"></p>
+                <p id="data-source"></p>
+            </div>
+
+            <div class="status-card">
+                <h3>WebSocket Status</h3>
+                <p id="ws-status"><span class="warning">⟳</span> Checking WebSocket...</p>
+                <p id="ws-endpoint"></p>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <h3>API Tests</h3>
+
+            <div class="api-test">
+                <button onclick="testMarketData()">Test Market Data API</button>
+                <button onclick="testSignals()">Test Signals API</button>
+                <button onclick="testAnalyze()">Test Analyze API</button>
+                <div id="api-result" class="api-result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <h2>Live Chart</h2>
+        <iframe src="http://localhost:3000" title="GoldenSignalsAI Chart"></iframe>
+    </div>
+
+    <script>
+        // Check backend status
+        async function checkBackend() {
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                document.getElementById('backend-status').innerHTML = '<span class="success">✓</span> Backend running';
+                document.getElementById('api-endpoint').innerHTML = '<span class="code">http://localhost:8000</span>';
+                document.getElementById('data-source').innerHTML = `Data source: <span class="code">${data.data_source || 'yfinance'}</span>`;
+            } catch (error) {
+                document.getElementById('backend-status').innerHTML = '<span class="error">✗</span> Backend not accessible';
+            }
+        }
+
+        // Check WebSocket
+        function checkWebSocket() {
+            try {
+                const ws = new WebSocket('ws://localhost:8000/ws');
+                ws.onopen = () => {
+                    document.getElementById('ws-status').innerHTML = '<span class="success">✓</span> WebSocket connected';
+                    document.getElementById('ws-endpoint').innerHTML = '<span class="code">ws://localhost:8000/ws</span>';
+                    ws.close();
+                };
+                ws.onerror = () => {
+                    document.getElementById('ws-status').innerHTML = '<span class="error">✗</span> WebSocket connection failed';
+                };
+            } catch (error) {
+                document.getElementById('ws-status').innerHTML = '<span class="error">✗</span> WebSocket error';
+            }
+        }
+
+        // Test Market Data API
+        async function testMarketData() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing Market Data API...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/market-data/AAPL/history?period=7d&interval=1h');
+                const data = await response.json();
+                resultDiv.innerHTML = `<span class="success">✓ Market Data API Working</span>\n\n` +
+                    `Symbol: ${data.symbol}\n` +
+                    `Period: ${data.period}\n` +
+                    `Data points: ${data.data.length}\n` +
+                    `Latest candle:\n${JSON.stringify(data.data[data.data.length - 1], null, 2)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ Market Data API Failed</span>\n\n${error.message}`;
+            }
+        }
+
+        // Test Signals API
+        async function testSignals() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing Signals API...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/signals/AAPL');
+                const data = await response.json();
+                resultDiv.innerHTML = `<span class="success">✓ Signals API Working</span>\n\n` +
+                    `Total signals: ${data.signals.length}\n` +
+                    `Latest signal:\n${JSON.stringify(data.signals[0], null, 2)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ Signals API Failed</span>\n\n${error.message}`;
+            }
+        }
+
+        // Test Analyze API
+        async function testAnalyze() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing Analyze API...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/signals/AAPL/analyze?timeframe=1h', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = `<span class="success">✓ Analyze API Working</span>\n\n` +
+                    `Analysis complete\n` +
+                    `Generated signals: ${data.signals ? data.signals.length : 'N/A'}\n` +
+                    `Response:\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ Analyze API Failed</span>\n\n${error.message}`;
+            }
+        }
+
+        // Run checks on load
+        checkBackend();
+        checkWebSocket();
+    </script>
+</body>
+</html>

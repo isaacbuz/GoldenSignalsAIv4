@@ -68,7 +68,7 @@ export const ${componentName}Page: React.FC = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           ${componentName}
         </Typography>
-        
+
         {/* Page content goes here */}
         <Box sx={{ mt: 3 }}>
           <Typography variant="body1">
@@ -168,90 +168,28 @@ describe('${componentName}Page', () => {
   });
 });`,
 
-    story: `import type { Meta, StoryObj } from '@storybook/react';
-import { ${componentName} } from './${componentName}';
 
-const meta: Meta<typeof ${componentName}> = {
-  title: 'Components/${componentName}',
-  component: ${componentName},
-  parameters: {
-    layout: 'centered',
-    docs: {
-      description: {
-        component: '${componentName} component description'
-      }
-    }
-  },
-  argTypes: {
-    className: {
-      control: 'text',
-      description: 'Custom CSS class name'
-    }
-  },
-};
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-  args: {},
-};
-
-export const WithCustomClass: Story = {
-  args: {
-    className: 'custom-styling',
-  },
-};
-
-export const WithChildren: Story = {
-  args: {
-    children: <div>Child content example</div>,
-  },
-};`,
-
-    pageStory: `import type { Meta, StoryObj } from '@storybook/react';
-import { ${componentName}Page } from './${componentName}Page';
-
-const meta: Meta<typeof ${componentName}Page> = {
-  title: 'Pages/${componentName}Page',
-  component: ${componentName}Page,
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        component: '${componentName} page component'
-      }
-    }
-  },
-};
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {};`
 };
 
 // Determine paths and file names based on type
-let componentDir, testTemplate, storyTemplate, componentTemplate;
+let componentDir, testTemplate, componentTemplate;
 
 switch (componentType) {
     case 'page':
         componentDir = `src/pages/${componentName}`;
         componentTemplate = templates.page;
         testTemplate = templates.pageTest;
-        storyTemplate = templates.pageStory;
+
         break;
     case 'util':
         componentDir = `src/utils/${componentName}`;
         componentTemplate = templates.util;
         testTemplate = templates.test;
-        storyTemplate = templates.story;
         break;
     default:
         componentDir = `src/components/${componentName}`;
         componentTemplate = templates.component;
         testTemplate = templates.test;
-        storyTemplate = templates.story;
 }
 
 // Create directory
@@ -267,10 +205,7 @@ const files = [
         name: componentType === 'page' ? `${componentName}Page.test.tsx` : `${componentName}.test.tsx`,
         content: testTemplate
     },
-    {
-        name: componentType === 'page' ? `${componentName}Page.stories.tsx` : `${componentName}.stories.tsx`,
-        content: storyTemplate
-    }
+
 ];
 
 files.forEach(({ name, content }) => {
@@ -305,4 +240,4 @@ console.log('🚀 Next steps:');
 console.log('   1. Implement your component logic');
 console.log('   2. Add more test cases');
 console.log('   3. Customize Storybook stories');
-console.log('   4. Update component props and interfaces'); 
+console.log('   4. Update component props and interfaces');

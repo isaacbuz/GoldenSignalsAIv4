@@ -58,8 +58,13 @@ export default defineConfig({
       'react-dom',
       '@mui/material',
       '@mui/icons-material',
+      '@mui/icons-material/Close',
       'react-router-dom',
     ],
+    exclude: ['@mui/icons-material'],
+    esbuildOptions: {
+      target: 'es2020',
+    },
   },
   define: {
     'process.env': process.env,
@@ -82,4 +87,4 @@ export default defineConfig({
       ],
     },
   },
-}) 
+})

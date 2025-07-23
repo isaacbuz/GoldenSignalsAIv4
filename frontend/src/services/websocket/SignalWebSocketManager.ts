@@ -6,6 +6,8 @@
 import { EventEmitter } from 'events';
 import { useState, useEffect, useCallback } from 'react';
 import { ENV } from '../../config/environment';
+import logger from '../logger';
+
 
 export enum WebSocketTopic {
   SIGNALS_LIVE = 'signals/live',
@@ -143,21 +145,21 @@ class SignalWebSocketManager {
       // Fix the URL construction - don't add /ws/signals if the URL already contains /ws
       const baseUrl = ENV.WEBSOCKET_URL.replace('http', 'ws');
       const wsUrl = baseUrl.endsWith('/ws') ? baseUrl + '/signals' : baseUrl + '/ws/signals';
-      console.log('Connecting to WebSocket:', wsUrl);
+      logger.info('Connecting to WebSocket:', wsUrl);
 
       this.ws = new WebSocket(wsUrl);
 
       // Connection timeout
       this.connectionTimeout = setTimeout(() => {
         if (this.ws && this.ws.readyState !== WebSocket.OPEN) {
-          console.warn('WebSocket connection timeout');
+          logger.warn('WebSocket connection timeout');
           this.ws.close();
           this.handleReconnect();
         }
       }, 10000);
 
       this.ws.onopen = (event) => {
-        console.log('✅ WebSocket connected successfully');
+        logger.info('✅ WebSocket connected successfully');
         this.isConnecting = false;
         this.reconnectAttempts = 0;
 
@@ -201,17 +203,17 @@ class SignalWebSocketManager {
           this.connectionStats.lastMessageTime = Date.now();
 
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          logger.error('Error parsing WebSocket message:', error);
         }
       };
 
       this.ws.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
+        logger.error('❌ WebSocket error:', error);
         this.isConnecting = false;
       };
 
       this.ws.onclose = (event) => {
-        console.log('🔌 WebSocket disconnected:', event.code, event.reason);
+        logger.info('🔌 WebSocket disconnected:', event.code, event.reason);
         this.isConnecting = false;
         this.stopHeartbeat();
 
@@ -226,7 +228,7 @@ class SignalWebSocketManager {
       };
 
     } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
+      logger.error('Failed to create WebSocket connection:', error);
       this.isConnecting = false;
       this.handleReconnect();
     }
@@ -266,7 +268,7 @@ class SignalWebSocketManager {
       try {
         callback(message);
       } catch (error) {
-        console.error('Error in message callback:', error);
+        logger.error('Error in message callback:', error);
       }
     });
   }
@@ -274,11 +276,11 @@ class SignalWebSocketManager {
   private handleSystemMessage(message: WebSocketMessage) {
     if (message.action === 'connection_established') {
       this.connectionId = message.data?.connection_id;
-      console.log('✅ WebSocket connection established with ID:', this.connectionId);
+      logger.info('✅ WebSocket connection established with ID:', this.connectionId);
     } else if (message.action === 'subscription_confirmed') {
-      console.log('✅ Subscription confirmed:', message.data?.topic);
+      logger.info('✅ Subscription confirmed:', message.data?.topic);
     } else if (message.action === 'error') {
-      console.error('❌ WebSocket server error:', message.data?.error);
+      logger.error('❌ WebSocket server error:', message.data?.error);
     }
   }
 
@@ -300,7 +302,7 @@ class SignalWebSocketManager {
         try {
           callback(signalUpdate);
         } catch (error) {
-          console.error('Error in signal callback:', error);
+          logger.error('Error in signal callback:', error);
         }
       });
     }
@@ -324,7 +326,7 @@ class SignalWebSocketManager {
         try {
           callback(agentUpdate);
         } catch (error) {
-          console.error('Error in agent callback:', error);
+          logger.error('Error in agent callback:', error);
         }
       });
     }
@@ -345,7 +347,7 @@ class SignalWebSocketManager {
       try {
         callback(marketUpdate);
       } catch (error) {
-        console.error('Error in market data callback:', error);
+        logger.error('Error in market data callback:', error);
       }
     });
   }
@@ -365,7 +367,7 @@ class SignalWebSocketManager {
       try {
         callback(consensusUpdate);
       } catch (error) {
-        console.error('Error in consensus callback:', error);
+        logger.error('Error in consensus callback:', error);
       }
     });
   }
@@ -391,14 +393,14 @@ class SignalWebSocketManager {
 
   private handleReconnect() {
     if (!this.shouldReconnect || this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('❌ Max reconnection attempts reached');
+      logger.error('❌ Max reconnection attempts reached');
       return;
     }
 
     this.reconnectAttempts++;
     const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), 30000);
 
-    console.log(`🔄 Reconnecting WebSocket in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+    logger.info(`🔄 Reconnecting WebSocket in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
 
     setTimeout(() => {
       this.connect();
@@ -439,7 +441,7 @@ class SignalWebSocketManager {
 
       // Only log warning if we're not currently connecting
       if (!this.isConnecting) {
-        console.warn('WebSocket not connected, message queued');
+        logger.warn('WebSocket not connected, message queued');
       }
     }
   }
@@ -447,7 +449,7 @@ class SignalWebSocketManager {
   // Add message queue property and processing
   private processQueuedMessages() {
     if (this.messageQueue.length > 0 && this.ws && this.ws.readyState === WebSocket.OPEN) {
-      console.log(`Processing ${this.messageQueue.length} queued messages`);
+      logger.info(`Processing ${this.messageQueue.length} queued messages`);
       const messages = [...this.messageQueue];
       this.messageQueue = [];
 
@@ -724,4 +726,3 @@ export const useWebSocketConnection = () => {
 };
 
 export default wsManager;
-

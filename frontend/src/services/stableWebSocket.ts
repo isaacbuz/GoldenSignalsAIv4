@@ -1,11 +1,13 @@
 /**
  * Stable WebSocket Service
- * 
+ *
  * Single, reliable WebSocket connection for the entire app.
  * Handles reconnection, heartbeat, and message routing automatically.
  */
 
 import { useAppStore } from '../store/appStore';
+import logger from './logger';
+
 
 interface WebSocketMessage {
     type: string;
@@ -46,7 +48,7 @@ class StableWebSocket {
         useAppStore.getState().setWSReconnecting(true);
 
         try {
-            console.log('🔌 Connecting to WebSocket:', this.url);
+            logger.info('🔌 Connecting to WebSocket:', this.url);
             this.ws = new WebSocket(this.url);
 
             this.ws.onopen = this.handleOpen.bind(this);
@@ -55,7 +57,7 @@ class StableWebSocket {
             this.ws.onerror = this.handleError.bind(this);
 
         } catch (error) {
-            console.error('❌ Failed to create WebSocket:', error);
+            logger.error('❌ Failed to create WebSocket:', error);
             this.handleError(error);
         }
     }
@@ -82,7 +84,7 @@ class StableWebSocket {
             try {
                 this.ws.send(JSON.stringify(messageWithTimestamp));
             } catch (error) {
-                console.error('❌ Failed to send message:', error);
+                logger.error('❌ Failed to send message:', error);
                 this.queueMessage(messageWithTimestamp);
             }
         } else {
@@ -131,7 +133,7 @@ class StableWebSocket {
     // === PRIVATE METHODS ===
 
     private handleOpen(): void {
-        console.log('✅ WebSocket connected successfully');
+        logger.info('✅ WebSocket connected successfully');
         this.reconnectAttempts = 0;
         this.reconnectDelay = 1000;
 
@@ -159,12 +161,12 @@ class StableWebSocket {
             this.routeMessage(message);
 
         } catch (error) {
-            console.error('❌ Failed to parse WebSocket message:', error);
+            logger.error('❌ Failed to parse WebSocket message:', error);
         }
     }
 
     private handleClose(event: CloseEvent): void {
-        console.log('🔌 WebSocket disconnected:', event.code, event.reason);
+        logger.info('🔌 WebSocket disconnected:', event.code, event.reason);
 
         this.clearTimers();
         useAppStore.getState().setWSConnected(false);
@@ -178,13 +180,13 @@ class StableWebSocket {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.scheduleReconnect();
         } else {
-            console.error('❌ Max reconnection attempts reached');
+            logger.error('❌ Max reconnection attempts reached');
             useAppStore.getState().setWSReconnecting(false);
         }
     }
 
     private handleError(error: any): void {
-        console.error('❌ WebSocket error:', error);
+        logger.error('❌ WebSocket error:', error);
     }
 
     private routeMessage(message: WebSocketMessage): void {
@@ -209,7 +211,7 @@ class StableWebSocket {
                         try {
                             handler(data);
                         } catch (error) {
-                            console.error(`❌ Error in message handler for ${type}:`, error);
+                            logger.error(`❌ Error in message handler for ${type}:`, error);
                         }
                     });
                 }
@@ -265,7 +267,7 @@ class StableWebSocket {
             this.maxReconnectDelay
         );
 
-        console.log(`🔄 Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+        logger.info(`🔄 Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
         useAppStore.getState().setWSReconnecting(true);
 
         this.reconnectTimeout = setTimeout(() => {
@@ -329,4 +331,4 @@ export const useStableWebSocket = () => {
     };
 };
 
-export default StableWebSocket; 
+export default StableWebSocket;

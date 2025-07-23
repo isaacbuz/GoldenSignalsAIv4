@@ -2,13 +2,13 @@ import requests
 from textblob import TextBlob
 from typing import List, Dict, Any
 import logging
-from .....base import BaseAgent
+from agents.base import BaseAgent
 
 logger = logging.getLogger(__name__)
 
 class SocialSentimentAgent(BaseAgent):
     """Agent that analyzes social media sentiment from StockTwits."""
-    
+
     def __init__(self, stocktwits_base_url: str = "https://api.stocktwits.com/api/2/streams/symbol/"):
         super().__init__(name="SocialSentiment", agent_type="sentiment")
         self.base_url = stocktwits_base_url
@@ -46,18 +46,18 @@ class SocialSentimentAgent(BaseAgent):
         """Process social media data to generate trading signals."""
         symbol = data.get("symbol", "TSLA")
         raw_messages = self.fetch_messages(symbol)
-        
+
         if not raw_messages:
             return {
                 "action": "hold",
                 "confidence": 0.0,
                 "metadata": {"error": "No social media data available"}
             }
-        
+
         sentiments = [self.analyze_sentiment(msg) for msg in raw_messages if msg]
         avg_sentiment = sum(s["score"] for s in sentiments) / len(sentiments) if sentiments else 0
         hype = self.hype_score(sentiments)
-        
+
         # Generate trading signal based on sentiment and hype
         if avg_sentiment > 0.2 and hype > 1.0:
             action = "buy"
@@ -68,7 +68,7 @@ class SocialSentimentAgent(BaseAgent):
         else:
             action = "hold"
             confidence = 0.0
-            
+
         return {
             "action": action,
             "confidence": confidence,

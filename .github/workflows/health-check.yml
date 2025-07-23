@@ -1,0 +1,140 @@
+name: Health Check
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  api-health:
+    name: API Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pytest
+
+      - name: Create health check script
+        run: |
+          cat > health_check.py << 'EOF'
+          import requests
+          import sys
+          import json
+
+          def check_health(base_url):
+              results = {}
+
+              # Check main health endpoint
+              try:
+                  resp = requests.get(f"{base_url}/health", timeout=10)
+                  results['health'] = {
+                      'status': resp.status_code,
+                      'healthy': resp.status_code == 200,
+                      'response': resp.json() if resp.status_code == 200 else resp.text
+                  }
+              except Exception as e:
+                  results['health'] = {'status': 'error', 'healthy': False, 'error': str(e)}
+
+              # Check API docs
+              try:
+                  resp = requests.get(f"{base_url}/docs", timeout=10)
+                  results['docs'] = {
+                      'status': resp.status_code,
+                      'accessible': resp.status_code == 200
+                  }
+              except Exception as e:
+                  results['docs'] = {'status': 'error', 'accessible': False, 'error': str(e)}
+
+              # Check WebSocket endpoint
+              try:
+                  resp = requests.get(f"{base_url}/ws", timeout=10)
+                  results['websocket'] = {
+                      'status': resp.status_code,
+                      'note': 'WebSocket endpoints typically return 426 Upgrade Required'
+                  }
+              except Exception as e:
+                  results['websocket'] = {'status': 'error', 'error': str(e)}
+
+              return results
+
+          if __name__ == "__main__":
+              base_url = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000"
+              results = check_health(base_url)
+
+              print(json.dumps(results, indent=2))
+
+              # Exit with error if health check failed
+              if not results.get('health', {}).get('healthy', False):
+                  sys.exit(1)
+          EOF
+
+      - name: Run health check
+        run: python health_check.py ${{ secrets.STAGING_API_URL || 'http://localhost:8000' }}
+        continue-on-error: true
+
+  frontend-lighthouse:
+    name: Frontend Performance Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            ${{ secrets.STAGING_URL || 'http://localhost:3000' }}
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+  dependency-check:
+    name: Dependency Update Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Python dependencies
+        run: |
+          pip install pip-outdated
+          pip-outdated requirements.txt || true
+
+      - name: Check npm dependencies
+        working-directory: ./frontend
+        run: |
+          npm outdated || true
+
+      - name: Create dependency report
+        run: |
+          echo "# Dependency Status Report" > dependency-report.md
+          echo "Generated on: $(date)" >> dependency-report.md
+          echo "" >> dependency-report.md
+
+          echo "## Python Dependencies" >> dependency-report.md
+          pip list --outdated >> dependency-report.md || true
+
+          echo "" >> dependency-report.md
+          echo "## NPM Dependencies" >> dependency-report.md
+          cd frontend && npm outdated >> ../dependency-report.md || true
+
+      - name: Upload dependency report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-report
+          path: dependency-report.md
+          retention-days: 30

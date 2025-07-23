@@ -1,0 +1,17 @@
+{
+  "frontend/src/**/*.{ts,tsx,js,jsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "frontend/src/**/*.{css,scss,md,json}": [
+    "prettier --write"
+  ],
+  "src/**/*.py": [
+    "black --check",
+    "isort --check-only",
+    "flake8"
+  ],
+  "*.{md,yml,yaml,json}": [
+    "prettier --write"
+  ]
+}

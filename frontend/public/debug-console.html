@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Console - GoldenSignalsAI</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+        }
+        .console {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error { color: #ff6b6b; }
+        .warn { color: #ffd43b; }
+        .info { color: #74c0fc; }
+        .success { color: #51cf66; }
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background: #0051D5; }
+    </style>
+</head>
+<body>
+    <h1>Debug Console</h1>
+
+    <div>
+        <button onclick="checkMainApp()">Check Main App</button>
+        <button onclick="checkAPIs()">Check All APIs</button>
+        <button onclick="clearConsole()">Clear Console</button>
+    </div>
+
+    <div id="console" class="console"></div>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${time}] ${message}`;
+            consoleDiv.appendChild(entry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleDiv.innerHTML = '';
+        }
+
+        async function checkMainApp() {
+            log('Checking main application...', 'info');
+
+            try {
+                // Check if app loads
+                const response = await fetch('http://localhost:3000/');
+                const html = await response.text();
+
+                if (html.includes('<div id="root">')) {
+                    log('✓ Main app HTML loads correctly', 'success');
+                } else {
+                    log('✗ Main app HTML structure issue', 'error');
+                }
+
+                // Check for JavaScript errors by loading in iframe
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = 'http://localhost:3000/';
+
+                iframe.onload = () => {
+                    log('✓ App loaded in iframe', 'success');
+
+                    // Try to access the app's window
+                    try {
+                        const iframeWindow = iframe.contentWindow;
+                        if (iframeWindow && iframeWindow.document.querySelector('#root')) {
+                            log('✓ React root element found', 'success');
+
+                            // Check if React rendered
+                            setTimeout(() => {
+                                const rootContent = iframeWindow.document.querySelector('#root').innerHTML;
+                                if (rootContent && rootContent.length > 50) {
+                                    log('✓ React app rendered content', 'success');
+                                } else {
+                                    log('✗ React app did not render content', 'error');
+                                    log('Root innerHTML length: ' + rootContent.length, 'warn');
+                                }
+                                document.body.removeChild(iframe);
+                            }, 2000);
+                        }
+                    } catch (e) {
+                        log('✗ Cannot access iframe content (CORS): ' + e.message, 'warn');
+                        document.body.removeChild(iframe);
+                    }
+                };
+
+                iframe.onerror = (e) => {
+                    log('✗ Failed to load app in iframe', 'error');
+                    document.body.removeChild(iframe);
+                };
+
+                document.body.appendChild(iframe);
+
+            } catch (error) {
+                log('✗ Failed to check main app: ' + error.message, 'error');
+            }
+        }
+
+        async function checkAPIs() {
+            log('Checking all APIs...', 'info');
+
+            // Backend health
+            try {
+                const health = await fetch('http://localhost:8000/health');
+                const healthData = await health.json();
+                log('✓ Backend health: ' + JSON.stringify(healthData), 'success');
+            } catch (e) {
+                log('✗ Backend health check failed: ' + e.message, 'error');
+            }
+
+            // Market data
+            try {
+                const marketData = await fetch('http://localhost:8000/api/v1/market-data/AAPL/history?period=1d&interval=1h');
+                const data = await marketData.json();
+                log(`✓ Market data API: ${data.data.length} candles received`, 'success');
+            } catch (e) {
+                log('✗ Market data API failed: ' + e.message, 'error');
+            }
+
+            // WebSocket
+            try {
+                const ws = new WebSocket('ws://localhost:8000/ws');
+                ws.onopen = () => {
+                    log('✓ WebSocket connected', 'success');
+                    ws.close();
+                };
+                ws.onerror = (e) => {
+                    log('✗ WebSocket error', 'error');
+                };
+                ws.onclose = () => {
+                    log('WebSocket closed', 'info');
+                };
+            } catch (e) {
+                log('✗ WebSocket failed: ' + e.message, 'error');
+            }
+
+            // Check CORS headers
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/market-data/AAPL/history?period=1d&interval=1h', {
+                    method: 'GET',
+                    headers: {
+                        'Origin': 'http://localhost:3000'
+                    }
+                });
+
+                const corsHeader = response.headers.get('access-control-allow-origin');
+                if (corsHeader) {
+                    log('✓ CORS header present: ' + corsHeader, 'success');
+                } else {
+                    log('✗ No CORS header found', 'error');
+                }
+            } catch (e) {
+                log('✗ CORS check failed: ' + e.message, 'error');
+            }
+        }
+
+        // Auto-run checks
+        log('Debug console ready', 'info');
+        log('Frontend URL: http://localhost:3000', 'info');
+        log('Backend URL: http://localhost:8000', 'info');
+    </script>
+</body>
+</html>

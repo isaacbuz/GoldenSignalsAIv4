@@ -34,7 +34,7 @@ export interface EnvironmentConfig {
     // Development Tools
     SHOW_DEV_TOOLS: boolean;
     MOCK_API: boolean;
-    STORYBOOK_MODE: boolean;
+
 
     // Performance
     ENABLE_PERFORMANCE_MONITORING: boolean;
@@ -63,12 +63,12 @@ function getEnvNumber(key: string, defaultValue: number): number {
 
 export const ENV: EnvironmentConfig = {
     // API Configuration
-    API_URL: getEnvVar('VITE_API_URL', 'http://localhost:8000'),
+    API_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:8000'),
     API_TIMEOUT: getEnvNumber('VITE_API_TIMEOUT', 30000),
 
     // WebSocket Configuration
     WEBSOCKET_ENABLED: getEnvBoolean('VITE_WEBSOCKET_ENABLED', true),
-    WEBSOCKET_URL: getEnvVar('VITE_WEBSOCKET_URL', 'ws://localhost:8000/ws'),
+    WEBSOCKET_URL: getEnvVar('VITE_WS_BASE_URL', 'ws://localhost:8000') + '/ws',
     WEBSOCKET_RECONNECT: getEnvBoolean('VITE_WEBSOCKET_RECONNECT', true),
     WEBSOCKET_RECONNECT_INTERVAL: getEnvNumber('VITE_WEBSOCKET_RECONNECT_INTERVAL', 5000),
 
@@ -92,7 +92,7 @@ export const ENV: EnvironmentConfig = {
     // Development Tools
     SHOW_DEV_TOOLS: getEnvBoolean('VITE_SHOW_DEV_TOOLS', false),
     MOCK_API: getEnvBoolean('VITE_MOCK_API', false),
-    STORYBOOK_MODE: getEnvBoolean('STORYBOOK', false),
+
 
     // Performance
     ENABLE_PERFORMANCE_MONITORING: getEnvBoolean('VITE_ENABLE_PERFORMANCE_MONITORING', true),
@@ -118,10 +118,10 @@ export function getApiEndpoint(path: string): string {
 
 // Helper function to check if running in mock mode
 export function isMockMode(): boolean {
-    return ENV.MOCK_API || ENV.STORYBOOK_MODE;
+    return ENV.MOCK_API;
 }
 
 // Export for debugging
 if (ENV.IS_DEVELOPMENT) {
     (window as any).__ENV__ = ENV;
-} 
+}

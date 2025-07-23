@@ -5,6 +5,8 @@
 
 import neo4j, { Driver, Session, Record } from 'neo4j-driver'
 import { vi } from 'vitest'
+import logger from '../services/logger';
+
 
 export interface GraphTestConfig {
     uri?: string
@@ -55,7 +57,7 @@ export class Neo4jTestHelper {
             // Verify connection
             await this.session.run('RETURN 1')
         } catch (error) {
-            console.warn('Neo4j not available, using mock:', error)
+            logger.warn('Neo4j not available, using mock:', error)
             this.useMock()
         }
     }
@@ -259,7 +261,7 @@ export class GraphTestScenarios {
     }> {
         const query = `
       MATCH (a:Agent)-[r:GENERATES]->(s:Signal {id: $signalId})
-      RETURN count(a) as agentCount, avg(r.weight) as avgWeight, 
+      RETURN count(a) as agentCount, avg(r.weight) as avgWeight,
              sum(r.weight * a.accuracy) / sum(r.weight) as consensus
     `
         const result = await this.helper.queryGraph(query, { signalId })
@@ -321,4 +323,4 @@ export async function setupGraphTests() {
 export async function teardownGraphTests() {
     await graphTestHelper.clearTestData()
     await graphTestHelper.disconnect()
-} 
+}

@@ -1,3 +1,5 @@
+import logger from './logger';
+
 // Simple API client for the trading platform
 const API_BASE_URL = 'http://localhost:8000/api/v1';
 
@@ -50,7 +52,7 @@ class ApiClient {
                 return await response.json();
             }
         } catch (error) {
-            console.warn('API call failed, using mock data:', error);
+            logger.warn('API call failed, using mock data:', error);
         }
 
         // Mock data fallback
@@ -72,7 +74,7 @@ class ApiClient {
                 return await response.json();
             }
         } catch (error) {
-            console.warn('API call failed, using mock data:', error);
+            logger.warn('API call failed, using mock data:', error);
         }
 
         // Mock data fallback
@@ -106,7 +108,7 @@ class ApiClient {
                 }));
             }
         } catch (error) {
-            console.warn('API call failed, using mock data:', error);
+            logger.warn('API call failed, using mock data:', error);
         }
 
         // Mock data fallback for options signals
@@ -150,7 +152,7 @@ class ApiClient {
                 throw new Error('Failed to generate signals');
             }
         } catch (error) {
-            console.warn('Failed to generate signals:', error);
+            logger.warn('Failed to generate signals:', error);
         }
     }
 
@@ -161,7 +163,7 @@ class ApiClient {
                 return await response.json();
             }
         } catch (error) {
-            console.warn('API call failed, using mock data:', error);
+            logger.warn('API call failed, using mock data:', error);
         }
 
         // Mock news data
@@ -198,4 +200,4 @@ export const apiClient = new ApiClient();
 
 // Legacy exports for backward compatibility
 export const fetchMarketData = (symbol: string) => apiClient.getMarketData(symbol);
-export const fetchAIInsights = (symbol: string) => apiClient.getAIInsights(symbol); 
+export const fetchAIInsights = (symbol: string) => apiClient.getAIInsights(symbol);

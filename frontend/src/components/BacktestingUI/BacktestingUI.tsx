@@ -51,6 +51,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Line, Bar } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -179,7 +180,7 @@ const BacktestingUI: React.FC = () => {
       averageLoss: -123.45,
       profitFactor: 2.34,
       expectancy: 89.12,
-      equity: Array.from({ length: 252 }, (_, i) => 
+      equity: Array.from({ length: 252 }, (_, i) =>
         100000 * (1 + 0.0015 * i + Math.random() * 0.02 - 0.01)
       ),
       dates: Array.from({ length: 252 }, (_, i) => {

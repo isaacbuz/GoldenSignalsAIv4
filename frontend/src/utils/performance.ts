@@ -1,4 +1,6 @@
 import React from 'react';
+import logger from '../services/logger';
+
 
 // Performance monitoring utilities
 export class PerformanceMonitor {
@@ -27,7 +29,7 @@ export class PerformanceMonitor {
                     entries.forEach((entry) => {
                         if (entry.duration > this.longTaskThreshold) {
                             if (process.env.NODE_ENV === 'development') {
-                                console.warn(`Long task detected: ${entry.duration.toFixed(2)}ms`, {
+                                logger.warn(`Long task detected: ${entry.duration.toFixed(2)}ms`, {
                                     name: entry.name,
                                     startTime: entry.startTime,
                                     duration: entry.duration
@@ -41,7 +43,7 @@ export class PerformanceMonitor {
                 this.isMonitoring = true;
             }
         } catch (error) {
-            console.error('Failed to start performance monitoring:', error);
+            logger.error('Failed to start performance monitoring:', error);
         }
     }
 
@@ -60,7 +62,7 @@ export class PerformanceMonitor {
         const duration = end - start;
 
         if (duration > this.longTaskThreshold && process.env.NODE_ENV === 'development') {
-            console.warn(`Function "${name}" took ${duration.toFixed(2)}ms`);
+            logger.warn(`Function "${name}" took ${duration.toFixed(2)}ms`);
         }
 
         return result;
@@ -73,7 +75,7 @@ export class PerformanceMonitor {
         const duration = end - start;
 
         if (duration > this.longTaskThreshold && process.env.NODE_ENV === 'development') {
-            console.warn(`Async function "${name}" took ${duration.toFixed(2)}ms`);
+            logger.warn(`Async function "${name}" took ${duration.toFixed(2)}ms`);
         }
 
         return result;
@@ -176,4 +178,4 @@ export class TaskScheduler {
     }
 }
 
-export const taskScheduler = new TaskScheduler(); 
+export const taskScheduler = new TaskScheduler();

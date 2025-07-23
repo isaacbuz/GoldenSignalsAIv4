@@ -12,8 +12,10 @@ import { styled } from '@mui/material/styles';
 
 // Import the new components
 import { TradeSearch } from '../components/TradeSearch';
-import { CentralChart } from '../components/CentralChart/CentralChart';
+import { AITradingChart } from '../components/AIChart/AITradingChart';
 import MarketContext from '../components/MarketContext/MarketContext';
+import logger from '../services/logger';
+
 
 // Styled components
 const DashboardContainer = styled(Box)(({ theme }) => ({
@@ -42,12 +44,12 @@ const TradingDashboard: React.FC = () => {
   const handleAnalyze = async (newSymbol: string, newTimeframe: string) => {
     setSymbol(newSymbol);
     setTimeframe(newTimeframe);
-    console.log('Analyzing:', newSymbol, newTimeframe);
+    logger.info('Analyzing:', newSymbol, newTimeframe);
     // Here you would trigger the actual analysis
   };
 
   const handleNewsClick = (news: any) => {
-    console.log('News clicked:', news);
+    logger.info('News clicked:', news);
     // Handle news item click
   };
 
@@ -80,11 +82,9 @@ const TradingDashboard: React.FC = () => {
           {/* Chart Section - Takes up 2/3 of the width */}
           <Grid item xs={12} lg={8}>
             <Paper elevation={0} sx={{ height: 600, p: 0 }}>
-              <CentralChart
+              <AITradingChart
                 symbol={symbol}
-                timeframe={timeframe}
-                onSymbolChange={setSymbol}
-                onTimeframeChange={setTimeframe}
+                height="600px"
               />
             </Paper>
           </Grid>

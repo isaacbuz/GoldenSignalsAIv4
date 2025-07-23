@@ -5,13 +5,15 @@ REST API endpoints for accessing real-time and historical market data.
 """
 
 import logging
-from typing import Dict, List, Any, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from pydantic import BaseModel
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from agents.services.market_data_service import MarketDataService
-from agents.core.dependencies import get_market_data_service
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
+
+from services.market_data_service import MarketDataService
+
+# from agents.core.dependencies import get_market_data_service
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,7 @@ market_data_service = MarketDataService()
 
 class MarketDataResponse(BaseModel):
     """Market data response model"""
+
     symbol: str
     price: float
     change: float
@@ -36,6 +39,7 @@ class MarketDataResponse(BaseModel):
 
 class MarketStatusResponse(BaseModel):
     """Market status response model"""
+
     is_open: bool
     current_time: str
     market_hours: Dict[str, str]
@@ -45,6 +49,7 @@ class MarketStatusResponse(BaseModel):
 
 class HistoricalDataPoint(BaseModel):
     """Historical data point model"""
+
     timestamp: str
     open: float
     high: float
@@ -60,7 +65,7 @@ async def get_market_data(symbol: str) -> Dict[str, Any]:
         quote = await market_data_service.get_quote(symbol.upper())
         if not quote:
             raise HTTPException(status_code=404, detail=f"No data found for symbol {symbol}")
-        
+
         # Transform to match frontend expectations
         return {
             "symbol": quote["symbol"],
@@ -68,7 +73,7 @@ async def get_market_data(symbol: str) -> Dict[str, Any]:
             "change": quote["change"],
             "change_percent": quote["change_percent"],
             "volume": quote["volume"],
-            "timestamp": int(datetime.utcnow().timestamp() * 1000)  # milliseconds
+            "timestamp": int(datetime.utcnow().timestamp() * 1000),  # milliseconds
         }
     except Exception as e:
         logger.error(f"Error fetching market data for {symbol}: {str(e)}")
@@ -91,38 +96,39 @@ async def get_quote(symbol: str) -> Dict[str, Any]:
 @router.get("/{symbol}/historical")
 async def get_historical_data(
     symbol: str,
-    period: str = Query("1d", description="Time period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max"),
-    interval: str = Query("5m", description="Data interval: 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo")
+    period: str = Query(
+        "1d", description="Time period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max"
+    ),
+    interval: str = Query(
+        "5m", description="Data interval: 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo"
+    ),
 ) -> Dict[str, Any]:
     """Get historical price data for a symbol"""
     try:
         hist_data = await market_data_service.get_historical_data(
-            symbol.upper(), 
-            period=period, 
-            interval=interval
+            symbol.upper(), period=period, interval=interval
         )
-        
+
         if hist_data is None or hist_data.empty:
-            raise HTTPException(status_code=404, detail=f"No historical data found for symbol {symbol}")
-        
+            raise HTTPException(
+                status_code=404, detail=f"No historical data found for symbol {symbol}"
+            )
+
         # Convert DataFrame to list of dictionaries
         data = []
         for index, row in hist_data.iterrows():
-            data.append({
-                "time": int(index.timestamp()),
-                "open": float(row["Open"]),
-                "high": float(row["High"]),
-                "low": float(row["Low"]),
-                "close": float(row["Close"]),
-                "volume": int(row["Volume"])
-            })
-        
-        return {
-            "symbol": symbol.upper(),
-            "period": period,
-            "interval": interval,
-            "data": data
-        }
+            data.append(
+                {
+                    "time": int(index.timestamp()),
+                    "open": float(row["Open"]),
+                    "high": float(row["High"]),
+                    "low": float(row["Low"]),
+                    "close": float(row["Close"]),
+                    "volume": int(row["Volume"]),
+                }
+            )
+
+        return {"symbol": symbol.upper(), "period": period, "interval": interval, "data": data}
     except Exception as e:
         logger.error(f"Error fetching historical data for {symbol}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -133,7 +139,7 @@ async def get_multiple_quotes(symbols: List[str]) -> Dict[str, Dict[str, Any]]:
     """Get quotes for multiple symbols"""
     try:
         quotes = await market_data_service.get_quotes([s.upper() for s in symbols])
-        
+
         # Transform to match frontend expectations
         result = {}
         for symbol, quote in quotes.items():
@@ -144,9 +150,9 @@ async def get_multiple_quotes(symbols: List[str]) -> Dict[str, Dict[str, Any]]:
                     "change": quote["change"],
                     "change_percent": quote["change_percent"],
                     "volume": quote["volume"],
-                    "timestamp": int(datetime.utcnow().timestamp() * 1000)
+                    "timestamp": int(datetime.utcnow().timestamp() * 1000),
                 }
-        
+
         return result
     except Exception as e:
         logger.error(f"Error fetching multiple quotes: {str(e)}")
@@ -181,7 +187,9 @@ async def get_options_chain(symbol: str) -> Dict[str, Any]:
     try:
         options = await market_data_service.get_options_chain(symbol.upper())
         if not options:
-            raise HTTPException(status_code=404, detail=f"No options data found for symbol {symbol}")
+            raise HTTPException(
+                status_code=404, detail=f"No options data found for symbol {symbol}"
+            )
         return options
     except Exception as e:
         logger.error(f"Error fetching options chain for {symbol}: {str(e)}")
@@ -190,8 +198,7 @@ async def get_options_chain(symbol: str) -> Dict[str, Any]:
 
 @router.get("/{symbol}/news")
 async def get_symbol_news(
-    symbol: str,
-    limit: int = Query(10, description="Number of news items to return")
+    symbol: str, limit: int = Query(10, description="Number of news items to return")
 ) -> List[Dict[str, Any]]:
     """Get latest news for a symbol"""
     try:
@@ -209,7 +216,7 @@ async def get_indices_summary() -> Dict[str, Any]:
         # Get quotes for major indices
         indices = ["SPY", "QQQ", "DIA", "IWM", "VTI"]
         quotes = await market_data_service.get_quotes(indices)
-        
+
         summary = {}
         for symbol, quote in quotes.items():
             if quote:
@@ -219,15 +226,15 @@ async def get_indices_summary() -> Dict[str, Any]:
                         "QQQ": "NASDAQ 100",
                         "DIA": "Dow Jones",
                         "IWM": "Russell 2000",
-                        "VTI": "Total Market"
+                        "VTI": "Total Market",
                     }.get(symbol, symbol),
                     "price": quote["price"],
                     "change": quote["change"],
                     "change_percent": quote["change_percent"],
-                    "volume": quote["volume"]
+                    "volume": quote["volume"],
                 }
-        
+
         return summary
     except Exception as e:
         logger.error(f"Error fetching indices summary: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))

@@ -1,12 +1,14 @@
 /**
  * Error Boundary Component
- * 
+ *
  * Catches JavaScript errors anywhere in the child component tree
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Typography, Button, Card, CardContent, Alert, Stack } from '@mui/material';
 import { ErrorOutline, Refresh } from '@mui/icons-material';
+import logger from '../../services/logger';
+
 
 interface Props {
   children: ReactNode;
@@ -46,7 +48,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error to console only in development
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by boundary:', error, errorInfo);
+      logger.error('Error caught by boundary:', error, errorInfo);
     }
 
     // Call custom error handler if provided
@@ -139,4 +141,4 @@ export const withErrorBoundary = <P extends object>(
   );
 };
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

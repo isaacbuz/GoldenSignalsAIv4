@@ -5,7 +5,7 @@
  * Creates a new React component with all required files:
  * - Component file with logging
  * - Test file with data-testids
- * - Storybook story file
+
  * - CSS module
  */
 
@@ -39,13 +39,13 @@ const componentDir = path.join('frontend', 'src', 'components', componentName);
 const indexPath = path.join(componentDir, 'index.tsx');
 const componentPath = path.join(componentDir, `${componentName}.tsx`);
 const testPath = path.join(componentDir, `${componentName}.test.tsx`);
-const storyPath = path.join(componentDir, `${componentName}.stories.tsx`);
+
 const stylePath = path.join(componentDir, `${componentName}.module.css`);
 
 // Component template
 const componentTemplate = `/**
  * ${componentName} Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -82,7 +82,7 @@ export const ${componentName}: React.FC<${componentName}Props> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={\`\${styles.container} \${className || ''}\`}
       data-testid={testId}
       {...props}
@@ -144,77 +144,7 @@ describe('${componentName}', () => {
 });
 `;
 
-// Storybook template
-const storyTemplate = `/**
- * ${componentName} Storybook Stories
- */
 
-import type { Meta, StoryObj } from '@storybook/react';
-import { ${componentName} } from './${componentName}';
-
-const meta = {
-  title: 'Components/${componentName}',
-  component: ${componentName},
-  parameters: {
-    layout: 'centered',
-    docs: {
-      description: {
-        component: 'TODO: Add component description for Storybook docs',
-      },
-    },
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    className: {
-      control: 'text',
-      description: 'Additional CSS classes',
-    },
-    'data-testid': {
-      control: 'text',
-      description: 'Test ID for testing',
-    },
-  },
-} satisfies Meta<typeof ${componentName}>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-/**
- * Default story showing the component in its default state
- */
-export const Default: Story = {
-  args: {
-    children: 'Default ${componentName}',
-  },
-};
-
-/**
- * Example with custom styling
- */
-export const WithCustomStyle: Story = {
-  args: {
-    children: 'Styled ${componentName}',
-    className: 'custom-style',
-  },
-};
-
-/**
- * Example with complex children
- */
-export const WithComplexChildren: Story = {
-  args: {
-    children: (
-      <div>
-        <h3>${componentName} with Complex Content</h3>
-        <p>This demonstrates how the component handles complex children.</p>
-        <button>Interactive Button</button>
-      </div>
-    ),
-  },
-};
-
-// TODO: Add more stories demonstrating different states and props
-`;
 
 // CSS Module template
 const cssTemplate = `/**
@@ -227,7 +157,7 @@ const cssTemplate = `/**
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* TODO: Add component-specific styles */
 }
 
@@ -277,7 +207,7 @@ try {
     fs.writeFileSync(indexPath, indexTemplate);
     fs.writeFileSync(componentPath, componentTemplate);
     fs.writeFileSync(testPath, testTemplate);
-    fs.writeFileSync(storyPath, storyTemplate);
+
     fs.writeFileSync(stylePath, cssTemplate);
 
     console.log(`✅ Component "${componentName}" generated successfully!`);
@@ -285,16 +215,14 @@ try {
     console.log(`  📄 ${indexPath}`);
     console.log(`  🧩 ${componentPath}`);
     console.log(`  🧪 ${testPath}`);
-    console.log(`  📚 ${storyPath}`);
+
     console.log(`  🎨 ${stylePath}`);
     console.log('\nNext steps:');
     console.log(`  1. Update the component logic in ${componentPath}`);
     console.log(`  2. Add specific tests in ${testPath}`);
-    console.log(`  3. Create story variations in ${storyPath}`);
-    console.log(`  4. Style the component in ${stylePath}`);
-    console.log('\nTo view in Storybook:');
-    console.log('  npm run storybook');
+    console.log(`  3. Style the component in ${stylePath}`);
+
 } catch (error) {
     console.error('Error creating component files:', error);
     process.exit(1);
-} 
+}

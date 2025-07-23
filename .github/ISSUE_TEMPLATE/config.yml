@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/YOUR_USERNAME/GoldenSignalsAIv4/wiki
+    about: Check our documentation for common solutions
+  - name: Community Support
+    url: https://github.com/YOUR_USERNAME/GoldenSignalsAIv4/discussions
+    about: Ask questions and discuss with the community
+  - name: Security Issue
+    url: mailto:security@goldensignalsai.com
+    about: Please report security vulnerabilities privately

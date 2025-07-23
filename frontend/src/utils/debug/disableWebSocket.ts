@@ -1,3 +1,5 @@
+import logger from '../../services/logger';
+
 /**
  * Debug utility to disable WebSocket connections
  * Can be used in browser console for testing
@@ -11,7 +13,7 @@ export function disableWebSocket() {
 
         constructor(url: string) {
             this.url = url;
-            console.log(`[MockWebSocket] Blocked connection to: ${url}`);
+            logger.info(`[MockWebSocket] Blocked connection to: ${url}`);
 
             // Simulate connection failure after a delay
             setTimeout(() => {
@@ -23,12 +25,12 @@ export function disableWebSocket() {
         }
 
         send() {
-            console.log('[MockWebSocket] Send blocked');
+            logger.info('[MockWebSocket] Send blocked');
         }
 
         close() {
             this.readyState = 3;
-            console.log('[MockWebSocket] Connection closed');
+            logger.info('[MockWebSocket] Connection closed');
         }
 
         onopen: ((event: Event) => void) | null = null;
@@ -37,7 +39,7 @@ export function disableWebSocket() {
         onmessage: ((event: MessageEvent) => void) | null = null;
     };
 
-    console.log('✅ WebSocket disabled. Refresh the page to apply changes.');
+    logger.info('✅ WebSocket disabled. Refresh the page to apply changes.');
 
     // Also set localStorage flag
     localStorage.setItem('DISABLE_WEBSOCKET', 'true');
@@ -50,5 +52,5 @@ if (process.env.NODE_ENV === 'development') {
 
 export function enableWebSocket() {
     localStorage.removeItem('DISABLE_WEBSOCKET');
-    console.log('✅ WebSocket enabled. Refresh the page to apply changes.');
-} 
+    logger.info('✅ WebSocket enabled. Refresh the page to apply changes.');
+}

@@ -39,7 +39,10 @@ import {
     Error as ErrorIcon,
 } from '@mui/icons-material';
 import { Line, Bar } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import axios from 'axios';
+import logger from '../../services/logger';
+
 
 interface BacktestRequest {
     symbols: string[];
@@ -113,7 +116,7 @@ const BacktestingDashboard: React.FC = () => {
                             });
                         }
                     } catch (err) {
-                        console.error('Error polling backtest:', err);
+                        logger.error('Error polling backtest:', err);
                     }
                 }
             });
@@ -161,7 +164,7 @@ const BacktestingDashboard: React.FC = () => {
 
             setSignalValidations(prev => [...prev, response.data]);
         } catch (err) {
-            console.error('Error validating signal:', err);
+            logger.error('Error validating signal:', err);
         }
     };
 
@@ -170,7 +173,7 @@ const BacktestingDashboard: React.FC = () => {
             const response = await axios.get(`${API_BASE_URL}/performance-metrics`);
             return response.data;
         } catch (err) {
-            console.error('Error fetching performance metrics:', err);
+            logger.error('Error fetching performance metrics:', err);
             return null;
         }
     };
@@ -507,7 +510,7 @@ const PerformanceMetricsTab: React.FC = () => {
                 const response = await axios.get('http://localhost:8001/performance-metrics');
                 setMetrics(response.data);
             } catch (err) {
-                console.error('Error fetching metrics:', err);
+                logger.error('Error fetching metrics:', err);
             } finally {
                 setLoading(false);
             }
@@ -591,4 +594,4 @@ const PerformanceMetricsTab: React.FC = () => {
     );
 };
 
-export default BacktestingDashboard; 
+export default BacktestingDashboard;

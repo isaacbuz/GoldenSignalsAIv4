@@ -1,0 +1,211 @@
+name: Create Tracking Issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_issues:
+        description: 'Create GitHub issues for tracking'
+        required: true
+        default: 'true'
+        type: boolean
+
+jobs:
+  create-issues:
+    name: Create Project Issues
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.create_issues == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issues = [
+              {
+                title: '🐛 Fix ESLint errors in frontend (21 errors)',
+                body: `## Description
+            There are currently 21 ESLint errors in the frontend that need to be fixed.
+
+            ## Errors to fix:
+            - Unused variables (must match /^_/u pattern)
+            - Console statements that need to be removed
+            - Missing type annotations
+
+            ## Files affected:
+            - \`AITradingChartDebug.tsx\`
+            - \`AppRoutes.tsx\`
+            - \`SimpleChart.tsx\`
+            - \`TestApp.tsx\`
+            - \`agents/ChartSignalAgent.ts\`
+            - And others...
+
+            ## How to fix:
+            \`\`\`bash
+            cd frontend
+            npm run lint -- --fix
+            # Then manually fix remaining issues
+            \`\`\``,
+                labels: ['bug', 'frontend', 'good first issue'],
+                assignees: []
+              },
+              {
+                title: '🔧 Fix Python linting issues in backend',
+                body: `## Description
+            Format and lint Python code to pass quality checks.
+
+            ## Tasks:
+            - [ ] Run Black formatter
+            - [ ] Fix isort import ordering
+            - [ ] Fix Flake8 violations
+
+            ## Commands:
+            \`\`\`bash
+            black src/
+            isort src/
+            flake8 src/
+            \`\`\``,
+                labels: ['enhancement', 'backend', 'code quality'],
+                assignees: []
+              },
+              {
+                title: '🧪 Fix failing tests',
+                body: `## Description
+            Ensure all tests pass for both frontend and backend.
+
+            ## Frontend tests:
+            \`\`\`bash
+            cd frontend
+            npm test
+            \`\`\`
+
+            ## Backend tests:
+            \`\`\`bash
+            pytest tests/
+            \`\`\``,
+                labels: ['test', 'bug'],
+                assignees: []
+              },
+              {
+                title: '📦 Add missing Docker files',
+                body: `## Description
+            Create Dockerfile for frontend and update backend Dockerfile.
+
+            ## Files needed:
+            - [ ] \`frontend/Dockerfile\`
+            - [ ] Update root \`Dockerfile\` for backend
+            - [ ] \`docker-compose.yml\` for local development
+
+            ## Requirements:
+            - Multi-stage builds for optimization
+            - Non-root user for security
+            - Health checks`,
+                labels: ['enhancement', 'devops'],
+                assignees: []
+              },
+              {
+                title: '🔐 Set up environment variables and secrets',
+                body: `## Description
+            Configure all required environment variables and secrets.
+
+            ## Required secrets:
+            - [ ] OPENAI_API_KEY
+            - [ ] ANTHROPIC_API_KEY
+            - [ ] XAI_API_KEY
+            - [ ] Market data provider API keys
+            - [ ] Database credentials
+            - [ ] Redis connection string
+
+            ## Files to update:
+            - [ ] \`.env.example\` with all required variables
+            - [ ] Documentation on how to set up`,
+                labels: ['configuration', 'security'],
+                assignees: []
+              },
+              {
+                title: '🚀 Configure deployment infrastructure',
+                body: `## Description
+            Set up deployment infrastructure for staging and production.
+
+            ## Options to consider:
+            - [ ] AWS ECS/EKS
+            - [ ] Google Cloud Run
+            - [ ] Azure Container Instances
+            - [ ] Vercel (frontend)
+            - [ ] Railway/Render (backend)
+
+            ## Requirements:
+            - Auto-scaling
+            - SSL certificates
+            - CDN for frontend
+            - Database backups`,
+                labels: ['infrastructure', 'deployment'],
+                assignees: []
+              },
+              {
+                title: '📊 Implement monitoring and observability',
+                body: `## Description
+            Add monitoring to track application health and performance.
+
+            ## Tools to integrate:
+            - [ ] Sentry for error tracking
+            - [ ] Prometheus/Grafana for metrics
+            - [ ] ELK stack for logs
+            - [ ] Uptime monitoring
+            - [ ] Performance monitoring (Lighthouse CI)
+
+            ## Key metrics:
+            - API response times
+            - WebSocket connection stability
+            - Error rates
+            - User activity`,
+                labels: ['monitoring', 'enhancement'],
+                assignees: []
+              },
+              {
+                title: '📝 Complete API documentation',
+                body: `## Description
+            Ensure all API endpoints are properly documented.
+
+            ## Tasks:
+            - [ ] Update OpenAPI/Swagger docs
+            - [ ] Add request/response examples
+            - [ ] Document WebSocket protocols
+            - [ ] Create API client SDKs
+            - [ ] Add authentication documentation`,
+                labels: ['documentation', 'api'],
+                assignees: []
+              }
+            ];
+
+            // Create issues
+            for (const issue of issues) {
+              try {
+                const result = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: issue.title,
+                  body: issue.body,
+                  labels: issue.labels,
+                  assignees: issue.assignees
+                });
+                console.log(`✅ Created issue: ${issue.title}`);
+              } catch (error) {
+                console.error(`❌ Failed to create issue: ${issue.title}`, error.message);
+              }
+            }
+
+            // Create a project board
+            try {
+              const project = await github.rest.projects.createForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'GoldenSignalsAI Development',
+                body: 'Track development progress for GoldenSignalsAI v4'
+              });
+              console.log(`✅ Created project board: ${project.data.name}`);
+            } catch (error) {
+              console.error('❌ Failed to create project board', error.message);
+            }

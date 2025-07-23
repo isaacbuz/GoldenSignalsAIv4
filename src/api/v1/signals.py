@@ -4,20 +4,21 @@ Trading Signals API Endpoints - GoldenSignalsAI V3
 Endpoints for retrieving, creating, and managing trading signals.
 """
 
+import logging
 from datetime import datetime, timedelta
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
-import logging
 
-from src.services.signal_service import SignalService
-from src.core.dependencies import get_signal_service, get_current_user
-from src.ml.models.signals import Signal, SignalType, SignalStrength
-from src.core.database import get_db
-from src.ml.models.schemas import SignalCreate
+from database import get_db
 from src.application.services import get_services
-from src.models.dto.signal_dto import SignalsResponse
+from src.core.dependencies import get_current_user, get_signal_service
+from src.ml.models.schemas import SignalCreate
+from src.ml.models.signals import Signal, SignalStrength, SignalType
+from src.models.dto.signal_dto import SignalResponse, SignalsResponse
+from src.services.signal_service import SignalService
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ services = get_services()
 
 class SignalResponse(BaseModel):
     """Response model for signal data"""
+
     signal_id: str
     symbol: str
     signal_type: str
@@ -47,6 +49,7 @@ class SignalResponse(BaseModel):
 
 class SignalListResponse(BaseModel):
     """Response model for signal lists"""
+
     signals: List[SignalResponse]
     total: int
     page: int
@@ -56,6 +59,7 @@ class SignalListResponse(BaseModel):
 
 class SignalAnalyticsResponse(BaseModel):
     """Response model for signal analytics"""
+
     total_signals: int
     executed_signals: int
     profitable_signals: int
@@ -76,11 +80,11 @@ async def get_signals_for_symbol(
     min_confidence: Optional[float] = Query(None, ge=0.0, le=1.0, description="Minimum confidence"),
     hours_back: Optional[int] = Query(24, ge=1, le=168, description="Hours to look back"),
     signal_service: SignalService = Depends(get_signal_service),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Get trading signals for a specific symbol with filtering options.
-    
+
     - **symbol**: Stock symbol (e.g., AAPL, TSLA)
     - **page**: Page number for pagination
     - **page_size**: Number of signals per page
@@ -91,7 +95,7 @@ async def get_signals_for_symbol(
     """
     try:
         since = datetime.utcnow() - timedelta(hours=hours_back)
-        
+
         # Get signals from service
         signals, total = await signal_service.get_signals_paginated(
             symbol=symbol.upper(),
@@ -100,9 +104,9 @@ async def get_signals_for_symbol(
             min_confidence=min_confidence,
             since=since,
             page=page,
-            page_size=page_size
+            page_size=page_size,
         )
-        
+
         # Convert to response models
         signal_responses = [
             SignalResponse(
@@ -119,23 +123,23 @@ async def get_signals_for_symbol(
                 risk_score=signal.risk_score,
                 reasoning=signal.reasoning,
                 created_at=signal.created_at,
-                expires_at=signal.expires_at
+                expires_at=signal.expires_at,
             )
             for signal in signals
         ]
-        
+
         return SignalListResponse(
             signals=signal_responses,
             total=total,
             page=page,
             page_size=page_size,
-            has_next=(page * page_size) < total
+            has_next=(page * page_size) < total,
         )
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve signals: {str(e)}"
+            detail=f"Failed to retrieve signals: {str(e)}",
         )
 
 
@@ -144,20 +148,17 @@ async def get_latest_signals(
     symbol: str,
     limit: int = Query(10, ge=1, le=50, description="Number of latest signals"),
     signal_service: SignalService = Depends(get_signal_service),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Get the latest signals for a symbol.
-    
+
     - **symbol**: Stock symbol
     - **limit**: Maximum number of signals to return
     """
     try:
-        signals = await signal_service.get_latest_signals(
-            symbol=symbol.upper(),
-            limit=limit
-        )
-        
+        signals = await signal_service.get_latest_signals(symbol=symbol.upper(), limit=limit)
+
         return [
             SignalResponse(
                 signal_id=signal.signal_id,
@@ -173,15 +174,15 @@ async def get_latest_signals(
                 risk_score=signal.risk_score,
                 reasoning=signal.reasoning,
                 created_at=signal.created_at,
-                expires_at=signal.expires_at
+                expires_at=signal.expires_at,
             )
             for signal in signals
         ]
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve latest signals: {str(e)}"
+            detail=f"Failed to retrieve latest signals: {str(e)}",
         )
 
 
@@ -190,26 +191,23 @@ async def get_signal_analytics(
     symbol: str,
     days: int = Query(30, ge=1, le=365, description="Days to analyze"),
     signal_service: SignalService = Depends(get_signal_service),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Get analytics and performance metrics for signals.
-    
+
     - **symbol**: Stock symbol to analyze
     - **days**: Number of days to include in analysis
     """
     try:
-        analytics = await signal_service.get_signal_analytics(
-            symbol=symbol.upper(),
-            days=days
-        )
-        
+        analytics = await signal_service.get_signal_analytics(symbol=symbol.upper(), days=days)
+
         return SignalAnalyticsResponse(**analytics)
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve signal analytics: {str(e)}"
+            detail=f"Failed to retrieve signal analytics: {str(e)}",
         )
 
 
@@ -218,30 +216,27 @@ async def get_signal_stream(
     symbol: str,
     limit: int = Query(50, ge=1, le=100, description="Number of signals in stream"),
     signal_service: SignalService = Depends(get_signal_service),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Get real-time signal stream for a symbol.
-    
+
     - **symbol**: Stock symbol
     - **limit**: Maximum number of signals in stream
     """
     try:
-        signals = await signal_service.get_signal_stream(
-            symbol=symbol.upper(),
-            limit=limit
-        )
-        
+        signals = await signal_service.get_signal_stream(symbol=symbol.upper(), limit=limit)
+
         return {
             "symbol": symbol.upper(),
             "signals": signals,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve signal stream: {str(e)}"
+            detail=f"Failed to retrieve signal stream: {str(e)}",
         )
 
 
@@ -253,11 +248,11 @@ async def submit_signal_feedback(
     actual_return: Optional[float] = None,
     notes: Optional[str] = None,
     signal_service: SignalService = Depends(get_signal_service),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Submit feedback on signal performance for machine learning improvement.
-    
+
     - **symbol**: Stock symbol
     - **signal_id**: ID of the signal to provide feedback on
     - **was_profitable**: Whether the signal was profitable
@@ -270,45 +265,46 @@ async def submit_signal_feedback(
             was_profitable=was_profitable,
             actual_return=actual_return,
             notes=notes,
-            user_id=current_user.get("user_id")
+            user_id=current_user.get("user_id"),
         )
-        
+
         return {
             "status": "success",
             "message": "Signal feedback submitted successfully",
-            "signal_id": signal_id
+            "signal_id": signal_id,
         }
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to submit signal feedback: {str(e)}"
+            detail=f"Failed to submit signal feedback: {str(e)}",
         )
 
 
-@router.get("/latest", response_model=List[Signal])
+@router.get("/latest", response_model=List[SignalResponse])
 async def get_latest_signals(
     limit: int = Query(default=10, ge=1, le=100),
-    signal_service: SignalService = Depends(get_signal_service)
+    signal_service: SignalService = Depends(get_signal_service),
 ):
     """
     Get the latest trading signals
-    
+
     This endpoint is used by the frontend dashboard to display recent signals.
     """
     # For MVP, generate mock signals if database is empty
     try:
         signals = await signal_service.get_latest_signals(limit)
-        
+
         # If no signals in database, generate some mock ones
         if not signals or len(signals) == 0:
             mock_signals = []
-            symbols = ['AAPL', 'GOOGL', 'TSLA', 'NVDA', 'MSFT', 'META', 'AMZN', 'SPY']
-            signal_types = ['BUY', 'SELL', 'HOLD']
-            strengths = ['STRONG', 'MODERATE', 'WEAK']
-            
+            symbols = ["AAPL", "GOOGL", "TSLA", "NVDA", "MSFT", "META", "AMZN", "SPY"]
+            signal_types = ["BUY", "SELL", "HOLD"]
+            strengths = ["STRONG", "MODERATE", "WEAK"]
+
             for i in range(min(limit, len(symbols))):
                 import random
+
                 signal = Signal(
                     signal_id=f"mock_{i}",
                     symbol=symbols[i],
@@ -320,50 +316,49 @@ async def get_latest_signals(
                     indicators={
                         "RSI": random.uniform(30, 70),
                         "MACD": random.uniform(-5, 5),
-                        "BB_Position": random.uniform(0, 1)
+                        "BB_Position": random.uniform(0, 1),
                     },
-                    timestamp=datetime.now().isoformat()
+                    timestamp=datetime.now().isoformat(),
                 )
                 mock_signals.append(signal)
-            
+
             return mock_signals
-        
+
         return signals
-        
+
     except Exception as e:
         # Return mock data on any error for MVP
         return []
 
 
-@router.get("/{symbol}", response_model=Signal)
+@router.get("/{symbol}/latest", response_model=SignalResponse)
 async def get_signal_for_symbol(
-    symbol: str,
-    signal_service: SignalService = Depends(get_signal_service)
+    symbol: str, signal_service: SignalService = Depends(get_signal_service)
 ):
     """Get the latest signal for a specific symbol"""
     signal = await signal_service.get_latest_signal_for_symbol(symbol.upper())
-    
+
     if not signal:
         # Generate a mock signal for MVP
         import random
+
         return Signal(
             signal_id=f"mock_{symbol}",
             symbol=symbol.upper(),
-            signal_type=random.choice(['BUY', 'SELL', 'HOLD']),
+            signal_type=random.choice(["BUY", "SELL", "HOLD"]),
             confidence=random.uniform(0.6, 0.95),
-            strength=random.choice(['STRONG', 'MODERATE', 'WEAK']),
+            strength=random.choice(["STRONG", "MODERATE", "WEAK"]),
             current_price=random.uniform(50, 500),
             reasoning="Technical analysis indicates opportunity",
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
-    
+
     return signal
 
 
-@router.post("/", response_model=Signal)
+@router.post("/", response_model=SignalResponse)
 async def create_signal(
-    signal: SignalCreate,
-    signal_service: SignalService = Depends(get_signal_service)
+    signal: SignalCreate, signal_service: SignalService = Depends(get_signal_service)
 ):
     """Create a new trading signal"""
     return await signal_service.create_signal(signal)
@@ -372,28 +367,23 @@ async def create_signal(
 @router.get("/generate", response_model=SignalsResponse)
 async def generate_signals(
     symbols: List[str] = Query(
-        default=["AAPL", "GOOGL", "MSFT"],
-        description="List of stock symbols to analyze"
+        default=["AAPL", "GOOGL", "MSFT"], description="List of stock symbols to analyze"
     )
 ):
     """
     Generate trading signals for given symbols
-    
+
     Args:
         symbols: List of stock symbols to analyze
-        
+
     Returns:
         SignalsResponse with generated signals
     """
     try:
         signals = await services.generate_signals(symbols)
-        
-        return SignalsResponse(
-            signals=signals,
-            count=len(signals),
-            status="success"
-        )
-        
+
+        return SignalsResponse(signals=signals, count=len(signals), status="success")
+
     except Exception as e:
         logger.error(f"Error generating signals: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -403,21 +393,21 @@ async def generate_signals(
 async def get_signal_performance(signal_id: str):
     """
     Get performance metrics for a specific signal
-    
+
     Args:
         signal_id: Signal identifier
-        
+
     Returns:
         Performance metrics dictionary
     """
     try:
         performance = await services.get_signal_performance(signal_id)
-        
+
         if "error" in performance:
             raise HTTPException(status_code=404, detail=performance["error"])
-            
+
         return performance
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -429,21 +419,21 @@ async def get_signal_performance(signal_id: str):
 async def analyze_signal_risk(signals: List[dict]):
     """
     Analyze risk for given signals
-    
+
     Args:
         signals: List of signal dictionaries
-        
+
     Returns:
         Risk analysis results
     """
     try:
         risk_analysis = await services.analyze_risk(signals)
-        
+
         if "error" in risk_analysis:
             raise HTTPException(status_code=400, detail=risk_analysis["error"])
-            
+
         return risk_analysis
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -455,23 +445,23 @@ async def analyze_signal_risk(signals: List[dict]):
 async def validate_data_quality(symbol: str):
     """
     Validate data quality for a symbol
-    
+
     Args:
         symbol: Stock symbol
-        
+
     Returns:
         Data quality validation report
     """
     try:
         validation = await services.validate_data_quality(symbol)
-        
+
         if "error" in validation:
             raise HTTPException(status_code=400, detail=validation["error"])
-            
+
         return validation
-        
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error validating data quality: {e}")
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))

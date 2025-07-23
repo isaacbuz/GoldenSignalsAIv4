@@ -48,6 +48,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createChart, IChartApi, ISeriesApi, Time } from 'lightweight-charts';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../services/api';
+import logger from '../../services/logger';
+
 
 export interface AISignalProphetProps {
     onSignalGenerated?: (signal: any) => void;
@@ -221,7 +223,7 @@ const AISignalProphet: React.FC<AISignalProphetProps> = ({ onSignalGenerated }) 
                 }
             }
         } catch (error) {
-            console.error('Error generating signal:', error);
+            logger.error('Error generating signal:', error);
         } finally {
             setIsAnalyzing(false);
         }
@@ -754,4 +756,4 @@ const AISignalProphet: React.FC<AISignalProphetProps> = ({ onSignalGenerated }) 
     );
 };
 
-export default AISignalProphet; 
+export default AISignalProphet;

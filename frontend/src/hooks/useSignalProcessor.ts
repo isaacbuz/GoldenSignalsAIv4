@@ -8,6 +8,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../services/api/apiClient';
 import { useSignalUpdates, SignalUpdate } from '../services/websocket/SignalWebSocketManager';
 import { yieldToMain } from '../utils/performance';
+import logger from '../services/logger';
+
 
 export interface ProcessedSignal {
     signal_id: string;
@@ -98,11 +100,11 @@ export const useSignalProcessor = (
                 } else if (response && Array.isArray(response.signals)) {
                     return response.signals;
                 } else {
-                    console.warn('API returned non-array signals data:', response);
+                    logger.warn('API returned non-array signals data:', response);
                     return [];
                 }
             } catch (error) {
-                console.error('Error fetching signals:', error);
+                logger.error('Error fetching signals:', error);
                 return [];
             }
         },
@@ -280,7 +282,7 @@ export const useSignalProcessor = (
             const processingTime = now - lastProcessTime.current;
             if (processingTime > 200) { // Increased threshold to 200ms to reduce noise
                 if (process.env.NODE_ENV === 'development') {
-                    console.warn(`Signal processing took ${processingTime.toFixed(2)}ms`);
+                    logger.warn(`Signal processing took ${processingTime.toFixed(2)}ms`);
                 }
             }
         }
@@ -325,4 +327,4 @@ export const useSignalProcessor = (
         // Config
         config: finalConfig
     };
-}; 
+};

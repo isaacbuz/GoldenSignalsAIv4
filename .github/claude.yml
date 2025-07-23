@@ -1,0 +1,196 @@
+# Claude for GitHub Configuration
+version: 1
+
+# Review settings
+reviews:
+  auto_review: true
+  review_drafts: false
+  comment_style: "constructive"  # constructive, detailed, concise
+
+  # What to check
+  checks:
+    - security
+    - performance
+    - best_practices
+    - documentation
+    - tests
+    - accessibility
+    - type_safety
+
+  # Language-specific settings
+  languages:
+    python:
+      style_guide: "black"
+      max_line_length: 100
+      type_checking: true
+      frameworks:
+        - "fastapi"
+        - "langchain"
+        - "pytest"
+
+    typescript:
+      style_guide: "eslint"
+      strict_mode: true
+      frameworks:
+        - "react"
+        - "mui"
+        - "vite"
+
+    javascript:
+      style_guide: "eslint"
+      frameworks:
+        - "react"
+        - "node"
+
+# Issue assistance
+issues:
+  auto_label: true
+  suggest_solutions: true
+  auto_assign_fixable: false
+
+  # Labels Claude can add
+  labels:
+    - "needs-review"
+    - "security"
+    - "performance"
+    - "bug"
+    - "enhancement"
+    - "good first issue"
+    - "help wanted"
+    - "documentation"
+
+  # Auto-responses
+  templates:
+    bug_detected: |
+      I've analyzed this bug report. Here's what I found:
+
+    enhancement_review: |
+      This enhancement request has been reviewed. Considerations:
+
+    question_answer: |
+      Based on the codebase analysis:
+
+# Pull request settings
+pull_requests:
+  auto_review_threshold: 10  # files changed
+  require_human_review: true
+
+  # PR checklist
+  checklist:
+    - "Tests added/updated"
+    - "Documentation updated"
+    - "No console.log statements"
+    - "TypeScript types defined"
+    - "Error handling implemented"
+    - "WebSocket connections handled properly"
+
+# Custom prompts for your project
+prompts:
+  review_focus: |
+    This is a FinTech trading signals application. Focus on:
+    1. Security vulnerabilities (especially API keys, auth)
+    2. Performance optimizations (real-time data handling)
+    3. React best practices and hooks usage
+    4. TypeScript type safety and inference
+    5. WebSocket connection stability and error handling
+    6. Chart rendering performance (canvas optimization)
+    7. Memory leaks in real-time components
+    8. Error boundaries and fallbacks
+
+  project_context: |
+    GoldenSignalsAI v4 is a professional trading platform with:
+    - React/TypeScript frontend with Material-UI
+    - FastAPI Python backend with async support
+    - Real-time WebSocket for market data and signals
+    - AI agents using LangGraph orchestration
+    - Multiple LLMs (GPT-4, Claude, Grok)
+    - Canvas-based charting (AITradingChart component)
+    - Redis caching and PostgreSQL database
+    - Docker containerization
+
+  code_standards: |
+    Follow these standards:
+    - Use functional React components with hooks
+    - Implement proper TypeScript types (avoid 'any')
+    - Handle all error cases with try-catch
+    - Add loading states for async operations
+    - Use proper WebSocket cleanup on unmount
+    - Follow ESLint rules (no-unused-vars with ^_ prefix)
+    - Python: Black formatting, 100 char lines
+    - Import order: React, Material-UI, external, internal, types
+
+# Specific rules for your codebase
+rules:
+  frontend:
+    - "No direct DOM manipulation"
+    - "Use Material-UI theme instead of inline styles"
+    - "Memoize expensive computations"
+    - "Clean up subscriptions and timers"
+    - "Use error boundaries for chart components"
+
+  backend:
+    - "Use async/await for all I/O operations"
+    - "Validate inputs with Pydantic"
+    - "Handle rate limiting properly"
+    - "Log errors with context"
+    - "Never expose internal errors to clients"
+
+  security:
+    - "No hardcoded API keys or secrets"
+    - "Validate all user inputs"
+    - "Use prepared statements for SQL"
+    - "Implement proper CORS policies"
+    - "Rate limit all endpoints"
+
+# Automation
+automation:
+  # Auto-fix certain issues
+  auto_fix:
+    - "trailing_whitespace"
+    - "missing_semicolons"
+    - "import_order"
+    - "unused_imports"
+
+  # Create follow-up issues
+  create_issues_for:
+    - "TODO comments"
+    - "FIXME comments"
+    - "Security warnings"
+    - "Performance concerns"
+
+# Integration with other tools
+integrations:
+  sentry:
+    report_errors: true
+
+  slack:
+    notify_on: ["security_issues", "failed_builds"]
+
+  jira:
+    sync_issues: false
+
+# Commands available in comments
+commands:
+  - name: "review"
+    description: "Request a code review"
+
+  - name: "security"
+    description: "Security-focused review"
+
+  - name: "performance"
+    description: "Performance analysis"
+
+  - name: "fix-lint"
+    description: "Suggest fixes for linting errors"
+
+  - name: "explain"
+    description: "Explain complex code"
+
+  - name: "refactor"
+    description: "Suggest refactoring"
+
+  - name: "tests"
+    description: "Generate test cases"
+
+  - name: "docs"
+    description: "Generate documentation"

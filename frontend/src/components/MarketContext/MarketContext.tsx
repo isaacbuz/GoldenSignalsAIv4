@@ -36,6 +36,9 @@ import {
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
+import logger from '../../services/logger';
+
 
 // Styled components
 const ContextContainer = styled(Box)(({ theme }) => ({
@@ -77,11 +80,11 @@ const SentimentIndicator = styled(Box)(({ theme }) => ({
   width: '100%',
   height: 8,
   borderRadius: 4,
-  background: `linear-gradient(to right, 
-    ${theme.palette.error.main} 0%, 
-    ${theme.palette.warning.main} 35%, 
-    ${theme.palette.grey[500]} 50%, 
-    ${theme.palette.info.main} 65%, 
+  background: `linear-gradient(to right,
+    ${theme.palette.error.main} 0%,
+    ${theme.palette.warning.main} 35%,
+    ${theme.palette.grey[500]} 50%,
+    ${theme.palette.info.main} 65%,
     ${theme.palette.success.main} 100%)`,
   position: 'relative',
   marginTop: theme.spacing(1),
@@ -244,7 +247,7 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
     try {
       // Simulate API calls
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setNews(generateMockNews());
       setOptionsFlow(generateMockOptionsFlow());
       setMarketMetrics(generateMarketMetrics());
@@ -253,7 +256,7 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
         `Strong bullish momentum detected for ${symbol}. Recent earnings beat and positive analyst sentiment driving institutional buying. Technical breakout confirmed with high volume. Options flow heavily skewed bullish with 87% call volume.`
       );
     } catch (error) {
-      console.error('Error fetching market context:', error);
+      logger.error('Error fetching market context:', error);
     } finally {
       setLoading(false);
     }
@@ -332,7 +335,7 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
   return (
     <ContextContainer>
       {/* AI Summary */}
-      <Card elevation={0} sx={{ 
+      <Card elevation={0} sx={{
         background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
         border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
       }}>
@@ -348,7 +351,7 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
               <RefreshIcon />
             </IconButton>
           </Box>
-          
+
           <Typography variant="body2" color="text.secondary" paragraph>
             {aiSummary}
           </Typography>
@@ -356,9 +359,9 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
           <Box>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="subtitle2">Overall Sentiment</Typography>
-              <Chip 
-                label={`${sentiment}% Bullish`} 
-                color="success" 
+              <Chip
+                label={`${sentiment}% Bullish`}
+                color="success"
                 size="small"
                 icon={<TrendingUpIcon />}
               />
@@ -389,8 +392,8 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
             >
               <Stack spacing={2}>
                 {news.map((item) => (
-                  <NewsCard 
-                    key={item.id} 
+                  <NewsCard
+                    key={item.id}
                     elevation={0}
                     onClick={() => onNewsClick?.(item)}
                   >
@@ -401,9 +404,9 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
                             {item.title}
                           </Typography>
                           <Box display="flex" alignItems="center" gap={1} mb={1}>
-                            <Chip 
-                              label={item.source} 
-                              size="small" 
+                            <Chip
+                              label={item.source}
+                              size="small"
                               variant="outlined"
                             />
                             <Typography variant="caption" color="text.secondary">
@@ -499,9 +502,9 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
                             <Typography variant="caption" color="text.secondary">
                               Smart Money Flow
                             </Typography>
-                            <Chip 
-                              label="BULLISH" 
-                              color="success" 
+                            <Chip
+                              label="BULLISH"
+                              color="success"
                               size="small"
                               icon={<TrendingUpIcon />}
                             />
@@ -533,8 +536,8 @@ const MarketContext: React.FC<MarketContextProps> = ({ symbol, onNewsClick }) =>
                           <tr key={index}>
                             <td style={{ padding: '8px' }}>${flow.strike}</td>
                             <td style={{ padding: '8px' }}>
-                              <Chip 
-                                label={flow.type.toUpperCase()} 
+                              <Chip
+                                label={flow.type.toUpperCase()}
                                 size="small"
                                 color={flow.type === 'call' ? 'success' : 'error'}
                               />

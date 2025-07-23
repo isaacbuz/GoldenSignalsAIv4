@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { lazy, Suspense, ComponentType } from 'react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import logger from '../services/logger';
+
 
 // Lazy load components with loading fallback
 export function lazyLoadComponent<T extends ComponentType<any>>(
@@ -97,7 +99,7 @@ export const PerformanceMonitor: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const observer = new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => {
-        console.log('Performance entry:', entry);
+        logger.info('Performance entry:', entry);
       });
     });
 

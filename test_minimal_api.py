@@ -32,7 +32,7 @@ async def test_endpoint():
     return {
         "message": "Test endpoint working",
         "frontend": "http://localhost:3000",
-        "storybook": "http://localhost:6006"
+
     }
 
 @app.websocket("/ws/signals")
@@ -46,20 +46,20 @@ async def websocket_endpoint(websocket: WebSocket):
             "timestamp": "2025-07-01T00:00:00Z",
             "data": {"message": "Connected to test WebSocket"}
         })
-        
+
         # Keep connection alive and handle messages
         while True:
             # Wait for incoming message
             data = await websocket.receive_text()
             message = json.loads(data)
-            
+
             # Echo back ping messages
             if message.get("type") == "ping":
                 await websocket.send_json({
                     "type": "pong",
                     "timestamp": "2025-07-01T00:00:00Z"
                 })
-            
+
             # Handle subscription messages
             elif message.get("type") == "subscribe":
                 await websocket.send_json({
@@ -68,7 +68,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     "topic": message.get("topic"),
                     "timestamp": "2025-07-01T00:00:00Z"
                 })
-                
+
             # Send mock signal updates periodically
             elif message.get("type") == "unsubscribe":
                 await websocket.send_json({
@@ -77,7 +77,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     "topic": message.get("topic"),
                     "timestamp": "2025-07-01T00:00:00Z"
                 })
-                
+
     except WebSocketDisconnect:
         print("WebSocket disconnected")
     except Exception as e:
@@ -88,5 +88,5 @@ if __name__ == "__main__":
     print("📍 API will be available at: http://localhost:8000")
     print("📚 Docs will be available at: http://localhost:8000/docs")
     print("\nPress Ctrl+C to stop")
-    
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)

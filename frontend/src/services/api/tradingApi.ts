@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { signalWebSocketManager } from '../websocket/SignalWebSocketManager';
+import logger from '../logger';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 // Types
 export interface StockSearchResult {
@@ -81,7 +83,7 @@ class TradingAPI {
       });
       return response.data;
     } catch (error) {
-      console.error('Error searching stocks:', error);
+      logger.error('Error searching stocks:', error);
       // Fallback to mock data if API fails
       return this.getMockStockData().filter(
         stock =>
@@ -99,7 +101,7 @@ class TradingAPI {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching price data:', error);
+      logger.error('Error fetching price data:', error);
       throw error;
     }
   }
@@ -113,7 +115,7 @@ class TradingAPI {
       });
       return response.data;
     } catch (error) {
-      console.error('Error generating signal:', error);
+      logger.error('Error generating signal:', error);
       throw error;
     }
   }
@@ -126,7 +128,7 @@ class TradingAPI {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching signals:', error);
+      logger.error('Error fetching signals:', error);
       throw error;
     }
   }
@@ -137,7 +139,7 @@ class TradingAPI {
       const response = await this.axiosInstance.get(`/api/v1/news/${symbol}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching news:', error);
+      logger.error('Error fetching news:', error);
       // Return mock data as fallback
       return this.getMockNews();
     }
@@ -149,7 +151,7 @@ class TradingAPI {
       const response = await this.axiosInstance.get(`/api/v1/options/${symbol}/flow`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching options flow:', error);
+      logger.error('Error fetching options flow:', error);
       return this.getMockOptionsFlow();
     }
   }
@@ -160,7 +162,7 @@ class TradingAPI {
       const response = await this.axiosInstance.get('/api/v1/market/metrics');
       return response.data;
     } catch (error) {
-      console.error('Error fetching market metrics:', error);
+      logger.error('Error fetching market metrics:', error);
       throw error;
     }
   }
@@ -169,7 +171,7 @@ class TradingAPI {
   connectToRealTimeData(symbol: string, onUpdate: (data: any) => void) {
     // Use the existing WebSocket manager
     signalWebSocketManager.connect();
-    
+
     // Subscribe to price updates
     signalWebSocketManager.subscribe('price_update', (data) => {
       if (data.symbol === symbol) {
