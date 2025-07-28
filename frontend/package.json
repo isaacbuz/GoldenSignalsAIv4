@@ -123,7 +123,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^3.2.4",
     "typescript": "^5.2.2",
-    "vite": "^5.0.0",
+    "vite": "^7.0.6",
     "vite-bundle-analyzer": "^1.0.0",
     "vite-plugin-pwa": "^0.17.4",
     "vite-tsconfig-paths": "^4.2.1",
