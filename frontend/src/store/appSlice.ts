@@ -46,4 +46,4 @@ export const {
     clearNotifications
 } = appSlice.actions;
 
-export default appSlice.reducer; 
+export default appSlice.reducer;

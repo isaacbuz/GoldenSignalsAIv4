@@ -10,6 +10,7 @@ class PriceAlertEvent:
     price: float
     timestamp: datetime = datetime.now()
 
+
 @dataclass
 class SignalEvent:
     type: str = "SignalEvent"

@@ -199,9 +199,11 @@ export const ChartCanvas = memo(forwardRef<ChartCanvasHandle, ChartCanvasProps>(
 }, ref) => {
   const muiTheme = useTheme();
   const theme = propTheme || muiTheme;
+  const { state } = useChartContext();
 
   // Use timeframe from props or default
   const timeframe = propTimeframe || '1h';
+  const symbol = state.chartData.symbol;
 
   // Layer manager ref
   const layerManagerRef = useRef<LayerManagerHandle>(null);

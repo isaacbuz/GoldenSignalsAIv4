@@ -58,11 +58,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     enable_auto_scaling = false
     os_disk_size_gb    = 50
     vnet_subnet_id     = azurerm_subnet.aks.id
-    
+
     enable_host_encryption = false
-    
+
     enable_node_public_ip = false
-    
+
     tags = {
       Environment = "Development"
     }
@@ -187,4 +187,4 @@ output "acr_login_server" {
 output "application_insights_key" {
   value = azurerm_application_insights.appinsights.instrumentation_key
   sensitive = true
-} 
+}

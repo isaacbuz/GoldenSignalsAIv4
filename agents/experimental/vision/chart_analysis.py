@@ -4,11 +4,13 @@ Chart Analysis Module
 Accepts chart images (screenshots or camera frames), detects technical patterns, and generates option trade signals.
 Uses ChartPatternModel for real pattern detection and overlay drawing.
 """
+import base64
+import io
+from typing import Any, Dict
+
 from fastapi import UploadFile
 from PIL import Image, ImageDraw
-import io
-import base64
-from typing import Dict, Any
+
 from .chart_model import ChartPatternModel
 
 model = ChartPatternModel()

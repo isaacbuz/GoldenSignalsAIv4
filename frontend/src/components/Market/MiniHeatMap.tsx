@@ -1,6 +1,6 @@
 /**
  * MiniHeatMap Component - Compact Market Overview
- * 
+ *
  * A smaller version of the heat map for dashboard integration
  */
 
@@ -225,4 +225,4 @@ const MiniHeatMap: React.FC<MiniHeatMapProps> = ({ onSymbolSelect }) => {
     );
 };
 
-export default MiniHeatMap; 
+export default MiniHeatMap;

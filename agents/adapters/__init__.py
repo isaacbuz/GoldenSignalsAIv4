@@ -1,1 +1,1 @@
-"""Adapter layer for bridging legacy agents into the V3 agent framework.""" 
+"""Adapter layer for bridging legacy agents into the V3 agent framework."""

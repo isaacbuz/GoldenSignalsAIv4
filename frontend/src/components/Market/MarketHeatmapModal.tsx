@@ -416,4 +416,4 @@ const MarketHeatmapModal: React.FC<MarketHeatmapModalProps> = ({
     );
 };
 
-export default MarketHeatmapModal; 
+export default MarketHeatmapModal;

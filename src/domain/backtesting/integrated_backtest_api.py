@@ -34,13 +34,14 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="GoldenSignalsAI Backtest API",
     description="Comprehensive backtesting with real data, market simulation, and adaptive learning",
-    version="2.0.0"
+    version="2.0.0",
 )
 
 
 # Pydantic models for API
 class BacktestRequest(BaseModel):
     """Request model for backtesting"""
+
     symbols: List[str]
     start_date: str
     end_date: str
@@ -50,7 +51,7 @@ class BacktestRequest(BaseModel):
     enable_ml: bool = True
     enable_risk_management: bool = True
     market_impact_model: bool = True
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -59,13 +60,14 @@ class BacktestRequest(BaseModel):
                 "end_date": "2024-12-31",
                 "initial_capital": 100000,
                 "strategy_type": "adaptive_rsi",
-                "enable_ml": True
+                "enable_ml": True,
             }
         }
 
 
 class BacktestStatus(BaseModel):
     """Status of a running backtest"""
+
     backtest_id: str
     status: str  # 'running', 'completed', 'failed'
     progress: float  # 0-100
@@ -77,29 +79,30 @@ class BacktestStatus(BaseModel):
 
 class BacktestResult(BaseModel):
     """Complete backtest results"""
+
     backtest_id: str
     status: str
     execution_time: float
-    
+
     # Performance metrics
     total_return: float
     sharpe_ratio: float
     max_drawdown: float
     win_rate: float
-    
+
     # Risk metrics
     var_95: float
     var_99: float
     leverage: float
-    
+
     # Execution quality
     avg_slippage: float
     fill_rate: float
-    
+
     # Signal accuracy
     signal_accuracy: float
     false_positive_rate: float
-    
+
     # Detailed results
     trades: List[Dict[str, Any]]
     daily_returns: List[float]
@@ -134,7 +137,7 @@ async def get_backtest_status(backtest_id: str):
         current_step="Simulating trading days",
         start_time=datetime.now(),
         estimated_completion=datetime.now() + timedelta(minutes=5),
-        partial_results=None
+        partial_results=None,
     )
 
 
@@ -160,7 +163,7 @@ async def get_backtest_results(backtest_id: str):
         trades=[],
         daily_returns=[],
         risk_events=[],
-        agent_performance={}
+        agent_performance={},
     )
 
 
@@ -174,11 +177,12 @@ async def health_check():
             "data_manager": "ready",
             "market_simulator": "ready",
             "risk_manager": "ready",
-            "adaptive_agents": "ready"
-        }
+            "adaptive_agents": "ready",
+        },
     }
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

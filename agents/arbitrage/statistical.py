@@ -1,18 +1,20 @@
 """
 Statistical arbitrage agent implementation.
 """
-from typing import Dict, Any, List, Optional, Callable
 import logging
+from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional
+
 import numpy as np
 import pandas as pd
-from datetime import datetime
-from .base import BaseArbitrageAgent, ArbitrageOpportunity
+
+from .base import ArbitrageOpportunity, BaseArbitrageAgent
 
 logger = logging.getLogger(__name__)
 
 class StatisticalArbitrageAgent(BaseArbitrageAgent):
     """Agent that finds statistical arbitrage opportunities."""
-    
+
     def __init__(
         self,
         name: str = "StatisticalArbitrage",
@@ -28,7 +30,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
     ):
         """
         Initialize statistical arbitrage agent.
-        
+
         Args:
             name: Agent name
             min_spread: Minimum spread to consider
@@ -53,7 +55,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
         self.zscore_threshold = zscore_threshold
         self.mean_reversion_threshold = mean_reversion_threshold
         self.data_fetcher = data_fetcher
-        
+
     def calculate_metrics(
         self,
         prices: pd.Series
@@ -64,7 +66,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
             mean = prices.rolling(window=self.window).mean()
             std = prices.rolling(window=self.window).std()
             zscore = (prices - mean) / std
-            
+
             # Calculate mean reversion strength
             price_changes = prices.diff()
             mean_dist = prices - mean
@@ -72,13 +74,13 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                 mean_dist[:-1],
                 price_changes[1:]
             )[0, 1]
-            
+
             # Calculate half-life of mean reversion
             if mean_reversion > 0:
                 half_life = np.log(2) / mean_reversion
             else:
                 half_life = np.inf
-                
+
             return {
                 "mean": mean.iloc[-1],
                 "std": std.iloc[-1],
@@ -86,11 +88,11 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                 "mean_reversion": mean_reversion,
                 "half_life": half_life
             }
-            
+
         except Exception as e:
             logger.error(f"Metric calculation failed: {str(e)}")
             return {}
-            
+
     def find_opportunities(
         self,
         symbol: str,
@@ -101,15 +103,15 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
         try:
             if not metrics:
                 return None
-                
+
             zscore = metrics["zscore"]
             mean_reversion = metrics["mean_reversion"]
             mean = metrics["mean"]
-            
+
             # Check if conditions are met
-            if (abs(zscore) > self.zscore_threshold and 
+            if (abs(zscore) > self.zscore_threshold and
                 mean_reversion > self.mean_reversion_threshold):
-                
+
                 # Determine trade direction
                 if zscore > 0:  # Overvalued
                     return ArbitrageOpportunity(
@@ -129,25 +131,25 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                         sell_price=mean,
                         timestamp=datetime.now().timestamp()
                     )
-                    
+
             return None
-            
+
         except Exception as e:
             logger.error(f"Opportunity finding failed: {str(e)}")
             return None
-        
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process market data for statistical arbitrage opportunities."""
         try:
             if "symbol" not in data or "price" not in data:
                 raise ValueError("Missing required data fields")
-                
+
             symbol = data["symbol"]
             current_price = data["price"]
-            
+
             if not self.data_fetcher:
                 raise ValueError("No data fetcher configured")
-                
+
             # Get historical data
             historical_data = self.data_fetcher(symbol)
             if historical_data is None or len(historical_data) < self.window:
@@ -158,7 +160,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                         "error": "Insufficient historical data"
                     }
                 }
-                
+
             # Calculate metrics
             metrics = self.calculate_metrics(historical_data)
             if not metrics:
@@ -169,17 +171,17 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                         "error": "Failed to calculate metrics"
                     }
                 }
-                
+
             # Find opportunities
             opportunity = self.find_opportunities(
                 symbol,
                 current_price,
                 metrics
             )
-            
+
             if opportunity and self.validate_opportunity(opportunity):
                 self.opportunities = [opportunity]
-                
+
                 # Calculate confidence based on z-score and mean reversion
                 zscore_conf = min(
                     abs(metrics["zscore"]) / self.zscore_threshold,
@@ -190,7 +192,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                     1.0
                 )
                 confidence = (zscore_conf + mr_conf) / 2
-                
+
                 return {
                     "action": "execute",
                     "confidence": confidence,
@@ -199,7 +201,7 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                         "opportunity": opportunity.to_dict()
                     }
                 }
-                
+
             return {
                 "action": "hold",
                 "confidence": 0.0,
@@ -208,11 +210,11 @@ class StatisticalArbitrageAgent(BaseArbitrageAgent):
                     "opportunities": []
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"Statistical arbitrage processing failed: {str(e)}")
             return {
                 "action": "hold",
                 "confidence": 0.0,
                 "metadata": {"error": str(e)}
-            } 
+            }

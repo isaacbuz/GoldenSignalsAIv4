@@ -14,4 +14,4 @@ def test_health_check():
     assert data["status"] == "healthy"
     assert "database" in data
     assert "redis" in data
-    assert "agents" in data 
+    assert "agents" in data

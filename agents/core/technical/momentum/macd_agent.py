@@ -1,17 +1,19 @@
 """
 MACD (Moving Average Convergence Divergence) technical analysis agent.
 """
-from typing import Dict, Any, Tuple, Optional
+import logging
+from typing import Any, Dict, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-import logging
+
 from ....base import BaseAgent
 
 logger = logging.getLogger(__name__)
 
 class MACDAgent(BaseAgent):
     """Agent that generates trading signals based on MACD crossovers and divergences."""
-    
+
     def __init__(
         self,
         name: str = "MACD",
@@ -22,7 +24,7 @@ class MACDAgent(BaseAgent):
     ):
         """
         Initialize MACD agent.
-        
+
         Args:
             name: Agent name
             fast_period: Fast EMA period
@@ -35,41 +37,41 @@ class MACDAgent(BaseAgent):
         self.slow_period = slow_period
         self.signal_period = signal_period
         self.divergence_threshold = divergence_threshold
-        
+
     def calculate_macd(self, prices: pd.Series) -> Tuple[Optional[float], Optional[float], Optional[float]]:
         """Calculate MACD line, signal line, and histogram."""
         try:
             if len(prices) < self.slow_period + self.signal_period:
                 return None, None, None
-                
+
             # Calculate EMAs
             ema_fast = prices.ewm(span=self.fast_period, adjust=False).mean()
             ema_slow = prices.ewm(span=self.slow_period, adjust=False).mean()
-            
+
             # Calculate MACD line and signal
             macd_line = ema_fast - ema_slow
             signal_line = macd_line.ewm(span=self.signal_period, adjust=False).mean()
             histogram = macd_line - signal_line
-            
+
             return (
                 float(macd_line.iloc[-1]),
                 float(signal_line.iloc[-1]),
                 float(histogram.iloc[-1])
             )
-            
+
         except Exception as e:
             logger.error(f"MACD calculation failed: {str(e)}")
             return None, None, None
-        
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process market data and generate MACD signals with confidence levels."""
         try:
             if "close_prices" not in data:
                 raise ValueError("Close prices not found in market data")
-                
+
             prices = pd.Series(data["close_prices"])
             macd, signal, histogram = self.calculate_macd(prices)
-            
+
             if macd is None:
                 return {
                     "action": "hold",
@@ -78,7 +80,7 @@ class MACDAgent(BaseAgent):
                         "error": "Insufficient data for MACD calculation"
                     }
                 }
-            
+
             # Calculate signal based on MACD crossovers and histogram
             if histogram > 0 and histogram > self.divergence_threshold:
                 action = "buy"
@@ -91,13 +93,13 @@ class MACDAgent(BaseAgent):
             else:
                 action = "hold"
                 confidence = 0.0
-                
+
             # Adjust confidence based on trend consistency
             if len(prices) >= self.slow_period:
                 trend = prices.pct_change(self.slow_period).iloc[-1]
                 if (action == "buy" and trend < 0) or (action == "sell" and trend > 0):
                     confidence *= 0.8  # Reduce confidence when against trend
-                
+
             return {
                 "action": action,
                 "confidence": confidence,
@@ -111,11 +113,11 @@ class MACDAgent(BaseAgent):
                     "divergence_threshold": self.divergence_threshold
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"MACD signal processing failed: {str(e)}")
             return {
                 "action": "hold",
                 "confidence": 0.0,
                 "metadata": {"error": str(e)}
-            } 
+            }

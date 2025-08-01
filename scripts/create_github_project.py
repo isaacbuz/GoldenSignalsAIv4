@@ -11,17 +11,17 @@ from datetime import datetime
 
 def create_project_board(token: str, owner: str, repo: str):
     """Create a GitHub project board for frontend enhancement"""
-    
+
     # GitHub API headers
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
         "X-GitHub-Api-Version": "2022-11-28"
     }
-    
+
     # Note: GitHub Projects V2 requires GraphQL API
     # For simplicity, we'll document the project structure
-    
+
     project_structure = {
         "name": "Frontend Enhancement Roadmap",
         "description": "Tracking the implementation of frontend enhancements to utilize all backend capabilities",
@@ -143,40 +143,40 @@ def create_project_board(token: str, owner: str, repo: str):
             }
         ]
     }
-    
+
     # Save project structure
     with open("github_project_structure.json", "w") as f:
         json.dump(project_structure, f, indent=2)
-    
+
     print("✅ Project structure saved to github_project_structure.json")
-    
+
     # Create milestones for each phase
     create_milestones(token, owner, repo, project_structure)
-    
+
     # Add labels to issues
     add_issue_labels(token, owner, repo)
-    
+
     return project_structure
 
 def create_milestones(token: str, owner: str, repo: str, project_structure: Dict):
     """Create milestones for each phase"""
-    
+
     url = f"https://api.github.com/repos/{owner}/{repo}/milestones"
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     for phase in project_structure["phases"]:
         milestone_data = {
             "title": f"Phase {phase['phase']}: {phase['name']}",
-            "description": f"Implementation weeks {phase['weeks']}\n\nKey deliverables:\n" + 
+            "description": f"Implementation weeks {phase['weeks']}\n\nKey deliverables:\n" +
                           "\n".join(f"- {m}" for m in phase['milestones']),
             "state": "open"
         }
-        
+
         response = requests.post(url, json=milestone_data, headers=headers)
-        
+
         if response.status_code == 201:
             print(f"✅ Created milestone: Phase {phase['phase']}")
         else:
@@ -185,7 +185,7 @@ def create_milestones(token: str, owner: str, repo: str, project_structure: Dict
 
 def add_issue_labels(token: str, owner: str, repo: str):
     """Add priority labels to frontend enhancement issues"""
-    
+
     # Issue number to priority mapping
     issue_priorities = {
         "198": ["epic", "high-priority", "frontend-enhancement"],  # EPIC
@@ -200,21 +200,21 @@ def add_issue_labels(token: str, owner: str, repo: str):
         "207": ["ongoing", "testing", "quality"],                 # Testing
         "208": ["ongoing", "documentation", "developer-experience"] # Documentation
     }
-    
+
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     # First create labels if they don't exist
     create_labels(token, owner, repo)
-    
+
     # Then add labels to issues
     for issue_num, labels in issue_priorities.items():
         url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_num}/labels"
-        
+
         response = requests.post(url, json=labels, headers=headers)
-        
+
         if response.status_code in [200, 201]:
             print(f"✅ Added labels to issue #{issue_num}")
         else:
@@ -222,13 +222,13 @@ def add_issue_labels(token: str, owner: str, repo: str):
 
 def create_labels(token: str, owner: str, repo: str):
     """Create custom labels for the project"""
-    
+
     url = f"https://api.github.com/repos/{owner}/{repo}/labels"
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     labels = [
         # Phase labels
         {"name": "phase-1", "color": "0052CC", "description": "Core Infrastructure"},
@@ -237,13 +237,13 @@ def create_labels(token: str, owner: str, repo: str):
         {"name": "phase-4", "color": "0052CC", "description": "Hybrid Signals"},
         {"name": "phase-5", "color": "0052CC", "description": "Portfolio & Risk"},
         {"name": "phase-6", "color": "0052CC", "description": "Admin & Monitoring"},
-        
+
         # Priority labels
         {"name": "critical", "color": "B60205", "description": "Must be done ASAP"},
         {"name": "high-priority", "color": "D93F0B", "description": "High priority"},
         {"name": "medium-priority", "color": "FBCA04", "description": "Medium priority"},
         {"name": "low-priority", "color": "0E8A16", "description": "Low priority"},
-        
+
         # Type labels
         {"name": "frontend-enhancement", "color": "5319E7", "description": "Frontend enhancement"},
         {"name": "infrastructure", "color": "006B75", "description": "Infrastructure work"},
@@ -252,13 +252,13 @@ def create_labels(token: str, owner: str, repo: str):
         {"name": "ui-ux", "color": "C5DEF5", "description": "UI/UX improvements"},
         {"name": "testing", "color": "BFD4F2", "description": "Testing related"},
         {"name": "documentation", "color": "D4C5F9", "description": "Documentation"},
-        
+
         # Status labels
         {"name": "ongoing", "color": "C2E0C6", "description": "Ongoing throughout project"},
         {"name": "blocked", "color": "E99695", "description": "Blocked by dependencies"},
         {"name": "ready-for-review", "color": "FEF2C0", "description": "Ready for review"}
     ]
-    
+
     for label in labels:
         response = requests.post(url, json=label, headers=headers)
         if response.status_code == 201:
@@ -269,7 +269,7 @@ def create_labels(token: str, owner: str, repo: str):
 
 def generate_project_readme():
     """Generate a README for the project board"""
-    
+
     readme_content = """# Frontend Enhancement Project Board
 
 ## Overview
@@ -282,7 +282,7 @@ This project board tracks the implementation of comprehensive frontend enhanceme
   - Enhanced API Service Layer
   - State Management Upgrade
   - Performance Monitoring
-  
+
 - **Phase 2: Advanced Backtesting** (Weeks 3-4)
   - Multi-strategy Comparison
   - Real-time Execution
@@ -295,7 +295,7 @@ This project board tracks the implementation of comprehensive frontend enhanceme
   - Vision AI Integration
   - Document Analysis
   - AI-Powered Analytics
-  
+
 - **Phase 4: Hybrid Signals** (Weeks 7-8)
   - Agent Performance Tracking
   - Divergence Detection
@@ -308,7 +308,7 @@ This project board tracks the implementation of comprehensive frontend enhanceme
   - Risk Analysis Tools
   - Portfolio Optimization
   - Performance Analytics
-  
+
 - **Phase 6: Admin & Monitoring** (Weeks 11-12)
   - System Health Dashboard
   - User Management
@@ -342,10 +342,10 @@ These issues affect all phases and should be addressed continuously:
 - [API Documentation](./docs/API_DOCUMENTATION.md)
 - [Contributing Guide](./CONTRIBUTING.md)
 """
-    
+
     with open("PROJECT_BOARD_README.md", "w") as f:
         f.write(readme_content)
-    
+
     print("✅ Generated PROJECT_BOARD_README.md")
 
 def main():
@@ -355,19 +355,19 @@ def main():
     if not token:
         print("❌ Error: GITHUB_TOKEN environment variable not set")
         return
-    
+
     # Repository details
     owner = "isaacbuz"
     repo = "GoldenSignalsAIv4"
-    
+
     print("🚀 Setting up GitHub Project Board...")
-    
+
     # Create project structure
     project_structure = create_project_board(token, owner, repo)
-    
+
     # Generate project README
     generate_project_readme()
-    
+
     print("\n✅ Project board setup complete!")
     print("\n📝 Next steps:")
     print("1. Go to your GitHub repository")
@@ -375,11 +375,11 @@ def main():
     print("3. Create a new project using the structure in github_project_structure.json")
     print("4. Add the issues to appropriate columns")
     print("5. Start tracking progress!")
-    
+
     print("\n🎯 Issue assignments:")
     print("- Assign team members to Phase 1 issues first")
     print("- Set up weekly progress reviews")
     print("- Update project board as work progresses")
 
 if __name__ == "__main__":
-    main() 
+    main()

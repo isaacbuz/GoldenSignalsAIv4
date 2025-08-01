@@ -25,10 +25,10 @@ logger = logging.getLogger(__name__)
 
 class TransformerEvaluator:
     """Evaluator for transformer model performance."""
-    
+
     def __init__(self, model_path: str, results_dir: str):
         """Initialize the evaluator.
-        
+
         Args:
             model_path: Path to the trained model
             results_dir: Directory to save evaluation results
@@ -36,11 +36,11 @@ class TransformerEvaluator:
         self.model_path = model_path
         self.results_dir = results_dir
         self.agent = TransformerAgent()
-        
+
         # Load the model
         if not self.agent.load_model(model_path):
             raise ValueError(f"Failed to load model from {model_path}")
-            
+
         # Initialize metrics
         self.metrics = {
             'mse': [],
@@ -54,7 +54,7 @@ class TransformerEvaluator:
             'signals': [],
             'signal_strengths': []
         }
-        
+
         # Initialize performance history
         self.performance_history = {
             'timestamp': [],
@@ -69,70 +69,70 @@ class TransformerEvaluator:
             'signal_count': [],
             'avg_signal_strength': []
         }
-        
+
     def evaluate(self, test_data: List[MarketData]) -> Dict:
         """Evaluate model performance on test data.
-        
+
         Args:
             test_data: List of test market data points
-            
+
         Returns:
             Dict: Evaluation metrics
         """
         logger.info("Starting model evaluation...")
-        
+
         predictions = []
         actual_prices = []
         signals = []
-        
+
         for data in test_data:
             # Generate prediction
             prediction = self.agent.predict(data)
             if prediction is None:
                 continue
-                
+
             # Generate signal
             signal = self.agent.generate_signal(data)
             if signal is not None:
                 signals.append(signal)
-                
+
             predictions.append(prediction.predicted_price)
             actual_prices.append(data.close)
-            
+
         if not predictions:
             logger.error("No predictions generated")
             return {}
-            
+
         # Calculate metrics
         predictions = np.array(predictions)
         actual_prices = np.array(actual_prices)
-        
+
         # Price prediction metrics
         mse = mean_squared_error(actual_prices, predictions)
         rmse = np.sqrt(mse)
         r2 = r2_score(actual_prices, predictions)
-        
+
         # Direction accuracy
         actual_direction = np.sign(np.diff(actual_prices))
         pred_direction = np.sign(np.diff(predictions))
         direction_accuracy = np.mean(actual_direction == pred_direction)
-        
+
         # Signal metrics
         if signals:
             signal_directions = [s.direction for s in signals]
             signal_strengths = [s.strength for s in signals]
-            
+
             # Calculate signal accuracy
             correct_signals = sum(1 for s in signals if (
                 (s.direction == 1 and s.metadata['predicted_price'] > s.metadata['current_price']) or
                 (s.direction == -1 and s.metadata['predicted_price'] < s.metadata['current_price'])
             ))
             signal_accuracy = correct_signals / len(signals)
-            
+
             # Calculate precision, recall, and F1
             y_true = [1 if s.direction != 0 else 0 for s in signals]
             y_pred = [1 if s.direction != 0 else 0 for s in signals]
-            
+
             precision = precision_score(y_true, y_pred, zero_division=0)
             recall = recall_score(y_true, y_pred, zero_division=0)
             f1 = f1_score(y_true, y_pred, zero_division=0)
@@ -143,7 +143,7 @@ class TransformerEvaluator:
             f1 = 0
             signal_directions = []
             signal_strengths = []
-            
+
         # Update metrics
         self.metrics['mse'].append(mse)
         self.metrics['rmse'].append(rmse)
@@ -155,7 +155,7 @@ class TransformerEvaluator:
         self.metrics['f1'].append(f1)
         self.metrics['signals'].extend(signal_directions)
         self.metrics['signal_strengths'].extend(signal_strengths)
-        
+
         # Update performance history
         current_time = datetime.now()
         self.performance_history['timestamp'].append(current_time)
@@ -171,7 +171,7 @@ class TransformerEvaluator:
         self.performance_history['avg_signal_strength'].append(
             np.mean(signal_strengths) if signal_strengths else 0
         )
-        
+
         # Log results
         logger.info(f"Evaluation completed:")
         logger.info(f"📊 MSE: {mse:.4f}")
@@ -183,7 +183,7 @@ class TransformerEvaluator:
         logger.info(f"📊 Recall: {recall:.4f}")
         logger.info(f"📊 F1 Score: {f1:.4f}")
         logger.info(f"📊 Total Signals: {len(signals)}")
-        
+
         return {
             'mse': mse,
             'rmse': rmse,
@@ -195,14 +195,14 @@ class TransformerEvaluator:
             'f1': f1,
             'signal_count': len(signals)
         }
-        
+
     def plot_results(self):
         """Generate and save evaluation plots."""
         logger.info("Generating evaluation plots...")
-        
+
         # Create results directory if it doesn't exist
         os.makedirs(self.results_dir, exist_ok=True)
-        
+
         # Plot predictions vs actual
         plt.figure(figsize=(12, 6))
         plt.plot(self.metrics['rmse'], label='RMSE')
@@ -213,7 +213,7 @@ class TransformerEvaluator:
         plt.legend()
         plt.savefig(os.path.join(self.results_dir, 'performance_metrics.png'))
         plt.close()
-        
+
         # Plot signal distribution
         if self.metrics['signals']:
             plt.figure(figsize=(10, 6))
@@ -224,7 +224,7 @@ class TransformerEvaluator:
             plt.xticks([-1, 0, 1], ['Sell', 'Hold', 'Buy'])
             plt.savefig(os.path.join(self.results_dir, 'signal_distribution.png'))
             plt.close()
-            
+
         # Plot signal strengths
         if self.metrics['signal_strengths']:
             plt.figure(figsize=(10, 6))
@@ -234,10 +234,10 @@ class TransformerEvaluator:
             plt.ylabel('Count')
             plt.savefig(os.path.join(self.results_dir, 'signal_strengths.png'))
             plt.close()
-            
+
         # Plot performance history
         plt.figure(figsize=(15, 10))
-        
+
         # Plot accuracy metrics
         plt.subplot(2, 2, 1)
         plt.plot(self.performance_history['timestamp'], self.performance_history['direction_accuracy'], label='Direction')
@@ -246,7 +246,7 @@ class TransformerEvaluator:
         plt.xlabel('Time')
         plt.ylabel('Accuracy')
         plt.legend()
-        
+
         # Plot precision, recall, F1
         plt.subplot(2, 2, 2)
         plt.plot(self.performance_history['timestamp'], self.performance_history['precision'], label='Precision')
@@ -256,31 +256,31 @@ class TransformerEvaluator:
         plt.xlabel('Time')
         plt.ylabel('Score')
         plt.legend()
-        
+
         # Plot signal count
         plt.subplot(2, 2, 3)
         plt.plot(self.performance_history['timestamp'], self.performance_history['signal_count'])
         plt.title('Signal Count Over Time')
         plt.xlabel('Time')
         plt.ylabel('Count')
-        
+
         # Plot average signal strength
         plt.subplot(2, 2, 4)
         plt.plot(self.performance_history['timestamp'], self.performance_history['avg_signal_strength'])
         plt.title('Average Signal Strength Over Time')
         plt.xlabel('Time')
         plt.ylabel('Strength')
-        
+
         plt.tight_layout()
         plt.savefig(os.path.join(self.results_dir, 'performance_history.png'))
         plt.close()
-        
+
         logger.info(f"Plots saved to {self.results_dir}")
-        
+
     def save_metrics(self):
         """Save evaluation metrics to file."""
         metrics_file = os.path.join(self.results_dir, 'evaluation_metrics.json')
-        
+
         # Calculate average metrics
         avg_metrics = {
             'mse': np.mean(self.metrics['mse']),
@@ -294,15 +294,15 @@ class TransformerEvaluator:
             'total_signals': len(self.metrics['signals']),
             'avg_signal_strength': np.mean(self.metrics['signal_strengths']) if self.metrics['signal_strengths'] else 0
         }
-        
+
         # Save metrics
         with open(metrics_file, 'w') as f:
             json.dump(avg_metrics, f, indent=4)
-            
+
         # Save performance history
         history_file = os.path.join(self.results_dir, 'performance_history.json')
         with open(history_file, 'w') as f:
             json.dump(self.performance_history, f, indent=4)
-            
+
         logger.info(f"Metrics saved to {metrics_file}")
-        logger.info(f"Performance history saved to {history_file}") 
+        logger.info(f"Performance history saved to {history_file}")

@@ -169,11 +169,11 @@ import { selectSelectedSymbol, selectUserTheme } from '../store/selectors';
 
 ```typescript
 // ✅ CORRECT: Import unified components
-import { 
-  UnifiedDashboard, 
-  UnifiedAIChat, 
-  UnifiedSearchBar, 
-  UnifiedChart 
+import {
+  UnifiedDashboard,
+  UnifiedAIChat,
+  UnifiedSearchBar,
+  UnifiedChart
 } from '../components';
 
 // ✅ CORRECT: Use with modes/variants
@@ -527,4 +527,4 @@ npm run test:quick 2>&1 | grep -E "(failed|error)"
 **Maintainer**: Development Team
 **Status**: COMPREHENSIVE RULES - COMPLETE GUIDANCE
 
-**These rules contain EVERYTHING needed for successful GoldenSignalsAI development. Follow them religiously for optimal results.** 
+**These rules contain EVERYTHING needed for successful GoldenSignalsAI development. Follow them religiously for optimal results.**

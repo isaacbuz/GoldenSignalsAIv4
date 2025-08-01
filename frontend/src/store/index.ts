@@ -19,4 +19,4 @@ export const useSignals = () => {
         loading: false,
         error: null,
     };
-}; 
+};

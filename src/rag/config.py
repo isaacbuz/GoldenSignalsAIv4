@@ -12,20 +12,8 @@ RAG_CONFIG = {
 }
 
 DOCUMENT_TYPES = {
-    "market_data": {
-        "weight": 1.0,
-        "fields": ["price", "volume", "timestamp"]
-    },
-    "news": {
-        "weight": 0.8,
-        "fields": ["title", "content", "sentiment", "timestamp"]
-    },
-    "signals": {
-        "weight": 1.2,
-        "fields": ["signal_type", "confidence", "outcome", "timestamp"]
-    },
-    "patterns": {
-        "weight": 1.5,
-        "fields": ["pattern_type", "accuracy", "occurrences", "timestamp"]
-    }
+    "market_data": {"weight": 1.0, "fields": ["price", "volume", "timestamp"]},
+    "news": {"weight": 0.8, "fields": ["title", "content", "sentiment", "timestamp"]},
+    "signals": {"weight": 1.2, "fields": ["signal_type", "confidence", "outcome", "timestamp"]},
+    "patterns": {"weight": 1.5, "fields": ["pattern_type", "accuracy", "occurrences", "timestamp"]},
 }

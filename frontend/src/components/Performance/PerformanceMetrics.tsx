@@ -141,4 +141,4 @@ const PerformanceMetrics: React.FC = () => {
     );
 };
 
-export default PerformanceMetrics; 
+export default PerformanceMetrics;

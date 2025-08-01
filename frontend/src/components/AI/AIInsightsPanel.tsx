@@ -65,7 +65,14 @@ import {
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../services/api/apiClient';
-import { ChartSignal } from '../Chart/UnifiedChart';
+// import { ChartSignal } from '../Chart/UnifiedChart';
+interface ChartSignal {
+  id: string;
+  type: 'buy' | 'sell';
+  price: number;
+  time: number;
+  confidence?: number;
+}
 import logger from '../../services/logger';
 
 

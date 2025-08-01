@@ -3,7 +3,9 @@ from typing import Any, Dict
 from src.models.signals import Signal, SignalStrength, SignalType
 
 
-def legacy_output_to_signal(legacy_out: Dict[str, Any], symbol: str, current_price: float, source: str) -> Signal:
+def legacy_output_to_signal(
+    legacy_out: Dict[str, Any], symbol: str, current_price: float, source: str
+) -> Signal:
     """Convert a legacy agent output dict into a V3 ``Signal`` object.
 
     Expected legacy format::
@@ -44,6 +46,8 @@ def legacy_output_to_signal(legacy_out: Dict[str, Any], symbol: str, current_pri
         target_price=None,
         stop_loss=None,
         risk_score=1.0 - confidence,  # simple placeholder
-        reasoning=legacy_out.get("metadata", {}).get("explanation") if legacy_out.get("metadata") else None,
+        reasoning=legacy_out.get("metadata", {}).get("explanation")
+        if legacy_out.get("metadata")
+        else None,
         indicators=legacy_out.get("metadata", {}),
-    ) 
+    )

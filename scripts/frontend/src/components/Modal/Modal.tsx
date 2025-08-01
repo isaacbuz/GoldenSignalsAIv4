@@ -1,6 +1,6 @@
 /**
  * Modal Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -37,7 +37,7 @@ export const Modal: React.FC<ModalProps> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={`${styles.container} ${className || ''}`}
       data-testid={testId}
       {...props}

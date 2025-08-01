@@ -4,9 +4,9 @@ Purpose: Implements a NewsSentimentAgent that analyzes news sentiment to generat
 """
 
 import logging
-import pandas as pd
-from typing import Dict, Any
+from typing import Any, Dict
 
+import pandas as pd
 from agents.base import BaseAgent
 
 # Configure logging with JSON-like format

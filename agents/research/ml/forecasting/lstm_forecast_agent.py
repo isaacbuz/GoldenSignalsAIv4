@@ -2,12 +2,14 @@
 LSTM-based forecasting agent with robust error handling and validation.
 """
 import logging
-from typing import Optional, Any, Dict
+from typing import Any, Dict, Optional
+
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
 from sklearn.preprocessing import MinMaxScaler
+
 from .....base import BaseAgent
 
 logger = logging.getLogger(__name__)
@@ -50,7 +52,7 @@ class LSTMForecastAgent(BaseAgent):
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process time series data to generate forecasts."""
         series = pd.Series(data.get("prices", []))
-        
+
         if self.model is None:
             logger.error("LSTM model not initialized.")
             return {
@@ -58,7 +60,7 @@ class LSTMForecastAgent(BaseAgent):
                 "confidence": 0.0,
                 "metadata": {"error": "LSTM model not initialized."}
             }
-            
+
         if not isinstance(series, pd.Series) or len(series) <= self.lookback:
             logger.warning("Input series too short or not a pandas Series.")
             return {
@@ -66,7 +68,7 @@ class LSTMForecastAgent(BaseAgent):
                 "confidence": 0.0,
                 "metadata": {"error": f"Series too short for lookback={self.lookback}."}
             }
-            
+
         try:
             X = self.prepare_data(series)
             if X is None or len(X) == 0:
@@ -75,15 +77,15 @@ class LSTMForecastAgent(BaseAgent):
                     "confidence": 0.0,
                     "metadata": {"error": "Insufficient data for prediction."}
                 }
-                
+
             with torch.no_grad():
                 output = self.model(X[-1].unsqueeze(0))
             prediction = float(self.scaler.inverse_transform(output.numpy())[0][0])
-            
+
             # Generate trading signal based on prediction
             current_price = series.iloc[-1]
             price_change = (prediction - current_price) / current_price
-            
+
             if price_change > 0.01:  # 1% threshold for buy
                 action = "buy"
                 confidence = min(price_change * 5, 1.0)  # Scale confidence
@@ -93,7 +95,7 @@ class LSTMForecastAgent(BaseAgent):
             else:
                 action = "hold"
                 confidence = 0.0
-                
+
             return {
                 "action": action,
                 "confidence": confidence,
@@ -104,7 +106,7 @@ class LSTMForecastAgent(BaseAgent):
                     "lookback": self.lookback
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"LSTM prediction failed: {e}")
             return {

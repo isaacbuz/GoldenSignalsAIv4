@@ -8,13 +8,15 @@ Includes:
 
 Migrated from /integration for unified access by agents and research modules.
 """
-import os
-import json
-import hashlib
-from typing import Any, Optional, List, Dict
-import redis
 import asyncio
+import hashlib
+import json
+import os
 from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Dict, List, Optional
+
+import redis
+
 
 class ExternalCache:
     """Simple Redis-backed cache for external model results (sentiment, embeddings, etc.)."""

@@ -159,4 +159,4 @@ export const LazyLoadWrapper: React.FC<LazyLoadWrapperProps> = ({
             {children}
         </React.Suspense>
     );
-}; 
+};

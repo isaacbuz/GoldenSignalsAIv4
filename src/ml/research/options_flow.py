@@ -95,10 +95,10 @@ class OptionsFlowAgent(BaseAgent):
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Trading signal to process.
-        
+
         Returns:
             Dict[str, Any]: Processed trading signal with potential modifications.
         """

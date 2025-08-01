@@ -9,13 +9,15 @@ class SignalType(Enum):
     BUY = "buy"
     SELL = "sell"
     HOLD = "hold"
-    
+
+
 class SignalStrength(Enum):
     WEAK = "weak"
     MEDIUM = "medium"
     MODERATE = "moderate"
     STRONG = "strong"
-    
+
+
 class SignalSource(Enum):
     TECHNICAL_ANALYSIS = "technical_analysis"
     SENTIMENT_ANALYSIS = "sentiment_analysis"
@@ -23,22 +25,25 @@ class SignalSource(Enum):
     OPTIONS_ANALYSIS = "options_analysis"
     RISK_ANALYSIS = "risk_analysis"
 
+
 class Signal:
-    def __init__(self, 
-                 symbol: str,
-                 signal_type: SignalType,
-                 confidence: float,
-                 strength: SignalStrength = SignalStrength.MODERATE,
-                 source: SignalSource = SignalSource.TECHNICAL_ANALYSIS,
-                 current_price: float = 100.0,
-                 target_price: Optional[float] = None,
-                 stop_loss: Optional[float] = None,
-                 take_profit: Optional[float] = None,
-                 risk_score: float = 0.5,
-                 reasoning: str = "",
-                 features: Optional[Dict[str, Any]] = None,
-                 indicators: Optional[Dict[str, float]] = None,
-                 market_conditions: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        symbol: str,
+        signal_type: SignalType,
+        confidence: float,
+        strength: SignalStrength = SignalStrength.MODERATE,
+        source: SignalSource = SignalSource.TECHNICAL_ANALYSIS,
+        current_price: float = 100.0,
+        target_price: Optional[float] = None,
+        stop_loss: Optional[float] = None,
+        take_profit: Optional[float] = None,
+        risk_score: float = 0.5,
+        reasoning: str = "",
+        features: Optional[Dict[str, Any]] = None,
+        indicators: Optional[Dict[str, float]] = None,
+        market_conditions: Optional[Dict[str, Any]] = None,
+    ):
         self.signal_id = str(uuid.uuid4())
         self.symbol = symbol
         self.signal_type = signal_type

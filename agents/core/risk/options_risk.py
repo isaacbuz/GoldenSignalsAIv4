@@ -6,10 +6,8 @@ Purpose: Implements an OptionsRiskAgent that evaluates risks in options trading 
 import logging
 
 import pandas as pd
-
-from src.services.risk_manager import RiskManager
-
 from agents.base import BaseAgent
+
 from src.services.risk_manager import RiskManager
 
 # Configure logging with JSON-like format

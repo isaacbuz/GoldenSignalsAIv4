@@ -29,7 +29,7 @@ issues_to_close = {
 ### Summary
 All abstract methods have been successfully implemented across 11 agent classes:
 - ✅ GammaExposureAgent
-- ✅ IVRankAgent  
+- ✅ IVRankAgent
 - ✅ SkewAgent
 - ✅ VolatilityAgent
 - ✅ PositionRiskAgent
@@ -53,7 +53,7 @@ All abstract methods have been successfully implemented across 11 agent classes:
 
 Closing as completed."""
     },
-    
+
     234: {
         "comment": """✅ **COMPLETED**: Fix Import Errors in Test Suite
 
@@ -91,7 +91,7 @@ The test suite is now functional with 240 passing tests. Remaining work focuses 
 
 Closing as the core import issues are resolved."""
     },
-    
+
     212: {
         "comment": """✅ **COMPLETED**: Complete Test Suite Implementation
 
@@ -139,17 +139,17 @@ def close_issue(issue_number, comment):
     # Add comment
     comment_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{issue_number}/comments"
     comment_response = requests.post(comment_url, headers=headers, json={"body": comment})
-    
+
     if comment_response.status_code == 201:
         print(f"✅ Added completion comment to issue #{issue_number}")
     else:
         print(f"❌ Failed to comment on issue #{issue_number}: {comment_response.status_code}")
         return False
-    
+
     # Close issue
     issue_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{issue_number}"
     close_response = requests.patch(issue_url, headers=headers, json={"state": "closed"})
-    
+
     if close_response.status_code == 200:
         print(f"✅ Closed issue #{issue_number}")
         return True

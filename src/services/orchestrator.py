@@ -12,15 +12,18 @@ import yaml
 
 # Load per-symbol thresholds from config
 THRESHOLD_CONFIG = {}
+
+
 def get_threshold(symbol, default=100.0):
     global THRESHOLD_CONFIG
     if not THRESHOLD_CONFIG:
         try:
-            with open('config/thresholds.yaml', 'r') as f:
+            with open("config/thresholds.yaml", "r") as f:
                 THRESHOLD_CONFIG = yaml.safe_load(f) or {}
         except Exception:
             THRESHOLD_CONFIG = {}
     return THRESHOLD_CONFIG.get(symbol, default)
+
 
 # === Advanced Model Agents ===
 from agents.finbert_sentiment_agent import FinBERTSentimentAgent
@@ -54,16 +57,20 @@ from src.services.strategy_selector import StrategySelector
 logger = logging.getLogger(__name__)
 DEVICE, USE_NUMBA = configure_hardware()
 
+
 class Orchestrator:
     """
     Orchestrator for GoldenSignalsAI: config-driven, registry-based, robust error handling.
     """
-    def __init__(self,
-                 symbols: List[str],
-                 model_names: List[str],
-                 strategy_name: str,
-                 config_path: str = 'config/parameters.yaml',
-                 thresholds_path: str = 'config/thresholds.yaml'):
+
+    def __init__(
+        self,
+        symbols: List[str],
+        model_names: List[str],
+        strategy_name: str,
+        config_path: str = "config/parameters.yaml",
+        thresholds_path: str = "config/thresholds.yaml",
+    ):
         self.symbols = symbols
         self.model_names = model_names
         self.strategy_name = strategy_name
@@ -71,24 +78,26 @@ class Orchestrator:
         self.model_service = ModelService()
         self.producer = EventPublisher()
         # Load config
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             self.config = yaml.safe_load(f)
-        with open(thresholds_path, 'r') as f:
+        with open(thresholds_path, "r") as f:
             self.thresholds = yaml.safe_load(f)
 
     def get_model_params(self, name):
-        return self.config.get('models', {}).get(name, {})
+        return self.config.get("models", {}).get(name, {})
 
     def get_strategy_params(self, name):
-        return self.config.get('strategies', {}).get(name, {})
+        return self.config.get("strategies", {}).get(name, {})
 
     def get_threshold(self, symbol):
-        t = self.thresholds.get(symbol, self.thresholds.get('default', {}))
-        return t.get('base', 1.0), t.get('atr_mult', 2.0)
+        t = self.thresholds.get(symbol, self.thresholds.get("default", {}))
+        return t.get("base", 1.0), t.get("atr_mult", 2.0)
 
     async def run(self):
         logger.info(f"Starting training and prediction for {self.symbols}")
-        if not isinstance(self.symbols, (list, tuple)) or not all(isinstance(s, str) and s.strip() for s in self.symbols):
+        if not isinstance(self.symbols, (list, tuple)) or not all(
+            isinstance(s, str) and s.strip() for s in self.symbols
+        ):
             logger.error("Invalid symbols: Must be a list of non-empty strings")
             return False
 
@@ -99,7 +108,13 @@ class Orchestrator:
                     raise DataFetchError(f"No data for symbol {symbol}")
                 # Compute ATR-based and config threshold
                 base, atr_mult = self.get_threshold(symbol)
-                atr = AdvancedStrategies.run_strategy('atr', df, period=self.config.get('strategies', {}).get('atr_breakout', {}).get('period', 14))
+                atr = AdvancedStrategies.run_strategy(
+                    "atr",
+                    df,
+                    period=self.config.get("strategies", {})
+                    .get("atr_breakout", {})
+                    .get("period", 14),
+                )
                 dynamic_threshold = base + (atr.iloc[-1] * atr_mult)
 
                 # Preprocess data
@@ -110,7 +125,7 @@ class Orchestrator:
                 for name in self.model_names:
                     params = self.get_model_params(name)
                     model = ModelFactory.get_model(name, config=params)
-                    model_path = f'models/{symbol}/{name}.model'
+                    model_path = f"models/{symbol}/{name}.model"
                     if os.path.exists(model_path):
                         model.load(model_path)
                     else:
@@ -122,33 +137,41 @@ class Orchestrator:
 
                 # Strategy selection and backtest
                 strat_params = self.get_strategy_params(self.strategy_name)
-                df['signal'] = AdvancedStrategies.run_strategy(self.strategy_name, df, **strat_params)
-                bt = BacktestStrategy(price_df=df, signal_series=df['signal'])
+                df["signal"] = AdvancedStrategies.run_strategy(
+                    self.strategy_name, df, **strat_params
+                )
+                bt = BacktestStrategy(price_df=df, signal_series=df["signal"])
                 result = bt.run()
                 logger.info(f"{symbol} backtest metrics: {result.metrics}")
 
                 # Alert if signal magnitude exceeds threshold
-                latest_signal = ensemble_signal[-1] if hasattr(ensemble_signal, '__getitem__') else ensemble_signal
+                latest_signal = (
+                    ensemble_signal[-1]
+                    if hasattr(ensemble_signal, "__getitem__")
+                    else ensemble_signal
+                )
                 if abs(latest_signal) > dynamic_threshold:
                     message = {
-                        'symbol': symbol,
-                        'signal': float(latest_signal),
-                        'threshold': float(dynamic_threshold)
+                        "symbol": symbol,
+                        "signal": float(latest_signal),
+                        "threshold": float(dynamic_threshold),
                     }
                     await self.producer.send(message)
                     logger.info(f"Alert sent for {symbol}: {message}")
 
             except Exception as e:
-                ErrorHandler.handle_error(e, context={'symbol': symbol})
+                ErrorHandler.handle_error(e, context={"symbol": symbol})
 
         tasks = [process_symbol(symbol) for symbol in self.symbols]
         results = await asyncio.gather(*tasks)
         return all(results)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import os
-    syms = os.getenv('SYMBOLS', 'AAPL,GOOG,MSFT').split(',')
-    models = os.getenv('MODELS', 'xgboost,lightgbm').split(',')
-    strategy = os.getenv('STRATEGY', 'moving_average_crossover')
+
+    syms = os.getenv("SYMBOLS", "AAPL,GOOG,MSFT").split(",")
+    models = os.getenv("MODELS", "xgboost,lightgbm").split(",")
+    strategy = os.getenv("STRATEGY", "moving_average_crossover")
     orch = Orchestrator(symbols=syms, model_names=models, strategy_name=strategy)
     asyncio.run(orch.run())

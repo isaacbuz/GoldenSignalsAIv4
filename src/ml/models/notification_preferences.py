@@ -5,8 +5,9 @@ from sqlalchemy.sql import func
 
 Base = declarative_base()
 
+
 class NotificationPreferences(Base):
-    __tablename__ = 'notification_preferences'
+    __tablename__ = "notification_preferences"
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, index=True, nullable=False, unique=True)
     slack = Column(String, nullable=True)

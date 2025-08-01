@@ -1,6 +1,6 @@
 /**
  * SignalDetailsModal - Comprehensive Signal Information Display
- * 
+ *
  * Shows detailed information about a signal including:
  * - Full entry/exit parameters
  * - Technical chart with overlays
@@ -508,4 +508,4 @@ const SignalDetailsModal: React.FC<SignalDetailsModalProps> = ({ signal, open, o
     );
 };
 
-export default SignalDetailsModal; 
+export default SignalDetailsModal;

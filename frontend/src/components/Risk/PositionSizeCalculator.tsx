@@ -351,4 +351,4 @@ R:R Ratio: 1:${result.riskRewardRatio.toFixed(2)}`;
     );
 };
 
-export default PositionSizeCalculator; 
+export default PositionSizeCalculator;

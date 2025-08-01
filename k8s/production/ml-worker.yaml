@@ -229,4 +229,4 @@ spec:
           volumes:
           - name: models
             persistentVolumeClaim:
-              claimName: ml-models-pvc 
+              claimName: ml-models-pvc

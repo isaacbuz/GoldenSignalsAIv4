@@ -10,7 +10,7 @@ class StrategyComposer:
     def evaluate(self, df: pd.DataFrame) -> List[str]:
         signals = []
         for i in range(1, len(df)):
-            decision = self._evaluate_logic(df.iloc[i-1], df.iloc[i])
+            decision = self._evaluate_logic(df.iloc[i - 1], df.iloc[i])
             signals.append(decision)
         return ["hold"] + signals
 

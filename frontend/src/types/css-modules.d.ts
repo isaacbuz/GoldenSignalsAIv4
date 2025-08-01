@@ -16,4 +16,4 @@ declare module '*.module.sass' {
 declare module '*.css' {
     const content: string;
     export default content;
-} 
+}

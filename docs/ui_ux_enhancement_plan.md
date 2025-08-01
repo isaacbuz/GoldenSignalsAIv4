@@ -71,7 +71,7 @@ This comprehensive plan outlines the transformation of GoldenSignalsAI into a pr
 - **Momentum**: RSI, MACD, Stochastic, Williams %R
 - **Volatility**: Bollinger Bands, ATR, Keltner Channels
 - **Volume**: OBV, Volume Profile, Accumulation/Distribution
-- **Custom AI Indicators**: 
+- **Custom AI Indicators**:
   - Consensus Strength Indicator
   - Signal Confidence Meter
   - Risk/Reward Visualizer

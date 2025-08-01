@@ -5,8 +5,10 @@ import openai
 
 logger = logging.getLogger(__name__)
 
+
 class GPTModelCopilot:
     """Copilot for GPT-based feature/model critique with robust error handling and logging."""
+
     def __init__(self, api_key: str, model: str = "gpt-4"):
         self.api_key = api_key
         openai.api_key = api_key
@@ -20,8 +22,7 @@ class GPTModelCopilot:
         )
         try:
             response = openai.ChatCompletion.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}]
+                model=self.model, messages=[{"role": "user", "content": prompt}]
             )
             logger.debug(f"GPT response: {response}")
             return response.choices[0].message["content"]

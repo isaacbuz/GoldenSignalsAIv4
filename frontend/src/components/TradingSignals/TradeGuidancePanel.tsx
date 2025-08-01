@@ -465,4 +465,4 @@ const TradeGuidancePanel: React.FC<TradeGuidancePanelProps> = ({
     );
 };
 
-export default TradeGuidancePanel; 
+export default TradeGuidancePanel;

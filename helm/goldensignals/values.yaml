@@ -93,7 +93,7 @@ grafana:
   persistence:
     enabled: true
     size: 10Gi
-  
+
 # Ingress configuration
 ingress:
   enabled: true
@@ -123,4 +123,4 @@ ingress:
     - secretName: goldensignals-tls
       hosts:
         - trading.goldensignals.ai
-        - dashboard.goldensignals.ai 
+        - dashboard.goldensignals.ai

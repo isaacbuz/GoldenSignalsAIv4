@@ -247,11 +247,11 @@ jobs:
           kubectl set image deployment/ml-service \
             ml-service=${{ needs.build.outputs.image-tag }} \
             -n goldensignals-staging
-          
+
           kubectl set image deployment/ml-worker \
             worker=${{ needs.build.outputs.image-tag }} \
             -n goldensignals-staging
-          
+
           kubectl rollout status deployment/ml-service -n goldensignals-staging
           kubectl rollout status deployment/ml-worker -n goldensignals-staging
 
@@ -301,9 +301,9 @@ jobs:
           kubectl set image deployment/ml-service-canary \
             ml-service=${{ needs.build.outputs.image-tag }} \
             -n goldensignals
-          
+
           kubectl rollout status deployment/ml-service-canary -n goldensignals
-          
+
           # Wait for canary metrics
           sleep 300
 
@@ -321,15 +321,15 @@ jobs:
           kubectl set image deployment/ml-service \
             ml-service=${{ needs.build.outputs.image-tag }} \
             -n goldensignals
-          
+
           kubectl set image deployment/ml-worker \
             worker=${{ needs.build.outputs.image-tag }} \
             -n goldensignals
-          
+
           # Wait for rollout
           kubectl rollout status deployment/ml-service -n goldensignals
           kubectl rollout status deployment/ml-worker -n goldensignals
-          
+
           # Remove canary
           kubectl delete deployment ml-service-canary -n goldensignals
 
@@ -366,10 +366,10 @@ jobs:
           aws eks update-kubeconfig --name goldensignals-production --region us-east-1
           kubectl rollout undo deployment/ml-service -n goldensignals
           kubectl rollout undo deployment/ml-worker -n goldensignals
-          
+
       - name: Notify rollback
         uses: 8398a7/action-slack@v3
         with:
           status: failure
           text: 'ML Service deployment rolled back due to failure!'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }} 
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

@@ -113,7 +113,7 @@ class ConnectionManager:
                 except Exception as e:
                     logger.error(f"Error broadcasting: {e}")
                     disconnected.append(connection)
-        
+
         # Clean up disconnected clients
         for conn in disconnected:
             self.disconnect(conn)
@@ -145,15 +145,15 @@ def calculate_rsi(prices: List[float], period: int = 14) -> float:
     """Calculate RSI"""
     if len(prices) < period + 1:
         return 50.0
-    
+
     deltas = np.diff(prices)
     seed = deltas[:period+1]
     up = seed[seed >= 0].sum() / period
     down = -seed[seed < 0].sum() / period
-    
+
     if down == 0:
         return 100.0
-    
+
     rs = up / down
     rsi = 100.0 - (100.0 / (1.0 + rs))
     return float(rsi)
@@ -162,12 +162,12 @@ def calculate_macd(prices: List[float]) -> Dict[str, float]:
     """Calculate MACD"""
     if len(prices) < 26:
         return {"macd": 0.0, "signal": 0.0, "histogram": 0.0}
-    
+
     exp1 = pd.Series(prices).ewm(span=12, adjust=False).mean()
     exp2 = pd.Series(prices).ewm(span=26, adjust=False).mean()
     macd = exp1 - exp2
     signal = macd.ewm(span=9, adjust=False).mean()
-    
+
     return {
         "macd": float(macd.iloc[-1]),
         "signal": float(signal.iloc[-1]),
@@ -178,10 +178,10 @@ def calculate_bollinger_bands(prices: List[float], period: int = 20) -> Dict[str
     """Calculate Bollinger Bands"""
     if len(prices) < period:
         return {"upper": 0.0, "middle": 0.0, "lower": 0.0}
-    
+
     sma = np.mean(prices[-period:])
     std = np.std(prices[-period:])
-    
+
     return {
         "upper": sma + (2 * std),
         "middle": sma,
@@ -197,10 +197,10 @@ async def get_market_data(symbol: str) -> Optional[MarketData]:
         cached = cache.get(f"market_data_{symbol}")
         if cached:
             return cached
-        
+
         ticker = yf.Ticker(symbol)
         info = ticker.info
-        
+
         # Get current price
         current_price = info.get('currentPrice') or info.get('regularMarketPrice', 0)
         if current_price == 0:
@@ -208,9 +208,9 @@ async def get_market_data(symbol: str) -> Optional[MarketData]:
             hist = ticker.history(period="1d", interval="1m")
             if not hist.empty:
                 current_price = float(hist['Close'].iloc[-1])
-        
+
         previous_close = info.get('previousClose', current_price)
-        
+
         data = MarketData(
             symbol=symbol,
             price=current_price,
@@ -223,10 +223,10 @@ async def get_market_data(symbol: str) -> Optional[MarketData]:
             previousClose=previous_close,
             timestamp=datetime.now(timezone.utc).isoformat()
         )
-        
+
         cache.set(f"market_data_{symbol}", data)
         return data
-        
+
     except Exception as e:
         logger.error(f"Error fetching market data for {symbol}: {e}")
         return None
@@ -236,10 +236,10 @@ async def get_historical_data(symbol: str, period: str = "1mo", interval: str = 
     try:
         ticker = yf.Ticker(symbol)
         hist = ticker.history(period=period, interval=interval)
-        
+
         if hist.empty:
             return []
-        
+
         data = []
         for idx, row in hist.iterrows():
             data.append({
@@ -250,9 +250,9 @@ async def get_historical_data(symbol: str, period: str = "1mo", interval: str = 
                 "close": float(row['Close']),
                 "volume": int(row['Volume'])
             })
-        
+
         return data
-        
+
     except Exception as e:
         logger.error(f"Error fetching historical data for {symbol}: {e}")
         return []
@@ -266,17 +266,17 @@ async def generate_ml_signals(symbol: str) -> List[Signal]:
         hist_data = await get_historical_data(symbol, period="1mo", interval="1d")
         if len(hist_data) < 20:
             return []
-        
+
         prices = [d['close'] for d in hist_data]
         current_price = prices[-1]
-        
+
         # Calculate indicators
         rsi = calculate_rsi(prices)
         macd = calculate_macd(prices)
         bb = calculate_bollinger_bands(prices)
-        
+
         signals = []
-        
+
         # RSI Signal
         if rsi < 30:
             signals.append(Signal(
@@ -308,7 +308,7 @@ async def generate_ml_signals(symbol: str) -> List[Signal]:
                 stop_loss=current_price * 1.02,
                 take_profit=current_price * 0.95
             ))
-        
+
         # MACD Signal
         if macd["histogram"] > 0 and macd["macd"] > macd["signal"]:
             signals.append(Signal(
@@ -325,7 +325,7 @@ async def generate_ml_signals(symbol: str) -> List[Signal]:
                 stop_loss=current_price * 0.97,
                 take_profit=current_price * 1.08
             ))
-        
+
         # Bollinger Bands Signal
         if current_price < bb["lower"]:
             signals.append(Signal(
@@ -342,7 +342,7 @@ async def generate_ml_signals(symbol: str) -> List[Signal]:
                 stop_loss=current_price * 0.95,
                 take_profit=current_price * 1.10
             ))
-        
+
         # Add some random signals for demo
         if random.random() > 0.7:
             signal_type = random.choice(["BUY", "SELL", "HOLD"])
@@ -364,9 +364,9 @@ async def generate_ml_signals(symbol: str) -> List[Signal]:
                 stop_loss=current_price * (0.95 if signal_type == "BUY" else 1.05),
                 take_profit=current_price * (1.10 if signal_type == "BUY" else 0.90)
             ))
-        
+
         return signals
-        
+
     except Exception as e:
         logger.error(f"Error generating ML signals for {symbol}: {e}")
         return []
@@ -382,7 +382,7 @@ async def get_market_data_endpoint(symbol: str):
     # Validate symbol format
     if not symbol or len(symbol) > 10 or not symbol.replace("-", "").isalnum():
         raise HTTPException(status_code=400, detail=f"Invalid symbol format: {symbol}")
-    
+
     data = await get_market_data(symbol)
     if not data:
         raise HTTPException(status_code=404, detail=f"Market data not found for {symbol}")
@@ -394,7 +394,7 @@ async def get_historical_data_endpoint(symbol: str, period: str = "1mo", interva
     valid_periods = ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"]
     if period not in valid_periods:
         raise HTTPException(status_code=400, detail=f"Invalid period: {period}. Valid periods: {', '.join(valid_periods)}")
-    
+
     data = await get_historical_data(symbol, period, interval)
     return {"symbol": symbol, "data": data}
 
@@ -402,11 +402,11 @@ async def get_historical_data_endpoint(symbol: str, period: str = "1mo", interva
 async def get_all_signals():
     symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA", "META", "AMZN", "SPY"]
     all_signals = []
-    
+
     for symbol in symbols:
         signals = await generate_ml_signals(symbol)
         all_signals.extend([s.dict() for s in signals])
-    
+
     return all_signals
 
 @app.get("/api/v1/signals/{symbol}")
@@ -418,7 +418,7 @@ async def get_signals_for_symbol(symbol: str):
 async def get_signal_insights(symbol: str):
     market_data = await get_market_data(symbol)
     signals = await generate_ml_signals(symbol)
-    
+
     return {
         "symbol": symbol,
         "current_price": market_data.price if market_data else 0,
@@ -458,7 +458,7 @@ async def get_precise_options_signals(symbol: str = "SPY", timeframe: str = "15m
 async def get_market_opportunities():
     opportunities = []
     symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA"]
-    
+
     for symbol in symbols:
         if random.random() > 0.5:
             opportunities.append(MarketOpportunity(
@@ -470,7 +470,7 @@ async def get_market_opportunities():
                 reason=f"{symbol} showing strong {random.choice(['bullish', 'technical'])} signals",
                 timestamp=datetime.now(timezone.utc).isoformat()
             ))
-    
+
     return {"opportunities": [opp.model_dump() for opp in opportunities]}
 
 # ============= WebSocket Endpoint =============
@@ -478,7 +478,7 @@ async def get_market_opportunities():
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
-    
+
     try:
         # Send initial connection message
         await manager.send_personal_message(
@@ -489,7 +489,7 @@ async def websocket_endpoint(websocket: WebSocket):
             }),
             websocket
         )
-        
+
         # Create tasks for sending updates
         async def send_market_updates():
             symbols = ["SPY", "QQQ", "AAPL", "TSLA", "NVDA"]
@@ -498,7 +498,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     for symbol in symbols:
                         if not manager.connection_status.get(websocket, False):
                             break
-                            
+
                         market_data = await get_market_data(symbol)
                         if market_data:
                             await manager.send_personal_message(
@@ -512,7 +512,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 except Exception as e:
                     logger.error(f"Error sending market updates: {e}")
                     break
-        
+
         async def send_signals():
             while manager.connection_status.get(websocket, False):
                 try:
@@ -529,14 +529,14 @@ async def websocket_endpoint(websocket: WebSocket):
                 except Exception as e:
                     logger.error(f"Error sending signals: {e}")
                     break
-        
+
         # Run both tasks concurrently
         await asyncio.gather(
             send_market_updates(),
             send_signals(),
             websocket.receive_text()  # Keep connection alive
         )
-        
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
     except Exception as e:
@@ -550,5 +550,5 @@ if __name__ == "__main__":
     print("📊 Live market data enabled")
     print("🤖 ML signals generation active")
     print("🌐 API docs available at http://localhost:8000/docs")
-    
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)

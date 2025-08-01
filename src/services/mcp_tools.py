@@ -435,6 +435,11 @@ def get_mcp_tools_for_openai() -> List[Dict[str, Any]]:
     return mcp_registry.get_openai_functions()
 
 
+def get_available_tools() -> List[str]:
+    """Get list of available MCP tool names"""
+    return list(mcp_registry.tools.keys())
+
+
 def get_mcp_tools_for_anthropic() -> List[Dict[str, Any]]:
     """Get tools formatted for Anthropic tool use"""
     return mcp_registry.get_anthropic_tools()

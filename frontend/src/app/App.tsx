@@ -1,6 +1,6 @@
 /**
  * Golden Signals AI - Simplified App
- * 
+ *
  * New simplified, stable architecture that replaces the complex previous version.
  * Single entry point with Golden Eye AI Prophet theme preserved.
  */
@@ -97,4 +97,4 @@ const App: React.FC = () => {
     );
 };
 
-export default App; 
+export default App;

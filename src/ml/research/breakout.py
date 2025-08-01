@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 class BreakoutAgent(BaseAgent):
     """Agent that identifies breakout patterns in stock prices."""
 
-    def __init__(self, window: int = 20, threshold: float = 0.05, volatility_threshold: float = 0.03):
+    def __init__(
+        self, window: int = 20, threshold: float = 0.05, volatility_threshold: float = 0.03
+    ):
         """Initialize the BreakoutAgent.
 
         Args:
@@ -98,10 +100,10 @@ class BreakoutAgent(BaseAgent):
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Trading signal to process.
-        
+
         Returns:
             Dict[str, Any]: Processed trading signal with potential modifications.
         """

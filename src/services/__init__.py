@@ -11,4 +11,4 @@ Contains business logic and service layer components.
 # from .market_data_service import MarketDataService
 # from .signal_service import SignalService
 
-__all__ = ["MarketDataService"] 
+__all__ = ["MarketDataService"]

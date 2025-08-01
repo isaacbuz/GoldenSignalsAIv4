@@ -46,4 +46,4 @@ interface SpeechRecognitionConstructor {
 interface Window {
     SpeechRecognition: SpeechRecognitionConstructor | undefined;
     webkitSpeechRecognition: SpeechRecognitionConstructor | undefined;
-} 
+}

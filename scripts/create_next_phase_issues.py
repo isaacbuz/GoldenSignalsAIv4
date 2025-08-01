@@ -34,10 +34,10 @@ Every agent inheriting from BaseAgent must implement:
 async def analyze(self, market_data: MarketData) -> Signal:
     \"\"\"
     Analyze market data and generate trading signal.
-    
+
     Args:
         market_data: Market data for analysis
-        
+
     Returns:
         Signal: Trading signal with analysis
     \"\"\"
@@ -46,7 +46,7 @@ async def analyze(self, market_data: MarketData) -> Signal:
 def get_required_data_types(self) -> List[str]:
     \"\"\"
     Returns list of required data types for analysis.
-    
+
     Returns:
         List of data type strings
     \"\"\"
@@ -113,14 +113,14 @@ class MockRedisClient:
     def __init__(self):
         self.data = {}
         self.pubsub_messages = []
-    
+
     async def get(self, key):
         return self.data.get(key)
-    
+
     async def set(self, key, value, ex=None):
         self.data[key] = value
         return True
-    
+
     async def publish(self, channel, message):
         self.pubsub_messages.append((channel, message))
         return 1
@@ -132,11 +132,11 @@ class MockDatabaseManager:
     def __init__(self):
         self.signals = []
         self.market_data = []
-    
+
     async def store_signal(self, signal):
         self.signals.append(signal)
         return signal.signal_id
-    
+
     async def get_market_data(self, symbol, timeframe, limit):
         return self.market_data[:limit]
 ```
@@ -146,10 +146,10 @@ class MockDatabaseManager:
 class MockMarketDataFetcher:
     def __init__(self):
         self.mock_prices = self._generate_mock_prices()
-    
+
     async def fetch_ohlcv(self, symbol, timeframe, limit):
         return self.mock_prices[:limit]
-    
+
     def _generate_mock_prices(self):
         # Generate realistic price data
         pass
@@ -161,10 +161,10 @@ class MockWebSocket:
     def __init__(self):
         self.messages = []
         self.connected = False
-    
+
     async def accept(self):
         self.connected = True
-    
+
     async def send_json(self, data):
         self.messages.append(data)
 ```
@@ -357,7 +357,7 @@ class TestDataGenerator:
     def generate_random_walk(start_price, num_points, volatility):
         # Generate realistic price movement
         pass
-    
+
     @staticmethod
     def generate_trending_data(start_price, trend, num_points):
         # Generate trending price data
@@ -411,17 +411,17 @@ def fix_imports(file_path):
     \"\"\"Fix common import issues in a file.\"\"\"
     with open(file_path, 'r') as f:
         content = f.read()
-    
+
     # Fix patterns
     patterns = [
         (r'from (\w+)\.base import', r'from agents.base import'),
         (r'from agents.base import', r'from agents.base import'),
         # Add more patterns
     ]
-    
+
     for pattern, replacement in patterns:
         content = re.sub(pattern, replacement, content)
-    
+
     with open(file_path, 'w') as f:
         f.write(content)
 ```
@@ -475,13 +475,13 @@ class AutomatedTestFixer:
         self.fixed_tests = []
         self.failed_tests = []
         self.fixes_applied = []
-    
+
     def run_tests(self, test_path: str) -> Tuple[bool, str]:
         \"\"\"Run tests and capture output.\"\"\"
         cmd = f"python -m pytest {test_path} -v"
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         return result.returncode == 0, result.stdout + result.stderr
-    
+
     def identify_error_type(self, error_output: str) -> str:
         \"\"\"Identify the type of error from output.\"\"\"
         if "ImportError" in error_output:
@@ -494,7 +494,7 @@ class AutomatedTestFixer:
             return "assertion_error"
         else:
             return "unknown"
-    
+
     def apply_fix(self, file_path: str, error_type: str, error_details: str) -> bool:
         \"\"\"Apply automated fix based on error type.\"\"\"
         if error_type == "import_error":
@@ -504,7 +504,7 @@ class AutomatedTestFixer:
         elif error_type == "attribute_error":
             return self.fix_attribute_error(file_path, error_details)
         return False
-    
+
     def fix_import_error(self, file_path: str, error_details: str) -> bool:
         \"\"\"Fix import errors.\"\"\"
         # Extract module name from error
@@ -515,13 +515,13 @@ class AutomatedTestFixer:
             self.create_missing_module(module_name)
             return True
         return False
-    
+
     def fix_abstract_class(self, file_path: str, error_details: str) -> bool:
         \"\"\"Fix abstract class errors.\"\"\"
         # Extract class name and missing methods
         class_match = re.search(r"abstract class (\w+)", error_details)
         method_match = re.search(r"abstract methods? ([\w, ]+)", error_details)
-        
+
         if class_match and method_match:
             class_name = class_match.group(1)
             methods = [m.strip() for m in method_match.group(1).split(',')]
@@ -529,7 +529,7 @@ class AutomatedTestFixer:
             self.add_abstract_methods(file_path, class_name, methods)
             return True
         return False
-    
+
     def generate_report(self) -> str:
         \"\"\"Generate fix report.\"\"\"
         report = f\"\"\"
@@ -555,10 +555,10 @@ class AutomatedTestFixer:
 # Main execution
 if __name__ == "__main__":
     fixer = AutomatedTestFixer()
-    
+
     # Get all test files
     test_files = list(Path("tests").rglob("test_*.py"))
-    
+
     for test_file in test_files:
         success, output = fixer.run_tests(str(test_file))
         if not success:
@@ -574,12 +574,12 @@ if __name__ == "__main__":
                 fixer.failed_tests.append(str(test_file))
         else:
             fixer.fixed_tests.append(str(test_file))
-    
+
     # Generate and save report
     report = fixer.generate_report()
     with open("test_fix_report.md", "w") as f:
         f.write(report)
-    
+
     print(report)
 ```
 
@@ -639,7 +639,7 @@ from unittest.mock import Mock, AsyncMock
 
 class TestComponent:
     \"\"\"Test suite for Component.\"\"\"
-    
+
     @pytest.fixture
     def component(self):
         \"\"\"Create component instance with mocks.\"\"\"
@@ -647,17 +647,17 @@ class TestComponent:
             dependency1=Mock(),
             dependency2=AsyncMock()
         )
-    
+
     def test_happy_path(self, component):
         \"\"\"Test normal operation.\"\"\"
         result = component.method(valid_input)
         assert result == expected_output
-    
+
     def test_edge_case(self, component):
         \"\"\"Test edge cases.\"\"\"
         result = component.method(edge_input)
         assert result == edge_output
-    
+
     def test_error_handling(self, component):
         \"\"\"Test error scenarios.\"\"\"
         with pytest.raises(ExpectedError):
@@ -672,11 +672,11 @@ class TestComponent:
 def generate_coverage_report():
     # Run coverage
     os.system("python -m pytest --cov=. --cov-report=html --cov-report=term")
-    
+
     # Parse coverage data
     with open(".coverage", "r") as f:
         coverage_data = f.read()
-    
+
     # Generate progress chart
     # Track improvement over time
 ```
@@ -696,9 +696,9 @@ def generate_coverage_report():
 def create_issue(issue_data):
     """Create a single issue on GitHub."""
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues'
-    
+
     response = requests.post(url, headers=headers, json=issue_data)
-    
+
     if response.status_code == 201:
         issue = response.json()
         print(f"✅ Created issue #{issue['number']}: {issue['title']}")
@@ -712,9 +712,9 @@ def main():
     """Create all next phase issues."""
     print("Creating Next Phase Test Improvement Issues...")
     print("=" * 50)
-    
+
     created_issues = []
-    
+
     for issue_data in next_phase_issues:
         issue_number = create_issue(issue_data)
         if issue_number:
@@ -723,10 +723,10 @@ def main():
                 'title': issue_data['title'],
                 'labels': issue_data['labels']
             })
-    
+
     print("\n" + "=" * 50)
     print(f"Created {len(created_issues)} issues for next phase")
-    
+
     # Create summary
     summary = {
         'created_at': datetime.now().isoformat(),
@@ -734,13 +734,13 @@ def main():
         'issues_created': created_issues,
         'total_issues': len(created_issues)
     }
-    
+
     # Save summary
     with open('next_phase_issues_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
-    
+
     print("\nSummary saved to next_phase_issues_summary.json")
-    
+
     # Print implementation order
     print("\n📋 Recommended Implementation Order:")
     print("1. 🔧 Fix Import and Module Errors (Critical)")
@@ -756,5 +756,5 @@ if __name__ == "__main__":
         print("❌ Error: GITHUB_TOKEN environment variable not set")
         print("Please set: export GITHUB_TOKEN='your_token'")
         exit(1)
-    
-    main() 
+
+    main()

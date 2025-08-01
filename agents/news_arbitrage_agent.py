@@ -4,19 +4,20 @@ High-speed news analysis and arbitrage opportunity detection
 Issue #188: Agent-4: Develop News Arbitrage Agent
 """
 
+import asyncio
+import json
+import logging
+import re
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple, Set
-import asyncio
-from dataclasses import dataclass, field
-from enum import Enum
-import logging
-from collections import deque, defaultdict
-import re
-import json
-from textblob import TextBlob
 import spacy
+from textblob import TextBlob
 
 logger = logging.getLogger(__name__)
 
@@ -124,27 +125,27 @@ class ArbitrageResult:
 
 class NewsProcessor:
     """Process and analyze news events"""
-    
+
     def __init__(self):
         # Initialize NLP models (mock for demo)
         self.sentiment_analyzer = self._init_sentiment_model()
         self.entity_extractor = self._init_entity_model()
         self.impact_predictor = self._init_impact_model()
-        
+
         # Historical patterns
         self.news_patterns = self._load_news_patterns()
         self.reaction_patterns = self._load_reaction_patterns()
-    
+
     def _init_sentiment_model(self) -> Any:
         """Initialize sentiment analysis model"""
         # In production, would use fine-tuned financial sentiment model
         return TextBlob
-    
+
     def _init_entity_model(self) -> Any:
         """Initialize named entity recognition"""
         # In production, would use spaCy with financial entities
         return None  # Simplified for demo
-    
+
     def _init_impact_model(self) -> Dict[str, Any]:
         """Initialize impact prediction model"""
         return {
@@ -159,7 +160,7 @@ class NewsProcessor:
             'guidance_raise': {'impact': 0.04, 'duration': 'days', 'confidence': 0.8},
             'guidance_lower': {'impact': -0.06, 'duration': 'days', 'confidence': 0.8}
         }
-    
+
     def _load_news_patterns(self) -> Dict[str, List[str]]:
         """Load news keyword patterns"""
         return {
@@ -172,7 +173,7 @@ class NewsProcessor:
             'management': ['CEO', 'CFO', 'resigns', 'appoints', 'departure', 'hire'],
             'guidance': ['guidance', 'outlook', 'forecast', 'raises', 'lowers', 'warns']
         }
-    
+
     def _load_reaction_patterns(self) -> Dict[NewsType, Dict[str, Any]]:
         """Load typical market reaction patterns"""
         return {
@@ -195,33 +196,33 @@ class NewsProcessor:
                 'correlated_assets': ['biotech_etf', 'competitors']
             }
         }
-    
+
     async def process_news(self, raw_news: Dict[str, Any]) -> NewsEvent:
         """Process raw news into structured event"""
         # Extract basic info
         headline = raw_news.get('headline', '')
         summary = raw_news.get('summary', headline)
         timestamp = datetime.fromisoformat(raw_news.get('timestamp', datetime.now().isoformat()))
-        
+
         # Classify news type
         news_type = self._classify_news_type(headline, summary)
-        
+
         # Extract entities and tickers
         entities = self._extract_entities(headline + ' ' + summary)
         tickers = self._extract_tickers(headline + ' ' + summary, entities)
-        
+
         # Analyze sentiment
         sentiment = self._analyze_sentiment(headline, summary, news_type)
-        
+
         # Extract keywords
         keywords = self._extract_keywords(headline + ' ' + summary)
-        
+
         # Determine urgency
         urgency = self._determine_urgency(news_type, keywords)
-        
+
         # Predict duration
         duration = self._predict_duration(news_type)
-        
+
         return NewsEvent(
             event_id=f"NEWS_{timestamp.timestamp()}",
             timestamp=timestamp,
@@ -237,11 +238,11 @@ class NewsProcessor:
             urgency=urgency,
             expected_duration=duration
         )
-    
+
     def _classify_news_type(self, headline: str, summary: str) -> NewsType:
         """Classify news type based on content"""
         text = (headline + ' ' + summary).lower()
-        
+
         # Check patterns
         for pattern_type, keywords in self.news_patterns.items():
             if any(keyword in text for keyword in keywords):
@@ -259,9 +260,9 @@ class NewsProcessor:
                     return NewsType.MANAGEMENT
                 elif 'guidance' in pattern_type:
                     return NewsType.GUIDANCE
-        
+
         return NewsType.BREAKING  # Default
-    
+
     def _extract_entities(self, text: str) -> Dict[str, List[str]]:
         """Extract named entities from text"""
         # Simplified entity extraction
@@ -271,74 +272,74 @@ class NewsProcessor:
             'numbers': [],
             'percentages': []
         }
-        
+
         # Extract companies (simplified - look for capitalized words)
         companies = re.findall(r'\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\b', text)
         entities['companies'] = list(set(companies))[:5]
-        
+
         # Extract numbers and percentages
         numbers = re.findall(r'\$?\d+(?:\.\d+)?(?:B|M|K)?', text)
         entities['numbers'] = numbers[:5]
-        
+
         percentages = re.findall(r'\d+(?:\.\d+)?%', text)
         entities['percentages'] = percentages[:5]
-        
+
         return entities
-    
+
     def _extract_tickers(self, text: str, entities: Dict[str, List[str]]) -> List[str]:
         """Extract stock tickers from text"""
         # Look for uppercase symbols 1-5 chars long
         tickers = re.findall(r'\b[A-Z]{1,5}\b', text)
-        
+
         # Filter common words
         common_words = {'CEO', 'CFO', 'FDA', 'SEC', 'IPO', 'NYSE', 'THE', 'AND', 'FOR'}
         tickers = [t for t in tickers if t not in common_words]
-        
+
         # Return unique tickers
         return list(set(tickers))[:5]
-    
-    def _analyze_sentiment(self, headline: str, summary: str, 
+
+    def _analyze_sentiment(self, headline: str, summary: str,
                          news_type: NewsType) -> float:
         """Analyze sentiment of news"""
         # Simple sentiment analysis
         text = headline + ' ' + summary
-        
+
         # Use TextBlob for basic sentiment
         blob = TextBlob(text)
         base_sentiment = blob.sentiment.polarity  # -1 to 1
-        
+
         # Adjust for financial keywords
         positive_words = ['beat', 'exceed', 'surpass', 'raise', 'upgrade', 'approve']
         negative_words = ['miss', 'fall', 'disappoint', 'lower', 'downgrade', 'reject']
-        
+
         positive_count = sum(1 for word in positive_words if word in text.lower())
         negative_count = sum(1 for word in negative_words if word in text.lower())
-        
+
         # Combine scores
         keyword_sentiment = (positive_count - negative_count) * 0.2
         final_sentiment = np.clip(base_sentiment + keyword_sentiment, -1, 1)
-        
+
         return final_sentiment
-    
+
     def _extract_keywords(self, text: str) -> List[str]:
         """Extract key words from text"""
         # Simple keyword extraction
         words = text.lower().split()
-        
+
         # Remove common words
         stop_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'}
         keywords = [w for w in words if w not in stop_words and len(w) > 3]
-        
+
         # Get most common
         from collections import Counter
         word_counts = Counter(keywords)
-        
+
         return [word for word, _ in word_counts.most_common(10)]
-    
+
     def _determine_urgency(self, news_type: NewsType, keywords: List[str]) -> str:
         """Determine urgency of news"""
         urgent_keywords = ['breaking', 'alert', 'urgent', 'immediate', 'now', 'just']
-        
+
         if any(word in keywords for word in urgent_keywords):
             return 'immediate'
         elif news_type in [NewsType.EARNINGS, NewsType.MERGER]:
@@ -347,7 +348,7 @@ class NewsProcessor:
             return 'medium'
         else:
             return 'low'
-    
+
     def _predict_duration(self, news_type: NewsType) -> str:
         """Predict impact duration"""
         duration_map = {
@@ -361,18 +362,18 @@ class NewsProcessor:
             NewsType.GUIDANCE: 'days',
             NewsType.BREAKING: 'minutes'
         }
-        
+
         return duration_map.get(news_type, 'hours')
 
 
 class ArbitrageDetector:
     """Detect arbitrage opportunities from news"""
-    
+
     def __init__(self):
         self.correlation_matrix = self._load_correlations()
         self.pair_relationships = self._load_pair_relationships()
         self.historical_reactions = self._load_historical_reactions()
-    
+
     def _load_correlations(self) -> Dict[str, Dict[str, float]]:
         """Load asset correlations"""
         # Simplified correlation matrix
@@ -382,7 +383,7 @@ class ArbitrageDetector:
             'JPM': {'XLF': 0.9, 'BAC': 0.85, 'GS': 0.8, 'SPY': 0.7},
             'XOM': {'XLE': 0.95, 'CVX': 0.9, 'COP': 0.85, 'SPY': 0.6}
         }
-    
+
     def _load_pair_relationships(self) -> Dict[str, List[Dict[str, Any]]]:
         """Load pair trading relationships"""
         return {
@@ -396,7 +397,7 @@ class ArbitrageDetector:
                 {'etf': 'XLE', 'components': ['XOM', 'CVX', 'COP'], 'weight': 0.33}
             ]
         }
-    
+
     def _load_historical_reactions(self) -> Dict[NewsType, Dict[str, Any]]:
         """Load historical reaction patterns"""
         return {
@@ -413,23 +414,23 @@ class ArbitrageDetector:
                 'arb_spread': 0.02
             }
         }
-    
+
     async def detect_opportunities(self, news_event: NewsEvent,
                                  market_data: Dict[str, Dict[str, Any]]) -> List[ArbitrageOpportunity]:
         """Detect arbitrage opportunities from news event"""
         opportunities = []
-        
+
         # Check each arbitrage type
         for arb_type in ArbitrageType:
             opp = await self._check_arbitrage_type(arb_type, news_event, market_data)
             if opp:
                 opportunities.append(opp)
-        
+
         # Sort by expected profit
         opportunities.sort(key=lambda x: x.expected_profit_bps, reverse=True)
-        
+
         return opportunities
-    
+
     async def _check_arbitrage_type(self, arb_type: ArbitrageType,
                                   news_event: NewsEvent,
                                   market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
@@ -444,26 +445,26 @@ class ArbitrageDetector:
             return await self._check_sentiment_arb(news_event, market_data)
         elif arb_type == ArbitrageType.VOLATILITY:
             return await self._check_volatility_arb(news_event, market_data)
-        
+
         return None
-    
+
     async def _check_cross_asset_arb(self, news: NewsEvent,
                                    market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
         """Check cross-asset arbitrage (stock vs options)"""
         if not news.tickers:
             return None
-        
+
         ticker = news.tickers[0]
         if ticker not in market_data:
             return None
-        
+
         stock_data = market_data[ticker]
-        
+
         # Check if options are mispriced relative to expected move
         if 'implied_volatility' in stock_data:
             current_iv = stock_data['implied_volatility']
             expected_move = abs(news.sentiment_score) * 0.05  # Simplified
-            
+
             # If IV hasn't adjusted to news yet
             if expected_move > current_iv * 0.1:  # 10% of IV
                 return ArbitrageOpportunity(
@@ -487,29 +488,29 @@ class ArbitrageDetector:
                     exit_signals=['iv_spike', 'price_move_complete'],
                     position_sizes={ticker: -1.0, f"{ticker}_OPTIONS": 2.0}  # Delta neutral
                 )
-        
+
         return None
-    
+
     async def _check_pairs_arb(self, news: NewsEvent,
                              market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
         """Check pairs trading arbitrage"""
         if not news.tickers:
             return None
-        
+
         ticker = news.tickers[0]
-        
+
         # Find correlated pairs
         if ticker in self.correlation_matrix:
             correlations = self.correlation_matrix[ticker]
-            
+
             for paired_ticker, correlation in correlations.items():
                 if correlation > 0.8 and paired_ticker in market_data:
                     # Check if pair has diverged
                     ticker_move = self._calculate_move(ticker, market_data)
                     pair_move = self._calculate_move(paired_ticker, market_data)
-                    
+
                     divergence = abs(ticker_move - pair_move)
-                    
+
                     if divergence > 0.02:  # 2% divergence
                         return ArbitrageOpportunity(
                             opp_id=f"PAIRS_{ticker}_{paired_ticker}_{news.event_id}",
@@ -532,9 +533,9 @@ class ArbitrageDetector:
                             exit_signals=['convergence_complete', 'stop_loss'],
                             position_sizes={ticker: -1.0, paired_ticker: 1.0}
                         )
-        
+
         return None
-    
+
     async def _check_index_arb(self, news: NewsEvent,
                              market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
         """Check index arbitrage opportunities"""
@@ -542,9 +543,9 @@ class ArbitrageDetector:
         for etf_info in self.pair_relationships['etf_components']:
             etf = etf_info['etf']
             components = etf_info['components']
-            
+
             affected_components = [t for t in news.tickers if t in components]
-            
+
             if affected_components and etf in market_data:
                 # Calculate expected ETF move based on component moves
                 component_moves = []
@@ -552,13 +553,13 @@ class ArbitrageDetector:
                     if comp in market_data:
                         move = self._calculate_move(comp, market_data)
                         component_moves.append(move * etf_info['weight'])
-                
+
                 if component_moves:
                     expected_etf_move = sum(component_moves)
                     actual_etf_move = self._calculate_move(etf, market_data)
-                    
+
                     discrepancy = expected_etf_move - actual_etf_move
-                    
+
                     if abs(discrepancy) > 0.005:  # 0.5% discrepancy
                         return ArbitrageOpportunity(
                             opp_id=f"INDEX_{etf}_{news.event_id}",
@@ -580,28 +581,28 @@ class ArbitrageDetector:
                             exit_signals=['arbitrage_closed', 'rebalancing'],
                             position_sizes={etf: 1.0 if discrepancy > 0 else -1.0}
                         )
-        
+
         return None
-    
+
     async def _check_sentiment_arb(self, news: NewsEvent,
                                  market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
         """Check sentiment-based arbitrage"""
         if not news.tickers:
             return None
-        
+
         ticker = news.tickers[0]
         if ticker not in market_data:
             return None
-        
+
         # Check if market reaction doesn't match news sentiment
         actual_move = self._calculate_move(ticker, market_data)
         expected_direction = 1 if news.sentiment_score > 0 else -1
         expected_magnitude = abs(news.sentiment_score) * 0.03  # 3% per sentiment unit
-        
+
         # If market moved opposite to sentiment or insufficient magnitude
         if (actual_move * expected_direction < 0) or \
            (abs(actual_move) < expected_magnitude * 0.5):
-            
+
             return ArbitrageOpportunity(
                 opp_id=f"SENT_{ticker}_{news.event_id}",
                 arb_type=ArbitrageType.SENTIMENT,
@@ -619,30 +620,30 @@ class ArbitrageDetector:
                 exit_signals=['sentiment_alignment', 'volume_spike'],
                 position_sizes={ticker: expected_direction * 1.0}
             )
-        
+
         return None
-    
+
     async def _check_volatility_arb(self, news: NewsEvent,
                                   market_data: Dict[str, Dict[str, Any]]) -> Optional[ArbitrageOpportunity]:
         """Check volatility arbitrage"""
         if news.news_type not in [NewsType.EARNINGS, NewsType.REGULATORY]:
             return None
-        
+
         ticker = news.tickers[0] if news.tickers else None
         if not ticker or ticker not in market_data:
             return None
-        
+
         stock_data = market_data[ticker]
-        
+
         # Check if IV is too low given news
         if 'implied_volatility' in stock_data:
             current_iv = stock_data['implied_volatility']
             historical_reaction = self.historical_reactions.get(news.news_type, {})
             expected_move = historical_reaction.get('avg_move', 0.04)
-            
+
             # Convert move to IV terms
             expected_iv = expected_move * np.sqrt(252)  # Annualized
-            
+
             if current_iv < expected_iv * 0.8:  # IV 20% below expected
                 return ArbitrageOpportunity(
                     opp_id=f"VOL_{ticker}_{news.event_id}",
@@ -667,18 +668,18 @@ class ArbitrageDetector:
                         ticker: -0.5  # Delta hedge
                     }
                 )
-        
+
         return None
-    
+
     def _calculate_move(self, ticker: str, market_data: Dict[str, Dict[str, Any]]) -> float:
         """Calculate price move for ticker"""
         if ticker not in market_data:
             return 0.0
-        
+
         data = market_data[ticker]
         if 'prev_close' in data and 'price' in data:
             return (data['price'] - data['prev_close']) / data['prev_close']
-        
+
         return 0.0
 
 
@@ -687,12 +688,12 @@ class NewsArbitrageAgent:
     News Arbitrage Agent that detects and executes arbitrage opportunities
     from breaking news events with ultra-low latency
     """
-    
+
     def __init__(self):
         """Initialize the news arbitrage agent"""
         self.news_processor = NewsProcessor()
         self.arbitrage_detector = ArbitrageDetector()
-        
+
         # Execution tracking
         self.active_opportunities = {}
         self.execution_history = deque(maxlen=1000)
@@ -703,31 +704,31 @@ class NewsArbitrageAgent:
             'total_pnl': 0,
             'avg_profit_bps': 0
         })
-        
+
         # Speed metrics
         self.latency_tracker = {
             'news_to_detection': deque(maxlen=100),
             'detection_to_execution': deque(maxlen=100),
             'total_latency': deque(maxlen=100)
         }
-    
+
     async def process_news_event(self, raw_news: Dict[str, Any],
                                market_data: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
         """Process news event and detect opportunities"""
         start_time = datetime.now()
-        
+
         # Process news
         news_event = await self.news_processor.process_news(raw_news)
         news_process_time = (datetime.now() - start_time).total_seconds()
-        
+
         # Detect arbitrage opportunities
         detect_start = datetime.now()
         opportunities = await self.arbitrage_detector.detect_opportunities(news_event, market_data)
         detect_time = (datetime.now() - detect_start).total_seconds()
-        
+
         # Track latency
         self.latency_tracker['news_to_detection'].append(news_process_time + detect_time)
-        
+
         # Prepare response
         response = {
             'news_event': {
@@ -753,68 +754,68 @@ class NewsArbitrageAgent:
             'processing_time_ms': int((news_process_time + detect_time) * 1000),
             'timestamp': datetime.now().isoformat()
         }
-        
+
         # Store active opportunities
         for opp in opportunities:
             self.active_opportunities[opp.opp_id] = opp
-        
+
         return response
-    
+
     async def execute_arbitrage(self, opp_id: str,
                               market_data: Dict[str, Dict[str, Any]]) -> ArbitrageResult:
         """Execute arbitrage opportunity"""
         if opp_id not in self.active_opportunities:
             raise ValueError(f"Opportunity {opp_id} not found")
-        
+
         opportunity = self.active_opportunities[opp_id]
         entry_time = datetime.now()
-        
+
         # Simulate execution (in production, would connect to execution system)
         trades = {}
         total_slippage = 0
-        
+
         for instrument, size in opportunity.position_sizes.items():
             if instrument in market_data:
                 entry_price = opportunity.entry_prices.get(instrument, market_data[instrument]['price'])
-                
+
                 # Simulate slippage
                 slippage = abs(size) * 0.0001  # 1 bp per unit
                 if size > 0:
                     exec_price = entry_price * (1 + slippage)
                 else:
                     exec_price = entry_price * (1 - slippage)
-                
+
                 trades[instrument] = {
                     'size': size,
                     'entry_price': entry_price,
                     'exec_price': exec_price,
                     'slippage_bps': slippage * 10000
                 }
-                
+
                 total_slippage += slippage * 10000
-        
+
         # Simulate holding period and exit
         await asyncio.sleep(0.1)  # Simulate time passing
-        
+
         # Calculate P&L (simplified)
         exit_time = datetime.now()
         total_pnl = 0
-        
+
         for instrument, trade in trades.items():
             if instrument in opportunity.target_prices:
                 exit_price = opportunity.target_prices[instrument]
             else:
                 # Use current market price
                 exit_price = market_data.get(instrument, {}).get('price', trade['exec_price'])
-            
+
             if trade['size'] > 0:
                 pnl = (exit_price - trade['exec_price']) / trade['exec_price']
             else:
                 pnl = (trade['exec_price'] - exit_price) / trade['exec_price']
-            
+
             pnl *= abs(trade['size'])
             total_pnl += pnl
-        
+
         # Create result
         result = ArbitrageResult(
             opp_id=opp_id,
@@ -831,40 +832,40 @@ class NewsArbitrageAgent:
                 'spread': 5.0
             }
         )
-        
+
         # Update metrics
         self._update_metrics(opportunity.arb_type, result)
-        
+
         # Store in history
         self.execution_history.append(result)
-        
+
         # Remove from active
         del self.active_opportunities[opp_id]
-        
+
         return result
-    
+
     def _update_metrics(self, arb_type: ArbitrageType, result: ArbitrageResult):
         """Update performance metrics"""
         metrics = self.performance_metrics[arb_type.value]
-        
+
         metrics['executed'] += 1
         if result.realized_pnl > 0:
             metrics['successful'] += 1
-        
+
         metrics['total_pnl'] += result.realized_pnl
         metrics['avg_profit_bps'] = (
             metrics['total_pnl'] / metrics['executed'] * 10000
             if metrics['executed'] > 0 else 0
         )
-    
+
     async def monitor_active_opportunities(self, market_data: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
         """Monitor active arbitrage opportunities"""
         monitoring_results = []
-        
+
         for opp_id, opportunity in list(self.active_opportunities.items()):
             # Check if opportunity still valid
             time_elapsed = (datetime.now() - opportunity.news_event.timestamp).total_seconds()
-            
+
             if time_elapsed > opportunity.time_window:
                 # Opportunity expired
                 del self.active_opportunities[opp_id]
@@ -878,46 +879,46 @@ class NewsArbitrageAgent:
                         # Check if prices converged
                         exit_triggered = True
                         break
-                
+
                 if exit_triggered:
                     # Execute exit
                     result = await self.execute_arbitrage(opp_id, market_data)
                     status = 'executed'
                 else:
                     status = 'active'
-            
+
             monitoring_results.append({
                 'opp_id': opp_id,
                 'status': status,
                 'time_remaining': max(0, opportunity.time_window - time_elapsed),
                 'current_pnl': self._calculate_current_pnl(opportunity, market_data)
             })
-        
+
         return {
             'active_opportunities': len(self.active_opportunities),
             'monitoring_results': monitoring_results,
             'timestamp': datetime.now().isoformat()
         }
-    
+
     def _calculate_current_pnl(self, opportunity: ArbitrageOpportunity,
                              market_data: Dict[str, Dict[str, Any]]) -> float:
         """Calculate current P&L for opportunity"""
         total_pnl = 0
-        
+
         for instrument, size in opportunity.position_sizes.items():
             if instrument in opportunity.entry_prices and instrument in market_data:
                 entry_price = opportunity.entry_prices[instrument]
                 current_price = market_data[instrument].get('price', entry_price)
-                
+
                 if size > 0:
                     pnl = (current_price - entry_price) / entry_price
                 else:
                     pnl = (entry_price - current_price) / entry_price
-                
+
                 total_pnl += pnl * abs(size)
-        
+
         return total_pnl * 10000  # In bps
-    
+
     def get_performance_summary(self) -> Dict[str, Any]:
         """Get performance summary"""
         total_metrics = {
@@ -928,18 +929,18 @@ class NewsArbitrageAgent:
             'success_rate': 0,
             'avg_latency_ms': 0
         }
-        
+
         if total_metrics['total_executed'] > 0:
             total_metrics['success_rate'] = (
                 total_metrics['total_successful'] / total_metrics['total_executed']
             )
-        
+
         # Calculate average latency
         if self.latency_tracker['total_latency']:
             total_metrics['avg_latency_ms'] = (
                 np.mean(self.latency_tracker['total_latency']) * 1000
             )
-        
+
         # By arbitrage type breakdown
         by_type = {}
         for arb_type, metrics in self.performance_metrics.items():
@@ -950,7 +951,7 @@ class NewsArbitrageAgent:
                     'avg_profit_bps': metrics['avg_profit_bps'],
                     'total_pnl': metrics['total_pnl']
                 }
-        
+
         return {
             'summary': total_metrics,
             'by_arbitrage_type': by_type,
@@ -969,21 +970,21 @@ class NewsArbitrageAgent:
 async def demo_news_arbitrage():
     """Demonstrate the News Arbitrage Agent"""
     agent = NewsArbitrageAgent()
-    
+
     print("News Arbitrage Agent Demo")
     print("="*70)
-    
+
     # Test Case 1: Earnings Beat News
     print("\n📰 Case 1: Earnings Beat News Event")
     print("-"*50)
-    
+
     earnings_news = {
         'headline': 'Apple Beats Q4 Earnings Expectations by 15%',
         'summary': 'Apple Inc. (AAPL) reported Q4 earnings of $1.50 per share, beating analyst expectations of $1.30. Revenue also exceeded forecasts.',
         'timestamp': datetime.now().isoformat(),
         'source': 'Reuters'
     }
-    
+
     market_data = {
         'AAPL': {
             'price': 195.00,
@@ -1004,67 +1005,67 @@ async def demo_news_arbitrage():
             'volume': 2000000
         }
     }
-    
+
     result = await agent.process_news_event(earnings_news, market_data)
-    
+
     print(f"News Type: {result['news_event']['type']}")
     print(f"Sentiment: {result['news_event']['sentiment']:.2f}")
     print(f"Affected Tickers: {', '.join(result['news_event']['tickers'])}")
     print(f"\n🎯 Arbitrage Opportunities Found: {result['opportunities_found']}")
-    
+
     for opp in result['opportunities']:
         print(f"\n  {opp['type'].upper()} Arbitrage:")
         print(f"    Instruments: {', '.join(opp['instruments'])}")
         print(f"    Expected Profit: {opp['expected_profit_bps']:.0f} bps")
         print(f"    Confidence: {opp['confidence']:.1%}")
         print(f"    Time Window: {opp['time_window']}s")
-    
+
     print(f"\n⚡ Processing Time: {result['processing_time_ms']}ms")
-    
+
     # Test Case 2: M&A Announcement
     print("\n\n📰 Case 2: Merger & Acquisition News")
     print("-"*50)
-    
+
     merger_news = {
         'headline': 'Microsoft to Acquire Gaming Company for $10B',
         'summary': 'Microsoft Corp (MSFT) announced the acquisition of XYZ Gaming for $10 billion in an all-cash deal.',
         'timestamp': datetime.now().isoformat(),
         'source': 'Bloomberg'
     }
-    
+
     # Update market data to show divergence
     market_data['MSFT']['price'] = 378.00  # Down on acquirer
     market_data['QQQ']['price'] = 400.50  # Minimal move
-    
+
     result2 = await agent.process_news_event(merger_news, market_data)
-    
+
     print(f"News Impact: {result2['news_event']['type']}")
     print(f"Urgency: {result2['news_event']['urgency'].upper()}")
-    
+
     # Execute one of the opportunities
     if result2['opportunities']:
         opp_id = result2['opportunities'][0]['id']
         print(f"\n💰 Executing Arbitrage: {opp_id}")
-        
+
         exec_result = await agent.execute_arbitrage(opp_id, market_data)
-        
+
         print(f"  Entry Time: {exec_result.entry_time.strftime('%H:%M:%S.%f')[:-3]}")
         print(f"  Exit Time: {exec_result.exit_time.strftime('%H:%M:%S.%f')[:-3]}")
         print(f"  Realized P&L: {exec_result.realized_bps:.1f} bps")
         print(f"  Slippage: {exec_result.slippage_bps:.1f} bps")
         print(f"  Execution Quality: {exec_result.execution_quality:.1%}")
-    
+
     # Test Case 3: Breaking News - Regulatory
     print("\n\n📰 Case 3: Breaking Regulatory News")
     print("-"*50)
-    
+
     regulatory_news = {
         'headline': 'BREAKING: FDA Approves XYZ Biotech Drug Ahead of Schedule',
         'summary': 'The FDA has granted approval for XYZ Biotech revolutionary cancer treatment, months ahead of expected timeline.',
         'timestamp': datetime.now().isoformat(),
         'source': 'FDA'
     }
-    
+
     # Add biotech data
     market_data['XYZ'] = {
         'price': 50.00,
@@ -1072,47 +1073,47 @@ async def demo_news_arbitrage():
         'volume': 500000,
         'implied_volatility': 0.60
     }
-    
+
     market_data['IBB'] = {  # Biotech ETF
         'price': 150.00,
         'prev_close': 150.00,
         'volume': 1000000
     }
-    
+
     result3 = await agent.process_news_event(regulatory_news, market_data)
-    
+
     print(f"🚨 URGENT: {result3['news_event']['urgency'].upper()} priority news!")
     print(f"Processing completed in {result3['processing_time_ms']}ms")
-    
+
     # Monitor active opportunities
     print("\n\n📊 Monitoring Active Opportunities")
     print("-"*50)
-    
+
     monitoring = await agent.monitor_active_opportunities(market_data)
-    
+
     print(f"Active Opportunities: {monitoring['active_opportunities']}")
     for mon in monitoring['monitoring_results'][:3]:
         print(f"  {mon['opp_id']}: {mon['status']} | "
               f"Time Left: {mon['time_remaining']:.0f}s | "
               f"Current P&L: {mon['current_pnl']:.1f} bps")
-    
+
     # Performance summary
     print("\n\n📊 Performance Summary")
     print("-"*50)
-    
+
     summary = agent.get_performance_summary()
-    
+
     print(f"Total Opportunities Detected: {summary['summary']['total_opportunities']}")
     print(f"Total Executed: {summary['summary']['total_executed']}")
     print(f"Success Rate: {summary['summary']['success_rate']:.1%}")
     print(f"Average Latency: {summary['summary']['avg_latency_ms']:.1f}ms")
-    
+
     if summary['by_arbitrage_type']:
         print("\nBy Arbitrage Type:")
         for arb_type, metrics in summary['by_arbitrage_type'].items():
             print(f"  {arb_type}: {metrics['executed']} trades, "
                   f"{metrics['avg_profit_bps']:.1f} bps avg")
-    
+
     print("\n✅ News Arbitrage Agent demonstrates:")
     print("- Ultra-low latency news processing (<100ms)")
     print("- Multiple arbitrage strategy detection")
@@ -1121,4 +1122,4 @@ async def demo_news_arbitrage():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_news_arbitrage()) 
+    asyncio.run(demo_news_arbitrage())

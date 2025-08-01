@@ -1,16 +1,17 @@
 """
 Base arbitrage agent defining common functionality.
 """
-from typing import Dict, Any, List, Optional
 import logging
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from src.base.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 
 class ArbitrageOpportunity:
     """Represents an arbitrage opportunity with execution details."""
-    
+
     def __init__(
         self,
         symbol: str,
@@ -31,7 +32,7 @@ class ArbitrageOpportunity:
         self.timestamp = timestamp or datetime.now().timestamp()
         self.status = 'Open'  # Open, Executed, Missed, Failed
         self.execution_details: Dict[str, Any] = {}
-        
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert opportunity to dictionary format."""
         return {
@@ -49,7 +50,7 @@ class ArbitrageOpportunity:
 
 class BaseArbitrageAgent(BaseAgent):
     """Base class for arbitrage agents."""
-    
+
     def __init__(
         self,
         name: str,
@@ -61,7 +62,7 @@ class BaseArbitrageAgent(BaseAgent):
     ):
         """
         Initialize base arbitrage agent.
-        
+
         Args:
             name: Agent name
             min_spread: Minimum spread to consider (as fraction)
@@ -77,56 +78,56 @@ class BaseArbitrageAgent(BaseAgent):
         self.max_latency_ms = max_latency_ms
         self.fee_rate = fee_rate
         self.opportunities: List[ArbitrageOpportunity] = []
-        
+
     def is_profitable(self, opportunity: ArbitrageOpportunity) -> bool:
         """Check if opportunity is profitable after fees and slippage."""
         try:
             # Calculate total fees
             volume = opportunity.volume or self.min_volume
             total_fee = (opportunity.buy_price + opportunity.sell_price) * volume * self.fee_rate
-            
+
             # Estimate worst-case slippage
             slippage_cost = (opportunity.buy_price + opportunity.sell_price) * volume * self.max_slippage
-            
+
             # Calculate net profit
             gross_profit = opportunity.spread * volume
             net_profit = gross_profit - total_fee - slippage_cost
-            
+
             return net_profit > 0
-            
+
         except Exception as e:
             logger.error(f"Profitability check failed: {str(e)}")
             return False
-            
+
     def validate_opportunity(self, opportunity: ArbitrageOpportunity) -> bool:
         """Validate opportunity meets basic requirements."""
         try:
             if not opportunity.buy_price > 0 or not opportunity.sell_price > 0:
                 return False
-                
+
             if opportunity.spread < self.min_spread:
                 return False
-                
+
             if opportunity.volume and opportunity.volume < self.min_volume:
                 return False
-                
+
             return self.is_profitable(opportunity)
-            
+
         except Exception as e:
             logger.error(f"Opportunity validation failed: {str(e)}")
             return False
-            
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process market data for arbitrage opportunities.
         To be implemented by specific arbitrage strategies.
         """
         raise NotImplementedError("Subclasses must implement process()")
-        
+
     def get_opportunities(self) -> List[Dict[str, Any]]:
         """Get current opportunities in dictionary format."""
         return [opp.to_dict() for opp in self.opportunities]
-        
+
     def clear_opportunities(self) -> None:
         """Clear current opportunities list."""
-        self.opportunities = [] 
+        self.opportunities = []

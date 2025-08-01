@@ -1,9 +1,10 @@
 """
 Metadata for pretrained models in GoldenSignalsAI.
 """
-from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict
+
 
 @dataclass
 class PretrainedModelInfo:
@@ -88,4 +89,4 @@ def list_pretrained_models() -> Dict[str, PretrainedModelInfo]:
 
 def is_pretrained(model_name: str) -> bool:
     """Check if a model is pretrained."""
-    return model_name in PRETRAINED_MODELS 
+    return model_name in PRETRAINED_MODELS

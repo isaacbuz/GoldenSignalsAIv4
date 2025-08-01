@@ -31,4 +31,4 @@ dependencies:
   - name: grafana
     version: "6.x.x"
     repository: https://grafana.github.io/helm-charts
-    condition: grafana.enabled 
+    condition: grafana.enabled

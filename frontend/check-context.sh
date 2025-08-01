@@ -17,4 +17,3 @@ echo ""
 echo "🚨 Remember: READ CONTEXT FILES BEFORE CODING!"
 echo "   - frontend/DEVELOPMENT_CONTEXT.md"
 echo "   - frontend/COMPONENT_INVENTORY.md"
-

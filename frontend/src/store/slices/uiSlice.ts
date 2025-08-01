@@ -253,4 +253,4 @@ export const {
     setFeatureFlag,
 } = uiSlice.actions;
 
-export default uiSlice.reducer; 
+export default uiSlice.reducer;

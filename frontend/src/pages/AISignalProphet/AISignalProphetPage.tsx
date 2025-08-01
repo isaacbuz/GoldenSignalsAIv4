@@ -25,4 +25,4 @@ const AISignalProphetPage: React.FC = () => {
     );
 };
 
-export default AISignalProphetPage; 
+export default AISignalProphetPage;

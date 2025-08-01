@@ -1,6 +1,6 @@
 /**
  * Error Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -37,7 +37,7 @@ export const Error: React.FC<ErrorProps> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={`${styles.container} ${className || ''}`}
       data-testid={testId}
       {...props}

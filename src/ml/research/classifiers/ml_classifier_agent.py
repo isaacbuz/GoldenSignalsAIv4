@@ -8,10 +8,12 @@ from xgboost import XGBClassifier
 
 logger = logging.getLogger(__name__)
 
+
 class MLClassifierAgent:
     """Agent for ML-based classification with RandomForest/XGBoost and robust error handling."""
-    def __init__(self, model_type: str = 'random_forest', model_path: Optional[str] = None):
-        if model_type == 'xgboost':
+
+    def __init__(self, model_type: str = "random_forest", model_path: Optional[str] = None):
+        if model_type == "xgboost":
             self.model = XGBClassifier()
         else:
             self.model = RandomForestClassifier(n_estimators=100)
@@ -34,7 +36,7 @@ class MLClassifierAgent:
 
     def predict_signal(self, features: pd.DataFrame) -> Any:
         """Predict trading signal from features. Returns 'buy', 'sell', 'hold', or error dict."""
-        if not hasattr(self.model, 'predict_proba') or not self._trained:
+        if not hasattr(self.model, "predict_proba") or not self._trained:
             logger.error("ML model not trained or loaded.")
             return {"error": "ML model not trained or loaded."}
         if not isinstance(features, pd.DataFrame) or features.empty:

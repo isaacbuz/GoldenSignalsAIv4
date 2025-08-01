@@ -101,7 +101,7 @@ const SymbolCard: React.FC<SymbolCardProps> = ({
               animate={{ width: `${confidence}%` }}
               transition={{ duration: 0.5 }}
               className={`h-full rounded-full ${
-                confidence > 70 ? 'bg-green-500' : 
+                confidence > 70 ? 'bg-green-500' :
                 confidence > 50 ? 'bg-yellow-500' : 'bg-red-500'
               }`}
             />
@@ -115,4 +115,4 @@ const SymbolCard: React.FC<SymbolCardProps> = ({
   );
 };
 
-export default SymbolCard; 
+export default SymbolCard;

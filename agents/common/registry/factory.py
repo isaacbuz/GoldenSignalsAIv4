@@ -3,18 +3,18 @@ factory.py
 Purpose: Defines the AgentFactory class for creating and orchestrating multiple agent types and trading strategies in GoldenSignalsAI. Integrates sentiment, predictive, and risk agents as well as strategy orchestration.
 """
 import logging
-import numpy as np
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
-from agents.sentiment.social_media import SocialMediaSentimentAgent
-from agents.sentiment.news import NewsSentimentAgent
+import numpy as np
+from agents.predictive.momentum_divergence import MomentumDivergenceAgent
 from agents.predictive.options_chain import OptionsChainAgent
 from agents.predictive.options_flow import OptionsFlowAgent
 from agents.predictive.reversion import ReversionAgent
-from agents.predictive.momentum_divergence import MomentumDivergenceAgent
 from agents.risk.options_risk import OptionsRiskAgent
-from strategies.strategy_orchestrator import StrategyOrchestrator
+from agents.sentiment.news import NewsSentimentAgent
+from agents.sentiment.social_media import SocialMediaSentimentAgent
 from strategies.advanced_strategies import AdvancedTradingStrategies
+from strategies.strategy_orchestrator import StrategyOrchestrator
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +25,8 @@ class AgentFactory:
     """
 
     def __init__(
-        self, 
-        data_fetcher=None, 
+        self,
+        data_fetcher=None,
         historical_data: Optional[np.ndarray] = None,
         strategies: Optional[List[str]] = None
     ):
@@ -40,13 +40,13 @@ class AgentFactory:
         """
         self.data_fetcher = data_fetcher
         self.agents = {}
-        
+
         # Initialize strategy orchestrator for multi-strategy workflows
         self.strategy_orchestrator = StrategyOrchestrator(
-            strategies=strategies, 
+            strategies=strategies,
             strategy_weights=None
         )
-        
+
         # Optional historical data for strategy learning
         self.historical_data = historical_data
 
@@ -156,11 +156,11 @@ def main():
         'low': np.cumsum(np.random.normal(0, 1, 1000)),
         'close': np.cumsum(np.random.normal(0, 1, 1000))
     }
-    
+
     # Initialize factory
     factory = AgentFactory(historical_data=market_data)
     factory.create_agents()
-    
+
     # Process signals
     results = factory.process_signals(market_data)
     print("Trading Analysis:", results)

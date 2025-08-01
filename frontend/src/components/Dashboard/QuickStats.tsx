@@ -1,6 +1,6 @@
 /**
  * QuickStats Component - Key Metrics Display
- * 
+ *
  * Shows important trading metrics in a horizontal bar format
  */
 
@@ -135,4 +135,4 @@ const QuickStats: React.FC<QuickStatsProps> = ({
     );
 };
 
-export default QuickStats; 
+export default QuickStats;

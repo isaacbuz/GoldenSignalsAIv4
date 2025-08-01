@@ -39,7 +39,7 @@ file_handler.setFormatter(formatter)
 # Console handler with colors
 class ColoredConsoleHandler(logging.StreamHandler):
     """Console handler with colored output"""
-    
+
     COLORS = {
         'DEBUG': '\033[0;36m',    # Cyan
         'INFO': '\033[0;37m',     # White
@@ -49,16 +49,16 @@ class ColoredConsoleHandler(logging.StreamHandler):
         'SUCCESS': '\033[0;32m',  # Green
         'RESET': '\033[0m'
     }
-    
+
     def emit(self, record):
         try:
             msg = self.format(record)
             color = self.COLORS.get(record.levelname, self.COLORS['RESET'])
-            
+
             # Add custom SUCCESS level handling
             if hasattr(record, 'success') and record.success:
                 color = self.COLORS['SUCCESS']
-            
+
             self.stream.write(f"{color}{msg}{self.COLORS['RESET']}\n")
             self.flush()
         except Exception:
@@ -112,17 +112,17 @@ class TestResult:
 
 class TestRunner:
     """Master test runner for all modules"""
-    
+
     def __init__(self):
         self.results: List[TestResult] = []
         self.start_time = None
         self.end_time = None
         self.summary_file = TEST_LOG_DIR / f"test_summary_{timestamp}.json"
-        
+
     def check_prerequisites(self) -> bool:
         """Check if all prerequisites are met"""
         logger.info("Checking prerequisites...")
-        
+
         checks = {
             "Python 3": self._check_python(),
             "Node.js": self._check_node(),
@@ -130,7 +130,7 @@ class TestRunner:
             "Python Dependencies": self._check_python_deps(),
             "Frontend Dependencies": self._check_frontend_deps()
         }
-        
+
         all_passed = True
         for check, passed in checks.items():
             if passed:
@@ -138,9 +138,9 @@ class TestRunner:
             else:
                 logger.error(f"✗ {check}")
                 all_passed = False
-        
+
         return all_passed
-    
+
     def _check_python(self) -> bool:
         """Check Python installation"""
         try:
@@ -152,7 +152,7 @@ class TestRunner:
             return result.returncode == 0
         except Exception:
             return False
-    
+
     def _check_node(self) -> bool:
         """Check Node.js installation"""
         try:
@@ -164,13 +164,13 @@ class TestRunner:
             return result.returncode == 0
         except Exception:
             return False
-    
+
     def _check_venv(self) -> bool:
         """Check if running in virtual environment"""
         return hasattr(sys, 'real_prefix') or (
             hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix
         )
-    
+
     def _check_python_deps(self) -> bool:
         """Check if Python dependencies are installed"""
         try:
@@ -180,23 +180,23 @@ class TestRunner:
             return True
         except ImportError:
             return False
-    
+
     def _check_frontend_deps(self) -> bool:
         """Check if frontend dependencies are installed"""
         frontend_dir = PROJECT_ROOT / "frontend"
         node_modules = frontend_dir / "node_modules"
         return node_modules.exists()
-    
+
     def run_command(self, command: List[str], cwd: Optional[Path] = None, env: Optional[Dict[str, str]] = None) -> Tuple[int, str, str]:
         """Run a command and capture output"""
         try:
             logger.debug(f"Running command: {' '.join(command)}")
-            
+
             if env is None:
                 env = os.environ.copy()
             # Ensure Python path includes project root
             env['PYTHONPATH'] = str(PROJECT_ROOT) + os.pathsep + env.get('PYTHONPATH', '')
-            
+
             result = subprocess.run(
                 command,
                 cwd=cwd or PROJECT_ROOT,
@@ -205,23 +205,23 @@ class TestRunner:
                 env=env,
                 timeout=300  # 5 minute timeout
             )
-            
+
             return result.returncode, result.stdout, result.stderr
-            
+
         except subprocess.TimeoutExpired:
             logger.error(f"Command timed out: {' '.join(command)}")
             return -1, "", "Command timed out after 5 minutes"
         except Exception as e:
             logger.error(f"Error running command: {e}")
             return -1, "", str(e)
-    
+
     def parse_pytest_output(self, output: str, error: str = "") -> Dict[str, int]:
         """Parse pytest output for test statistics"""
         stats = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0}
-        
+
         # Combine stdout and stderr
         full_output = output + "\n" + error
-        
+
         # Look for pytest summary line
         for line in full_output.split('\n'):
             # Pattern: "X passed, Y failed, Z skipped"
@@ -253,16 +253,16 @@ class TestRunner:
                             stats["errors"] = int(num)
                         except (ValueError, IndexError):
                             pass
-        
+
         return stats
-    
+
     def parse_npm_test_output(self, output: str, error: str = "") -> Dict[str, int]:
         """Parse npm test output for test statistics"""
         stats = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0}
-        
+
         # Combine stdout and stderr
         full_output = output + "\n" + error
-        
+
         # Look for test summary patterns
         for line in full_output.split('\n'):
             # Vitest format
@@ -293,36 +293,36 @@ class TestRunner:
                 stats["passed"] += line.count("✓")
             elif "✗" in line or "×" in line:
                 stats["failed"] += line.count("✗") + line.count("×")
-        
+
         return stats
-    
+
     def run_test_suite(self, result: TestResult) -> TestResult:
         """Run a single test suite"""
         logger.info("=" * 80)
         logger.info(f"Running {result.module} - {result.test_type}")
         logger.info(f"Command: {' '.join(result.command)}")
         logger.info("=" * 80)
-        
+
         start_time = time.time()
-        
+
         # Determine working directory
         cwd = PROJECT_ROOT
         if result.module == "Frontend" and (PROJECT_ROOT / "frontend").exists():
             cwd = PROJECT_ROOT / "frontend"
-        
+
         # Set TEST_MODE for comprehensive system test
         env = None
         if "test_comprehensive_system.py" in ' '.join(result.command):
             env = os.environ.copy()
             env["TEST_MODE"] = "true"
-        
+
         # Run the test
         returncode, stdout, stderr = self.run_command(result.command, cwd=cwd, env=env)
-        
+
         result.duration = time.time() - start_time
         result.output = stdout
         result.error_details = stderr
-        
+
         # Parse results based on test type
         if "pytest" in result.command[0] or "pytest" in str(result.command):
             stats = self.parse_pytest_output(stdout, stderr)
@@ -336,12 +336,12 @@ class TestRunner:
                 "skipped": 0,
                 "errors": 0
             }
-        
+
         result.passed = stats["passed"]
         result.failed = stats["failed"]
         result.skipped = stats["skipped"]
         result.errors = stats["errors"]
-        
+
         # Determine status
         if returncode == 0 and result.failed == 0:
             result.status = TestStatus.PASSED
@@ -349,22 +349,22 @@ class TestRunner:
         else:
             result.status = TestStatus.FAILED
             logger.error(f"✗ {result.test_type} FAILED ({result.duration:.2f}s)")
-            
+
             # Log first few lines of error
             if stderr:
                 error_lines = stderr.split('\n')[:10]
                 for line in error_lines:
                     if line.strip():
                         logger.error(f"  {line}")
-        
+
         return result
-    
+
     def run_backend_tests(self):
         """Run all backend Python tests"""
         logger.info("\n" + "=" * 80)
         logger.info("BACKEND TESTS")
         logger.info("=" * 80)
-        
+
         test_suites = [
             TestResult(
                 module="Backend",
@@ -392,22 +392,22 @@ class TestRunner:
                 command=[sys.executable, "tests/test_comprehensive_system.py"]
             )
         ]
-        
+
         for test_suite in test_suites:
             result = self.run_test_suite(test_suite)
             self.results.append(result)
-    
+
     def run_frontend_tests(self):
         """Run all frontend tests"""
         logger.info("\n" + "=" * 80)
         logger.info("FRONTEND TESTS")
         logger.info("=" * 80)
-        
+
         frontend_dir = PROJECT_ROOT / "frontend"
         if not frontend_dir.exists():
             logger.warning("Frontend directory not found, skipping frontend tests")
             return
-        
+
         test_suites = [
             TestResult(
                 module="Frontend",
@@ -420,7 +420,7 @@ class TestRunner:
                 command=["npm", "test", "--", "--run", "src/components"]
             )
         ]
-        
+
         # Add E2E tests if Cypress is configured
         if (frontend_dir / "cypress.config.ts").exists():
             test_suites.append(
@@ -430,19 +430,19 @@ class TestRunner:
                     command=["npm", "run", "test:e2e:headless"]
                 )
             )
-        
+
         for test_suite in test_suites:
             result = self.run_test_suite(test_suite)
             self.results.append(result)
-    
+
     def run_ml_tests(self):
         """Run ML model tests"""
         logger.info("\n" + "=" * 80)
         logger.info("ML MODEL TESTS")
         logger.info("=" * 80)
-        
+
         test_suites = []
-        
+
         # ML Models tests
         if (PROJECT_ROOT / "ml_models" / "tests").exists():
             test_suites.append(
@@ -452,7 +452,7 @@ class TestRunner:
                     command=[sys.executable, "-m", "pytest", "ml_models/tests", "-v", "--tb=short"]
                 )
             )
-        
+
         # ML Training tests
         if (PROJECT_ROOT / "ml_training").exists():
             test_suites.append(
@@ -462,19 +462,19 @@ class TestRunner:
                     command=[sys.executable, "-m", "pytest", "ml_training", "-v", "--tb=short", "-k", "test"]
                 )
             )
-        
+
         for test_suite in test_suites:
             result = self.run_test_suite(test_suite)
             self.results.append(result)
-    
+
     def run_infrastructure_tests(self):
         """Run infrastructure and configuration tests"""
         logger.info("\n" + "=" * 80)
         logger.info("INFRASTRUCTURE TESTS")
         logger.info("=" * 80)
-        
+
         test_suites = []
-        
+
         # Config validation
         if (PROJECT_ROOT / "config.yaml").exists():
             test_suites.append(
@@ -484,7 +484,7 @@ class TestRunner:
                     command=[sys.executable, "-c", "import yaml; yaml.safe_load(open('config.yaml')); print('Config is valid')"]
                 )
             )
-        
+
         # Database connection test
         if (PROJECT_ROOT / "check_databases.py").exists():
             test_suites.append(
@@ -494,31 +494,31 @@ class TestRunner:
                     command=[sys.executable, "check_databases.py"]
                 )
             )
-        
+
         for test_suite in test_suites:
             result = self.run_test_suite(test_suite)
             self.results.append(result)
-    
+
     def generate_report(self) -> bool:
         """Generate comprehensive test report"""
         logger.info("\n" + "=" * 80)
         logger.info("TEST EXECUTION SUMMARY")
         logger.info("=" * 80)
-        
+
         # Calculate totals
         total_passed = sum(r.passed for r in self.results)
         total_failed = sum(r.failed for r in self.results)
         total_skipped = sum(r.skipped for r in self.results)
         total_errors = sum(r.errors for r in self.results)
         total_duration = sum(r.duration for r in self.results)
-        
+
         # Group by module
         modules = {}
         for result in self.results:
             if result.module not in modules:
                 modules[result.module] = []
             modules[result.module].append(result)
-        
+
         # Print summary by module
         for module, results in modules.items():
             logger.info(f"\n{module} Tests:")
@@ -526,13 +526,13 @@ class TestRunner:
                 status_symbol = "✓" if result.status == TestStatus.PASSED else "✗"
                 status_color = "\033[0;32m" if result.status == TestStatus.PASSED else "\033[0;31m"
                 reset_color = "\033[0m"
-                
+
                 logger.info(
                     f"  {status_color}{status_symbol}{reset_color} {result.test_type}: "
                     f"{result.passed} passed, {result.failed} failed, "
                     f"{result.skipped} skipped ({result.duration:.2f}s)"
                 )
-        
+
         # Overall summary
         logger.info("\n" + "-" * 80)
         logger.info("Overall Statistics:")
@@ -541,12 +541,12 @@ class TestRunner:
         logger.info(f"  Total Tests Skipped: {total_skipped}")
         logger.info(f"  Total Errors: {total_errors}")
         logger.info(f"  Total Duration: {total_duration:.2f}s")
-        
+
         success_rate = 0
         if (total_passed + total_failed) > 0:
             success_rate = (total_passed / (total_passed + total_failed)) * 100
         logger.info(f"  Success Rate: {success_rate:.2f}%")
-        
+
         # Save detailed report
         report_data = {
             "execution_time": {
@@ -576,20 +576,20 @@ class TestRunner:
                 for r in self.results
             ]
         }
-        
+
         with open(self.summary_file, 'w') as f:
             json.dump(report_data, f, indent=2)
-        
+
         logger.info(f"\nDetailed report saved to: {self.summary_file}")
         logger.info(f"Full log available at: {log_file}")
-        
+
         # Print failed tests details
         failed_tests = [r for r in self.results if r.status == TestStatus.FAILED]
         if failed_tests:
             logger.error("\n" + "=" * 80)
             logger.error("FAILED TESTS DETAILS")
             logger.error("=" * 80)
-            
+
             for result in failed_tests:
                 logger.error(f"\n{result.module} - {result.test_type}:")
                 logger.error(f"Command: {' '.join(result.command)}")
@@ -599,9 +599,9 @@ class TestRunner:
                     for line in error_lines:
                         if line.strip():
                             logger.error(f"  {line}")
-        
+
         all_passed = total_failed == 0 and total_errors == 0
-        
+
         if all_passed:
             logger.success("\n" + "=" * 80)
             logger.success("ALL TESTS PASSED! 🎉")
@@ -610,19 +610,19 @@ class TestRunner:
             logger.error("\n" + "=" * 80)
             logger.error("SOME TESTS FAILED")
             logger.error("=" * 80)
-        
+
         return all_passed
-    
+
     def run_all_tests(self, modules: Optional[List[str]] = None):
         """Run all tests or specific modules"""
         self.start_time = datetime.now()
         logger.info(f"Starting test execution at {self.start_time}")
-        
+
         # Check prerequisites
         if not self.check_prerequisites():
             logger.error("Prerequisites check failed. Please install missing dependencies.")
             return False
-        
+
         # Determine which test suites to run
         if modules:
             logger.info(f"Running specific modules: {', '.join(modules)}")
@@ -640,17 +640,17 @@ class TestRunner:
             self.run_frontend_tests()
             self.run_ml_tests()
             self.run_infrastructure_tests()
-        
+
         self.end_time = datetime.now()
         success = self.generate_report()
-        
+
         return success
 
 
 def main():
     """Main entry point"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description="Comprehensive test runner for GoldenSignalsAI V2",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -662,22 +662,22 @@ Examples:
   python test_runner.py --list             # List all available test suites
         """
     )
-    
+
     parser.add_argument(
-        "--module", 
+        "--module",
         nargs="+",
         choices=["backend", "frontend", "ml", "infrastructure"],
         help="Run tests for specific modules only"
     )
-    
+
     parser.add_argument(
         "--list",
         action="store_true",
         help="List all available test suites"
     )
-    
+
     args = parser.parse_args()
-    
+
     if args.list:
         print("Available test modules:")
         print("  - backend: Backend unit, integration, and system tests")
@@ -685,13 +685,13 @@ Examples:
         print("  - ml: Machine learning model and training tests")
         print("  - infrastructure: Configuration and infrastructure tests")
         sys.exit(0)
-    
+
     runner = TestRunner()
-    
+
     try:
         success = runner.run_all_tests(modules=args.module)
         sys.exit(0 if success else 1)
-        
+
     except KeyboardInterrupt:
         logger.error("\nTest execution interrupted by user")
         sys.exit(1)
@@ -702,4 +702,4 @@ Examples:
 
 
 if __name__ == "__main__":
-    main() 
+    main()

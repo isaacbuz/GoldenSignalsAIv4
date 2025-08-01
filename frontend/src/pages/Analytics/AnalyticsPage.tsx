@@ -1,6 +1,6 @@
 /**
  * Analytics Page
- * 
+ *
  * Comprehensive analytics and performance tracking
  */
 
@@ -22,4 +22,4 @@ export const AnalyticsPage: React.FC = () => {
     );
 };
 
-export default AnalyticsPage; 
+export default AnalyticsPage;

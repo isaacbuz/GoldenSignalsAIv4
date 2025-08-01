@@ -60,7 +60,7 @@ const ConsensusRing: React.FC<ConsensusRingProps> = ({
 
     // Create agent segments
     const anglePerAgent = (2 * Math.PI) / agents.length;
-    
+
     agents.forEach((agent, index) => {
       const startAngle = index * anglePerAgent;
       const endAngle = (index + 1) * anglePerAgent;

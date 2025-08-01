@@ -132,14 +132,14 @@ interface SignalCardProps {
 
 /**
  * Enhanced SignalCard - Displays complete trade suggestions
- * 
+ *
  * Shows:
  * - Entry price/zone
  * - Multiple exit targets
  * - Stop loss level
  * - Risk/reward visualization
  * - AI confidence and reasoning
- * 
+ *
  * This is NOT for execution - just detailed suggestions!
  */
 export const SignalCard: React.FC<SignalCardProps> = ({

@@ -17,12 +17,12 @@ from typing import Any, Dict, List, Optional, Tuple
 # For advanced vector operations
 import faiss
 import numpy as np
-
-# Vector store imports
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+
+# Vector store imports
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
 
 logger = logging.getLogger(__name__)
 

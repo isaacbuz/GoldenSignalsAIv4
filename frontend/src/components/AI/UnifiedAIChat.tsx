@@ -186,4 +186,4 @@ export const UnifiedAIChat: React.FC<UnifiedAIChatProps> = ({
     );
 };
 
-export default UnifiedAIChat; 
+export default UnifiedAIChat;

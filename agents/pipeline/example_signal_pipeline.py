@@ -1,7 +1,8 @@
-from agents.pipeline.pipeline_agent import PipelineAgent
-from agents.pipeline.pipeline_runner import PipelineRunner
 from agents.edge.approval_agent import ApprovalAgent
 from agents.edge.notify_agent import NotifyAgent
+from agents.pipeline.pipeline_agent import PipelineAgent
+from agents.pipeline.pipeline_runner import PipelineRunner
+
 
 class IngestionAgent(PipelineAgent):
     def run(self, input_data, context):

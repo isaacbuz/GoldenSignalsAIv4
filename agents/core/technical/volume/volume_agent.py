@@ -3,10 +3,11 @@ Volume Analysis Agent
 Analyzes volume patterns to detect unusual activity and potential price movements
 """
 
-import numpy as np
-from typing import Dict, Any, List
-from agents.unified_base_agent import UnifiedBaseAgent, SignalStrength
 import logging
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+from agents.unified_base_agent import SignalStrength, UnifiedBaseAgent
 
 logger = logging.getLogger(__name__)
 
@@ -242,4 +243,5 @@ class VolumeAgent(UnifiedBaseAgent):
 
 # For backward compatibility
 from typing import Optional
+
 __all__ = ['VolumeAgent']

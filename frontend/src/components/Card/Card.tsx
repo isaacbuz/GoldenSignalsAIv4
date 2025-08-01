@@ -262,4 +262,4 @@ export const CardMedia: React.FC<{
             {children}
         </div>
     );
-}; 
+};

@@ -9,17 +9,17 @@ from datetime import datetime, timedelta
 def sample_ohlcv_data():
     """Generate sample OHLCV data for testing"""
     dates = pd.date_range(end=datetime.now(), periods=100, freq='H')
-    
+
     # Generate realistic price movements
     np.random.seed(42)
     base_price = 100
     prices = []
-    
+
     for i in range(100):
         change = np.random.normal(0, 0.02)
         base_price *= (1 + change)
         prices.append(base_price)
-    
+
     data = pd.DataFrame({
         'timestamp': dates,
         'open': prices,
@@ -28,7 +28,7 @@ def sample_ohlcv_data():
         'close': [p * 1.002 for p in prices],
         'volume': np.random.randint(1000, 10000, 100)
     })
-    
+
     return data
 
 @pytest.fixture
@@ -59,7 +59,7 @@ def bullish_market_data():
     for i in range(50):
         base += np.random.uniform(0, 2)
         prices.append(base)
-    
+
     return {
         "close": prices,
         "volume": [1000000 + i * 10000 for i in range(50)]
@@ -73,7 +73,7 @@ def bearish_market_data():
     for i in range(50):
         base -= np.random.uniform(0, 1.5)
         prices.append(base)
-    
+
     return {
         "close": prices,
         "volume": [1000000 - i * 5000 for i in range(50)]
@@ -87,7 +87,7 @@ def sideways_market_data():
     for i in range(50):
         base += np.random.uniform(-1, 1)
         prices.append(base)
-    
+
     return {
         "close": prices,
         "volume": [1000000 + np.random.randint(-50000, 50000) for _ in range(50)]
@@ -101,8 +101,8 @@ def high_volatility_data():
     for i in range(50):
         base *= (1 + np.random.uniform(-0.05, 0.05))
         prices.append(base)
-    
+
     return {
         "close": prices,
         "volume": [np.random.randint(500000, 2000000) for _ in range(50)]
-    } 
+    }

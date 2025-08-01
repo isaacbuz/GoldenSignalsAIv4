@@ -31,7 +31,7 @@ import GridLayout from 'react-grid-layout';
 import SignalCard from '../SignalCard/SignalCard';
 import RealTimeFeed from '../RealTimeFeed/RealTimeFeed';
 import { FloatingOrbAssistant } from '../FloatingOrbAssistant/FloatingOrbAssistant';
-import ProfessionalChart from '../ProfessionalChart/ProfessionalChart';
+import { AITradingChart } from '../AIChart/AITradingChart';
 import { List as VirtualizedList } from 'react-virtualized';
 import logger from '../../services/logger';
 
@@ -240,7 +240,7 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ symbol = 'SP
                 <div key="realtime"><RealTimeFeed /></div>
                 <div key="professionalChart">
                     <DashboardCard>
-                        <ProfessionalChart
+                        <AITradingChart
                             symbol={selectedSymbol}
                             timeframe={timeframe}
                         />

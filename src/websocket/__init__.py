@@ -6,4 +6,4 @@ Real-time communication and data streaming.
 
 from .manager import WebSocketManager
 
-__all__ = ["WebSocketManager"] 
+__all__ = ["WebSocketManager"]

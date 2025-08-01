@@ -8,4 +8,4 @@ __email__ = "isaacbuz@gmail.com"
 
 from .core.config import settings
 
-__all__ = ["settings"] 
+__all__ = ["settings"]

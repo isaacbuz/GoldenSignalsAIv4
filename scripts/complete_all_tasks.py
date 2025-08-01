@@ -32,36 +32,36 @@ def print_section(title):
 def fix_remaining_test_errors():
     """Fix all remaining test collection and execution errors."""
     print_section("Fixing Remaining Test Errors")
-    
+
     # Fix List import in test_full_system.py
     full_system_test = 'tests/integration/complete/test_full_system.py'
     if os.path.exists(full_system_test):
         with open(full_system_test, 'r') as f:
             content = f.read()
-        
+
         # Add typing imports
         if 'from typing import' not in content:
             content = 'from typing import List, Dict, Any\n' + content
         elif 'List' not in content:
             content = content.replace('from typing import', 'from typing import List,')
-        
+
         with open(full_system_test, 'w') as f:
             f.write(content)
         print("✅ Fixed List import in test_full_system.py")
-    
+
     # Fix AgentPerformance import
     backtest_test = 'tests/agents/test_backtest_engine.py'
     if os.path.exists(backtest_test):
         with open(backtest_test, 'r') as f:
             content = f.read()
-        
+
         if 'from agents.base import AgentPerformance' not in content:
             content = 'from agents.base import AgentPerformance, BaseAgent\n' + content
-        
+
         with open(backtest_test, 'w') as f:
             f.write(content)
         print("✅ Fixed AgentPerformance import")
-    
+
     # Fix RSI agent tests
     for test_file in ['tests/agents/test_rsi_agent.py', 'tests/unit/agents/test_rsi_agent_unit.py']:
         if os.path.exists(test_file):
@@ -84,12 +84,12 @@ def test_rsi_agent_creation():
 async def test_rsi_agent_analyze():
     """Test RSI agent analysis."""
     agent = SimpleRSIAgent()
-    
+
     # Mock the _fetch_data method
     dates = pd.date_range(end=pd.Timestamp.now(), periods=30)
     prices = pd.Series(np.random.uniform(95, 105, 30), index=dates)
     agent._fetch_data = lambda symbol: prices
-    
+
     market_data = MarketData(symbol="TEST", current_price=100.0)
     signal = await agent.analyze(market_data)
     assert signal is not None
@@ -99,7 +99,7 @@ def test_rsi_calculation():
     """Test RSI calculation logic."""
     agent = SimpleRSIAgent()
     prices = pd.Series([100, 102, 101, 103, 104, 102, 105, 103, 106, 104])
-    
+
     # Test with mock data
     assert agent is not None
     assert hasattr(agent, 'calculate_rsi')
@@ -111,7 +111,7 @@ def test_rsi_calculation():
 def increase_test_coverage():
     """Add more tests to increase coverage to 60%+."""
     print_section("Increasing Test Coverage")
-    
+
     # Create comprehensive agent tests
     agent_test_template = '''"""Test for {agent_name}."""
 
@@ -125,7 +125,7 @@ from src.ml.models.signals import SignalType
 
 class Test{class_name}:
     """Comprehensive tests for {class_name}."""
-    
+
     def test_initialization(self):
         """Test agent initialization."""
         agent = {class_name}()
@@ -133,7 +133,7 @@ class Test{class_name}:
         assert agent.name == "{display_name}"
         assert hasattr(agent, 'analyze')
         assert hasattr(agent, 'get_required_data_types')
-    
+
     @pytest.mark.asyncio
     async def test_analyze_buy_signal(self):
         """Test buy signal generation."""
@@ -143,16 +143,16 @@ class Test{class_name}:
             current_price=100.0,
             timeframe="1h"
         )
-        
+
         # Mock data that should trigger buy signal
         with patch.object(agent, '_fetch_data') as mock_fetch:
             mock_fetch.return_value = self._create_bullish_data()
             signal = await agent.analyze(market_data)
-            
+
             assert signal is not None
             assert signal.symbol == "TEST"
             assert signal.confidence > 0.5
-    
+
     @pytest.mark.asyncio
     async def test_analyze_sell_signal(self):
         """Test sell signal generation."""
@@ -162,46 +162,46 @@ class Test{class_name}:
             current_price=100.0,
             timeframe="1h"
         )
-        
+
         # Mock data that should trigger sell signal
         with patch.object(agent, '_fetch_data') as mock_fetch:
             mock_fetch.return_value = self._create_bearish_data()
             signal = await agent.analyze(market_data)
-            
+
             assert signal is not None
             assert signal.symbol == "TEST"
-    
+
     def test_get_required_data_types(self):
         """Test required data types."""
         agent = {class_name}()
         data_types = agent.get_required_data_types()
         assert isinstance(data_types, list)
         assert len(data_types) > 0
-    
+
     def test_edge_cases(self):
         """Test edge cases and error handling."""
         agent = {class_name}()
-        
+
         # Test with empty data
         assert agent is not None
-        
+
         # Test with invalid data
         with pytest.raises(Exception):
             agent.process({{}})
-    
+
     def _create_bullish_data(self):
         """Create bullish market data."""
         dates = pd.date_range(end=pd.Timestamp.now(), periods=100)
         prices = pd.Series(np.linspace(90, 110, 100) + np.random.normal(0, 1, 100), index=dates)
         return prices
-    
+
     def _create_bearish_data(self):
         """Create bearish market data."""
         dates = pd.date_range(end=pd.Timestamp.now(), periods=100)
         prices = pd.Series(np.linspace(110, 90, 100) + np.random.normal(0, 1, 100), index=dates)
         return prices
 '''
-    
+
     # Create tests for major agents
     agents_to_test = [
         ("BreakoutAgent", "agents.core.technical.breakout_agent", "Breakout"),
@@ -210,10 +210,10 @@ class Test{class_name}:
         ("PatternAgent", "agents.core.technical.pattern_agent", "Pattern Recognition"),
         ("MarketRegimeAgent", "agents.core.market_regime_agent", "Market Regime"),
     ]
-    
+
     test_dir = Path("tests/unit/agents/comprehensive")
     test_dir.mkdir(parents=True, exist_ok=True)
-    
+
     for class_name, import_path, display_name in agents_to_test:
         test_content = agent_test_template.format(
             agent_name=class_name,
@@ -221,12 +221,12 @@ class Test{class_name}:
             import_path=import_path,
             display_name=display_name
         )
-        
+
         test_file = test_dir / f"test_{class_name.lower()}.py"
         with open(test_file, 'w') as f:
             f.write(test_content)
         print(f"✅ Created test for {class_name}")
-    
+
     # Create service tests
     service_test_template = '''"""Test for {service_name}."""
 
@@ -236,25 +236,25 @@ from {import_path} import {class_name}
 
 class Test{class_name}:
     """Comprehensive tests for {class_name}."""
-    
+
     def test_initialization(self):
         """Test service initialization."""
         service = {class_name}()
         assert service is not None
-    
+
     @pytest.mark.asyncio
     async def test_main_functionality(self):
         """Test main service functionality."""
         service = {class_name}()
         # Add specific tests based on service
         assert service is not None
-    
+
     def test_error_handling(self):
         """Test error handling."""
         service = {class_name}()
         # Test various error scenarios
         assert service is not None
-    
+
     @pytest.mark.asyncio
     async def test_async_operations(self):
         """Test async operations."""
@@ -262,24 +262,24 @@ class Test{class_name}:
         # Test async methods
         assert service is not None
 '''
-    
+
     services_to_test = [
         ("SignalService", "src.services.signal_service"),
         ("MarketDataService", "src.services.market_data_service"),
         ("BacktestService", "src.services.backtest_service"),
         ("NotificationService", "src.services.notification_service"),
     ]
-    
+
     service_test_dir = Path("tests/unit/services/comprehensive")
     service_test_dir.mkdir(parents=True, exist_ok=True)
-    
+
     for class_name, import_path in services_to_test:
         test_content = service_test_template.format(
             service_name=class_name,
             class_name=class_name,
             import_path=import_path
         )
-        
+
         test_file = service_test_dir / f"test_{class_name.lower()}.py"
         with open(test_file, 'w') as f:
             f.write(test_content)
@@ -288,15 +288,15 @@ class Test{class_name}:
 def setup_database_migrations():
     """Set up Alembic for database migrations."""
     print_section("Setting Up Database Migrations")
-    
+
     # Install Alembic
     run_command("pip install alembic")
-    
+
     # Initialize Alembic if not already done
     if not os.path.exists("alembic.ini"):
         run_command("alembic init alembic")
         print("✅ Initialized Alembic")
-    
+
     # Create initial migration
     alembic_env = '''"""Alembic environment configuration."""
 
@@ -355,14 +355,14 @@ if context.is_offline_mode():
 else:
     run_migrations_online()
 '''
-    
+
     # Update Alembic env.py
     env_path = Path("alembic/env.py")
     if env_path.exists():
         with open(env_path, 'w') as f:
             f.write(alembic_env)
         print("✅ Updated Alembic environment")
-    
+
     # Create initial models if needed
     models_init = Path("src/models/__init__.py")
     if not models_init.exists():
@@ -373,7 +373,7 @@ else:
 def complete_api_documentation():
     """Generate complete OpenAPI documentation."""
     print_section("Completing API Documentation")
-    
+
     # Create API documentation
     api_docs = '''"""
 API Documentation for GoldenSignalsAI V2
@@ -388,37 +388,37 @@ def custom_openapi(app: FastAPI):
     """Generate custom OpenAPI schema."""
     if app.openapi_schema:
         return app.openapi_schema
-    
+
     openapi_schema = get_openapi(
         title="GoldenSignalsAI API",
         version="2.0.0",
         description="""
         ## Overview
-        
+
         GoldenSignalsAI is an AI-powered financial trading platform that provides:
-        
+
         - **Real-time Signal Generation**: 50+ specialized trading agents
         - **Risk Management**: Advanced portfolio and position risk analysis
         - **Market Analysis**: Technical, fundamental, and sentiment analysis
         - **Backtesting**: Historical performance validation
         - **ML Integration**: Transformer models and adaptive learning
-        
+
         ## Authentication
-        
+
         All endpoints require JWT authentication. Obtain a token via `/auth/login`.
-        
+
         ```
         Authorization: Bearer <your-token>
         ```
-        
+
         ## Rate Limiting
-        
+
         - Public endpoints: 100 requests/minute
         - Authenticated: 1000 requests/minute
         - Premium: 10000 requests/minute
-        
+
         ## WebSocket
-        
+
         Real-time updates available at `ws://api/v1/ws`
         """,
         routes=app.routes,
@@ -454,7 +454,7 @@ def custom_openapi(app: FastAPI):
             {"url": "http://localhost:8000", "description": "Development"}
         ]
     )
-    
+
     # Add security schemes
     openapi_schema["components"]["securitySchemes"] = {
         "bearerAuth": {
@@ -463,10 +463,10 @@ def custom_openapi(app: FastAPI):
             "bearerFormat": "JWT"
         }
     }
-    
+
     # Add global security
     openapi_schema["security"] = [{"bearerAuth": []}]
-    
+
     # Add response examples
     openapi_schema["components"]["examples"] = {
         "SignalExample": {
@@ -491,22 +491,22 @@ def custom_openapi(app: FastAPI):
             }
         }
     }
-    
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 '''
-    
+
     # Save API documentation
     with open("src/api/documentation.py", 'w') as f:
         f.write(api_docs)
     print("✅ Created comprehensive API documentation")
-    
+
     # Update main.py to use custom OpenAPI
     main_py = Path("src/main.py")
     if main_py.exists():
         with open(main_py, 'r') as f:
             content = f.read()
-        
+
         if 'custom_openapi' not in content:
             content = content.replace(
                 'app = FastAPI(',
@@ -515,7 +515,7 @@ def custom_openapi(app: FastAPI):
 app = FastAPI('''
             )
             content += '\n\n# Set custom OpenAPI schema\napp.openapi = lambda: custom_openapi(app)\n'
-            
+
             with open(main_py, 'w') as f:
                 f.write(content)
             print("✅ Updated main.py with custom OpenAPI")
@@ -523,10 +523,10 @@ app = FastAPI('''
 def add_performance_monitoring():
     """Add Prometheus metrics and monitoring."""
     print_section("Adding Performance Monitoring")
-    
+
     # Install monitoring dependencies
     run_command("pip install prometheus-client grafana-api")
-    
+
     # Create metrics module
     metrics_code = '''"""
 Performance metrics for GoldenSignalsAI V2.
@@ -656,7 +656,7 @@ def track_time(metric: Histogram, **labels):
                 return result
             finally:
                 metric.labels(**labels).observe(time.time() - start)
-        
+
         @wraps(func)
         def sync_wrapper(*args, **kwargs):
             start = time.time()
@@ -665,7 +665,7 @@ def track_time(metric: Histogram, **labels):
                 return result
             finally:
                 metric.labels(**labels).observe(time.time() - start)
-        
+
         return async_wrapper if asyncio.iscoroutinefunction(func) else sync_wrapper
     return decorator
 
@@ -691,19 +691,19 @@ def track_request(method: str, endpoint: str):
 # Business metrics
 class BusinessMetrics:
     """Track business-specific metrics."""
-    
+
     @staticmethod
     def track_signal(symbol: str, signal_type: str, source: str, confidence: float):
         """Track signal generation."""
         signals_generated_total.labels(symbol, signal_type, source).inc()
         signal_confidence.labels(source).observe(confidence)
-    
+
     @staticmethod
     def track_portfolio_performance(value: float, returns: float):
         """Track portfolio performance."""
         portfolio_value.set(value)
         portfolio_returns.set(returns)
-    
+
     @staticmethod
     def track_agent_performance(agent_name: str, execution_time: float, error: str = None):
         """Track agent performance."""
@@ -713,16 +713,16 @@ class BusinessMetrics:
 
 import asyncio
 '''
-    
+
     # Create monitoring directory
     monitoring_dir = Path("src/monitoring")
     monitoring_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Save metrics module
     with open("src/monitoring/metrics.py", 'w') as f:
         f.write(metrics_code)
     print("✅ Created Prometheus metrics module")
-    
+
     # Create Grafana dashboard
     dashboard_json = {
         "dashboard": {
@@ -763,7 +763,7 @@ import asyncio
             ]
         }
     }
-    
+
     # Save Grafana dashboard
     dashboard_path = Path("monitoring/dashboards/goldensignals.json")
     dashboard_path.parent.mkdir(parents=True, exist_ok=True)
@@ -774,10 +774,10 @@ import asyncio
 def setup_load_testing():
     """Set up load testing with Locust."""
     print_section("Setting Up Load Testing")
-    
+
     # Install Locust
     run_command("pip install locust")
-    
+
     # Create load test script
     locust_script = '''"""
 Load testing for GoldenSignalsAI API.
@@ -791,9 +791,9 @@ import json
 
 class GoldenSignalsUser(HttpUser):
     """Simulated user for load testing."""
-    
+
     wait_time = between(1, 3)
-    
+
     def on_start(self):
         """Login and get auth token."""
         response = self.client.post("/auth/login", json={
@@ -803,29 +803,29 @@ class GoldenSignalsUser(HttpUser):
         if response.status_code == 200:
             self.token = response.json()["access_token"]
             self.client.headers.update({"Authorization": f"Bearer {self.token}"})
-    
+
     @task(3)
     def get_signals(self):
         """Get signals for random symbol."""
         symbol = random.choice(["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"])
         self.client.get(f"/api/v1/signals/{symbol}")
-    
+
     @task(2)
     def get_latest_signals(self):
         """Get latest signals."""
         self.client.get("/api/v1/signals/latest")
-    
+
     @task(1)
     def generate_signals(self):
         """Generate new signals."""
         symbols = random.sample(["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"], 3)
         self.client.get(f"/api/v1/signals/generate", params={"symbols": symbols})
-    
+
     @task(2)
     def get_portfolio(self):
         """Get portfolio status."""
         self.client.get("/api/v1/portfolio/status")
-    
+
     @task(1)
     def health_check(self):
         """Check system health."""
@@ -833,9 +833,9 @@ class GoldenSignalsUser(HttpUser):
 
 class AdminUser(HttpUser):
     """Simulated admin user."""
-    
+
     wait_time = between(5, 10)
-    
+
     def on_start(self):
         """Login as admin."""
         response = self.client.post("/auth/login", json={
@@ -845,25 +845,25 @@ class AdminUser(HttpUser):
         if response.status_code == 200:
             self.token = response.json()["access_token"]
             self.client.headers.update({"Authorization": f"Bearer {self.token}"})
-    
+
     @task
     def get_system_metrics(self):
         """Get system metrics."""
         self.client.get("/api/v1/admin/metrics")
-    
+
     @task
     def get_agent_status(self):
         """Get agent status."""
         self.client.get("/api/v1/agents/status")
 '''
-    
+
     # Save load test script
     load_test_path = Path("tests/load/locustfile.py")
     load_test_path.parent.mkdir(parents=True, exist_ok=True)
     with open(load_test_path, 'w') as f:
         f.write(locust_script)
     print("✅ Created load testing script")
-    
+
     # Create performance benchmarks
     benchmark_script = '''"""Performance benchmarks for GoldenSignalsAI."""
 
@@ -876,16 +876,16 @@ import pandas as pd
 
 class PerformanceBenchmark:
     """Run performance benchmarks."""
-    
+
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
         self.results = []
-    
+
     async def benchmark_endpoint(self, endpoint: str, method: str = "GET", iterations: int = 100):
         """Benchmark a single endpoint."""
         times = []
         errors = 0
-        
+
         async with aiohttp.ClientSession() as session:
             for _ in range(iterations):
                 start = time.time()
@@ -896,9 +896,9 @@ class PerformanceBenchmark:
                             errors += 1
                 except Exception:
                     errors += 1
-                
+
                 times.append(time.time() - start)
-        
+
         return {
             "endpoint": endpoint,
             "method": method,
@@ -911,7 +911,7 @@ class PerformanceBenchmark:
             "p95_time": statistics.quantiles(times, n=20)[18],  # 95th percentile
             "p99_time": statistics.quantiles(times, n=100)[98],  # 99th percentile
         }
-    
+
     async def run_benchmarks(self):
         """Run all benchmarks."""
         endpoints = [
@@ -920,18 +920,18 @@ class PerformanceBenchmark:
             ("/api/v1/signals/latest", "GET"),
             ("/api/v1/portfolio/status", "GET"),
         ]
-        
+
         for endpoint, method in endpoints:
             result = await self.benchmark_endpoint(endpoint, method)
             self.results.append(result)
             print(f"✅ Benchmarked {endpoint}: avg={result['avg_time']:.3f}s, p95={result['p95_time']:.3f}s")
-    
+
     def save_results(self, filename: str = "benchmark_results.csv"):
         """Save benchmark results."""
         df = pd.DataFrame(self.results)
         df.to_csv(filename, index=False)
         print(f"✅ Saved benchmark results to {filename}")
-    
+
     def check_sla(self):
         """Check if results meet SLA requirements."""
         sla_requirements = {
@@ -939,14 +939,14 @@ class PerformanceBenchmark:
             "/api/v1/signals/": 0.5,  # 500ms
             "/api/v1/portfolio/": 1.0,  # 1s
         }
-        
+
         violations = []
         for result in self.results:
             for endpoint_prefix, max_time in sla_requirements.items():
                 if result["endpoint"].startswith(endpoint_prefix):
                     if result["p95_time"] > max_time:
                         violations.append(f"{result['endpoint']}: p95={result['p95_time']:.3f}s > SLA={max_time}s")
-        
+
         if violations:
             print("❌ SLA Violations:")
             for violation in violations:
@@ -960,7 +960,7 @@ if __name__ == "__main__":
     benchmark.save_results()
     benchmark.check_sla()
 '''
-    
+
     # Save benchmark script
     with open("tests/performance/benchmark.py", 'w') as f:
         f.write(benchmark_script)
@@ -969,18 +969,18 @@ if __name__ == "__main__":
 def perform_security_audit():
     """Perform basic security audit and create recommendations."""
     print_section("Performing Security Audit")
-    
+
     # Install security tools
     run_command("pip install bandit safety")
-    
+
     # Run Bandit security scan
     print("Running Bandit security scan...")
     bandit_result = run_command("bandit -r src/ -f json", check=False)
-    
+
     # Run Safety check
     print("Running Safety dependency check...")
     safety_result = run_command("safety check --json", check=False)
-    
+
     # Create security recommendations
     security_report = '''# Security Audit Report - GoldenSignalsAI V2
 
@@ -1138,7 +1138,7 @@ Next Review Date: {next_review}
         date=datetime.now().strftime("%Y-%m-%d"),
         next_review=(datetime.now() + timedelta(days=90)).strftime("%Y-%m-%d")
     )
-    
+
     # Save security report
     with open("SECURITY_AUDIT_REPORT.md", 'w') as f:
         f.write(security_report)
@@ -1147,7 +1147,7 @@ Next Review Date: {next_review}
 def close_github_issues():
     """Close completed GitHub issues."""
     print_section("Closing GitHub Issues")
-    
+
     # Create issue closing script
     close_issues_script = '''#!/usr/bin/env python3
 """Close completed GitHub issues for GoldenSignalsAI V2."""
@@ -1180,7 +1180,7 @@ issues_to_close = {
 ### Summary
 All abstract methods have been successfully implemented across 11 agent classes:
 - ✅ GammaExposureAgent
-- ✅ IVRankAgent  
+- ✅ IVRankAgent
 - ✅ SkewAgent
 - ✅ VolatilityAgent
 - ✅ PositionRiskAgent
@@ -1204,7 +1204,7 @@ All abstract methods have been successfully implemented across 11 agent classes:
 
 Closing as completed."""
     },
-    
+
     234: {
         "comment": """✅ **COMPLETED**: Fix Import Errors in Test Suite
 
@@ -1242,7 +1242,7 @@ The test suite is now functional with 240 passing tests. Remaining work focuses 
 
 Closing as the core import issues are resolved."""
     },
-    
+
     212: {
         "comment": """✅ **COMPLETED**: Complete Test Suite Implementation
 
@@ -1290,17 +1290,17 @@ def close_issue(issue_number, comment):
     # Add comment
     comment_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{issue_number}/comments"
     comment_response = requests.post(comment_url, headers=headers, json={"body": comment})
-    
+
     if comment_response.status_code == 201:
         print(f"✅ Added completion comment to issue #{issue_number}")
     else:
         print(f"❌ Failed to comment on issue #{issue_number}: {comment_response.status_code}")
         return False
-    
+
     # Close issue
     issue_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{issue_number}"
     close_response = requests.patch(issue_url, headers=headers, json={"state": "closed"})
-    
+
     if close_response.status_code == 200:
         print(f"✅ Closed issue #{issue_number}")
         return True
@@ -1372,7 +1372,7 @@ if create_response.status_code == 201:
 else:
     print(f"\n❌ Failed to create summary issue: {create_response.status_code}")
 '''
-    
+
     # Save the script
     with open("scripts/close_github_issues.py", 'w') as f:
         f.write(close_issues_script)
@@ -1383,7 +1383,7 @@ else:
 def create_final_summary():
     """Create a comprehensive final summary of all work completed."""
     print_section("Creating Final Summary")
-    
+
     summary = f'''# 🎉 GoldenSignalsAI V2 - Comprehensive Completion Report
 
 Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
@@ -1552,7 +1552,7 @@ The foundation is solid, the architecture is scalable, and the path to productio
 Generated by: Comprehensive Completion Script
 Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 '''
-    
+
     # Save final summary
     with open("FINAL_COMPLETION_SUMMARY.md", 'w') as f:
         f.write(summary)
@@ -1561,7 +1561,7 @@ Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 def main():
     """Execute all tasks to complete the project."""
     start_time = datetime.now()
-    
+
     print("""
     ╔══════════════════════════════════════════════════════════════╗
     ║          GoldenSignalsAI V2 - Complete All Tasks             ║
@@ -1570,7 +1570,7 @@ def main():
     ║  the project production-ready in one comprehensive run.      ║
     ╚══════════════════════════════════════════════════════════════╝
     """)
-    
+
     # Execute all tasks
     tasks = [
         ("Fixing Remaining Test Errors", fix_remaining_test_errors),
@@ -1583,7 +1583,7 @@ def main():
         ("Closing GitHub Issues", close_github_issues),
         ("Creating Final Summary", create_final_summary),
     ]
-    
+
     completed_tasks = 0
     for task_name, task_func in tasks:
         try:
@@ -1592,11 +1592,11 @@ def main():
             print(f"✅ Completed: {task_name}")
         except Exception as e:
             print(f"❌ Failed: {task_name} - {str(e)}")
-    
+
     # Final report
     end_time = datetime.now()
     duration = end_time - start_time
-    
+
     print(f"""
     ╔══════════════════════════════════════════════════════════════╗
     ║                    COMPLETION REPORT                         ║
@@ -1607,19 +1607,19 @@ def main():
     ║                                                              ║
     ║  Status: {'✅ SUCCESS' if completed_tasks == len(tasks) else '⚠️  PARTIAL SUCCESS'}                               ║
     ╚══════════════════════════════════════════════════════════════╝
-    
+
     Next Steps:
     1. Run: python -m pytest --cov
     2. Review: FINAL_COMPLETION_SUMMARY.md
     3. Deploy: Follow DEPLOYMENT_GUIDE.md
     4. Monitor: Check Prometheus/Grafana dashboards
-    
+
     🎉 GoldenSignalsAI V2 is ready for production!
     """)
-    
+
     # Run final test summary
     print("\nRunning final test summary...")
     run_command("python -m pytest --tb=no --no-header -q 2>&1 | tail -5")
 
 if __name__ == "__main__":
-    main() 
+    main()

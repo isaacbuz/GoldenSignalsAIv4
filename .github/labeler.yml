@@ -90,4 +90,4 @@ security:
   - '**/auth*'
   - '**/security*'
   - '**/jwt*'
-  - '**/encryption*' 
+  - '**/encryption*'

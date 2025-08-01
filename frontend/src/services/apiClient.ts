@@ -9,4 +9,4 @@ async function apiFetch(endpoint, options) {
         toast.error(`Error: ${error.message}`);
         throw error;
     }
-} 
+}

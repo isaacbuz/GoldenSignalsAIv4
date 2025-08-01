@@ -51,7 +51,7 @@ def test_new_log_creation(temp_log_dir):
     """Test creating new log file."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     assert logger.current_log is not None
     assert os.path.exists(logger.current_log)
     assert logger.current_log.startswith(os.path.join(temp_log_dir, "test_strategy_"))
@@ -61,13 +61,13 @@ def test_signal_logging(temp_log_dir, sample_signals):
     """Test logging trading signals."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     # Log multiple signals
     for signal in sample_signals:
         logger.log_signal(signal)
-    
+
     assert len(logger.signals) == len(sample_signals)
-    
+
     # Verify file contents
     with open(logger.current_log, "r") as f:
         saved_data = json.load(f)
@@ -78,7 +78,7 @@ def test_signal_analysis(temp_log_dir, sample_signals):
     """Test signal analysis functionality."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     # Create signals with specific timestamps
     base_time = datetime.now()
     for i, signal in enumerate(sample_signals):
@@ -86,7 +86,7 @@ def test_signal_analysis(temp_log_dir, sample_signals):
             "timestamp": (base_time + timedelta(hours=i)).isoformat(),
             "signal": signal
         })
-    
+
     # Test analysis without date filters
     analysis = logger.analyze_signals()
     assert analysis["total_signals"] == len(sample_signals)
@@ -94,7 +94,7 @@ def test_signal_analysis(temp_log_dir, sample_signals):
     assert "sell" in analysis["signal_distribution"]
     assert "hold" in analysis["signal_distribution"]
     assert isinstance(analysis["average_confidence"], float)
-    
+
     # Test analysis with date filter
     filtered_analysis = logger.analyze_signals(
         start_date=(base_time + timedelta(hours=1)).isoformat()
@@ -104,15 +104,15 @@ def test_signal_analysis(temp_log_dir, sample_signals):
 def test_error_handling(temp_log_dir):
     """Test error handling scenarios."""
     logger = SignalLogger(log_dir=temp_log_dir)
-    
+
     # Test logging without starting new log
     with pytest.raises(ValueError):
         logger.log_signal({"action": "buy"})
-    
+
     # Test analysis with no signals
     analysis = logger.analyze_signals()
     assert "error" in analysis
-    
+
     # Test loading non-existent log
     assert not logger.load_log("nonexistent.json")
 
@@ -120,11 +120,11 @@ def test_log_loading(temp_log_dir, sample_signals):
     """Test loading existing log files."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     # Log some signals
     for signal in sample_signals:
         logger.log_signal(signal)
-    
+
     # Create new logger instance and load log
     new_logger = SignalLogger(log_dir=temp_log_dir)
     log_file = os.path.basename(logger.current_log)
@@ -135,16 +135,16 @@ def test_recent_signals(temp_log_dir, sample_signals):
     """Test retrieving recent signals."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     # Log signals
     for signal in sample_signals:
         logger.log_signal(signal)
-    
+
     # Test getting recent signals
     recent = logger.get_recent_signals(2)
     assert len(recent) == 2
     assert recent[-1]["signal"]["action"] == sample_signals[-1]["action"]
-    
+
     # Test getting more signals than available
     all_recent = logger.get_recent_signals(10)
     assert len(all_recent) == len(sample_signals)
@@ -153,7 +153,7 @@ def test_signal_transitions(temp_log_dir):
     """Test signal transition matrix calculation."""
     logger = SignalLogger(log_dir=temp_log_dir)
     logger.start_new_log("test_strategy")
-    
+
     # Create sequence of signals
     signals = [
         {"action": "buy", "confidence": 0.8},
@@ -162,14 +162,14 @@ def test_signal_transitions(temp_log_dir):
         {"action": "sell", "confidence": 0.7},
         {"action": "buy", "confidence": 0.8}
     ]
-    
+
     for signal in signals:
         logger.log_signal(signal)
-    
+
     analysis = logger.analyze_signals()
     transitions = analysis["signal_transitions"]
-    
+
     # Verify transitions exist
     assert "buy" in transitions
     assert "hold" in transitions
-    assert "sell" in transitions 
+    assert "sell" in transitions

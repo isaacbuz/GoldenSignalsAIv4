@@ -20,7 +20,7 @@ def test_individual_agents():
     """Test each agent individually"""
     print("🧪 Testing Individual Agents")
     print("=" * 50)
-    
+
     agents = [
         ("RSI Agent", SimpleWorkingAgent()),
         ("MACD Agent", MACDAgent()),
@@ -32,9 +32,9 @@ def test_individual_agents():
         ("ATR Agent", ATRAgent()),
         ("VWAP Agent", VWAPAgent()),
     ]
-    
+
     test_symbol = "AAPL"
-    
+
     for name, agent in agents:
         try:
             signal = agent.generate_signal(test_symbol)
@@ -42,28 +42,28 @@ def test_individual_agents():
             print(f"{status} {name}: {signal}")
         except Exception as e:
             print(f"❌ {name}: Error - {str(e)}")
-    
+
     print()
 
 def test_orchestrator():
     """Test the orchestrator with all agents"""
     print("🎭 Testing Orchestrator")
     print("=" * 50)
-    
+
     orchestrator = SimpleOrchestrator()
-    
+
     # Test single symbol
     print("\n📊 Single Symbol Test (AAPL):")
     signal = orchestrator.generate_signal("AAPL")
     print(f"Consensus Signal: {signal}")
-    
+
     # Test multiple symbols
     print("\n📊 Multiple Symbols Test:")
     symbols = ["AAPL", "GOOGL", "MSFT"]
     signals = orchestrator.generate_signals(symbols)
     for symbol, signal in signals.items():
         print(f"{symbol}: {signal}")
-    
+
     # Show performance stats
     print("\n📈 Performance Statistics:")
     stats = orchestrator.get_performance_stats()
@@ -76,11 +76,11 @@ def test_orchestrator():
 def main():
     print("🚀 GoldenSignalsAI Phase 2 Agent Test")
     print("=" * 50)
-    
+
     test_individual_agents()
     test_orchestrator()
-    
+
     print("\n✅ Phase 2 Testing Complete!")
 
 if __name__ == "__main__":
-    main() 
+    main()

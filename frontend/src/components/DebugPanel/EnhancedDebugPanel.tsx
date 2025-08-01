@@ -1,6 +1,6 @@
 /**
  * EnhancedDebugPanel Component
- * 
+ *
  * Development tool for viewing console logs, errors, and performance metrics in real-time
  */
 
@@ -241,4 +241,4 @@ export const EnhancedDebugPanel: React.FC = () => {
             </Collapse>
         </Paper>
     );
-}; 
+};

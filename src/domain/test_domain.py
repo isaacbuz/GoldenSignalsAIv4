@@ -7,7 +7,8 @@ class Trade:
         self.symbol = symbol
         self.qty = qty
 
+
 def test_trade_creation():
-    trade = Trade('AAPL', 10)
-    assert trade.symbol == 'AAPL'
+    trade = Trade("AAPL", 10)
+    assert trade.symbol == "AAPL"
     assert trade.qty == 10

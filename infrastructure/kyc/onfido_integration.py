@@ -1,9 +1,10 @@
 from onfido import Onfido
 
+
 class KYCManager:
     def __init__(self):
         self.onfido = Onfido(api_token=os.getenv('ONFIDO_API_TOKEN'))
-        
+
     async def verify_user(self, user_id):
         applicant = self.onfido.Applicant.create({
             'first_name': user_id.first_name,

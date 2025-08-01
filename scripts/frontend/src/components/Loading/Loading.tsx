@@ -1,6 +1,6 @@
 /**
  * Loading Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -37,7 +37,7 @@ export const Loading: React.FC<LoadingProps> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={`${styles.container} ${className || ''}`}
       data-testid={testId}
       {...props}

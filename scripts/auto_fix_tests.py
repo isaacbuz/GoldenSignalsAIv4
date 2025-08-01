@@ -8,42 +8,42 @@ from pathlib import Path
 
 def run_tests_and_fix():
     """Run tests and automatically fix common issues."""
-    
+
     # Run tests to identify failures
     result = subprocess.run([
         "python", "-m", "pytest", "tests/", "-v", "--tb=short"
     ], capture_output=True, text=True)
-    
+
     if result.returncode == 0:
         print("✅ All tests passing!")
         return True
-    
+
     # Parse error output and fix common issues
     output = result.stdout + result.stderr
-    
+
     fixes_applied = 0
-    
+
     # Fix import errors
     if "ModuleNotFoundError" in output:
         print("🔧 Fixing import errors...")
         # Add common import fixes here
         fixes_applied += 1
-    
+
     # Fix syntax errors
     if "SyntaxError" in output:
         print("🔧 Fixing syntax errors...")
         fixes_applied += 1
-    
+
     # Fix missing dependencies
     if "ImportError" in output:
         print("🔧 Installing missing dependencies...")
         subprocess.run(["pip", "install", "email-validator", "psutil"])
         fixes_applied += 1
-    
+
     if fixes_applied > 0:
         print(f"🔧 Applied {fixes_applied} fixes, running tests again...")
         return run_tests_and_fix()
-    
+
     return False
 
 if __name__ == "__main__":

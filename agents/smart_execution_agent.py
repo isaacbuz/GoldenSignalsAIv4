@@ -4,16 +4,17 @@ Intelligent order execution with market impact minimization and optimal routing
 Issue #187: Agent-3: Develop Smart Execution Agent
 """
 
+import asyncio
+import heapq
+import logging
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from datetime import datetime, time, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta, time
-from typing import Dict, List, Any, Optional, Tuple, Union
-import asyncio
-from dataclasses import dataclass, field
-from enum import Enum
-import logging
-from collections import deque, defaultdict
-import heapq
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ class ExecutionOrder:
     participate_rate: float = 0.1  # Max % of volume
     price_improvement_bps: float = 0  # Desired improvement
     venue_preferences: List[Venue] = field(default_factory=list)
-    
+
     @property
     def is_buy(self) -> bool:
         return self.side.lower() == 'buy'
@@ -104,7 +105,7 @@ class ExecutionSlice:
     min_fill: int
     max_show: Optional[int]
     priority: int  # For ordering
-    
+
     def __lt__(self, other):
         return self.priority < other.priority
 
@@ -128,12 +129,12 @@ class ExecutionResult:
 
 class MarketSimulator:
     """Simulates market dynamics for execution"""
-    
+
     def __init__(self):
         self.order_book = defaultdict(lambda: {'bids': [], 'asks': []})
         self.trade_history = deque(maxlen=1000)
         self.market_impact_model = self._initialize_impact_model()
-    
+
     def _initialize_impact_model(self) -> Dict[str, Any]:
         """Initialize market impact model parameters"""
         return {
@@ -143,27 +144,27 @@ class MarketSimulator:
             'volatility_adjustment': 1.5,
             'liquidity_factor': 0.8
         }
-    
-    def estimate_market_impact(self, order: ExecutionOrder, 
+
+    def estimate_market_impact(self, order: ExecutionOrder,
                              market: MarketConditions) -> float:
         """Estimate market impact in basis points"""
         # Size impact (square root model)
         size_ratio = order.total_quantity / market.avg_volume
         size_impact = 10 * np.sqrt(size_ratio * 100)
-        
+
         # Participation rate impact
         participation_impact = self.market_impact_model['participation_impact'] * \
                              order.participate_rate * 100
-        
+
         # Volatility adjustment
         vol_adj = market.volatility / 0.20  # Normalized to 20% annual vol
         volatility_impact = size_impact * vol_adj * \
                           self.market_impact_model['volatility_adjustment']
-        
+
         # Liquidity adjustment
         liquidity_adj = (1 - market.liquidity_score) * 2
         liquidity_impact = size_impact * liquidity_adj
-        
+
         # Urgency adjustment
         urgency_mult = {
             'low': 0.7,
@@ -171,13 +172,13 @@ class MarketSimulator:
             'high': 1.5,
             'immediate': 2.0
         }.get(order.urgency, 1.0)
-        
-        total_impact = (size_impact + participation_impact + 
+
+        total_impact = (size_impact + participation_impact +
                        volatility_impact + liquidity_impact) * urgency_mult
-        
+
         return total_impact
-    
-    def simulate_fill(self, slice: ExecutionSlice, 
+
+    def simulate_fill(self, slice: ExecutionSlice,
                      market: MarketConditions) -> Tuple[int, float]:
         """Simulate order fill"""
         # Simple fill simulation
@@ -205,18 +206,18 @@ class MarketSimulator:
             # Other order types
             fill_quantity = int(slice.quantity * 0.8)  # Partial fill
             fill_price = market.mid
-        
+
         return fill_quantity, fill_price
 
 
 class ExecutionAlgorithm:
     """Base class for execution algorithms"""
-    
+
     def __init__(self, name: str):
         self.name = name
         self.execution_history = []
-    
-    async def execute(self, order: ExecutionOrder, 
+
+    async def execute(self, order: ExecutionOrder,
                      market: MarketConditions) -> List[ExecutionSlice]:
         """Execute order and return slices"""
         raise NotImplementedError
@@ -224,31 +225,31 @@ class ExecutionAlgorithm:
 
 class TWAPAlgorithm(ExecutionAlgorithm):
     """Time-Weighted Average Price algorithm"""
-    
+
     def __init__(self):
         super().__init__("TWAP")
-    
-    async def execute(self, order: ExecutionOrder, 
+
+    async def execute(self, order: ExecutionOrder,
                      market: MarketConditions) -> List[ExecutionSlice]:
         """Execute using TWAP strategy"""
         slices = []
-        
+
         # Determine time period
         time_minutes = order.time_constraint or 60
         num_slices = min(time_minutes // 5, 20)  # 5-minute intervals, max 20 slices
-        
+
         # Equal size slices
         slice_size = order.total_quantity // num_slices
         remaining = order.total_quantity
-        
+
         current_time = datetime.now()
-        
+
         for i in range(num_slices):
             if remaining <= 0:
                 break
-                
+
             quantity = min(slice_size, remaining)
-            
+
             slice = ExecutionSlice(
                 slice_id=f"TWAP_{order.symbol}_{i}",
                 quantity=quantity,
@@ -261,72 +262,72 @@ class TWAPAlgorithm(ExecutionAlgorithm):
                 max_show=min(quantity, order.max_display_size) if order.max_display_size else quantity,
                 priority=i
             )
-            
+
             slices.append(slice)
             remaining -= quantity
-        
+
         return slices
 
 
 class VWAPAlgorithm(ExecutionAlgorithm):
     """Volume-Weighted Average Price algorithm"""
-    
+
     def __init__(self):
         super().__init__("VWAP")
         self.volume_profile = self._load_volume_profile()
-    
+
     def _load_volume_profile(self) -> Dict[int, float]:
         """Load typical intraday volume profile"""
         # Typical U-shaped volume profile
         profile = {}
         hours = [9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5]
         volumes = [0.15, 0.12, 0.08, 0.06, 0.05, 0.04, 0.04, 0.05, 0.06, 0.08, 0.10, 0.12, 0.15]
-        
+
         for hour, vol in zip(hours, volumes):
             profile[int(hour * 60)] = vol  # Convert to minutes
-        
+
         return profile
-    
-    async def execute(self, order: ExecutionOrder, 
+
+    async def execute(self, order: ExecutionOrder,
                      market: MarketConditions) -> List[ExecutionSlice]:
         """Execute using VWAP strategy"""
         slices = []
         current_time = datetime.now()
         current_minutes = current_time.hour * 60 + current_time.minute
-        
+
         # Get remaining volume distribution
         remaining_volume_pct = 0
         time_slices = []
-        
+
         for time_min, vol_pct in sorted(self.volume_profile.items()):
             if time_min > current_minutes:
                 remaining_volume_pct += vol_pct
                 time_slices.append((time_min, vol_pct))
-        
+
         if remaining_volume_pct == 0:
             # Fall back to TWAP if after hours
             twap = TWAPAlgorithm()
             return await twap.execute(order, market)
-        
+
         # Normalize percentages
         for i, (time_min, vol_pct) in enumerate(time_slices):
             time_slices[i] = (time_min, vol_pct / remaining_volume_pct)
-        
+
         # Create slices based on volume profile
         remaining = order.total_quantity
-        
+
         for i, (time_min, vol_pct) in enumerate(time_slices):
             if remaining <= 0:
                 break
-            
+
             quantity = int(order.total_quantity * vol_pct)
             quantity = min(quantity, remaining)
-            
+
             # Calculate start time
             hours = time_min // 60
             minutes = time_min % 60
             start_time = current_time.replace(hour=hours, minute=minutes, second=0)
-            
+
             slice = ExecutionSlice(
                 slice_id=f"VWAP_{order.symbol}_{i}",
                 quantity=quantity,
@@ -339,21 +340,21 @@ class VWAPAlgorithm(ExecutionAlgorithm):
                 max_show=min(quantity // 5, order.max_display_size or quantity),
                 priority=i
             )
-            
+
             slices.append(slice)
             remaining -= quantity
-        
+
         return slices
 
 
 class AdaptiveAlgorithm(ExecutionAlgorithm):
     """Adaptive execution using ML predictions"""
-    
+
     def __init__(self):
         super().__init__("Adaptive")
         self.market_predictor = self._initialize_predictor()
         self.execution_optimizer = self._initialize_optimizer()
-    
+
     def _initialize_predictor(self) -> Dict[str, Any]:
         """Initialize market predictor"""
         return {
@@ -361,7 +362,7 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
             'price_model': 'gru',
             'impact_model': 'xgboost'
         }
-    
+
     def _initialize_optimizer(self) -> Dict[str, Any]:
         """Initialize execution optimizer"""
         return {
@@ -369,17 +370,17 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
             'constraints': ['participation', 'timing'],
             'method': 'dynamic_programming'
         }
-    
-    async def execute(self, order: ExecutionOrder, 
+
+    async def execute(self, order: ExecutionOrder,
                      market: MarketConditions) -> List[ExecutionSlice]:
         """Execute using adaptive strategy"""
         slices = []
-        
+
         # Predict optimal execution schedule
         schedule = await self._optimize_schedule(order, market)
-        
+
         current_time = datetime.now()
-        
+
         for i, (time_offset, quantity, strategy) in enumerate(schedule):
             slice = ExecutionSlice(
                 slice_id=f"ADAPTIVE_{order.symbol}_{i}",
@@ -393,30 +394,30 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
                 max_show=self._calculate_display_size(quantity, strategy),
                 priority=i
             )
-            
+
             slices.append(slice)
-        
+
         return slices
-    
+
     async def _optimize_schedule(self, order: ExecutionOrder,
                                market: MarketConditions) -> List[Tuple[int, int, str]]:
         """Optimize execution schedule using DP"""
         # Simplified optimization
         total_time = order.time_constraint or 60
         num_periods = min(total_time // 5, 12)
-        
+
         # Dynamic programming to minimize cost
         remaining = order.total_quantity
         schedule = []
-        
+
         for period in range(num_periods):
             if remaining <= 0:
                 break
-            
+
             # Predict optimal quantity for this period
             predicted_liquidity = self._predict_liquidity(period, market)
             predicted_impact = self._predict_impact(remaining, market)
-            
+
             # Optimal quantity balances urgency vs impact
             if order.urgency == 'immediate':
                 quantity = remaining
@@ -427,7 +428,7 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
                 max_quantity = int(market.avg_volume * order.participate_rate * 5 / 390)  # 5-min slice
                 optimal_quantity = int(max_quantity * predicted_liquidity)
                 quantity = min(remaining, optimal_quantity)
-            
+
             # Select strategy based on conditions
             if predicted_impact > 20:  # High impact
                 strategy = 'passive'
@@ -435,25 +436,25 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
                 strategy = 'aggressive'
             else:
                 strategy = 'balanced'
-            
+
             schedule.append((period * 5, quantity, strategy))
             remaining -= quantity
-        
+
         return schedule
-    
+
     def _predict_liquidity(self, period: int, market: MarketConditions) -> float:
         """Predict liquidity for period"""
         # Simplified prediction
         base_liquidity = market.liquidity_score
         time_factor = 1.0 if period < 6 else 0.8  # Lower liquidity later
         return min(1.0, base_liquidity * time_factor)
-    
+
     def _predict_impact(self, size: int, market: MarketConditions) -> float:
         """Predict market impact"""
         # Simplified impact prediction
         size_ratio = size / market.avg_volume
         return 10 * np.sqrt(size_ratio * 100)
-    
+
     def _select_order_type(self, strategy: str, market: MarketConditions) -> OrderType:
         """Select order type based on strategy"""
         if strategy == 'aggressive':
@@ -462,7 +463,7 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
             return OrderType.LIMIT
         else:
             return OrderType.MIDPOINT
-    
+
     def _select_venue(self, strategy: str, market: MarketConditions) -> Venue:
         """Select venue based on strategy"""
         if strategy == 'passive' and market.liquidity_score < 0.5:
@@ -471,7 +472,7 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
             return Venue.ECN
         else:
             return Venue.PRIMARY
-    
+
     def _calculate_limit_price(self, order: ExecutionOrder,
                              market: MarketConditions,
                              strategy: str) -> Optional[float]:
@@ -485,7 +486,7 @@ class AdaptiveAlgorithm(ExecutionAlgorithm):
         else:
             # Midpoint
             return market.mid
-    
+
     def _calculate_display_size(self, quantity: int, strategy: str) -> int:
         """Calculate display size"""
         if strategy == 'passive':
@@ -501,7 +502,7 @@ class SmartExecutionAgent:
     Smart Execution Agent that minimizes market impact and optimizes execution
     Combines multiple algorithms and venues for optimal results
     """
-    
+
     def __init__(self):
         """Initialize the smart execution agent"""
         self.algorithms = {
@@ -509,12 +510,12 @@ class SmartExecutionAgent:
             ExecutionStrategy.VWAP: VWAPAlgorithm(),
             ExecutionStrategy.ADAPTIVE: AdaptiveAlgorithm()
         }
-        
+
         self.market_simulator = MarketSimulator()
         self.execution_queue = []
         self.active_orders = {}
         self.execution_history = deque(maxlen=1000)
-        
+
         # Performance tracking
         self.performance_metrics = {
             'total_orders': 0,
@@ -522,35 +523,35 @@ class SmartExecutionAgent:
             'avg_market_impact_bps': 0,
             'fill_rate': 0
         }
-    
+
     async def execute_order(self, order: ExecutionOrder,
                            market_data: Dict[str, Any]) -> ExecutionResult:
         """Execute a smart order"""
         start_time = datetime.now()
-        
+
         # Convert market data to conditions
         market = self._create_market_conditions(market_data)
-        
+
         # Select execution strategy
         strategy = await self._select_strategy(order, market)
-        
+
         # Get algorithm
         algorithm = self.algorithms.get(strategy)
         if not algorithm:
             algorithm = self.algorithms[ExecutionStrategy.ADAPTIVE]
-        
+
         # Generate execution slices
         slices = await algorithm.execute(order, market)
-        
+
         # Simulate execution
         fills = await self._execute_slices(slices, order, market)
-        
+
         # Calculate results
         result = self._calculate_results(order, fills, market, start_time)
-        
+
         # Update performance metrics
         self._update_metrics(result)
-        
+
         # Store in history
         self.execution_history.append({
             'timestamp': datetime.now(),
@@ -558,14 +559,14 @@ class SmartExecutionAgent:
             'result': result,
             'market_conditions': market
         })
-        
+
         return result
-    
+
     def _create_market_conditions(self, market_data: Dict[str, Any]) -> MarketConditions:
         """Create market conditions from data"""
         bid = market_data.get('bid', 100.0)
         ask = market_data.get('ask', 100.1)
-        
+
         return MarketConditions(
             bid=bid,
             ask=ask,
@@ -580,13 +581,13 @@ class SmartExecutionAgent:
             momentum=market_data.get('momentum', 0.0),
             market_impact=10.0  # Default 10 bps
         )
-    
+
     async def _select_strategy(self, order: ExecutionOrder,
                              market: MarketConditions) -> ExecutionStrategy:
         """Select optimal execution strategy"""
         # Estimate market impact
         impact = self.market_simulator.estimate_market_impact(order, market)
-        
+
         # Decision logic
         if order.urgency == 'immediate':
             return ExecutionStrategy.ADAPTIVE
@@ -601,21 +602,21 @@ class SmartExecutionAgent:
             return ExecutionStrategy.ADAPTIVE
         else:
             return ExecutionStrategy.VWAP
-    
+
     async def _execute_slices(self, slices: List[ExecutionSlice],
                             order: ExecutionOrder,
                             market: MarketConditions) -> List[Dict[str, Any]]:
         """Execute slices and return fills"""
         fills = []
         total_filled = 0
-        
+
         for slice in slices:
             # Simulate execution delay
             await asyncio.sleep(0.01)
-            
+
             # Simulate fill
             fill_quantity, fill_price = self.market_simulator.simulate_fill(slice, market)
-            
+
             if fill_quantity > 0:
                 fills.append({
                     'slice_id': slice.slice_id,
@@ -624,9 +625,9 @@ class SmartExecutionAgent:
                     'venue': slice.venue,
                     'timestamp': datetime.now()
                 })
-                
+
                 total_filled += fill_quantity
-                
+
                 # Update market conditions (simplified)
                 if order.is_buy:
                     market.bid = fill_price * 0.9999
@@ -634,9 +635,9 @@ class SmartExecutionAgent:
                 else:
                     market.bid = fill_price * 0.9999
                     market.ask = fill_price * 1.0001
-        
+
         return fills
-    
+
     def _calculate_results(self, order: ExecutionOrder,
                          fills: List[Dict[str, Any]],
                          market: MarketConditions,
@@ -657,36 +658,36 @@ class SmartExecutionAgent:
                 execution_time_seconds=0,
                 cost_analysis={}
             )
-        
+
         # Calculate metrics
         total_filled = sum(f['quantity'] for f in fills)
         total_value = sum(f['quantity'] * f['price'] for f in fills)
         average_price = total_value / total_filled if total_filled > 0 else 0
-        
+
         # VWAP calculation (simplified)
         vwap = average_price  # In reality, would weight by time
-        
+
         # Slippage
         if order.is_buy:
             slippage_bps = (average_price - market.mid) / market.mid * 10000
         else:
             slippage_bps = (market.mid - average_price) / market.mid * 10000
-        
+
         # Market impact (simplified)
         market_impact_bps = abs(fills[-1]['price'] - fills[0]['price']) / fills[0]['price'] * 10000
-        
+
         # Venue breakdown
         venue_breakdown = defaultdict(int)
         for fill in fills:
             venue_breakdown[fill['venue']] += fill['quantity']
-        
+
         # Cost analysis
         spread_cost = market.spread_bps * total_filled / order.total_quantity
         impact_cost = market_impact_bps
         timing_cost = max(0, slippage_bps - market_impact_bps)
-        
+
         execution_time = (datetime.now() - start_time).total_seconds()
-        
+
         return ExecutionResult(
             order_id=f"{order.symbol}_{start_time.timestamp()}",
             slices_executed=len(fills),
@@ -706,11 +707,11 @@ class SmartExecutionAgent:
                 'total_cost_bps': spread_cost + impact_cost + timing_cost
             }
         )
-    
+
     def _update_metrics(self, result: ExecutionResult):
         """Update performance metrics"""
         n = self.performance_metrics['total_orders']
-        
+
         # Update moving averages
         self.performance_metrics['avg_slippage_bps'] = \
             (self.performance_metrics['avg_slippage_bps'] * n + result.slippage_bps) / (n + 1)
@@ -718,32 +719,32 @@ class SmartExecutionAgent:
             (self.performance_metrics['avg_market_impact_bps'] * n + result.market_impact_bps) / (n + 1)
         self.performance_metrics['fill_rate'] = \
             (self.performance_metrics['fill_rate'] * n + result.fill_rate) / (n + 1)
-        
+
         self.performance_metrics['total_orders'] += 1
-    
+
     async def optimize_execution(self, orders: List[ExecutionOrder],
                                market_data: Dict[str, Any],
                                constraints: Optional[Dict[str, Any]] = None) -> List[ExecutionResult]:
         """Optimize execution for multiple orders"""
         results = []
-        
+
         # Sort orders by priority
         priority_orders = sorted(orders, key=lambda x: (
             {'immediate': 0, 'high': 1, 'normal': 2, 'low': 3}[x.urgency],
             -x.total_quantity
         ))
-        
+
         # Execute in priority order
         for order in priority_orders:
             result = await self.execute_order(order, market_data)
             results.append(result)
-            
+
             # Update market data based on execution
             if result.fill_rate > 0:
                 market_data['volume'] += result.total_filled
-        
+
         return results
-    
+
     def get_performance_report(self) -> Dict[str, Any]:
         """Get performance report"""
         return {
@@ -771,14 +772,14 @@ class SmartExecutionAgent:
 async def demo_smart_execution():
     """Demonstrate the Smart Execution Agent"""
     agent = SmartExecutionAgent()
-    
+
     print("Smart Execution Agent Demo")
     print("="*70)
-    
+
     # Test Case 1: Small order, normal conditions
     print("\n📊 Case 1: Small Order, Normal Market")
     print("-"*50)
-    
+
     order1 = ExecutionOrder(
         symbol='AAPL',
         side='buy',
@@ -788,7 +789,7 @@ async def demo_smart_execution():
         participate_rate=0.1,
         venue_preferences=[Venue.PRIMARY, Venue.ECN]
     )
-    
+
     market_data1 = {
         'bid': 195.00,
         'ask': 195.02,
@@ -797,9 +798,9 @@ async def demo_smart_execution():
         'volatility': 0.18,
         'liquidity_score': 0.85
     }
-    
+
     result1 = await agent.execute_order(order1, market_data1)
-    
+
     print(f"Order: Buy {order1.total_quantity} shares of {order1.symbol}")
     print(f"Execution Results:")
     print(f"  Fill Rate: {result1.fill_rate:.1%}")
@@ -807,11 +808,11 @@ async def demo_smart_execution():
     print(f"  Slippage: {result1.slippage_bps:.1f} bps")
     print(f"  Market Impact: {result1.market_impact_bps:.1f} bps")
     print(f"  Total Cost: {result1.cost_analysis['total_cost_bps']:.1f} bps")
-    
+
     # Test Case 2: Large order, urgent
     print("\n\n📊 Case 2: Large Urgent Order")
     print("-"*50)
-    
+
     order2 = ExecutionOrder(
         symbol='SPY',
         side='sell',
@@ -821,7 +822,7 @@ async def demo_smart_execution():
         time_constraint=15,  # 15 minutes
         participate_rate=0.2
     )
-    
+
     market_data2 = {
         'bid': 450.50,
         'ask': 450.52,
@@ -830,9 +831,9 @@ async def demo_smart_execution():
         'volatility': 0.15,
         'liquidity_score': 0.90
     }
-    
+
     result2 = await agent.execute_order(order2, market_data2)
-    
+
     print(f"Order: Sell {order2.total_quantity} shares of {order2.symbol} (URGENT)")
     print(f"Execution Results:")
     print(f"  Fill Rate: {result2.fill_rate:.1%}")
@@ -842,11 +843,11 @@ async def demo_smart_execution():
     print(f"  Venue Breakdown:")
     for venue, qty in result2.venue_breakdown.items():
         print(f"    {venue.value}: {qty:,} shares")
-    
+
     # Test Case 3: Illiquid market
     print("\n\n📊 Case 3: Illiquid Market Conditions")
     print("-"*50)
-    
+
     order3 = ExecutionOrder(
         symbol='XYZ',
         side='buy',
@@ -856,7 +857,7 @@ async def demo_smart_execution():
         price_improvement_bps=5,
         max_display_size=500
     )
-    
+
     market_data3 = {
         'bid': 25.00,
         'ask': 25.10,
@@ -865,30 +866,30 @@ async def demo_smart_execution():
         'volatility': 0.35,
         'liquidity_score': 0.40
     }
-    
+
     result3 = await agent.execute_order(order3, market_data3)
-    
+
     print(f"Order: Buy {order3.total_quantity} shares of {order3.symbol} (ILLIQUID)")
     print(f"Market Conditions:")
     print(f"  Spread: {(market_data3['ask'] - market_data3['bid'])/market_data3['bid']*10000:.1f} bps")
     print(f"  Liquidity Score: {market_data3['liquidity_score']:.2f}")
-    
+
     print(f"\nAdaptive Execution Results:")
     print(f"  Strategy Selected: Adaptive (due to low liquidity)")
     print(f"  Average Price: ${result3.average_price:.2f}")
     print(f"  Price Improvement: {result3.slippage_bps:.1f} bps")
     print(f"  Hidden Quantity: {order3.max_display_size} shares shown")
-    
+
     # Test Case 4: Multi-order optimization
     print("\n\n📊 Case 4: Multi-Order Optimization")
     print("-"*50)
-    
+
     orders = [
         ExecutionOrder('AAPL', 'buy', 2000, OrderType.LIMIT, urgency='high'),
         ExecutionOrder('MSFT', 'sell', 3000, OrderType.LIMIT, urgency='normal'),
         ExecutionOrder('GOOGL', 'buy', 1000, OrderType.LIMIT, urgency='immediate')
     ]
-    
+
     market_data_multi = {
         'bid': 100.00,
         'ask': 100.02,
@@ -897,30 +898,30 @@ async def demo_smart_execution():
         'volatility': 0.20,
         'liquidity_score': 0.75
     }
-    
+
     results = await agent.optimize_execution(orders, market_data_multi)
-    
+
     print("Multi-Order Execution Results:")
     print(f"{'Symbol':<8} {'Side':<6} {'Qty':<8} {'Urgency':<10} {'Fill%':<8} {'Cost(bps)':<10}")
     print("-"*60)
-    
+
     for order, result in zip(orders, results):
         print(f"{order.symbol:<8} {order.side:<6} {order.total_quantity:<8} "
               f"{order.urgency:<10} {result.fill_rate*100:<7.1f}% "
               f"{result.cost_analysis['total_cost_bps']:<10.1f}")
-    
+
     # Performance summary
     print("\n\n📊 Performance Summary")
     print("-"*50)
-    
+
     report = agent.get_performance_report()
     summary = report['summary']
-    
+
     print(f"Total Orders Executed: {summary['total_orders']}")
     print(f"Average Fill Rate: {summary['fill_rate']:.1%}")
     print(f"Average Slippage: {summary['avg_slippage_bps']:.1f} bps")
     print(f"Average Market Impact: {summary['avg_market_impact_bps']:.1f} bps")
-    
+
     print("\n✅ Smart Execution Agent demonstrates:")
     print("- Adaptive strategy selection based on market conditions")
     print("- Multi-venue routing for optimal execution")
@@ -929,4 +930,4 @@ async def demo_smart_execution():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_smart_execution()) 
+    asyncio.run(demo_smart_execution())

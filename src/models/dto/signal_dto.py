@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 class SignalResponse(BaseModel):
     """Response model for a single signal"""
+
     id: str
     symbol: str
     action: str
@@ -24,7 +25,7 @@ class SignalResponse(BaseModel):
     take_profit: float
     metadata: Dict[str, Any] = Field(default_factory=dict)
     quality_score: float = Field(ge=0, le=1)
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -35,27 +36,24 @@ class SignalResponse(BaseModel):
                 "price": 150.50,
                 "timestamp": "2024-01-10T14:30:00Z",
                 "reason": "RSI oversold; MACD bullish crossover",
-                "indicators": {
-                    "rsi": 28.5,
-                    "macd": 1.2,
-                    "sma_20": 148.3
-                },
+                "indicators": {"rsi": 28.5, "macd": 1.2, "sma_20": 148.3},
                 "risk_level": "medium",
                 "entry_price": 150.50,
                 "stop_loss": 147.00,
                 "take_profit": 156.00,
                 "metadata": {},
-                "quality_score": 0.85
+                "quality_score": 0.85,
             }
         }
 
 
 class SignalsResponse(BaseModel):
     """Response model for multiple signals"""
+
     signals: List[Dict[str, Any]]
     count: int
     status: str = "success"
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -74,17 +72,18 @@ class SignalsResponse(BaseModel):
                         "stop_loss": 147.00,
                         "take_profit": 156.00,
                         "metadata": {},
-                        "quality_score": 0.85
+                        "quality_score": 0.85,
                     }
                 ],
                 "count": 1,
-                "status": "success"
+                "status": "success",
             }
         }
 
 
 class SignalCreate(BaseModel):
     """Model for creating a new signal"""
+
     symbol: str
     action: str = Field(pattern="^(BUY|SELL|HOLD)$")
     confidence: float = Field(ge=0, le=1)
@@ -94,4 +93,4 @@ class SignalCreate(BaseModel):
     entry_price: float
     stop_loss: float
     take_profit: float
-    metadata: Dict[str, Any] = Field(default_factory=dict) 
+    metadata: Dict[str, Any] = Field(default_factory=dict)

@@ -125,4 +125,4 @@ export const selectPerformanceStatus = createSelector(
         memoryStatus: metrics.memoryUsage > 80 ? 'high' :
             metrics.memoryUsage > 50 ? 'moderate' : 'low',
     })
-); 
+);

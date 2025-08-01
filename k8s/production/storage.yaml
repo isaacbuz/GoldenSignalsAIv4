@@ -90,4 +90,4 @@ spec:
   storageClassName: goldensignals-ssd
   resources:
     requests:
-      storage: 20Gi 
+      storage: 20Gi

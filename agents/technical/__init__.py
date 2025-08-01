@@ -2,4 +2,4 @@
 
 from .momentum_agent import MomentumAgent
 
-__all__ = ['MomentumAgent'] 
+__all__ = ['MomentumAgent']

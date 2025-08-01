@@ -86,11 +86,11 @@ class LogEntry(BaseModel):
 def generate_mock_signal(symbol: str = "SPY") -> Dict[str, Any]:
     signal_types = ["BUY", "SELL", "HOLD"]
     sources = ["TechnicalAnalysisAgent", "SentimentAgent", "VolumeAgent", "MacroAgent"]
-    
+
     price = random.uniform(400, 500)
     signal_type = random.choice(signal_types)
     confidence = random.uniform(65, 95)
-    
+
     return {
         "signal_id": f"signal_{random.randint(1000, 9999)}",
         "symbol": symbol,
@@ -111,7 +111,7 @@ def generate_historical_data(symbol: str, timeframe: str = "1h", bars: int = 100
     data = []
     base_price = random.uniform(400, 500)
     now = datetime.now()
-    
+
     for i in range(bars):
         timestamp = now - timedelta(hours=i)
         price = base_price + random.uniform(-5, 5)
@@ -119,7 +119,7 @@ def generate_historical_data(symbol: str, timeframe: str = "1h", bars: int = 100
         high = max(open_price, price) + random.uniform(0, 3)
         low = min(open_price, price) - random.uniform(0, 3)
         volume = random.randint(500000, 2000000)
-        
+
         data.append({
             "time": int(timestamp.timestamp()),
             "open": round(open_price, 2),
@@ -128,7 +128,7 @@ def generate_historical_data(symbol: str, timeframe: str = "1h", bars: int = 100
             "close": round(price, 2),
             "volume": volume
         })
-    
+
     return list(reversed(data))  # Return in chronological order
 
 # API Routes
@@ -151,7 +151,7 @@ async def get_market_status():
         now.weekday() < 5 and  # Monday = 0, Friday = 4
         9 <= now.hour < 16
     )
-    
+
     return {
         "isOpen": is_open,
         "status": "open" if is_open else "closed",
@@ -176,7 +176,7 @@ async def get_signals_for_symbol(symbol: str, hours_back: int = 24):
     """Get signals for a specific symbol"""
     count = random.randint(3, 8)
     signals = [generate_mock_signal(symbol) for _ in range(count)]
-    
+
     return {
         "symbol": symbol,
         "signals": signals,
@@ -190,7 +190,7 @@ async def get_agent_performance():
     """Get agent performance metrics"""
     agents = ["TechnicalAnalysisAgent", "SentimentAgent", "VolumeAgent", "MacroAgent", "OptionsFlowAgent"]
     performance = {}
-    
+
     for agent in agents:
         performance[agent] = {
             "accuracy": round(random.uniform(75, 92), 1),
@@ -200,7 +200,7 @@ async def get_agent_performance():
             "sharpe_ratio": round(random.uniform(1.2, 2.8), 2),
             "last_updated": datetime.now().isoformat()
         }
-    
+
     return {
         "agents": performance,
         "overall_accuracy": round(sum(p["accuracy"] for p in performance.values()) / len(performance), 1),
@@ -261,12 +261,12 @@ async def search_symbols(q: str = "", limit: int = 10):
         {"symbol": "ETH-USD", "name": "Ethereum USD", "type": "CRYPTO"},
         {"symbol": "NVDA", "name": "NVIDIA Corporation", "type": "STOCK"},
     ]
-    
+
     if q:
         filtered = [s for s in symbols if q.upper() in s["symbol"] or q.lower() in s["name"].lower()]
     else:
         filtered = symbols
-    
+
     return {
         "symbols": filtered[:limit],
         "total": len(filtered),
@@ -278,7 +278,7 @@ async def search_symbols(q: str = "", limit: int = 10):
 async def websocket_signals(websocket: WebSocket):
     client_id = f"signals_{random.randint(1000, 9999)}"
     await manager.connect(websocket, client_id)
-    
+
     try:
         # Send initial welcome message
         await websocket.send_text(json.dumps({
@@ -286,7 +286,7 @@ async def websocket_signals(websocket: WebSocket):
             "message": "Connected to signals feed",
             "client_id": client_id
         }))
-        
+
         # Start sending periodic signals
         async def send_periodic_signals():
             while True:
@@ -300,16 +300,16 @@ async def websocket_signals(websocket: WebSocket):
                 except Exception as e:
                     logger.error(f"Error sending periodic signal: {e}")
                     break
-        
+
         # Start the periodic task
         task = asyncio.create_task(send_periodic_signals())
-        
+
         # Handle incoming messages
         while True:
             try:
                 data = await websocket.receive_text()
                 message = json.loads(data)
-                
+
                 if message.get("type") == "subscribe":
                     symbols = message.get("symbols", ["SPY"])
                     await websocket.send_text(json.dumps({
@@ -322,16 +322,16 @@ async def websocket_signals(websocket: WebSocket):
                         "type": "pong",
                         "timestamp": datetime.now().isoformat()
                     }))
-                    
+
             except WebSocketDisconnect:
                 break
             except Exception as e:
                 logger.error(f"WebSocket error: {e}")
                 break
-        
+
         # Cleanup
         task.cancel()
-        
+
     except WebSocketDisconnect:
         pass
     except Exception as e:
@@ -369,11 +369,11 @@ if __name__ == "__main__":
     print("  - WebSocket Signals: ws://localhost:8000/ws/signals")
     print("  - API Docs: http://localhost:8000/docs")
     print("🌐 CORS enabled for localhost:3000 and localhost:5173")
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",
         port=8000,
         log_level="info",
         access_log=True
-    ) 
+    )

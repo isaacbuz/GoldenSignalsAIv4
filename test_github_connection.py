@@ -10,15 +10,15 @@ GITHUB_API_URL = "https://api.github.com"
 
 def test_connection():
     """Test various GitHub API endpoints"""
-    
+
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     print("🔍 Testing GitHub API Connection")
     print("=" * 60)
-    
+
     # Test 1: Check authenticated user
     print("\n1. Testing authentication...")
     response = requests.get(f"{GITHUB_API_URL}/user", headers=headers)
@@ -30,7 +30,7 @@ def test_connection():
         print(f"❌ Authentication failed: {response.status_code}")
         print(f"   Response: {response.text}")
         return
-    
+
     # Test 2: List user's repositories
     print("\n2. Listing your repositories...")
     response = requests.get(f"{GITHUB_API_URL}/user/repos", headers=headers)
@@ -41,10 +41,10 @@ def test_connection():
             print(f"   - {repo['full_name']} {'(private)' if repo['private'] else '(public)'}")
     else:
         print(f"❌ Failed to list repos: {response.status_code}")
-    
+
     # Test 3: Check specific repository
     print("\n3. Checking for GoldenSignalsAI_V2 repository...")
-    
+
     # Try different possible paths
     possible_repos = [
         "isaacbuz/GoldenSignalsAI_V2",
@@ -52,7 +52,7 @@ def test_connection():
         "isaacbuz/GoldenSignalsAI-V2",
         "isaacbuz/goldensignals-ai-v2"
     ]
-    
+
     found_repo = None
     for repo_path in possible_repos:
         response = requests.get(f"{GITHUB_API_URL}/repos/{repo_path}", headers=headers)
@@ -63,7 +63,7 @@ def test_connection():
             print(f"   Default branch: {found_repo['default_branch']}")
             print(f"   URL: {found_repo['html_url']}")
             break
-    
+
     if not found_repo:
         print("❌ Could not find GoldenSignalsAI_V2 repository")
         print("\nSearching for repositories with 'golden' in the name...")
@@ -77,7 +77,7 @@ def test_connection():
                     print(f"   - {repo['full_name']}")
             else:
                 print("No repositories with 'golden' in the name found")
-    
+
     # Test 4: Check token permissions
     print("\n4. Checking token permissions...")
     response = requests.get(f"{GITHUB_API_URL}/user", headers=headers)
@@ -93,4 +93,4 @@ if __name__ == "__main__":
     if not GITHUB_TOKEN:
         print("❌ GITHUB_TOKEN not set!")
     else:
-        test_connection() 
+        test_connection()

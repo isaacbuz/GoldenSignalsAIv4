@@ -1,6 +1,6 @@
 /**
  * Golden Signals Dashboard
- * 
+ *
  * Simplified main dashboard that brings together all components
  * in a clean, stable interface with the Golden Eye AI Prophet theme.
  */
@@ -430,4 +430,4 @@ export const GoldenSignalsDashboard: React.FC = () => {
     );
 };
 
-export default GoldenSignalsDashboard; 
+export default GoldenSignalsDashboard;

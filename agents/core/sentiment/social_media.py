@@ -1,4 +1,5 @@
-from typing import Dict, Any
+from typing import Any, Dict
+
 """
 social_media.py
 Purpose: Implements a SocialMediaSentimentAgent that analyzes social media sentiment to generate trading signals, useful for options trading during sentiment-driven volatility. Integrates with the GoldenSignalsAI agent framework.
@@ -7,6 +8,7 @@ Purpose: Implements a SocialMediaSentimentAgent that analyzes social media senti
 import logging
 
 import pandas as pd
+
 # Simple sentiment analysis using word lists
 POSITIVE_WORDS = {'good', 'great', 'excellent', 'bullish', 'buy', 'positive', 'strong', 'gain', 'rise', 'up'}
 NEGATIVE_WORDS = {'bad', 'poor', 'terrible', 'bearish', 'sell', 'negative', 'weak', 'loss', 'fall', 'down'}
@@ -61,11 +63,11 @@ class SocialMediaSentimentAgent(BaseAgent):
                 text = post.get('text', '').lower()
                 if not text:
                     continue
-                
+
                 # Count positive and negative words
                 positive_count = sum(1 for word in text.split() if word in POSITIVE_WORDS)
                 negative_count = sum(1 for word in text.split() if word in NEGATIVE_WORDS)
-                
+
                 # Calculate sentiment score
                 if positive_count > negative_count:
                     sentiment_scores.append(positive_count / (positive_count + negative_count))
@@ -73,7 +75,7 @@ class SocialMediaSentimentAgent(BaseAgent):
                     sentiment_scores.append(-negative_count / (positive_count + negative_count))
                 else:
                     sentiment_scores.append(0.0)
-            
+
             avg_sentiment = (
                 sum(sentiment_scores) / len(sentiment_scores)
                 if sentiment_scores
@@ -121,10 +123,10 @@ class SocialMediaSentimentAgent(BaseAgent):
 
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Input trading signal
-            
+
         Returns:
             Dict[str, Any]: Potentially modified trading signal
         """

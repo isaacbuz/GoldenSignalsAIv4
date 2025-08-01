@@ -2,8 +2,9 @@
 Comprehensive Agent Registry - All institutional-grade agents for GoldenSignalsAI.
 Implements the complete list of agents used by top quant funds, HFTs, and institutional desks.
 """
-from typing import Dict, Any, List, Type
 import logging
+from typing import Any, Dict, List, Type
+
 from .common.base.base_agent import BaseAgent
 from .ml.transformer_agent import TransformerAgent
 
@@ -15,10 +16,10 @@ logger = logging.getLogger(__name__)
 
 class TechnicalAgent(BaseAgent):
     """RSI, MACD, moving averages, crossovers, etc."""
-    
+
     def __init__(self, name: str = "Technical"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for technical analysis
         return signal
@@ -26,10 +27,10 @@ class TechnicalAgent(BaseAgent):
 
 class PatternAgent(BaseAgent):
     """Chart patterns (double top/bottom, H&S, triangles, flags)."""
-    
+
     def __init__(self, name: str = "Pattern"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for pattern recognition
         return signal
@@ -37,10 +38,10 @@ class PatternAgent(BaseAgent):
 
 class BreakoutAgent(BaseAgent):
     """Detects breakouts from recent price ranges."""
-    
+
     def __init__(self, name: str = "Breakout"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for breakout detection
         return signal
@@ -48,10 +49,10 @@ class BreakoutAgent(BaseAgent):
 
 class MeanReversionAgent(BaseAgent):
     """Z-score, Bollinger bands, mean reversion signals."""
-    
+
     def __init__(self, name: str = "MeanReversion"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for mean reversion
         return signal
@@ -59,10 +60,10 @@ class MeanReversionAgent(BaseAgent):
 
 class TrendAgent(BaseAgent):
     """ADX, DMI, moving average slope."""
-    
+
     def __init__(self, name: str = "Trend"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for trend analysis
         return signal
@@ -70,10 +71,10 @@ class TrendAgent(BaseAgent):
 
 class SupportResistanceAgent(BaseAgent):
     """Auto-detects support/resistance levels."""
-    
+
     def __init__(self, name: str = "SupportResistance"):
         super().__init__(name=name, agent_type="technical")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for support/resistance detection
         return signal
@@ -85,10 +86,10 @@ class SupportResistanceAgent(BaseAgent):
 
 class VolumeSpikeAgent(BaseAgent):
     """Unusual volume spikes."""
-    
+
     def __init__(self, name: str = "VolumeSpike"):
         super().__init__(name=name, agent_type="volume")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for volume spike detection
         return signal
@@ -96,10 +97,10 @@ class VolumeSpikeAgent(BaseAgent):
 
 class VWAPAgent(BaseAgent):
     """Price deviation from VWAP."""
-    
+
     def __init__(self, name: str = "VWAP"):
         super().__init__(name=name, agent_type="volume")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for VWAP analysis
         return signal
@@ -107,10 +108,10 @@ class VWAPAgent(BaseAgent):
 
 class OrderBookImbalanceAgent(BaseAgent):
     """Real-time L2 imbalance."""
-    
+
     def __init__(self, name: str = "OrderBookImbalance"):
         super().__init__(name=name, agent_type="volume")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for order book analysis
         return signal
@@ -118,10 +119,10 @@ class OrderBookImbalanceAgent(BaseAgent):
 
 class LiquidityShockAgent(BaseAgent):
     """Sudden drops/spikes in liquidity."""
-    
+
     def __init__(self, name: str = "LiquidityShock"):
         super().__init__(name=name, agent_type="volume")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for liquidity shock detection
         return signal
@@ -129,10 +130,10 @@ class LiquidityShockAgent(BaseAgent):
 
 class DarkPoolAgent(BaseAgent):
     """Dark pool prints and their impact."""
-    
+
     def __init__(self, name: str = "DarkPool"):
         super().__init__(name=name, agent_type="volume")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for dark pool analysis
         return signal
@@ -144,10 +145,10 @@ class DarkPoolAgent(BaseAgent):
 
 class VolatilityAgent(BaseAgent):
     """ATR, realized/IV."""
-    
+
     def __init__(self, name: str = "Volatility"):
         super().__init__(name=name, agent_type="volatility")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for volatility analysis
         return signal
@@ -155,10 +156,10 @@ class VolatilityAgent(BaseAgent):
 
 class SkewAgent(BaseAgent):
     """IV skew."""
-    
+
     def __init__(self, name: str = "Skew"):
         super().__init__(name=name, agent_type="volatility")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for skew analysis
         return signal
@@ -166,10 +167,10 @@ class SkewAgent(BaseAgent):
 
 class IVRankAgent(BaseAgent):
     """IV percentile."""
-    
+
     def __init__(self, name: str = "IVRank"):
         super().__init__(name=name, agent_type="volatility")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for IV rank analysis
         return signal
@@ -177,10 +178,10 @@ class IVRankAgent(BaseAgent):
 
 class GammaExposureAgent(BaseAgent):
     """Gamma near spot."""
-    
+
     def __init__(self, name: str = "GammaExposure"):
         super().__init__(name=name, agent_type="options")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for gamma exposure analysis
         return signal
@@ -188,10 +189,10 @@ class GammaExposureAgent(BaseAgent):
 
 class OptionsPinningAgent(BaseAgent):
     """Pin risk."""
-    
+
     def __init__(self, name: str = "OptionsPinning"):
         super().__init__(name=name, agent_type="options")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for options pinning analysis
         return signal
@@ -199,10 +200,10 @@ class OptionsPinningAgent(BaseAgent):
 
 class GammaSqueezeAgent(BaseAgent):
     """Gamma squeeze setups."""
-    
+
     def __init__(self, name: str = "GammaSqueeze"):
         super().__init__(name=name, agent_type="options")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for gamma squeeze detection
         return signal
@@ -210,10 +211,10 @@ class GammaSqueezeAgent(BaseAgent):
 
 class OptionsFlowAgent(BaseAgent):
     """Unusual options activity."""
-    
+
     def __init__(self, name: str = "OptionsFlow"):
         super().__init__(name=name, agent_type="options")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for options flow analysis
         return signal
@@ -225,10 +226,10 @@ class OptionsFlowAgent(BaseAgent):
 
 class SentimentAgent(BaseAgent):
     """News/social/analyst ratings."""
-    
+
     def __init__(self, name: str = "Sentiment"):
         super().__init__(name=name, agent_type="sentiment")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for sentiment analysis
         return signal
@@ -236,10 +237,10 @@ class SentimentAgent(BaseAgent):
 
 class DeepSentimentAgent(BaseAgent):
     """Transformer NLP."""
-    
+
     def __init__(self, name: str = "DeepSentiment"):
         super().__init__(name=name, agent_type="sentiment")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for deep sentiment analysis
         return signal
@@ -247,10 +248,10 @@ class DeepSentimentAgent(BaseAgent):
 
 class NewsAgent(BaseAgent):
     """Headline scanning, event detection."""
-    
+
     def __init__(self, name: str = "News"):
         super().__init__(name=name, agent_type="sentiment")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for news analysis
         return signal
@@ -258,10 +259,10 @@ class NewsAgent(BaseAgent):
 
 class NewsVelocityAgent(BaseAgent):
     """News flow speed."""
-    
+
     def __init__(self, name: str = "NewsVelocity"):
         super().__init__(name=name, agent_type="sentiment")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for news velocity analysis
         return signal
@@ -269,10 +270,10 @@ class NewsVelocityAgent(BaseAgent):
 
 class SocialAgent(BaseAgent):
     """Twitter/Reddit/Stocktwits."""
-    
+
     def __init__(self, name: str = "Social"):
         super().__init__(name=name, agent_type="sentiment")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for social media analysis
         return signal
@@ -280,10 +281,10 @@ class SocialAgent(BaseAgent):
 
 class AltDataAgent(BaseAgent):
     """Web traffic, satellite, credit card."""
-    
+
     def __init__(self, name: str = "AltData"):
         super().__init__(name=name, agent_type="alt_data")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for alternative data analysis
         return signal
@@ -295,10 +296,10 @@ class AltDataAgent(BaseAgent):
 
 class MacroAgent(BaseAgent):
     """Rates, GDP, inflation, surprise index."""
-    
+
     def __init__(self, name: str = "Macro"):
         super().__init__(name=name, agent_type="macro")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for macro analysis
         return signal
@@ -306,10 +307,10 @@ class MacroAgent(BaseAgent):
 
 class MacroSurpriseAgent(BaseAgent):
     """Economic data beats/misses."""
-    
+
     def __init__(self, name: str = "MacroSurprise"):
         super().__init__(name=name, agent_type="macro")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for macro surprise analysis
         return signal
@@ -317,10 +318,10 @@ class MacroSurpriseAgent(BaseAgent):
 
 class RegimeAgent(BaseAgent):
     """Bull/bear/sideways."""
-    
+
     def __init__(self, name: str = "Regime"):
         super().__init__(name=name, agent_type="regime")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for regime detection
         return signal
@@ -328,10 +329,10 @@ class RegimeAgent(BaseAgent):
 
 class SeasonalityAgent(BaseAgent):
     """Calendar, earnings, ex-dividend."""
-    
+
     def __init__(self, name: str = "Seasonality"):
         super().__init__(name=name, agent_type="temporal")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for seasonality analysis
         return signal
@@ -339,10 +340,10 @@ class SeasonalityAgent(BaseAgent):
 
 class GeopoliticalAgent(BaseAgent):
     """Wars, sanctions, elections."""
-    
+
     def __init__(self, name: str = "Geopolitical"):
         super().__init__(name=name, agent_type="macro")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for geopolitical analysis
         return signal
@@ -350,10 +351,10 @@ class GeopoliticalAgent(BaseAgent):
 
 class EventAgent(BaseAgent):
     """Earnings, splits, dividends."""
-    
+
     def __init__(self, name: str = "Event"):
         super().__init__(name=name, agent_type="event")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for event analysis
         return signal
@@ -361,10 +362,10 @@ class EventAgent(BaseAgent):
 
 class RegulatoryEventAgent(BaseAgent):
     """SEC filings, compliance."""
-    
+
     def __init__(self, name: str = "RegulatoryEvent"):
         super().__init__(name=name, agent_type="regulatory")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for regulatory event analysis
         return signal
@@ -376,10 +377,10 @@ class RegulatoryEventAgent(BaseAgent):
 
 class ArbitrageAgent(BaseAgent):
     """ETF/underlying, pairs, cross-asset."""
-    
+
     def __init__(self, name: str = "Arbitrage"):
         super().__init__(name=name, agent_type="arbitrage")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for arbitrage detection
         return signal
@@ -387,10 +388,10 @@ class ArbitrageAgent(BaseAgent):
 
 class ETFArbAgent(BaseAgent):
     """ETF/underlying."""
-    
+
     def __init__(self, name: str = "ETFArb"):
         super().__init__(name=name, agent_type="arbitrage")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for ETF arbitrage
         return signal
@@ -398,10 +399,10 @@ class ETFArbAgent(BaseAgent):
 
 class SpreadArbAgent(BaseAgent):
     """Mean-reverting spreads."""
-    
+
     def __init__(self, name: str = "SpreadArb"):
         super().__init__(name=name, agent_type="arbitrage")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for spread arbitrage
         return signal
@@ -409,10 +410,10 @@ class SpreadArbAgent(BaseAgent):
 
 class CrossAssetArbAgent(BaseAgent):
     """Equities, futures, FX, crypto."""
-    
+
     def __init__(self, name: str = "CrossAssetArb"):
         super().__init__(name=name, agent_type="arbitrage")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for cross-asset arbitrage
         return signal
@@ -420,10 +421,10 @@ class CrossAssetArbAgent(BaseAgent):
 
 class SectorRotationAgent(BaseAgent):
     """Sector flows."""
-    
+
     def __init__(self, name: str = "SectorRotation"):
         super().__init__(name=name, agent_type="flow")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for sector rotation analysis
         return signal
@@ -431,10 +432,10 @@ class SectorRotationAgent(BaseAgent):
 
 class ETFFlowAgent(BaseAgent):
     """ETF creation/redemption."""
-    
+
     def __init__(self, name: str = "ETFFlow"):
         super().__init__(name=name, agent_type="flow")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for ETF flow analysis
         return signal
@@ -442,10 +443,10 @@ class ETFFlowAgent(BaseAgent):
 
 class WhaleTradeAgent(BaseAgent):
     """Block trades, smart money."""
-    
+
     def __init__(self, name: str = "WhaleTrade"):
         super().__init__(name=name, agent_type="flow")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for whale trade detection
         return signal
@@ -453,10 +454,10 @@ class WhaleTradeAgent(BaseAgent):
 
 class HedgeFundAgent(BaseAgent):
     """Volume spikes, 13F filings."""
-    
+
     def __init__(self, name: str = "HedgeFund"):
         super().__init__(name=name, agent_type="institutional")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for hedge fund analysis
         return signal
@@ -468,10 +469,10 @@ class HedgeFundAgent(BaseAgent):
 
 class InsiderAgent(BaseAgent):
     """Insider buying/selling."""
-    
+
     def __init__(self, name: str = "Insider"):
         super().__init__(name=name, agent_type="insider")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for insider trading analysis
         return signal
@@ -479,10 +480,10 @@ class InsiderAgent(BaseAgent):
 
 class InsiderClusterAgent(BaseAgent):
     """Clusters of insider trades."""
-    
+
     def __init__(self, name: str = "InsiderCluster"):
         super().__init__(name=name, agent_type="insider")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for insider cluster analysis
         return signal
@@ -490,10 +491,10 @@ class InsiderClusterAgent(BaseAgent):
 
 class UserBehaviorAgent(BaseAgent):
     """Learns from user trading/feedback."""
-    
+
     def __init__(self, name: str = "UserBehavior"):
         super().__init__(name=name, agent_type="behavioral")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for user behavior analysis
         return signal
@@ -501,10 +502,10 @@ class UserBehaviorAgent(BaseAgent):
 
 class CustomUserAgent(BaseAgent):
     """User-defined logic."""
-    
+
     def __init__(self, name: str = "CustomUser"):
         super().__init__(name=name, agent_type="custom")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for custom user logic
         return signal
@@ -516,10 +517,10 @@ class CustomUserAgent(BaseAgent):
 
 class MLAgent(BaseAgent):
     """Machine learning models."""
-    
+
     def __init__(self, name: str = "ML"):
         super().__init__(name=name, agent_type="ml")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for ML predictions
         return signal
@@ -527,10 +528,10 @@ class MLAgent(BaseAgent):
 
 class StackedEnsembleAgent(BaseAgent):
     """Meta-learner."""
-    
+
     def __init__(self, name: str = "StackedEnsemble"):
         super().__init__(name=name, agent_type="ml")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for stacked ensemble
         return signal
@@ -538,10 +539,10 @@ class StackedEnsembleAgent(BaseAgent):
 
 class AnomalyDetectionAgent(BaseAgent):
     """Isolation Forest, autoencoder."""
-    
+
     def __init__(self, name: str = "AnomalyDetection"):
         super().__init__(name=name, agent_type="ml")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for anomaly detection
         return signal
@@ -549,10 +550,10 @@ class AnomalyDetectionAgent(BaseAgent):
 
 class MetaConsensusAgent(BaseAgent):
     """Weighted voting, RL, Bayesian."""
-    
+
     def __init__(self, name: str = "MetaConsensus"):
         super().__init__(name=name, agent_type="meta")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for meta consensus
         return signal
@@ -560,10 +561,10 @@ class MetaConsensusAgent(BaseAgent):
 
 class CustomLLMAgent(BaseAgent):
     """LLM-generated signals."""
-    
+
     def __init__(self, name: str = "CustomLLM"):
         super().__init__(name=name, agent_type="llm")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for LLM-based signals
         return signal
@@ -571,10 +572,10 @@ class CustomLLMAgent(BaseAgent):
 
 class ExplainabilityAgent(BaseAgent):
     """LLM explanations."""
-    
+
     def __init__(self, name: str = "Explainability"):
         super().__init__(name=name, agent_type="explainability")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for signal explanations
         return signal
@@ -582,10 +583,10 @@ class ExplainabilityAgent(BaseAgent):
 
 class TransformerAgent(TransformerAgent):
     """Transformer-based predictions."""
-    
+
     def __init__(self, name: str = "Transformer"):
         super().__init__(name=name, agent_type="transformer")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for transformer predictions
         return signal
@@ -597,10 +598,10 @@ class TransformerAgent(TransformerAgent):
 
 class EarningsDriftAgent(BaseAgent):
     """Post-earnings drift."""
-    
+
     def __init__(self, name: str = "EarningsDrift"):
         super().__init__(name=name, agent_type="event")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for earnings drift analysis
         return signal
@@ -608,10 +609,10 @@ class EarningsDriftAgent(BaseAgent):
 
 class WeatherAgent(BaseAgent):
     """Weather data for commodities/equities."""
-    
+
     def __init__(self, name: str = "Weather"):
         super().__init__(name=name, agent_type="alt_data")
-    
+
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         # Implementation for weather-based analysis
         return signal
@@ -629,14 +630,14 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'MeanReversionAgent': MeanReversionAgent,
     'TrendAgent': TrendAgent,
     'SupportResistanceAgent': SupportResistanceAgent,
-    
+
     # Volume/Liquidity Agents
     'VolumeSpikeAgent': VolumeSpikeAgent,
     'VWAPAgent': VWAPAgent,
     'OrderBookImbalanceAgent': OrderBookImbalanceAgent,
     'LiquidityShockAgent': LiquidityShockAgent,
     'DarkPoolAgent': DarkPoolAgent,
-    
+
     # Options/Volatility Agents
     'VolatilityAgent': VolatilityAgent,
     'SkewAgent': SkewAgent,
@@ -645,7 +646,7 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'OptionsPinningAgent': OptionsPinningAgent,
     'GammaSqueezeAgent': GammaSqueezeAgent,
     'OptionsFlowAgent': OptionsFlowAgent,
-    
+
     # Sentiment/News/Alt Data Agents
     'SentimentAgent': SentimentAgent,
     'DeepSentimentAgent': DeepSentimentAgent,
@@ -653,7 +654,7 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'NewsVelocityAgent': NewsVelocityAgent,
     'SocialAgent': SocialAgent,
     'AltDataAgent': AltDataAgent,
-    
+
     # Macro/Regime/Seasonality Agents
     'MacroAgent': MacroAgent,
     'MacroSurpriseAgent': MacroSurpriseAgent,
@@ -662,7 +663,7 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'GeopoliticalAgent': GeopoliticalAgent,
     'EventAgent': EventAgent,
     'RegulatoryEventAgent': RegulatoryEventAgent,
-    
+
     # Flow/Arbitrage Agents
     'ArbitrageAgent': ArbitrageAgent,
     'ETFArbAgent': ETFArbAgent,
@@ -672,13 +673,13 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'ETFFlowAgent': ETFFlowAgent,
     'WhaleTradeAgent': WhaleTradeAgent,
     'HedgeFundAgent': HedgeFundAgent,
-    
+
     # Insider/Behavioral Agents
     'InsiderAgent': InsiderAgent,
     'InsiderClusterAgent': InsiderClusterAgent,
     'UserBehaviorAgent': UserBehaviorAgent,
     'CustomUserAgent': CustomUserAgent,
-    
+
     # ML/AI/Meta Agents
     'MLAgent': MLAgent,
     'StackedEnsembleAgent': StackedEnsembleAgent,
@@ -687,7 +688,7 @@ COMPREHENSIVE_AGENT_REGISTRY: Dict[str, Type[BaseAgent]] = {
     'CustomLLMAgent': CustomLLMAgent,
     'ExplainabilityAgent': ExplainabilityAgent,
     'TransformerAgent': TransformerAgent,
-    
+
     # Other Real-World Agents
     'EarningsDriftAgent': EarningsDriftAgent,
     'WeatherAgent': WeatherAgent,
@@ -726,11 +727,11 @@ def create_agent_instance(agent_name: str, **kwargs) -> BaseAgent:
 # Agent categories for easy organization
 AGENT_CATEGORIES = {
     'Technical Analysis': [
-        'TechnicalAgent', 'PatternAgent', 'BreakoutAgent', 'MeanReversionAgent', 
+        'TechnicalAgent', 'PatternAgent', 'BreakoutAgent', 'MeanReversionAgent',
         'TrendAgent', 'SupportResistanceAgent'
     ],
     'Volume & Liquidity': [
-        'VolumeSpikeAgent', 'VWAPAgent', 'OrderBookImbalanceAgent', 
+        'VolumeSpikeAgent', 'VWAPAgent', 'OrderBookImbalanceAgent',
         'LiquidityShockAgent', 'DarkPoolAgent'
     ],
     'Options & Volatility': [
@@ -753,10 +754,10 @@ AGENT_CATEGORIES = {
         'InsiderAgent', 'InsiderClusterAgent', 'UserBehaviorAgent', 'CustomUserAgent'
     ],
     'ML & AI': [
-        'MLAgent', 'StackedEnsembleAgent', 'AnomalyDetectionAgent', 
+        'MLAgent', 'StackedEnsembleAgent', 'AnomalyDetectionAgent',
         'MetaConsensusAgent', 'CustomLLMAgent', 'ExplainabilityAgent', 'TransformerAgent'
     ],
     'Specialized': [
         'EarningsDriftAgent', 'WeatherAgent'
     ]
-} 
+}

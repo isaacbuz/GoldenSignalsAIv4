@@ -115,7 +115,7 @@ class BackendMarketDataService {
       });
 
       const response = await fetch(
-        `${this.baseUrl}/api/v1/market-data/${symbol}/history?${params}`,
+        `${this.baseUrl}/api/v1/market-data/${symbol}/historical?${params}`,
         {
           method: 'GET',
           headers: {
@@ -212,17 +212,20 @@ class BackendMarketDataService {
    * Connect to WebSocket for real-time updates
    */
   async connectWebSocket(symbol: string, onMessage: (data: any) => void): Promise<void> {
-    const wsUrl = this.baseUrl.replace('http', 'ws') + `/ws/market-data`;
+    const wsUrl = this.baseUrl.replace('http', 'ws') + `/ws`;
 
     try {
       this.wsConnection = new WebSocket(wsUrl);
 
       this.wsConnection.onopen = () => {
         logger.info('WebSocket connected');
-        // Subscribe to symbol
+        // Subscribe to market data for the symbol
         this.wsConnection?.send(JSON.stringify({
           type: 'subscribe',
-          symbol: symbol,
+          data: {
+            channel: 'market_data',
+            symbol: symbol,
+          }
         }));
       };
 

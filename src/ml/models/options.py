@@ -47,14 +47,8 @@ class OptionsData(BaseModel):
             if self.call_put not in ["call", "put"]:
                 raise ValueError(f"Invalid option type: {self.call_put}")
             self.validate()
-            logger.debug(
-                {"message": f"Options data validated successfully for {self.symbol}"}
-            )
+            logger.debug({"message": f"Options data validated successfully for {self.symbol}"})
             return True
         except Exception as e:
-            logger.error(
-                {
-                    "message": f"Options data validation failed for {self.symbol}: {str(e)}"
-                }
-            )
+            logger.error({"message": f"Options data validation failed for {self.symbol}: {str(e)}"})
             return False

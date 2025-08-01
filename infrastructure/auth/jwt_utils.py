@@ -1,6 +1,7 @@
 import os
-import jwt
 from datetime import datetime, timedelta
+
+import jwt
 from fastapi import HTTPException
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'supersecret')

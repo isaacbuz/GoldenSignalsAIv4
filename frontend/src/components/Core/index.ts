@@ -1,6 +1,6 @@
 /**
  * Core Component Library
- * 
+ *
  * This file exports all core UI components that form the foundation
  * of the GoldenSignalsAI design system.
  */
@@ -35,4 +35,4 @@ export type { ButtonProps } from './Button';
 // export type { TooltipProps } from './Tooltip';
 
 // export { Table } from './Table';
-// export type { TableProps } from './Table'; 
+// export type { TableProps } from './Table';

@@ -398,4 +398,4 @@ export const formatPercentage = (value: number) => {
     }).format(value / 100);
 };
 
-export default professionalTheme; 
+export default professionalTheme;

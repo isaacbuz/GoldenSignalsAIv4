@@ -102,15 +102,15 @@ const CentralChart: React.FC<CentralChartProps> = ({
   const fetchChartData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Fetch historical data
       const response = await fetch(`/api/v1/market-data/${symbol}/historical?period=${timeframe}`);
       if (!response.ok) throw new Error('Failed to fetch market data');
-      
+
       const marketData = await response.json();
       setData(marketData.data || []);
-      
+
       // Fetch AI analysis
       const analysisResponse = await fetch(`/api/v1/signals/${symbol}/insights`);
       if (analysisResponse.ok) {
@@ -132,14 +132,14 @@ const CentralChart: React.FC<CentralChartProps> = ({
     const now = new Date();
     const data: CandlestickData[] = [];
     let basePrice = 150;
-    
+
     for (let i = 30; i >= 0; i--) {
       const date = new Date(now);
       date.setDate(date.getDate() - i);
-      
+
       const change = (Math.random() - 0.5) * 5;
       basePrice += change;
-      
+
       data.push({
         time: date.toISOString(),
         open: basePrice + (Math.random() - 0.5) * 2,
@@ -149,7 +149,7 @@ const CentralChart: React.FC<CentralChartProps> = ({
         volume: Math.floor(Math.random() * 1000000)
       });
     }
-    
+
     return data;
   };
 
@@ -329,29 +329,29 @@ const CentralChart: React.FC<CentralChartProps> = ({
             <CircularProgress />
           </Box>
         )}
-        
+
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
-        
+
         <Box sx={{ height: 'calc(100% - 100px)' }}>
           <Chart ref={chartRef} type='bar' data={chartData} options={chartOptions} />
         </Box>
-        
+
         <TradeSearch onSubmit={handleTradeSubmit} />
-        <ProphetOrb 
+        <ProphetOrb
           onAction={handleProphetAction}
           analysis={aiAnalysis}
           confidence={aiAnalysis?.confidence}
         />
-        <OptionsPanel 
+        <OptionsPanel
           onUpdate={handleOptionsUpdate}
           currentAnalysis={aiAnalysis}
         />
         {aiAnalysis && (
-          <AnalysisLegend 
+          <AnalysisLegend
             analysis={aiAnalysis}
             symbol={symbol}
           />

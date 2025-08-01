@@ -203,4 +203,4 @@ if [ "$1" = "--daemon" ]; then
 else
     print_status "Press Ctrl+C to stop all services"
     wait
-fi 
+fi

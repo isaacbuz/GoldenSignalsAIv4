@@ -260,4 +260,4 @@ describe('Button', () => {
             expect(button).toHaveAttribute('name', 'submit-button');
         });
     });
-}); 
+});

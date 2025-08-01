@@ -372,13 +372,17 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
       dispatch({ type: 'SET_LOADING', payload: true });
 
       // Start agent analysis
-      await analyzeSymbol(symbol);
+      await analyzeSymbol();
 
       if (analysisLevels) {
         setTradingLevels(analysisLevels);
 
-        // Update signals from real-time agents
-        setAgentSignals(realtimeAgents);
+        // Update signals from real-time agents - convert to array format
+        const signalsArray = Object.entries(realtimeAgents).map(([agentName, signal]) => ({
+          ...signal,
+          agent: agentName
+        }));
+        setAgentSignals(signalsArray);
 
         // Notify parent component
         if (onSymbolAnalyze) {
@@ -420,8 +424,12 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
         metadata: agentData.metadata || {},
       }));
 
-      // Update agent signals in context
-      setAgentSignals(newSignals);
+      // Update agent signals in context - convert to array format
+      const signalsArray = Object.entries(newSignals).map(([agentName, signal]) => ({
+        ...signal,
+        agent: agentName
+      }));
+      setAgentSignals(signalsArray);
     }
   }, [realtimeAgents, setAgentSignals]);
 
@@ -489,12 +497,12 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
 
       // Just ensure data types are correct without normalizing ranges
       const formattedData = data.map(candle => ({
-        time: typeof candle.time === 'number' ? candle.time : new Date(candle.time).getTime() / 1000,
-        open: parseFloat(candle.open),
-        high: parseFloat(candle.high),
-        low: parseFloat(candle.low),
-        close: parseFloat(candle.close),
-        volume: parseInt(candle.volume) || 0,
+        time: typeof candle.time === 'number' ? candle.time : new Date(candle.time as string).getTime() / 1000,
+        open: parseFloat(String(candle.open)),
+        high: parseFloat(String(candle.high)),
+        low: parseFloat(String(candle.low)),
+        close: parseFloat(String(candle.close)),
+        volume: parseInt(String(candle.volume)) || 0,
       }));
 
       // Apply normalization to fix large/unrealistic candlesticks
@@ -881,6 +889,8 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
         <Box sx={{ position: 'absolute', top: 80, left: 20, zIndex: 20 }}>
           <AgentProgressIndicator
             progress={progress}
+            currentStage={null}
+            messages={[]}
           />
         </Box>
       )}
@@ -898,7 +908,7 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
       {/* Loading Overlay */}
       {state.chartData.loading && (
         <LoadingOverlay
-          visible={true}
+          visible={state.chartData.loading}
           message={isAnalyzing ? 'AI agents analyzing market...' : 'Loading chart data...'}
           progress={isAnalyzing && progress ? progress : undefined}
         />
@@ -944,7 +954,7 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
               Make sure the backend is running on port 8000
             </Typography>
           </Box>
-        ) : isChartReady && dimensions.width > 0 && dimensions.height > 0 && state.chartData.data.length > 0 ? (
+        ) : isChartReady && dimensions.width > 0 && dimensions.height > 0 ? (
           <ChartCanvas
             ref={chartCanvasRef}
             data={state.chartData.data}
@@ -1036,9 +1046,9 @@ const AITradingChartContent: React.FC<AITradingChartProps> = ({
       {/* Agent Signal Overlay (legacy compatibility) */}
       {selectedIndicators.includes('agent-levels') && state.tradingLevels && (
         <AgentSignalOverlay
-          tradingLevels={state.tradingLevels}
-          containerRef={containerRef}
-          theme={theme}
+          agentSignals={{}}
+          workflowDecision={null}
+          onClose={() => {}}
         />
       )}
 

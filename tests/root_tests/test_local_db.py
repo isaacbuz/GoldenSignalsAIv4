@@ -33,25 +33,25 @@ async def test_asyncpg_connection():
             database=DB_NAME,
             timeout=5
         )
-        
+
         # Test query
         version = await conn.fetchval('SELECT version()')
         print(f"✅ Connected successfully!")
         print(f"   PostgreSQL version: {version}")
-        
+
         # Check if we can create tables
         can_create = await conn.fetchval("""
             SELECT has_database_privilege($1, 'CREATE')
         """, DB_NAME)
         print(f"   Can create objects: {can_create}")
-        
+
         # List existing tables
         tables = await conn.fetch("""
-            SELECT tablename FROM pg_tables 
+            SELECT tablename FROM pg_tables
             WHERE schemaname = 'public'
             ORDER BY tablename
         """)
-        
+
         if tables:
             print(f"\n📋 Existing tables ({len(tables)}):")
             for table in tables[:10]:  # Show first 10 tables
@@ -60,10 +60,10 @@ async def test_asyncpg_connection():
                 print(f"   ... and {len(tables) - 10} more")
         else:
             print("\n📋 No tables found (database is empty)")
-        
+
         await conn.close()
         return True
-        
+
     except Exception as e:
         print(f"❌ Connection failed: {type(e).__name__}: {e}")
         return False
@@ -79,12 +79,12 @@ async def test_sqlalchemy_connection():
             echo=False,
             pool_pre_ping=True
         )
-        
+
         # Test connection
         async with engine.connect() as conn:
             result = await conn.execute(text("SELECT 1"))
             print("✅ SQLAlchemy connection successful!")
-            
+
             # Check database size
             result = await conn.execute(text("""
                 SELECT pg_database_size(:dbname) as size
@@ -92,10 +92,10 @@ async def test_sqlalchemy_connection():
             size = result.scalar()
             size_mb = size / (1024 * 1024) if size else 0
             print(f"   Database size: {size_mb:.2f} MB")
-        
+
         await engine.dispose()
         return True
-        
+
     except Exception as e:
         print(f"❌ SQLAlchemy connection failed: {type(e).__name__}: {e}")
         return False
@@ -104,21 +104,21 @@ async def test_sqlalchemy_connection():
 async def create_tables_if_needed():
     """Create the necessary tables if they don't exist"""
     print("\n🔨 Checking/Creating required tables...")
-    
+
     engine = create_async_engine(SQLALCHEMY_URL, echo=False)
-    
+
     try:
         async with engine.begin() as conn:
             # Check if signals table exists
             result = await conn.execute(text("""
                 SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
+                    SELECT FROM information_schema.tables
+                    WHERE table_schema = 'public'
                     AND table_name = 'signals'
                 )
             """))
             signals_exists = result.scalar()
-            
+
             if not signals_exists:
                 print("   Creating signals table...")
                 await conn.execute(text("""
@@ -140,17 +140,17 @@ async def create_tables_if_needed():
                 print("   ✅ Signals table created")
             else:
                 print("   ✅ Signals table already exists")
-            
+
             # Create users table
             result = await conn.execute(text("""
                 SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
+                    SELECT FROM information_schema.tables
+                    WHERE table_schema = 'public'
                     AND table_name = 'users'
                 )
             """))
             users_exists = result.scalar()
-            
+
             if not users_exists:
                 print("   Creating users table...")
                 await conn.execute(text("""
@@ -168,17 +168,17 @@ async def create_tables_if_needed():
                 print("   ✅ Users table created")
             else:
                 print("   ✅ Users table already exists")
-            
+
             # Create portfolios table
             result = await conn.execute(text("""
                 SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
+                    SELECT FROM information_schema.tables
+                    WHERE table_schema = 'public'
                     AND table_name = 'portfolios'
                 )
             """))
             portfolios_exists = result.scalar()
-            
+
             if not portfolios_exists:
                 print("   Creating portfolios table...")
                 await conn.execute(text("""
@@ -196,7 +196,7 @@ async def create_tables_if_needed():
                 print("   ✅ Portfolios table created")
             else:
                 print("   ✅ Portfolios table already exists")
-            
+
     except Exception as e:
         print(f"   ❌ Error creating tables: {e}")
     finally:
@@ -211,15 +211,15 @@ async def main():
     print(f"\n📍 Host: {DB_HOST}")
     print(f"📍 Database: {DB_NAME}")
     print(f"📍 User: {DB_USER}")
-    
+
     # Test connections
     asyncpg_ok = await test_asyncpg_connection()
     sqlalchemy_ok = await test_sqlalchemy_connection()
-    
+
     if asyncpg_ok and sqlalchemy_ok:
         # Create tables
         await create_tables_if_needed()
-        
+
         print("\n" + "=" * 60)
         print("✅ All tests passed! Your local database is ready to use.")
         print("\n🎯 Next steps:")
@@ -235,4 +235,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

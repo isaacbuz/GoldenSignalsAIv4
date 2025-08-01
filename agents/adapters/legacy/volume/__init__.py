@@ -1,1 +1,1 @@
-from .obv import OBVLegacyAdapter  # noqa: F401 
+from .obv import OBVLegacyAdapter  # noqa: F401

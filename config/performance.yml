@@ -10,19 +10,19 @@ database:
     - signals_symbol_idx
     - agents_consensus_idx
 
-# Redis Optimization  
+# Redis Optimization
 redis:
   maxmemory: 2GB
   maxmemory_policy: allkeys-lru
   save: ""  # Disable persistence for speed
-  
+
 # Application Optimization
 application:
   worker_processes: auto
   worker_connections: 1024
   keepalive_timeout: 65
   send_timeout: 300
-  
+
 # Python Optimization
 python:
   PYTHONOPTIMIZE: 2

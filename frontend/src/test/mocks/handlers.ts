@@ -98,12 +98,12 @@ export const handlers = [
     const url = new URL(request.url)
     const period = url.searchParams.get('period') || '1d'
     const interval = url.searchParams.get('interval') || '5m'
-    
+
     // Generate mock historical data
     const dataPoints = []
     const now = Date.now()
     const intervalMs = interval === '5m' ? 5 * 60 * 1000 : 60 * 60 * 1000
-    
+
     for (let i = 0; i < 100; i++) {
       dataPoints.push({
         timestamp: new Date(now - i * intervalMs).toISOString(),
@@ -114,7 +114,7 @@ export const handlers = [
         volume: Math.floor(Math.random() * 1000000)
       })
     }
-    
+
     return HttpResponse.json({
       symbol: params.symbol,
       period,

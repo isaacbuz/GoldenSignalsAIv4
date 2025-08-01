@@ -45,4 +45,4 @@ echo ""
 echo "To stop: ./stop_production.sh"
 
 # Keep script running
-wait 
+wait

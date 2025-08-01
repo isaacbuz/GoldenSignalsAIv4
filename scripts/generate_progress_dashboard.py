@@ -9,7 +9,7 @@ from datetime import datetime
 
 def generate_dashboard():
     """Generate an HTML dashboard with progress visualization"""
-    
+
     # Load progress data
     progress_file = Path("progress_data.json")
     if progress_file.exists():
@@ -18,7 +18,7 @@ def generate_dashboard():
     else:
         print("No progress data found. Run 'python scripts/progress_tracker.py report' first.")
         return
-    
+
     # Calculate metrics
     total_tasks = sum(len(m["tasks"]) for m in data["milestones"].values())
     completed_tasks = sum(
@@ -27,7 +27,7 @@ def generate_dashboard():
         if t["progress"] == 100
     )
     overall_progress = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
-    
+
     # Generate HTML
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -123,7 +123,7 @@ def generate_dashboard():
             <h1>GoldenSignalsAI Progress Dashboard</h1>
             <p>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
         </div>
-        
+
         <div class="metrics">
             <div class="metric-card">
                 <div class="metric-value">{overall_progress:.1f}%</div>
@@ -142,20 +142,20 @@ def generate_dashboard():
                 <div class="metric-label">Components Created</div>
             </div>
         </div>
-        
+
         <div class="chart-container">
             <h2>Progress by Milestone</h2>
             <canvas id="progressChart" width="400" height="200"></canvas>
         </div>
-        
+
         <div class="chart-container">
             <h2>Task Status Distribution</h2>
             <canvas id="statusChart" width="400" height="200"></canvas>
         </div>
-        
+
         <h2>Milestone Details</h2>
 """
-    
+
     # Add milestone details
     for milestone_id, milestone in data["milestones"].items():
         tasks = milestone.get("tasks", {})
@@ -163,7 +163,7 @@ def generate_dashboard():
             progress = sum(t["progress"] for t in tasks.values()) / len(tasks)
         else:
             progress = 0
-        
+
         html += f"""
         <div class="milestone">
             <div class="milestone-header">
@@ -177,7 +177,7 @@ def generate_dashboard():
             <p>{progress:.1f}% Complete</p>
         </div>
 """
-    
+
     # Add chart data
     milestone_names = [m["name"] for m in data["milestones"].values()]
     milestone_progress = []
@@ -188,7 +188,7 @@ def generate_dashboard():
         else:
             progress = 0
         milestone_progress.append(progress)
-    
+
     # Count task statuses
     status_counts = {"done": 0, "in_progress": 0, "planned": 0, "blocked": 0}
     for m in data["milestones"].values():
@@ -196,10 +196,10 @@ def generate_dashboard():
             status = t.get("status", "planned")
             if status in status_counts:
                 status_counts[status] += 1
-    
+
     html += f"""
     </div>
-    
+
     <script>
         // Progress by Milestone Chart
         const progressCtx = document.getElementById('progressChart').getContext('2d');
@@ -224,7 +224,7 @@ def generate_dashboard():
                 }}
             }}
         }});
-        
+
         // Task Status Chart
         const statusCtx = document.getElementById('statusChart').getContext('2d');
         new Chart(statusCtx, {{
@@ -246,15 +246,15 @@ def generate_dashboard():
 </body>
 </html>
 """
-    
+
     # Save dashboard
     dashboard_path = Path("progress_dashboard.html")
     with open(dashboard_path, 'w') as f:
         f.write(html)
-    
+
     print(f"✅ Dashboard generated: {dashboard_path.absolute()}")
     print(f"📊 Overall Progress: {overall_progress:.1f}%")
     print(f"📈 Tasks Completed: {completed_tasks}/{total_tasks}")
 
 if __name__ == "__main__":
-    generate_dashboard() 
+    generate_dashboard()

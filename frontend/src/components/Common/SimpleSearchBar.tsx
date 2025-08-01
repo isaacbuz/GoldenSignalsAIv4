@@ -56,31 +56,36 @@ export const SimpleSearchBar: React.FC<SimpleSearchBarProps> = ({
             <Paper
                 component="form"
                 onSubmit={handleSubmit}
+                elevation={0}
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    borderRadius: 3,
-                    border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                    backgroundColor: alpha(theme.palette.background.paper, 0.9),
-                    backdropFilter: 'blur(10px)',
-                    px: 2,
-                    py: 1,
-                    transition: 'all 0.2s',
+                    borderRadius: '12px',
+                    border: `1px solid ${alpha('#FFD700', 0.15)}`,
+                    backgroundColor: alpha(theme.palette.background.paper, 0.6),
+                    backdropFilter: 'blur(16px)',
+                    px: 2.5,
+                    py: 1.25,
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.6)} 100%)`,
                     '&:hover': {
-                        borderColor: alpha(theme.palette.primary.main, 0.3),
-                        boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
+                        borderColor: alpha(theme.palette.primary.main, 0.4),
+                        boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.15)}`,
+                        transform: 'translateY(-1px)',
                     },
                     '&:focus-within': {
                         borderColor: theme.palette.primary.main,
-                        boxShadow: `0 2px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.25)}, inset 0 0 20px ${alpha(theme.palette.primary.main, 0.05)}`,
+                        transform: 'translateY(-1px)',
                     },
                 }}
             >
                 <SearchIcon
                     sx={{
-                        color: theme.palette.text.secondary,
+                        color: alpha(theme.palette.primary.main, 0.6),
                         mr: 1.5,
-                        fontSize: 20,
+                        fontSize: 22,
+                        transition: 'color 0.3s',
                     }}
                 />
 
@@ -91,12 +96,13 @@ export const SimpleSearchBar: React.FC<SimpleSearchBarProps> = ({
                     sx={{
                         flex: 1,
                         '& .MuiInputBase-input': {
-                            fontSize: '0.95rem',
+                            fontSize: '0.925rem',
                             fontWeight: 500,
+                            letterSpacing: '0.01em',
                             color: theme.palette.text.primary,
                             '&::placeholder': {
-                                color: theme.palette.text.secondary,
-                                opacity: 0.7,
+                                color: alpha(theme.palette.text.secondary, 0.6),
+                                opacity: 1,
                             },
                         },
                     }}
@@ -117,4 +123,4 @@ export const SimpleSearchBar: React.FC<SimpleSearchBarProps> = ({
             </Paper>
         </Box>
     );
-}; 
+};

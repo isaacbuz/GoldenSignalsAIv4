@@ -11,7 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-sys.path.append('..')
+sys.path.append("..")
 from demo_signal_system import DemoSignalGenerator
 
 app = FastAPI(title="GoldenSignalsAI", version="3.0")
@@ -24,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Signal model
 class Signal(BaseModel):
@@ -41,8 +42,10 @@ class Signal(BaseModel):
     reasoning: str
     signal_strength: str
 
+
 # Initialize generator
 signal_generator = DemoSignalGenerator()
+
 
 @app.get("/")
 def read_root():
@@ -53,60 +56,62 @@ def read_root():
         "endpoints": {
             "/signals/{symbol}": "Get signal for specific symbol",
             "/signals": "Get signals for all symbols",
-            "/health": "API health check"
-        }
+            "/health": "API health check",
+        },
     }
+
 
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
+
 @app.get("/signals/{symbol}", response_model=Signal)
 def get_signal(symbol: str):
     """Get trading signal for a specific symbol"""
     symbol = symbol.upper()
-    
+
     try:
         signal = signal_generator.generate_demo_signal(symbol)
         return signal
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/signals", response_model=List[Signal])
 def get_all_signals():
     """Get signals for all tracked symbols"""
     signals = []
-    
+
     for symbol in signal_generator.symbols:
         try:
             signal = signal_generator.generate_demo_signal(symbol)
             signals.append(signal)
         except Exception as e:
             print(f"Error generating signal for {symbol}: {e}")
-    
+
     return signals
+
 
 @app.post("/signals/custom")
 def get_custom_signals(symbols: List[str]):
     """Get signals for custom list of symbols"""
     signals = []
-    
+
     for symbol in symbols:
         try:
             signal = signal_generator.generate_demo_signal(symbol.upper())
             signals.append(signal)
         except Exception as e:
-            signals.append({
-                "symbol": symbol,
-                "error": str(e),
-                "signal": "ERROR"
-            })
-    
+            signals.append({"symbol": symbol, "error": str(e), "signal": "ERROR"})
+
     return signals
+
 
 if __name__ == "__main__":
     import uvicorn
+
     print("🚀 Starting GoldenSignalsAI Signal API...")
     print("📍 Access at: http://localhost:8000")
     print("📚 API Docs: http://localhost:8000/docs")
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    uvicorn.run(app, host="0.0.0.0", port=8000)

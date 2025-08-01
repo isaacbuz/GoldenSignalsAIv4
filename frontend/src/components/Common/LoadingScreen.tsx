@@ -1,6 +1,6 @@
 /**
  * Loading Screen Component
- * 
+ *
  * Full-screen loading indicator for app initialization and page transitions
  */
 
@@ -48,4 +48,4 @@ export default function LoadingScreen({ message = 'Loading...' }: LoadingScreenP
       </Box>
     </Box>
   );
-} 
+}

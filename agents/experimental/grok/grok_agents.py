@@ -3,7 +3,7 @@ grok_agents.py
 
 Usage:
     from agents.grok_agents import GrokBacktestCritic, GrokSentimentAgent, GrokStrategyAgent
-    
+
     # Example
     critic = GrokBacktestCritic(api_key="...")
     suggestions = critic.critique(logic, win_rate, avg_return)
@@ -14,8 +14,10 @@ Includes:
 - GrokSentimentAgent: provides real-time sentiment scoring
 - GrokStrategyAgent: generates trading logic pseudocode
 """
+from typing import Any, Dict, List
+
 import requests
-from typing import List, Dict, Any
+
 
 class GrokBacktestCritic:
     """

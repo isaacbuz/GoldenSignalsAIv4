@@ -4,10 +4,9 @@ Purpose: Implements a ReversionAgent that identifies mean-reversion opportunitie
 """
 
 import logging
+from typing import Any, Dict
 
 import pandas as pd
-from typing import Dict, Any
-
 from agents.base import BaseAgent
 
 # Configure logging with JSON-like format
@@ -30,7 +29,14 @@ class ReversionAgent(BaseAgent):
         - "bollinger": ReversionAgent.bollinger_bands_factor
     """
 
-    def __init__(self, trade_horizon: str = "swing", mean_reversion_window: int = None, z_score_threshold: float = 2.0, use_volatility_adjustment: bool = True, custom_factors: Dict[str, Any] = None):
+    def __init__(
+        self,
+        trade_horizon: str = "swing",
+        mean_reversion_window: int = None,
+        z_score_threshold: float = 2.0,
+        use_volatility_adjustment: bool = True,
+        custom_factors: Dict[str, Any] = None,
+    ):
         """Initialize the ReversionAgent.
 
         Args:
@@ -58,7 +64,7 @@ class ReversionAgent(BaseAgent):
     @staticmethod
     def rsi_factor(df: pd.DataFrame, period: int = 14) -> float:
         """Calculate RSI (Relative Strength Index) for the last value."""
-        delta = df['Close'].diff()
+        delta = df["Close"].diff()
         gain = delta.clip(lower=0).rolling(period).mean()
         loss = -delta.clip(upper=0).rolling(period).mean()
         rs = gain / (loss + 1e-9)
@@ -68,27 +74,27 @@ class ReversionAgent(BaseAgent):
     @staticmethod
     def momentum_factor(df: pd.DataFrame, window: int = 10) -> bool:
         """Detect positive momentum (last close > mean of window). Returns True if momentum is positive."""
-        if len(df['Close']) < window + 1:
+        if len(df["Close"]) < window + 1:
             return False
-        if df['Close'].iloc[-1] > df['Close'].iloc[-window-1:-1].mean():
+        if df["Close"].iloc[-1] > df["Close"].iloc[-window - 1 : -1].mean():
             return True
         return False
 
     @staticmethod
     def volume_spike_factor(df: pd.DataFrame, window: int = 20, spike_ratio: float = 2.0) -> bool:
         """Detect volume spike (last volume > spike_ratio * mean of window). Returns True if spike detected."""
-        if 'Volume' not in df or len(df['Volume']) < window + 1:
+        if "Volume" not in df or len(df["Volume"]) < window + 1:
             return False
-        mean_vol = df['Volume'].iloc[-window-1:-1].mean()
-        if mean_vol > 0 and df['Volume'].iloc[-1] > spike_ratio * mean_vol:
+        mean_vol = df["Volume"].iloc[-window - 1 : -1].mean()
+        if mean_vol > 0 and df["Volume"].iloc[-1] > spike_ratio * mean_vol:
             return True
         return False
 
     @staticmethod
     def macd_factor(df: pd.DataFrame, fast: int = 12, slow: int = 26, signal: int = 9) -> float:
         """Calculate MACD (Moving Average Convergence Divergence) histogram value for the last bar."""
-        ema_fast = df['Close'].ewm(span=fast, adjust=False).mean()
-        ema_slow = df['Close'].ewm(span=slow, adjust=False).mean()
+        ema_fast = df["Close"].ewm(span=fast, adjust=False).mean()
+        ema_slow = df["Close"].ewm(span=slow, adjust=False).mean()
         macd_line = ema_fast - ema_slow
         signal_line = macd_line.ewm(span=signal, adjust=False).mean()
         macd_hist = macd_line - signal_line
@@ -97,27 +103,27 @@ class ReversionAgent(BaseAgent):
     @staticmethod
     def bollinger_bands_factor(df: pd.DataFrame, window: int = 20, num_std: float = 2.0) -> str:
         """Detect if price is above upper band, below lower, or within Bollinger Bands. Returns 'above', 'below', or 'within'."""
-        if len(df['Close']) < window:
-            return 'within'
-        rolling_mean = df['Close'].rolling(window).mean()
-        rolling_std = df['Close'].rolling(window).std()
+        if len(df["Close"]) < window:
+            return "within"
+        rolling_mean = df["Close"].rolling(window).mean()
+        rolling_std = df["Close"].rolling(window).std()
         upper_band = rolling_mean + num_std * rolling_std
         lower_band = rolling_mean - num_std * rolling_std
-        price = df['Close'].iloc[-1]
+        price = df["Close"].iloc[-1]
         if price > upper_band.iloc[-1]:
-            return 'above'
+            return "above"
         elif price < lower_band.iloc[-1]:
-            return 'below'
+            return "below"
         else:
-            return 'within'
+            return "within"
 
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Trading signal to process.
-        
+
         Returns:
             Dict[str, Any]: Processed trading signal with potential modifications.
         """
@@ -134,7 +140,9 @@ class ReversionAgent(BaseAgent):
         Returns:
             Dict: Decision with 'action', 'confidence', and 'metadata'.
         """
-        logger.info({"message": f"Processing data for ReversionAgent (horizon={self.trade_horizon})"})
+        logger.info(
+            {"message": f"Processing data for ReversionAgent (horizon={self.trade_horizon})"}
+        )
         try:
             stock_data = pd.DataFrame(data["stock_data"])
             if stock_data.empty:
@@ -143,18 +151,24 @@ class ReversionAgent(BaseAgent):
 
             prices = stock_data["Close"]
             if len(prices) < self.mean_reversion_window:
-                logger.warning({
-                    "message": f"Insufficient data: {len(prices)} < {self.mean_reversion_window}"
-                })
+                logger.warning(
+                    {"message": f"Insufficient data: {len(prices)} < {self.mean_reversion_window}"}
+                )
                 return {"action": "hold", "confidence": 0.0, "metadata": {}}
 
             # --- Volatility Adjustment ---
             if self.use_volatility_adjustment:
                 returns = prices.pct_change().dropna()
-                recent_vol = returns[-self.mean_reversion_window:].std() if len(returns) >= self.mean_reversion_window else returns.std()
+                recent_vol = (
+                    returns[-self.mean_reversion_window :].std()
+                    if len(returns) >= self.mean_reversion_window
+                    else returns.std()
+                )
                 # ATR or stddev can be used; here we use stddev of returns
-                window_adj = int(self.mean_reversion_window * (1 + recent_vol*5))
-                threshold_adj = 0.01 + recent_vol if self.trade_horizon == "day" else 0.05 + recent_vol
+                window_adj = int(self.mean_reversion_window * (1 + recent_vol * 5))
+                threshold_adj = (
+                    0.01 + recent_vol if self.trade_horizon == "day" else 0.05 + recent_vol
+                )
                 window = max(3, min(window_adj, len(prices)))
                 threshold = min(0.1, threshold_adj)
             else:
@@ -210,14 +224,18 @@ class ReversionAgent(BaseAgent):
                     "threshold": threshold,
                     "window": window,
                     "volatility": float(recent_vol) if self.use_volatility_adjustment else None,
-                    **factors
+                    **factors,
                 },
             }
             logger.info({"message": f"ReversionAgent decision: {decision}"})
             return decision
         except Exception as e:
             logger.error({"message": f"ReversionAgent processing failed: {str(e)}"})
-            return {"action": "hold", "confidence": 0.0, "metadata": {"error": str(e), "signal_type": self.trade_horizon}}
+            return {
+                "action": "hold",
+                "confidence": 0.0,
+                "metadata": {"error": str(e), "signal_type": self.trade_horizon},
+            }
 
     def adapt(self, new_data: pd.DataFrame):
         """Adapt the agent to new market data (placeholder for learning).
@@ -241,7 +259,7 @@ class ReversionAgent(BaseAgent):
         logger.info({"message": "Backtesting ReversionAgent..."})
         results = []
         for i in range(self.mean_reversion_window, len(historical_data)):
-            window_data = historical_data.iloc[:i+1]
+            window_data = historical_data.iloc[: i + 1]
             signal = self.process({"stock_data": window_data})
             results.append(signal)
         # Simple PnL calculation: +1 for correct direction, -1 for wrong, 0 for hold
@@ -249,7 +267,7 @@ class ReversionAgent(BaseAgent):
         trades = 0
         wins = 0
         for i, sig in enumerate(results[:-1]):
-            next_price = historical_data["Close"].iloc[i+1]
+            next_price = historical_data["Close"].iloc[i + 1]
             curr_price = historical_data["Close"].iloc[i]
             if sig["action"] == "buy":
                 trades += 1

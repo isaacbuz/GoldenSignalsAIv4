@@ -41,8 +41,10 @@ class MarketRegimeDetector:
 
     def apply_to_series(self, df: pd.DataFrame, price_col: str = "close") -> pd.DataFrame:
         df = df.copy()
-        df["regime"] = df[price_col].rolling(self.volatility_window).apply(
-            lambda x: self._map_vol_to_regime(np.std(np.diff(np.log(x)))), raw=False
+        df["regime"] = (
+            df[price_col]
+            .rolling(self.volatility_window)
+            .apply(lambda x: self._map_vol_to_regime(np.std(np.diff(np.log(x)))), raw=False)
         )
         return df
 

@@ -10,7 +10,7 @@ services:
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
     networks:
       - goldensignals
-      
+
 networks:
   goldensignals:
     external: true

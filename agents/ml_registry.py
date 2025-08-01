@@ -11,15 +11,18 @@ Features:
 - Model comparison
 - Experiment management
 """
-import os
 import json
-import mlflow
-import torch
-import numpy as np
-from typing import Dict, Any, Optional, List
+import os
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import mlflow
+import numpy as np
+import torch
+
 from src.infrastructure.config_manager import config_manager
 from src.infrastructure.monitoring import system_monitoring
+
 
 class ModelRegistry:
     """
@@ -29,7 +32,7 @@ class ModelRegistry:
         mlflow_tracking_uri = config_manager.get('ml.mlflow.tracking_uri', 'sqlite:///mlflow.db')
         mlflow.set_tracking_uri(mlflow_tracking_uri)
         self.model_base_path = config_manager.get(
-            'ml.model_storage_path', 
+            'ml.model_storage_path',
             os.path.join(os.path.dirname(__file__), 'models')
         )
         os.makedirs(self.model_base_path, exist_ok=True)

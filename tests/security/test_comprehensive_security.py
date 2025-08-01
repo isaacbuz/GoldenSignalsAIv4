@@ -16,7 +16,7 @@ def test_rate_limiting():
     # Make multiple rapid requests
     for _ in range(100):
         response = client.get("/health")
-    
+
     # Should not be rate limited for health endpoint
     assert response.status_code == 200
 
@@ -25,7 +25,7 @@ def test_input_validation():
     # Test SQL injection attempt
     malicious_input = "'; DROP TABLE users; --"
     response = client.post("/api/v1/signals", json={"symbol": malicious_input})
-    
+
     # Should handle gracefully (either 400 or sanitized)
     assert response.status_code in [200, 400, 422]
 

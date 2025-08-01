@@ -107,4 +107,4 @@ global.requestAnimationFrame = (cb: any) => {
 
 // Mock URL.createObjectURL
 global.URL.createObjectURL = jest.fn(() => 'mock-url');
-global.URL.revokeObjectURL = jest.fn(); 
+global.URL.revokeObjectURL = jest.fn();

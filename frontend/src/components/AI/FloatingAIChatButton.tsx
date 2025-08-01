@@ -1,6 +1,6 @@
 /**
  * Floating AI Chat Button Component
- * 
+ *
  * A modern floating action button that toggles the AI chat assistant
  * Features:
  * - Fixed position bottom-right
@@ -183,4 +183,4 @@ export const FloatingAIChatButton: React.FC<FloatingAIChatButtonProps> = ({
             </Badge>
         </Box>
     );
-}; 
+};

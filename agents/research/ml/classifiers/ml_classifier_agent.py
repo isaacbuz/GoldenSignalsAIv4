@@ -1,7 +1,8 @@
 import logging
-from typing import Optional, Any
-import pandas as pd
+from typing import Any, Optional
+
 import joblib
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 

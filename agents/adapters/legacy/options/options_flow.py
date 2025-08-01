@@ -1,12 +1,13 @@
-from starlette.concurrency import run_in_threadpool
 from typing import Any, Dict, List, Optional
 
-from agents.base import BaseAgent, AgentConfig
-from src.ml.models.signals import Signal
-from src.utils.legacy_mapper import legacy_output_to_signal
+from agents.base import AgentConfig, BaseAgent
 
 # Legacy implementation path
 from agents.research.ml.options_flow import OptionsFlowAgent as LegacyOptionsFlowAgent
+from starlette.concurrency import run_in_threadpool
+
+from src.ml.models.signals import Signal
+from src.utils.legacy_mapper import legacy_output_to_signal
 
 
 class OptionsFlowLegacyAdapter(BaseAgent):
@@ -54,4 +55,4 @@ class OptionsFlowLegacyAdapter(BaseAgent):
         )
 
     def get_required_data_types(self):
-        return ["options_flow"] 
+        return ["options_flow"]

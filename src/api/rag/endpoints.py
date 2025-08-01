@@ -6,15 +6,18 @@ from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/api/rag", tags=["rag"])
 
+
 @router.post("/query")
 async def query_rag(query: Dict[str, Any]):
     """Query RAG system"""
     return {"results": [], "confidence": 0.0}
 
+
 @router.get("/patterns/{symbol}")
 async def get_patterns(symbol: str):
     """Get historical patterns for symbol"""
     return {"patterns": []}
+
 
 @router.get("/regime")
 async def get_market_regime():

@@ -22,6 +22,7 @@ router = APIRouter(prefix="/logs", tags=["logging"])
 LOG_DIR = Path("logs/frontend")
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
+
 class LogEntry(BaseModel):
     timestamp: str
     level: str
@@ -32,10 +33,12 @@ class LogEntry(BaseModel):
     userAgent: str
     url: str
 
+
 class LogBatch(BaseModel):
     logs: List[LogEntry]
     sessionId: str
     timestamp: str
+
 
 @router.post("/frontend")
 async def receive_frontend_logs(batch: LogBatch):
@@ -46,7 +49,7 @@ async def receive_frontend_logs(batch: LogBatch):
         # Create filename with date and session
         date_str = datetime.now().strftime("%Y%m%d")
         filename = LOG_DIR / f"frontend-{date_str}-{batch.sessionId}.log"
-        
+
         # Append logs to file
         with open(filename, "a") as f:
             for log_entry in batch.logs:
@@ -59,10 +62,10 @@ async def receive_frontend_logs(batch: LogBatch):
                     "stack": log_entry.stack,
                     "userAgent": log_entry.userAgent,
                     "url": log_entry.url,
-                    "sessionId": batch.sessionId
+                    "sessionId": batch.sessionId,
                 }
                 f.write(json.dumps(log_line) + "\n")
-        
+
         # Also write to a consolidated error log if there are errors
         errors = [log for log in batch.logs if log.level == "error"]
         if errors:
@@ -76,17 +79,18 @@ async def receive_frontend_logs(batch: LogBatch):
                         "data": error.data,
                         "stack": error.stack,
                         "url": error.url,
-                        "sessionId": batch.sessionId
+                        "sessionId": batch.sessionId,
                     }
                     f.write(json.dumps(error_line) + "\n")
-        
+
         logger.info(f"Received {len(batch.logs)} frontend logs for session {batch.sessionId}")
-        
+
         return {"status": "success", "count": len(batch.logs)}
-    
+
     except Exception as e:
         logger.error(f"Error storing frontend logs: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to store logs")
+
 
 @router.get("/frontend/recent")
 async def get_recent_logs(limit: int = 100):
@@ -97,7 +101,7 @@ async def get_recent_logs(limit: int = 100):
         # Find today's log files
         date_str = datetime.now().strftime("%Y%m%d")
         log_files = list(LOG_DIR.glob(f"frontend-{date_str}-*.log"))
-        
+
         all_logs = []
         for log_file in log_files:
             with open(log_file, "r") as f:
@@ -107,15 +111,16 @@ async def get_recent_logs(limit: int = 100):
                         all_logs.append(log_entry)
                     except json.JSONDecodeError:
                         continue
-        
+
         # Sort by timestamp and return most recent
-        all_logs.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
-        
+        all_logs.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+
         return all_logs[:limit]
-    
+
     except Exception as e:
         logger.error(f"Error reading frontend logs: {str(e)}")
         return []
+
 
 @router.delete("/frontend/clear")
 async def clear_frontend_logs():
@@ -125,9 +130,9 @@ async def clear_frontend_logs():
     try:
         for log_file in LOG_DIR.glob("frontend-*.log"):
             log_file.unlink()
-        
+
         return {"status": "success", "message": "All frontend logs cleared"}
-    
+
     except Exception as e:
         logger.error(f"Error clearing frontend logs: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to clear logs") 
+        raise HTTPException(status_code=500, detail="Failed to clear logs")

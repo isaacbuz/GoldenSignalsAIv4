@@ -1,6 +1,6 @@
 /**
  * Golden Eye AI Prophet Widget
- * 
+ *
  * Simplified floating mystical orb with preserved animations.
  * The heart of the Golden Eye AI Prophet experience.
  */
@@ -202,4 +202,4 @@ export const GoldenEyeWidget: React.FC<GoldenEyeWidgetProps> = ({
     );
 };
 
-export default GoldenEyeWidget; 
+export default GoldenEyeWidget;

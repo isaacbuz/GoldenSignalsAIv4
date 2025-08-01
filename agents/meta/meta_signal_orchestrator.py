@@ -1,6 +1,7 @@
 from agents.agent_registry import AgentRegistry
 from agents.meta.meta_ensembler import MetaEnsembler
 
+
 class MetaSignalOrchestrator:
     def __init__(self, mode="swing"):
         self.registry = AgentRegistry(mode=mode)

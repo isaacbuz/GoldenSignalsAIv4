@@ -1,6 +1,6 @@
 /**
  * Golden Eye AI Prophet Theme
- * 
+ *
  * Mystical theme for the AI Prophet experience.
  * Preserves the magical golden eye aesthetic.
  */
@@ -35,19 +35,19 @@ export const goldenEyeAnimations = {
     // Floating orb animations
     etherealGlow: keyframes`
     0% {
-      box-shadow: 
+      box-shadow:
         0 0 20px ${alpha(goldenEyeColors.primary, 0.4)},
         0 0 40px ${alpha(goldenEyeColors.primary, 0.2)},
         0 0 60px ${alpha(goldenEyeColors.mystical, 0.1)};
     }
     50% {
-      box-shadow: 
+      box-shadow:
         0 0 30px ${alpha(goldenEyeColors.primary, 0.6)},
         0 0 50px ${alpha(goldenEyeColors.primary, 0.3)},
         0 0 80px ${alpha(goldenEyeColors.mystical, 0.2)};
     }
     100% {
-      box-shadow: 
+      box-shadow:
         0 0 20px ${alpha(goldenEyeColors.primary, 0.4)},
         0 0 40px ${alpha(goldenEyeColors.primary, 0.2)},
         0 0 60px ${alpha(goldenEyeColors.mystical, 0.1)};
@@ -241,4 +241,4 @@ export const prophetMessages = [
     "The eye sees what others cannot...",
 ];
 
-export default goldenEyeTheme; 
+export default goldenEyeTheme;

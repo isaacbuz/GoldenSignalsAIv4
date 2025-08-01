@@ -1,6 +1,6 @@
 /**
  * UI Design System Showcase
- * 
+ *
  * This component demonstrates all the key visual elements
  * of the GoldenSignalsAI professional redesign
  */
@@ -458,4 +458,4 @@ export const UIShowcase: React.FC = () => {
             </style>
         </Box>
     );
-}; 
+};

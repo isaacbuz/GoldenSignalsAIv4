@@ -204,4 +204,4 @@ grafana:
         type: prometheus
         url: http://prometheus-server
         access: proxy
-        isDefault: true 
+        isDefault: true

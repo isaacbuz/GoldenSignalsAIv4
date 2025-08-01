@@ -1,6 +1,6 @@
 /**
  * MarketHeatMap Component - Interactive Market Visualization
- * 
+ *
  * A beautiful, interactive heat map showing market sectors and stocks
  * with real-time performance data and drill-down capabilities
  */
@@ -629,4 +629,4 @@ const MarketHeatMap: React.FC<MarketHeatMapProps> = ({
     );
 };
 
-export default MarketHeatMap; 
+export default MarketHeatMap;

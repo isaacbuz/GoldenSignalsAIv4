@@ -14,7 +14,7 @@ class AuditLogger:
             "actor": actor,
             "action": action,
             "status": status,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
         with self.log_file.open("a") as f:
             f.write(json.dumps(entry) + "\n")

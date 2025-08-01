@@ -12,21 +12,23 @@ class BacktestResult:
         self.equity = equity
         self.metrics = metrics
 
+
 class BacktestEngine:
     """
     Unified backtest engine for GoldenSignalsAI. Loads all parameters from config/parameters.yaml, uses strategy/model registries, and advanced error handling.
     """
-    def __init__(self, price_df, signal_series, config_path='config/parameters.yaml'):
-        self.price = price_df['close']
+
+    def __init__(self, price_df, signal_series, config_path="config/parameters.yaml"):
+        self.price = price_df["close"]
         self.signal = signal_series
         self.initial_capital = 10000
         self.commission = 0.001
         self.slippage = 0.0005
         # Load config
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             self.config = yaml.safe_load(f)
-        self.strategy_params = self.config.get('strategies', {})
-        self.model_params = self.config.get('models', {})
+        self.strategy_params = self.config.get("strategies", {})
+        self.model_params = self.config.get("models", {})
 
     def run(self) -> BacktestResult:
         """
@@ -43,7 +45,11 @@ class BacktestEngine:
             equity = (1 + net_returns).cumprod() * self.initial_capital
             # Compute metrics
             total_return = equity.iloc[-1] / self.initial_capital - 1
-            sharpe_ratio = net_returns.mean() / net_returns.std() * (252 ** 0.5) if net_returns.std() != 0 else 0
+            sharpe_ratio = (
+                net_returns.mean() / net_returns.std() * (252**0.5)
+                if net_returns.std() != 0
+                else 0
+            )
             max_drawdown = (equity - equity.cummax()).min()
             # Win/loss stats
             wins = (net_returns > 0).sum()
@@ -59,17 +65,18 @@ class BacktestEngine:
                 "num_trades": int(len(net_returns)),
                 "slippage": float(self.slippage),
                 "commission": float(self.commission),
-                "position_size": float(1.0)
+                "position_size": float(1.0),
             }
             return BacktestResult(equity=equity, metrics=metrics)
         except Exception as e:
             ErrorHandler.handle_error(e)
             raise
 
+
 # Example usage
 if __name__ == "__main__":
     # Load data
-    data = pd.read_csv('data.csv')
+    data = pd.read_csv("data.csv")
     # Create signal series
     signal = pd.Series([1, -1, 0, 1, -1, 0])
     # Create backtest engine

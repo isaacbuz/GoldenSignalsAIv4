@@ -292,4 +292,4 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
             </Box>
         </Drawer>
     );
-}; 
+};

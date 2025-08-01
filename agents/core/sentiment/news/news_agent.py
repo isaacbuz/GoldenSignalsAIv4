@@ -1,6 +1,8 @@
+from typing import Dict, List
+
 import requests
 from textblob import TextBlob
-from typing import List, Dict
+
 
 class NewsSentimentAgent:
     def __init__(self, api_key: str):

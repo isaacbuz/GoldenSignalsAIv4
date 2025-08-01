@@ -305,4 +305,4 @@ export const ModernTopBar: React.FC<ModernTopBarProps> = ({
             </Toolbar>
         </AppBar>
     );
-}; 
+};

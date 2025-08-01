@@ -75,4 +75,4 @@ export const goldenTheme = createTheme({
     },
 });
 
-export default goldenTheme; 
+export default goldenTheme;

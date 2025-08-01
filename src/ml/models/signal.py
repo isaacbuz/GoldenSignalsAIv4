@@ -20,9 +20,7 @@ class TradingSignal(BaseModel):
 
     symbol: str = Field(..., description="Stock symbol (e.g., 'AAPL')")
     action: str = Field(..., description="Trading action ('buy', 'sell', 'hold')")
-    confidence: float = Field(
-        ..., ge=0.0, le=1.0, description="Confidence score (0 to 1)"
-    )
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence score (0 to 1)")
     ai_score: float = Field(..., description="AI prediction score")
     indicator_score: float = Field(..., description="Technical indicator score")
     final_score: float = Field(..., description="Final combined score")
@@ -31,9 +29,7 @@ class TradingSignal(BaseModel):
         ..., description="User risk profile ('conservative', 'balanced', 'aggressive')"
     )
     indicators: List[str] = Field(..., description="List of indicators used")
-    metadata: Dict = Field(
-        default_factory=dict, description="Additional metadata (e.g., regime)"
-    )
+    metadata: Dict = Field(default_factory=dict, description="Additional metadata (e.g., regime)")
 
     class Config:
         """Pydantic configuration for validation."""
@@ -53,14 +49,10 @@ class TradingSignal(BaseModel):
             if self.risk_profile not in ["conservative", "balanced", "aggressive"]:
                 raise ValueError(f"Invalid risk profile: {self.risk_profile}")
             self.validate()
-            logger.debug(
-                {"message": f"Trading signal validated successfully for {self.symbol}"}
-            )
+            logger.debug({"message": f"Trading signal validated successfully for {self.symbol}"})
             return True
         except Exception as e:
             logger.error(
-                {
-                    "message": f"Trading signal validation failed for {self.symbol}: {str(e)}"
-                }
+                {"message": f"Trading signal validation failed for {self.symbol}: {str(e)}"}
             )
             return False

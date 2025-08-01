@@ -54,8 +54,8 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
   const expirations = Array.from(new Set(chain.map(c => c.expiration))).sort();
 
   // Filter chain by expiration
-  const filteredChain = selectedExpiration === 'all' 
-    ? chain 
+  const filteredChain = selectedExpiration === 'all'
+    ? chain
     : chain.filter(c => c.expiration === selectedExpiration);
 
   // Identify unusual activity
@@ -90,7 +90,7 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
               Current Price: <span className="text-white font-medium">${currentPrice.toFixed(2)}</span>
             </p>
           </div>
-          
+
           {/* View Mode Selector */}
           <div className="flex bg-gray-800 rounded-lg p-1">
             {['standard', 'greeks', 'flow'].map((mode) => (
@@ -146,12 +146,12 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
               <th colSpan={viewMode === 'greeks' ? 7 : 6} className="text-center py-3 text-green-400 font-semibold border-r border-gray-700">
                 CALLS
               </th>
-              
+
               {/* Strike Header */}
               <th className="text-center py-3 text-white font-semibold px-4">
                 STRIKE
               </th>
-              
+
               {/* Puts Header */}
               <th colSpan={viewMode === 'greeks' ? 7 : 6} className="text-center py-3 text-red-400 font-semibold border-l border-gray-700">
                 PUTS
@@ -166,10 +166,10 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
               <th className="py-2 px-2 text-right">Vol</th>
               <th className="py-2 px-2 text-right">OI</th>
               <th className="py-2 px-2 text-right border-r border-gray-700">IV</th>
-              
+
               {/* Strike column */}
               <th className="py-2 px-4"></th>
-              
+
               {/* Puts columns */}
               <th className="py-2 px-2 text-left border-l border-gray-700">IV</th>
               <th className="py-2 px-2 text-left">OI</th>
@@ -184,9 +184,9 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
             {filteredChain.map((contract) => {
               const callUnusual = isUnusualActivity(contract.call.volume, contract.call.openInterest);
               const putUnusual = isUnusualActivity(contract.put.volume, contract.put.openInterest);
-              
+
               return (
-                <tr 
+                <tr
                   key={`${contract.strike}-${contract.expiration}`}
                   className={`border-b border-gray-800 hover:bg-gray-800/30 transition-colors ${getStrikeStyle(contract.strike)}`}
                 >
@@ -227,7 +227,7 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
                   <td className="py-2 px-2 text-right text-sm text-gray-300 border-r border-gray-700">
                     {(contract.call.impliedVolatility * 100).toFixed(1)}%
                   </td>
-                  
+
                   {/* Strike */}
                   <td className="py-2 px-4 text-center font-bold text-white">
                     ${contract.strike}
@@ -235,7 +235,7 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
                       <span className="block text-xs text-blue-400 font-normal">ATM</span>
                     )}
                   </td>
-                  
+
                   {/* Put side */}
                   <td className="py-2 px-2 text-left text-sm text-gray-300 border-l border-gray-700">
                     {(contract.put.impliedVolatility * 100).toFixed(1)}%
@@ -301,4 +301,4 @@ export const OptionsChainView: React.FC<OptionsChainViewProps> = ({
       </div>
     </div>
   );
-}; 
+};

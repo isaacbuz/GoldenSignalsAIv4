@@ -37,7 +37,7 @@ MCP_SERVERS = {
         "health_check": "/health"
     },
     "market-data": {
-        "url": "http://localhost:8002", 
+        "url": "http://localhost:8002",
         "description": "Real-time and historical market data",
         "health_check": "/health"
     },
@@ -62,7 +62,7 @@ MCP_SERVERS = {
 class MCPRequest(BaseModel):
     method: str
     params: Dict[str, Any] = {}
-    
+
 class MCPResponse(BaseModel):
     result: Any
     error: Optional[str] = None
@@ -77,13 +77,13 @@ security = HTTPBearer()
 
 class RateLimiter:
     """Rate limiting implementation using Redis"""
-    
+
     def __init__(self, redis_client: redis.Redis):
         self.redis = redis_client
-        
+
     async def check_rate_limit(
-        self, 
-        user_id: str, 
+        self,
+        user_id: str,
         resource: str,
         limit: int = 100,
         window: int = 60
@@ -92,28 +92,28 @@ class RateLimiter:
         key = f"rate_limit:{user_id}:{resource}"
         current_time = int(now_utc().timestamp())
         window_start = current_time - window
-        
+
         # Remove old entries
         await self.redis.zremrangebyscore(key, 0, window_start)
-        
+
         # Count requests in window
         request_count = await self.redis.zcard(key)
-        
+
         if request_count >= limit:
             return False
-        
+
         # Add current request
         await self.redis.zadd(key, {str(current_time): current_time})
         await self.redis.expire(key, window)
-        
+
         return True
 
 class AuditLogger:
     """Audit logging for compliance and debugging"""
-    
+
     def __init__(self, redis_client: redis.Redis):
         self.redis = redis_client
-        
+
     async def log_request(
         self,
         user: str,
@@ -132,12 +132,12 @@ class AuditLogger:
             "ip_address": ip_address,
             "type": "request"
         }
-        
+
         # Store in Redis with TTL
         key = f"audit:{now_utc().strftime('%Y%m%d')}:{user}"
         await self.redis.lpush(key, json.dumps(audit_entry))
         await self.redis.expire(key, 86400 * 30)  # 30 days
-        
+
     async def log_response(
         self,
         user: str,
@@ -156,36 +156,36 @@ class AuditLogger:
             "latency_ms": latency_ms,
             "type": "response"
         }
-        
+
         key = f"audit:{now_utc().strftime('%Y%m%d')}:{user}"
         await self.redis.lpush(key, json.dumps(audit_entry))
-        
+
     def _sanitize_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Remove sensitive data from parameters"""
         sanitized = params.copy()
         sensitive_fields = ["password", "api_key", "secret", "token", "credential"]
-        
+
         for field in sensitive_fields:
             if field in sanitized:
                 sanitized[field] = "[REDACTED]"
-                
+
         return sanitized
 
 class LoadBalancer:
     """Simple round-robin load balancer for MCP servers"""
-    
+
     def __init__(self):
         self.server_indices = {}
-        
+
     def get_next_server(self, server_type: str, servers: List[str]) -> str:
         """Get next server using round-robin"""
         if server_type not in self.server_indices:
             self.server_indices[server_type] = 0
-            
+
         index = self.server_indices[server_type]
         server = servers[index % len(servers)]
         self.server_indices[server_type] = (index + 1) % len(servers)
-        
+
         return server
 
 # Global instances
@@ -198,13 +198,13 @@ load_balancer = LoadBalancer()
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
     global redis_client, rate_limiter, audit_logger
-    
+
     # Startup
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     redis_client = await redis.from_url(redis_url, decode_responses=True)
     rate_limiter = RateLimiter(redis_client)
     audit_logger = AuditLogger(redis_client)
-    
+
     # Health check all MCP servers
     async with httpx.AsyncClient() as client:
         for server_name, server_info in MCP_SERVERS.items():
@@ -216,9 +216,9 @@ async def lifespan(app: FastAPI):
                     logger.warning(f"⚠️  {server_name} server returned {response.status_code}")
             except Exception as e:
                 logger.error(f"❌ {server_name} server is not reachable: {e}")
-    
+
     yield
-    
+
     # Shutdown
     if redis_client:
         await redis_client.close()
@@ -268,16 +268,16 @@ def check_permission(user: TokenData, server: str, method: str) -> bool:
     # Admin has all permissions
     if "admin" in user.scopes:
         return True
-    
+
     # Check specific permission
     required_permission = f"{server}:{method}"
     if required_permission in user.scopes:
         return True
-    
+
     # Check wildcard permission
     if f"{server}:*" in user.scopes:
         return True
-    
+
     return False
 
 # API Endpoints
@@ -299,7 +299,7 @@ async def health_check():
         "timestamp": now_utc().isoformat(),
         "servers": {}
     }
-    
+
     # Check each MCP server
     async with httpx.AsyncClient() as client:
         for server_name, server_info in MCP_SERVERS.items():
@@ -317,11 +317,11 @@ async def health_check():
                     "status": "unreachable",
                     "error": str(e)
                 }
-    
+
     # Check if any server is unhealthy
     if any(s["status"] != "healthy" for s in health_status["servers"].values()):
         health_status["status"] = "degraded"
-    
+
     return health_status
 
 @app.post("/auth/login")
@@ -335,11 +335,11 @@ async def login(username: str, password: str):
         scopes = ["admin"]
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
     access_token = create_access_token(
         data={"sub": username, "scopes": scopes}
     )
-    
+
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -356,28 +356,28 @@ async def mcp_proxy(
 ):
     """Proxy MCP requests to appropriate servers"""
     start_time = now_utc()
-    
+
     # Validate server exists
     if server not in MCP_SERVERS:
         raise HTTPException(status_code=404, detail=f"Server '{server}' not found")
-    
+
     # Check permissions
     if not check_permission(user, server, method):
         raise HTTPException(
             status_code=403,
             detail=f"Insufficient permissions for {server}:{method}"
         )
-    
+
     # Rate limiting
     if not await rate_limiter.check_rate_limit(user.username, f"{server}:{method}"):
         raise HTTPException(
             status_code=429,
             detail="Rate limit exceeded. Please try again later."
         )
-    
+
     # Get client IP
     client_ip = req.client.host if req.client else "unknown"
-    
+
     # Audit logging
     await audit_logger.log_request(
         user.username,
@@ -386,10 +386,10 @@ async def mcp_proxy(
         request.params,
         client_ip
     )
-    
+
     # Forward request to MCP server
     server_url = MCP_SERVERS[server]["url"]
-    
+
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
@@ -402,10 +402,10 @@ async def mcp_proxy(
                 },
                 timeout=30.0
             )
-            
+
         # Calculate latency
         latency_ms = (now_utc() - start_time).total_seconds() * 1000
-        
+
         # Audit response
         await audit_logger.log_response(
             user.username,
@@ -414,13 +414,13 @@ async def mcp_proxy(
             response.status_code == 200,
             latency_ms
         )
-        
+
         if response.status_code != 200:
             raise HTTPException(
                 status_code=response.status_code,
                 detail=response.text
             )
-        
+
         # Return response with metadata
         result = response.json()
         return MCPResponse(
@@ -432,7 +432,7 @@ async def mcp_proxy(
                 "timestamp": now_utc().isoformat()
             }
         )
-        
+
     except httpx.RequestError as e:
         # Log error
         await audit_logger.log_response(
@@ -442,7 +442,7 @@ async def mcp_proxy(
             False,
             (now_utc() - start_time).total_seconds() * 1000
         )
-        
+
         raise HTTPException(
             status_code=503,
             detail=f"Server '{server}' is temporarily unavailable: {str(e)}"
@@ -452,7 +452,7 @@ async def mcp_proxy(
 async def list_servers(user: TokenData = Depends(verify_token)):
     """List available MCP servers and their capabilities"""
     servers = {}
-    
+
     for server_name, server_info in MCP_SERVERS.items():
         # Check if user has any permission for this server
         if any(scope.startswith(f"{server_name}:") for scope in user.scopes) or "admin" in user.scopes:
@@ -461,7 +461,7 @@ async def list_servers(user: TokenData = Depends(verify_token)):
                 "status": "available",  # TODO: Real-time status check
                 "permissions": [s for s in user.scopes if s.startswith(f"{server_name}:")]
             }
-    
+
     return {
         "servers": servers,
         "user": user.username,
@@ -477,18 +477,18 @@ async def get_audit_logs(
     """Get audit logs (admin only)"""
     if "admin" not in user.scopes:
         raise HTTPException(status_code=403, detail="Admin access required")
-    
+
     # Use today's date if not specified
     if date is None:
         date = now_utc().strftime("%Y%m%d")
-    
+
     # Get logs from Redis
     key = f"audit:{date}:*"
     logs = []
-    
+
     # TODO: Implement proper log retrieval
     # For now, return empty list
-    
+
     return {
         "logs": logs,
         "date": date,
@@ -501,7 +501,7 @@ async def get_metrics(user: TokenData = Depends(verify_token)):
     """Get gateway metrics"""
     if "admin" not in user.scopes:
         raise HTTPException(status_code=403, detail="Admin access required")
-    
+
     # TODO: Implement proper metrics collection
     return {
         "requests_total": 0,
@@ -516,10 +516,10 @@ if __name__ == "__main__":
     print("Starting MCP Gateway Server")
     print("Available servers:", list(MCP_SERVERS.keys()))
     print("API docs available at http://localhost:8000/docs")
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",
         port=8000,
         log_level="info"
-    ) 
+    )

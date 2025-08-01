@@ -442,4 +442,4 @@ export function Table<T extends Record<string, any>>({
             )}
         </div>
     );
-} 
+}

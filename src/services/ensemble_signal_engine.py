@@ -23,7 +23,7 @@ class EnsembleSignalEngine:
             "signal": signal,
             "confidence": round(float(avg_prob[1]), 4),
             "raw_probs": [list(map(float, p)) for p in individual_signals],
-            "method": "weighted_average"
+            "method": "weighted_average",
         }
 
     def _interpret(self, avg_prob: np.ndarray) -> str:

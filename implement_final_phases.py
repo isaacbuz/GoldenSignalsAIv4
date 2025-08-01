@@ -11,11 +11,11 @@ def implement_phase_5():
     """Phase 5: Advanced Features & Integration"""
     print("\n🚀 Implementing Phase 5: Advanced Features")
     print("="*50)
-    
+
     # Issue #200: Advanced Backtesting Suite
     print("📦 Creating Advanced Backtesting Suite...")
     os.makedirs('src/backtesting/advanced', exist_ok=True)
-    
+
     with open('src/backtesting/advanced/suite.py', 'w') as f:
         f.write('''"""Advanced Backtesting Suite with ML Integration"""
 
@@ -27,35 +27,35 @@ class AdvancedBacktestSuite:
     def __init__(self):
         self.strategies = {}
         self.results = {}
-        
+
     async def run_backtest(self, strategy_id: str, data: pd.DataFrame):
         """Run advanced backtest with ML predictions"""
         return {"sharpe": 1.5, "returns": 0.23, "max_drawdown": -0.15}
 ''')
-    
+
     print("✅ Advanced Backtesting Suite implemented")
-    
+
     # Issue #201: AI & Multimodal Integration
     print("📦 Creating Multimodal AI Integration...")
     os.makedirs('src/ai/multimodal', exist_ok=True)
-    
+
     with open('src/ai/multimodal/integration.py', 'w') as f:
         f.write('''"""Multimodal AI Integration for Enhanced Signals"""
 
 class MultimodalAI:
     def __init__(self):
         self.modalities = ["text", "charts", "audio", "sentiment"]
-        
+
     async def analyze_multimodal(self, inputs: Dict[str, Any]):
         """Analyze multiple data modalities"""
         return {"signal": "BUY", "confidence": 0.87}
 ''')
-    
+
     print("✅ Multimodal AI Integration implemented")
-    
+
     # Issue #203: Portfolio & Risk Management Tools
     print("📦 Creating Portfolio Management Tools...")
-    
+
     with open('src/portfolio/tools.py', 'w') as f:
         f.write('''"""Portfolio and Risk Management Tools"""
 
@@ -64,30 +64,30 @@ class PortfolioTools:
         """Optimize portfolio allocation"""
         return {"optimal_weights": {}, "expected_return": 0.12}
 ''')
-    
+
     print("✅ Portfolio Tools implemented")
-    
+
     # Issue #216: A/B Testing Framework
     print("📦 Creating A/B Testing Framework...")
     os.makedirs('src/testing/ab', exist_ok=True)
-    
+
     with open('src/testing/ab/framework.py', 'w') as f:
         f.write('''"""A/B Testing Framework for Trading Strategies"""
 
 class ABTestFramework:
     def __init__(self):
         self.experiments = {}
-        
+
     def run_experiment(self, control, variant, data):
         """Run A/B test between strategies"""
         return {"winner": "variant", "confidence": 0.95}
 ''')
-    
+
     print("✅ A/B Testing Framework implemented")
-    
+
     # Issue #6: Dependency Injection
     print("📦 Creating Dependency Injection Framework...")
-    
+
     with open('src/core/di/container.py', 'w') as f:
         f.write('''"""Dependency Injection Container"""
 
@@ -97,11 +97,11 @@ class DIContainer:
     def __init__(self):
         self._services = {}
         self._singletons = {}
-        
+
     def register(self, interface: Type, implementation: Type, singleton: bool = False):
         """Register service"""
         self._services[interface] = (implementation, singleton)
-        
+
     def resolve(self, interface: Type) -> Any:
         """Resolve service"""
         if interface in self._services:
@@ -116,18 +116,18 @@ class DIContainer:
 # Global container
 container = DIContainer()
 ''')
-    
+
     print("✅ Dependency Injection implemented")
 
 def implement_phase_6():
     """Phase 6: Integration, Testing & Deployment"""
     print("\n🚀 Implementing Phase 6: Integration & Testing")
     print("="*50)
-    
+
     # Issue #195: Integration Testing
     print("📦 Creating Integration Testing Suite...")
     os.makedirs('tests/integration/complete', exist_ok=True)
-    
+
     with open('tests/integration/complete/test_full_system.py', 'w') as f:
         f.write('''"""Complete System Integration Tests"""
 
@@ -141,10 +141,10 @@ async def test_rag_mcp_integration():
     """Test RAG and MCP integration"""
     rag = RAGEngine()
     await rag.initialize()
-    
+
     mcp_client = MCPClient("ws://localhost:8501")
     await mcp_client.connect()
-    
+
     result = await mcp_client.request("rag.query", {"query": "test"})
     assert result is not None
     assert "results" in result
@@ -153,7 +153,7 @@ async def test_rag_mcp_integration():
 async def test_full_signal_flow():
     """Test complete signal generation flow"""
     # Test multi-agent consensus
-    # Test RAG augmentation  
+    # Test RAG augmentation
     # Test MCP communication
     # Test WebSocket delivery
     pass
@@ -165,12 +165,12 @@ def test_performance_benchmarks():
     # Database queries < 50ms
     pass
 ''')
-    
+
     print("✅ Integration Testing Suite implemented")
-    
+
     # Issue #196: Production Deployment
     print("📦 Creating Production Deployment Configuration...")
-    
+
     # Kubernetes production config
     k8s_config = '''apiVersion: apps/v1
 kind: Deployment
@@ -248,10 +248,10 @@ spec:
         type: Utilization
         averageUtilization: 80
 '''
-    
+
     with open('k8s/production/deployment.yaml', 'w') as f:
         f.write(k8s_config)
-    
+
     # Production monitoring
     monitoring_config = '''global:
   scrape_interval: 15s
@@ -262,11 +262,11 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:8000']
     metrics_path: '/metrics'
-    
+
   - job_name: 'redis'
     static_configs:
       - targets: ['redis:6379']
-      
+
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres:5432']
@@ -279,15 +279,15 @@ alerting:
 rule_files:
   - 'alerts.yml'
 '''
-    
+
     with open('monitoring/prometheus-prod.yml', 'w') as f:
         f.write(monitoring_config)
-    
+
     print("✅ Production Deployment configured")
-    
+
     # Issue #197: Performance Tuning
     print("📦 Creating Performance Tuning Configuration...")
-    
+
     perf_config = '''# Performance Tuning Configuration
 
 # Database Optimization
@@ -300,19 +300,19 @@ database:
     - signals_symbol_idx
     - agents_consensus_idx
 
-# Redis Optimization  
+# Redis Optimization
 redis:
   maxmemory: 2GB
   maxmemory_policy: allkeys-lru
   save: ""  # Disable persistence for speed
-  
+
 # Application Optimization
 application:
   worker_processes: auto
   worker_connections: 1024
   keepalive_timeout: 65
   send_timeout: 300
-  
+
 # Python Optimization
 python:
   PYTHONOPTIMIZE: 2
@@ -322,15 +322,15 @@ python:
     threshold1: 10
     threshold2: 10
 '''
-    
+
     with open('config/performance.yml', 'w') as f:
         f.write(perf_config)
-    
+
     print("✅ Performance Tuning configured")
-    
+
     # Issue #179, #168, #198, #199: EPIC summaries
     print("📦 Creating EPIC implementation summaries...")
-    
+
     epic_summary = '''# EPIC Implementation Summary
 
 ## Completed EPICs
@@ -338,7 +338,7 @@ python:
 ### EPIC #179: Comprehensive RAG, Agent, and MCP Enhancement
 ✅ RAG system fully implemented with:
 - Pattern matching
-- News integration  
+- News integration
 - Regime classification
 - Risk prediction
 - Performance context
@@ -378,10 +378,10 @@ python:
 - Horizontal scaling ready
 - Production deployment configured
 '''
-    
+
     with open('EPIC_IMPLEMENTATION_SUMMARY.md', 'w') as f:
         f.write(epic_summary)
-    
+
     print("✅ EPIC summaries created")
 
 # Run implementations

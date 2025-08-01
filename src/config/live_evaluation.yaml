@@ -37,4 +37,4 @@ logging:
 
 # API Keys (to be loaded from environment variables)
 api_keys:
-  polygon: "${POLYGON_API_KEY}" 
+  polygon: "${POLYGON_API_KEY}"

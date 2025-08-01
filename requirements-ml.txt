@@ -61,4 +61,4 @@ opentelemetry-instrumentation-fastapi==0.40b0
 
 # Testing
 pytest-benchmark==4.0.0
-hypothesis==6.82.0 
+hypothesis==6.82.0

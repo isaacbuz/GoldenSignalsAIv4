@@ -14,7 +14,7 @@ from datetime import datetime
 
 class RiskAnalyticsMCPServer(MCPServer):
     """MCP server for risk analytics"""
-    
+
     def __init__(self):
         super().__init__("Risk Analytics Server", 8502)
         self.capabilities = [
@@ -24,12 +24,12 @@ class RiskAnalyticsMCPServer(MCPServer):
             "risk.stress_test",
             "risk.get_recommendations"
         ]
-        
+
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle risk analytics requests"""
         method = request.get("method")
         params = request.get("params", {})
-        
+
         try:
             if method == "risk.calculate_var":
                 return await self.calculate_var(params)
@@ -45,20 +45,20 @@ class RiskAnalyticsMCPServer(MCPServer):
                 return {"capabilities": self.capabilities}
             else:
                 return {"error": f"Unknown method: {method}"}
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     async def calculate_var(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate Value at Risk"""
         positions = params.get("positions", [])
         confidence_level = params.get("confidence_level", 0.95)
         time_horizon = params.get("time_horizon", 1)
-        
+
         # Mock VaR calculation
         portfolio_value = sum(p.get("value", 0) for p in positions)
         var_amount = portfolio_value * 0.02 * time_horizon  # 2% daily VaR
-        
+
         return {
             "var": var_amount,
             "confidence_level": confidence_level,
@@ -70,14 +70,14 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "beta": 1.1
             }
         }
-    
+
     async def assess_portfolio(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Assess portfolio risk"""
         positions = params.get("positions", [])
-        
+
         # Mock risk assessment
         risk_score = 0.65  # 0-1 scale
-        
+
         risks = {
             "concentration_risk": {
                 "score": 0.7,
@@ -96,7 +96,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "details": "Elevated due to market conditions"
             }
         }
-        
+
         return {
             "overall_risk_score": risk_score,
             "risk_breakdown": risks,
@@ -105,12 +105,12 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "Add hedging positions for downside protection"
             ]
         }
-    
+
     async def predict_risk_events(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Predict potential risk events"""
         symbol = params.get("symbol", "")
         horizon_days = params.get("horizon_days", 30)
-        
+
         # Mock risk event prediction
         events = [
             {
@@ -128,19 +128,19 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "confidence": 0.6
             }
         ]
-        
+
         return {
             "symbol": symbol,
             "risk_events": events,
             "horizon_days": horizon_days,
             "overall_risk_level": "medium"
         }
-    
+
     async def run_stress_test(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Run portfolio stress test"""
         positions = params.get("positions", [])
         scenarios = params.get("scenarios", ["market_crash", "rate_hike"])
-        
+
         # Mock stress test results
         results = {}
         for scenario in scenarios:
@@ -158,7 +158,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                     "best_position": "BANK_STOCK",
                     "recovery_time_estimate": 90
                 }
-        
+
         return {
             "stress_test_results": results,
             "recommendations": [
@@ -166,12 +166,12 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "Consider tail risk hedging strategies"
             ]
         }
-    
+
     async def get_risk_recommendations(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get risk management recommendations"""
         risk_tolerance = params.get("risk_tolerance", "moderate")
         current_positions = params.get("positions", [])
-        
+
         recommendations = {
             "position_sizing": {
                 "max_position_size": 0.1,
@@ -190,7 +190,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "suggestions": ["Add international exposure", "Include commodities"]
             }
         }
-        
+
         return {
             "risk_tolerance": risk_tolerance,
             "recommendations": recommendations,

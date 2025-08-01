@@ -6,4 +6,4 @@ export {
     NetworkError,
     ValidationError
 } from './Error';
-export type { ErrorProps, ErrorType, ErrorSeverity } from './Error'; 
+export type { ErrorProps, ErrorType, ErrorSeverity } from './Error';

@@ -129,7 +129,7 @@ const AdminPanel: React.FC = () => {
   const [showApiKey, setShowApiKey] = useState<string | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  
+
   // Mock data
   const [systemConfig, setSystemConfig] = useState({
     signalGenerationEnabled: true,
@@ -247,7 +247,7 @@ const AdminPanel: React.FC = () => {
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" sx={{ mb: 2 }}>Core Settings</Typography>
-                
+
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <FormControlLabel
                     control={
@@ -258,7 +258,7 @@ const AdminPanel: React.FC = () => {
                     }
                     label="Signal Generation Enabled"
                   />
-                  
+
                   <TextField
                     label="Max Concurrent Agents"
                     type="number"
@@ -266,7 +266,7 @@ const AdminPanel: React.FC = () => {
                     onChange={(e) => setSystemConfig({ ...systemConfig, maxConcurrentAgents: parseInt(e.target.value) })}
                     fullWidth
                   />
-                  
+
                   <TextField
                     label="Consensus Threshold"
                     type="number"
@@ -275,7 +275,7 @@ const AdminPanel: React.FC = () => {
                     inputProps={{ min: 0, max: 1, step: 0.05 }}
                     fullWidth
                   />
-                  
+
                   <FormControlLabel
                     control={
                       <Switch
@@ -287,10 +287,10 @@ const AdminPanel: React.FC = () => {
                   />
                 </Box>
               </Grid>
-              
+
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" sx={{ mb: 2 }}>Rate Limiting</Typography>
-                
+
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <TextField
                     label="Rate Limit (per minute)"
@@ -299,7 +299,7 @@ const AdminPanel: React.FC = () => {
                     onChange={(e) => setSystemConfig({ ...systemConfig, rateLimitPerMinute: parseInt(e.target.value) })}
                     fullWidth
                   />
-                  
+
                   <FormControlLabel
                     control={
                       <Switch
@@ -310,7 +310,7 @@ const AdminPanel: React.FC = () => {
                     }
                     label="Maintenance Mode"
                   />
-                  
+
                   <Button
                     variant="contained"
                     startIcon={<Save />}
@@ -337,7 +337,7 @@ const AdminPanel: React.FC = () => {
                 Add Key
               </Button>
             </Box>
-            
+
             <TableContainer>
               <Table>
                 <TableHead>
@@ -394,7 +394,7 @@ const AdminPanel: React.FC = () => {
           {/* Users Tab */}
           <TabPanel value={tabValue} index={2}>
             <Typography variant="h6" sx={{ mb: 3 }}>User Management</Typography>
-            
+
             <TableContainer>
               <Table>
                 <TableHead>
@@ -444,7 +444,7 @@ const AdminPanel: React.FC = () => {
               <Grid item xs={12}>
                 <Typography variant="h6" sx={{ mb: 3 }}>System Health</Typography>
               </Grid>
-              
+
               {/* Service Status */}
               <Grid item xs={12} md={6}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -486,7 +486,7 @@ const AdminPanel: React.FC = () => {
                   </Box>
                 </Box>
               </Grid>
-              
+
               {/* Resource Usage */}
               <Grid item xs={12} md={6}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -514,7 +514,7 @@ const AdminPanel: React.FC = () => {
                   </Box>
                 </Box>
               </Grid>
-              
+
               {/* Metrics */}
               <Grid item xs={12}>
                 <Divider sx={{ my: 2 }} />
@@ -588,7 +588,7 @@ const AdminPanel: React.FC = () => {
                   </ListItem>
                 </List>
               </Grid>
-              
+
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" sx={{ mb: 2 }}>Cache Management</Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -613,7 +613,7 @@ const AdminPanel: React.FC = () => {
                   </Button>
                 </Box>
               </Grid>
-              
+
               <Grid item xs={12}>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="h6" sx={{ mb: 2 }}>Backup & Restore</Typography>

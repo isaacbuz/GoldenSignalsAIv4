@@ -4,16 +4,17 @@ Historical success rates and optimal parameters for technical patterns
 Issue #183: RAG-4: Implement Technical Pattern Success RAG
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
 import asyncio
 import json
-from dataclasses import dataclass
-from enum import Enum
 import logging
 from collections import defaultdict
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class PatternType(Enum):
     FLAG_BULL = "flag_bull"
     FLAG_BEAR = "flag_bear"
     CUP_AND_HANDLE = "cup_and_handle"
-    
+
     # Candlestick patterns
     DOJI = "doji"
     HAMMER = "hammer"
@@ -40,7 +41,7 @@ class PatternType(Enum):
     ENGULFING_BEAR = "engulfing_bearish"
     MORNING_STAR = "morning_star"
     EVENING_STAR = "evening_star"
-    
+
     # Indicator patterns
     RSI_DIVERGENCE = "rsi_divergence"
     MACD_CROSS = "macd_cross"
@@ -69,18 +70,18 @@ class PatternInstance:
     pattern_end: datetime
     market_condition: MarketCondition
     timeframe: str  # 1m, 5m, 1h, 1d, etc.
-    
+
     # Pattern characteristics
     pattern_strength: float  # 0-1 score
     volume_confirmation: bool
     pattern_dimensions: Dict[str, float]  # height, width, etc.
-    
+
     # Entry/exit details
     entry_price: float
     entry_date: datetime
     stop_loss: float
     take_profit_targets: List[float]
-    
+
     # Outcome
     exit_price: float
     exit_date: datetime
@@ -88,13 +89,13 @@ class PatternInstance:
     profit_loss_percent: float
     max_favorable_excursion: float  # Best unrealized profit
     max_adverse_excursion: float  # Worst unrealized loss
-    
+
     # Context
     market_cap: str  # large, mid, small
     sector: str
     relative_volume: float  # vs average
     news_events: List[str]
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             'id': self.id,
@@ -107,7 +108,7 @@ class PatternInstance:
             'profit_loss_percent': self.profit_loss_percent,
             'exit_reason': self.exit_reason
         }
-    
+
     def to_embedding(self) -> np.ndarray:
         """Convert pattern to embedding for similarity search"""
         # Create feature vector
@@ -117,67 +118,67 @@ class PatternInstance:
             float(self.pattern_type.value.startswith('wedge')),
             float('bull' in self.pattern_type.value),
             float('bear' in self.pattern_type.value),
-            
+
             # Market condition
             float(self.market_condition == MarketCondition.TRENDING_UP),
             float(self.market_condition == MarketCondition.TRENDING_DOWN),
             float(self.market_condition == MarketCondition.HIGH_VOLATILITY),
-            
+
             # Pattern characteristics
             self.pattern_strength,
             float(self.volume_confirmation),
             self.relative_volume,
-            
+
             # Timeframe (encoded)
             1.0 if self.timeframe == '1m' else 0.0,
             0.8 if self.timeframe == '5m' else 0.0,
             0.6 if self.timeframe == '1h' else 0.0,
             0.4 if self.timeframe == '4h' else 0.0,
             0.2 if self.timeframe == '1d' else 0.0,
-            
+
             # Risk/reward
             (self.take_profit_targets[0] - self.entry_price) / (self.entry_price - self.stop_loss) if self.stop_loss else 2.0
         ]
-        
+
         return np.array(features)
 
 
 class PatternSuccessAnalyzer:
     """Analyzes historical success rates of patterns"""
-    
+
     def __init__(self):
         self.success_thresholds = {
             'high': 0.70,  # 70%+ win rate
             'medium': 0.55,  # 55-70% win rate
             'low': 0.40    # 40-55% win rate
         }
-    
-    def calculate_pattern_statistics(self, 
+
+    def calculate_pattern_statistics(self,
                                    patterns: List[PatternInstance]) -> Dict[str, Any]:
         """Calculate comprehensive statistics for a pattern type"""
         if not patterns:
             return {'error': 'No patterns to analyze'}
-        
+
         # Basic statistics
         total_patterns = len(patterns)
         profitable = [p for p in patterns if p.profit_loss_percent > 0]
         win_rate = len(profitable) / total_patterns
-        
+
         # Profit/loss statistics
         profits = [p.profit_loss_percent for p in patterns]
         avg_profit = np.mean(profits)
         median_profit = np.median(profits)
-        
+
         # Win/loss analysis
         wins = [p.profit_loss_percent for p in profitable]
         losses = [p.profit_loss_percent for p in patterns if p.profit_loss_percent <= 0]
-        
+
         avg_win = np.mean(wins) if wins else 0
         avg_loss = np.mean(losses) if losses else 0
-        
+
         # Risk/reward
         profit_factor = abs(sum(wins) / sum(losses)) if losses else float('inf')
-        
+
         # Pattern reliability by market condition
         condition_stats = defaultdict(lambda: {'count': 0, 'wins': 0, 'avg_profit': []})
         for pattern in patterns:
@@ -186,12 +187,12 @@ class PatternSuccessAnalyzer:
             if pattern.profit_loss_percent > 0:
                 condition_stats[condition]['wins'] += 1
             condition_stats[condition]['avg_profit'].append(pattern.profit_loss_percent)
-        
+
         # Calculate condition success rates
         for condition, stats in condition_stats.items():
             stats['win_rate'] = stats['wins'] / stats['count'] if stats['count'] > 0 else 0
             stats['avg_profit'] = np.mean(stats['avg_profit']) if stats['avg_profit'] else 0
-        
+
         # Timeframe analysis
         timeframe_stats = defaultdict(lambda: {'count': 0, 'win_rate': 0})
         for pattern in patterns:
@@ -199,15 +200,15 @@ class PatternSuccessAnalyzer:
             timeframe_stats[tf]['count'] += 1
             if pattern.profit_loss_percent > 0:
                 timeframe_stats[tf]['wins'] = timeframe_stats[tf].get('wins', 0) + 1
-        
+
         for tf, stats in timeframe_stats.items():
             stats['win_rate'] = stats.get('wins', 0) / stats['count']
-        
+
         # Exit reason analysis
         exit_reasons = defaultdict(int)
         for pattern in patterns:
             exit_reasons[pattern.exit_reason] += 1
-        
+
         return {
             'total_patterns': total_patterns,
             'win_rate': win_rate,
@@ -225,73 +226,73 @@ class PatternSuccessAnalyzer:
                 win_rate, profit_factor, total_patterns
             )
         }
-    
-    def _calculate_reliability_score(self, win_rate: float, 
-                                   profit_factor: float, 
+
+    def _calculate_reliability_score(self, win_rate: float,
+                                   profit_factor: float,
                                    sample_size: int) -> float:
         """Calculate overall reliability score for a pattern"""
         # Weight factors
         win_rate_weight = 0.4
         profit_factor_weight = 0.4
         sample_size_weight = 0.2
-        
+
         # Normalize profit factor (cap at 3)
         normalized_pf = min(profit_factor, 3.0) / 3.0
-        
+
         # Sample size score (more samples = more reliable)
         sample_score = min(sample_size / 100, 1.0)
-        
+
         reliability = (
             win_rate * win_rate_weight +
             normalized_pf * profit_factor_weight +
             sample_score * sample_size_weight
         )
-        
+
         return reliability
-    
-    def find_optimal_parameters(self, 
+
+    def find_optimal_parameters(self,
                                patterns: List[PatternInstance]) -> Dict[str, Any]:
         """Find optimal parameters for pattern trading"""
         if not patterns:
             return {}
-        
+
         # Group by pattern strength
         strength_groups = {
             'strong': [p for p in patterns if p.pattern_strength > 0.8],
             'medium': [p for p in patterns if 0.5 < p.pattern_strength <= 0.8],
             'weak': [p for p in patterns if p.pattern_strength <= 0.5]
         }
-        
+
         optimal_params = {}
-        
+
         for strength, group in strength_groups.items():
             if group:
                 profitable = [p for p in group if p.profit_loss_percent > 0]
                 win_rate = len(profitable) / len(group)
-                
+
                 # Calculate optimal stop loss distance
                 stop_distances = []
                 for p in group:
                     if p.stop_loss and p.entry_price:
                         distance = abs(p.entry_price - p.stop_loss) / p.entry_price
                         stop_distances.append(distance)
-                
+
                 optimal_params[strength] = {
                     'win_rate': win_rate,
                     'avg_profit': np.mean([p.profit_loss_percent for p in group]),
                     'optimal_stop_distance': np.percentile(stop_distances, 25) if stop_distances else 0.02,
                     'sample_size': len(group)
                 }
-        
+
         # Volume confirmation impact
         with_volume = [p for p in patterns if p.volume_confirmation]
         without_volume = [p for p in patterns if not p.volume_confirmation]
-        
+
         volume_impact = {
             'with_volume_win_rate': len([p for p in with_volume if p.profit_loss_percent > 0]) / len(with_volume) if with_volume else 0,
             'without_volume_win_rate': len([p for p in without_volume if p.profit_loss_percent > 0]) / len(without_volume) if without_volume else 0
         }
-        
+
         return {
             'strength_analysis': optimal_params,
             'volume_impact': volume_impact,
@@ -304,22 +305,22 @@ class TechnicalPatternSuccessRAG:
     RAG system for technical pattern success rates and optimization
     Provides historical context for pattern reliability
     """
-    
+
     def __init__(self, use_mock_db: bool = True):
         """Initialize the Technical Pattern Success RAG"""
         self.use_mock_db = use_mock_db
         self.pattern_analyzer = PatternSuccessAnalyzer()
         self.pattern_instances: List[PatternInstance] = []
         self.pattern_embeddings: Dict[str, np.ndarray] = {}
-        
+
         if use_mock_db:
             self._load_mock_pattern_history()
-    
+
     def _load_mock_pattern_history(self):
         """Load mock historical pattern data"""
         # Create diverse pattern examples
         patterns = []
-        
+
         # Successful bull flag in uptrend
         patterns.append(PatternInstance(
             id="bull_flag_aapl_001",
@@ -348,7 +349,7 @@ class TechnicalPatternSuccessRAG:
             relative_volume=1.5,
             news_events=["iPhone 15 launch"]
         ))
-        
+
         # Failed double top in ranging market
         patterns.append(PatternInstance(
             id="double_top_spy_001",
@@ -377,7 +378,7 @@ class TechnicalPatternSuccessRAG:
             relative_volume=0.8,
             news_events=["Fed minutes release"]
         ))
-        
+
         # Successful cup and handle
         patterns.append(PatternInstance(
             id="cup_handle_nvda_001",
@@ -406,7 +407,7 @@ class TechnicalPatternSuccessRAG:
             relative_volume=2.1,
             news_events=["AI boom", "Earnings beat"]
         ))
-        
+
         # RSI divergence pattern
         patterns.append(PatternInstance(
             id="rsi_div_tsla_001",
@@ -435,7 +436,7 @@ class TechnicalPatternSuccessRAG:
             relative_volume=1.8,
             news_events=["Supercharger news"]
         ))
-        
+
         # Failed wedge pattern
         patterns.append(PatternInstance(
             id="wedge_amd_001",
@@ -464,16 +465,16 @@ class TechnicalPatternSuccessRAG:
             relative_volume=0.7,
             news_events=[]
         ))
-        
+
         self.pattern_instances.extend(patterns)
         self._generate_pattern_embeddings()
-    
+
     def _generate_pattern_embeddings(self):
         """Generate embeddings for all patterns"""
         for pattern in self.pattern_instances:
             self.pattern_embeddings[pattern.id] = pattern.to_embedding()
-    
-    def _calculate_similarity(self, embedding1: np.ndarray, 
+
+    def _calculate_similarity(self, embedding1: np.ndarray,
                             embedding2: np.ndarray) -> float:
         """Calculate cosine similarity between embeddings"""
         dot_product = np.dot(embedding1, embedding2)
@@ -481,7 +482,7 @@ class TechnicalPatternSuccessRAG:
         if norm_product == 0:
             return 0.0
         return dot_product / norm_product
-    
+
     async def analyze_pattern(self, pattern_data: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze a detected pattern and provide success probability"""
         # Extract pattern details
@@ -490,12 +491,12 @@ class TechnicalPatternSuccessRAG:
         market_condition = MarketCondition(pattern_data.get('market_condition', 'trending_up'))
         pattern_strength = pattern_data.get('pattern_strength', 0.75)
         volume_confirmation = pattern_data.get('volume_confirmation', False)
-        
+
         # Find similar historical patterns
         similar_patterns = self._find_similar_patterns(
             pattern_type, market_condition, timeframe, pattern_strength
         )
-        
+
         if not similar_patterns:
             return {
                 'pattern_type': pattern_type.value,
@@ -503,30 +504,30 @@ class TechnicalPatternSuccessRAG:
                 'confidence': 'low',
                 'message': 'No historical data available'
             }
-        
+
         # Calculate statistics
         stats = self.pattern_analyzer.calculate_pattern_statistics(similar_patterns)
-        
+
         # Find optimal parameters
         optimal_params = self.pattern_analyzer.find_optimal_parameters(similar_patterns)
-        
+
         # Generate success probability
         base_probability = stats['win_rate']
-        
+
         # Adjust for pattern strength
         if pattern_strength > optimal_params.get('recommended_min_strength', 0.7):
             base_probability *= 1.1
-        
+
         # Adjust for volume confirmation
         if volume_confirmation:
             volume_boost = optimal_params['volume_impact'].get('with_volume_win_rate', 0) - \
                           optimal_params['volume_impact'].get('without_volume_win_rate', 0)
             if volume_boost > 0:
                 base_probability *= (1 + volume_boost)
-        
+
         # Cap probability
         success_probability = min(base_probability, 0.85)
-        
+
         # Determine confidence level
         sample_size = stats['total_patterns']
         if sample_size >= 50:
@@ -535,10 +536,10 @@ class TechnicalPatternSuccessRAG:
             confidence = 'medium'
         else:
             confidence = 'low'
-        
+
         # Get best performing conditions
         best_conditions = self._get_best_conditions(stats['condition_performance'])
-        
+
         return {
             'pattern_type': pattern_type.value,
             'success_probability': float(success_probability),
@@ -569,7 +570,7 @@ class TechnicalPatternSuccessRAG:
                 success_probability, stats, optimal_params
             )
         }
-    
+
     def _find_similar_patterns(self, pattern_type: PatternType,
                               market_condition: MarketCondition,
                               timeframe: str,
@@ -577,43 +578,43 @@ class TechnicalPatternSuccessRAG:
         """Find similar historical patterns"""
         # Filter by pattern type first
         same_type = [p for p in self.pattern_instances if p.pattern_type == pattern_type]
-        
+
         # If not enough same type, include related patterns
         if len(same_type) < 10:
             related_types = self._get_related_pattern_types(pattern_type)
-            same_type.extend([p for p in self.pattern_instances 
+            same_type.extend([p for p in self.pattern_instances
                             if p.pattern_type in related_types])
-        
+
         # Score similarity
         scored_patterns = []
         for pattern in same_type:
             score = 0
-            
+
             # Market condition match
             if pattern.market_condition == market_condition:
                 score += 0.3
-            
+
             # Timeframe match
             if pattern.timeframe == timeframe:
                 score += 0.2
-            
+
             # Pattern strength similarity
             strength_diff = abs(pattern.pattern_strength - pattern_strength)
             score += 0.3 * (1 - strength_diff)
-            
+
             # Add pattern with score
             scored_patterns.append((score, pattern))
-        
+
         # Sort by similarity score
         scored_patterns.sort(key=lambda x: x[0], reverse=True)
-        
+
         # Return top similar patterns
         return [p for _, p in scored_patterns[:20]]
-    
+
     def _get_related_pattern_types(self, pattern_type: PatternType) -> List[PatternType]:
         """Get related pattern types for similarity matching"""
         pattern_families = {
-            'reversal': [PatternType.HEAD_AND_SHOULDERS, PatternType.DOUBLE_TOP, 
+            'reversal': [PatternType.HEAD_AND_SHOULDERS, PatternType.DOUBLE_TOP,
                         PatternType.DOUBLE_BOTTOM],
             'continuation': [PatternType.FLAG_BULL, PatternType.FLAG_BEAR,
                            PatternType.TRIANGLE_ASCENDING, PatternType.TRIANGLE_DESCENDING],
@@ -621,17 +622,17 @@ class TechnicalPatternSuccessRAG:
             'indicator': [PatternType.RSI_DIVERGENCE, PatternType.MACD_CROSS,
                          PatternType.GOLDEN_CROSS, PatternType.DEATH_CROSS]
         }
-        
+
         for family, patterns in pattern_families.items():
             if pattern_type in patterns:
                 return [p for p in patterns if p != pattern_type]
-        
+
         return []
-    
+
     def _get_best_conditions(self, condition_performance: Dict) -> List[Dict[str, Any]]:
         """Extract best performing conditions"""
         best_conditions = []
-        
+
         for condition, stats in condition_performance.items():
             if stats['win_rate'] > 0.6 and stats['count'] > 5:
                 best_conditions.append({
@@ -639,11 +640,11 @@ class TechnicalPatternSuccessRAG:
                     'win_rate': stats['win_rate'],
                     'avg_profit': stats['avg_profit']
                 })
-        
+
         # Sort by win rate
         best_conditions.sort(key=lambda x: x['win_rate'], reverse=True)
         return best_conditions[:3]
-    
+
     def _generate_trading_recommendation(self, success_prob: float,
                                        stats: Dict[str, Any],
                                        optimal_params: Dict[str, Any]) -> Dict[str, Any]:
@@ -655,7 +656,7 @@ class TechnicalPatternSuccessRAG:
             'risk_parameters': {},
             'notes': []
         }
-        
+
         # Determine action based on probability and stats
         if success_prob > 0.65 and stats['profit_factor'] > 1.5:
             recommendation['action'] = 'trade'
@@ -669,7 +670,7 @@ class TechnicalPatternSuccessRAG:
             recommendation['notes'].append("Moderate probability setup")
         else:
             recommendation['notes'].append("Low probability or poor risk/reward")
-        
+
         # Set risk parameters
         if recommendation['action'] == 'trade':
             stop_distance = optimal_params.get('strength_analysis', {}).get('strong', {}).get('optimal_stop_distance', 0.02)
@@ -679,14 +680,14 @@ class TechnicalPatternSuccessRAG:
                 'max_risk_percent': 1.0,  # Max 1% portfolio risk
                 'scale_in_levels': 2 if recommendation['confidence'] == 'medium' else 1
             }
-            
+
             # Add specific notes
             if stats['avg_win'] > abs(stats['avg_loss']) * 1.5:
                 recommendation['notes'].append("Favorable risk/reward ratio")
-            
+
             if optimal_params['volume_impact']['with_volume_win_rate'] > 0.65:
                 recommendation['notes'].append("Volume confirmation critical for success")
-        
+
         return recommendation
 
 
@@ -694,14 +695,14 @@ class TechnicalPatternSuccessRAG:
 async def demo_pattern_success_rag():
     """Demonstrate the Technical Pattern Success RAG"""
     rag = TechnicalPatternSuccessRAG(use_mock_db=True)
-    
+
     print("Technical Pattern Success RAG Demo")
     print("="*70)
-    
+
     # Test 1: Analyze a bull flag pattern
     print("\n1. Analyzing Bull Flag Pattern:")
     print("-"*50)
-    
+
     bull_flag_data = {
         'pattern_type': 'flag_bull',
         'timeframe': '1h',
@@ -709,13 +710,13 @@ async def demo_pattern_success_rag():
         'pattern_strength': 0.82,
         'volume_confirmation': True
     }
-    
+
     result = await rag.analyze_pattern(bull_flag_data)
-    
+
     print(f"Pattern: {result['pattern_type']}")
     print(f"Success Probability: {result['success_probability']:.1%}")
     print(f"Confidence: {result['confidence'].upper()}")
-    
+
     print(f"\nHistorical Statistics:")
     hist = result['historical_stats']
     print(f"  Sample Size: {hist['sample_size']} patterns")
@@ -723,13 +724,13 @@ async def demo_pattern_success_rag():
     print(f"  Average Profit: {hist['avg_profit']:.1%}")
     print(f"  Profit Factor: {hist['profit_factor']:.2f}")
     print(f"  Reliability Score: {hist['reliability_score']:.2f}")
-    
+
     print(f"\nOptimal Parameters:")
     opt = result['optimal_parameters']
     print(f"  Min Pattern Strength: {opt['min_pattern_strength']:.2f}")
     print(f"  Recommended Stop: {opt['recommended_stop_distance']:.1%}")
     print(f"  Volume Important: {'YES' if opt['volume_confirmation_important'] else 'NO'}")
-    
+
     print(f"\nTrading Recommendation:")
     rec = result['trading_recommendation']
     print(f"  Action: {rec['action'].upper()}")
@@ -737,11 +738,11 @@ async def demo_pattern_success_rag():
     print(f"  Position Size: {rec['position_size']:.0%}")
     if rec['risk_parameters']:
         print(f"  Stop Loss: {rec['risk_parameters']['stop_loss_percent']:.1f}%")
-    
+
     # Test 2: Analyze a double top pattern
     print("\n\n2. Analyzing Double Top Pattern:")
     print("-"*50)
-    
+
     double_top_data = {
         'pattern_type': 'double_top',
         'timeframe': '1d',
@@ -749,25 +750,25 @@ async def demo_pattern_success_rag():
         'pattern_strength': 0.68,
         'volume_confirmation': False
     }
-    
+
     result2 = await rag.analyze_pattern(double_top_data)
-    
+
     print(f"Pattern: {result2['pattern_type']}")
     print(f"Success Probability: {result2['success_probability']:.1%}")
     print(f"Recommendation: {result2['trading_recommendation']['action'].upper()}")
     for note in result2['trading_recommendation']['notes']:
         print(f"  - {note}")
-    
+
     # Test 3: Pattern comparison
     print("\n\n3. Pattern Performance Summary:")
     print("-"*50)
-    
+
     patterns_to_test = [
         ('cup_and_handle', 'trending_up'),
         ('rsi_divergence', 'high_volatility'),
         ('wedge_rising', 'low_volatility')
     ]
-    
+
     for pattern_type, condition in patterns_to_test:
         test_data = {
             'pattern_type': pattern_type,
@@ -776,7 +777,7 @@ async def demo_pattern_success_rag():
             'volume_confirmation': True,
             'timeframe': '1d'
         }
-        
+
         result = await rag.analyze_pattern(test_data)
         print(f"\n{pattern_type.upper()} in {condition}:")
         print(f"  Success Rate: {result['success_probability']:.1%}")
@@ -785,4 +786,4 @@ async def demo_pattern_success_rag():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_pattern_success_rag()) 
+    asyncio.run(demo_pattern_success_rag())

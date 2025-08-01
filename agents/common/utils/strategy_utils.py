@@ -10,6 +10,7 @@ Migrated from application/strategies for unified access by agents and research m
 import optuna
 from goldensignalsai.application.services.signal_engine import SignalEngine
 
+
 class StrategyTuner:
     """Hyperparameter optimizer for signal engine weights using Optuna."""
     def __init__(self, data, symbol, historical_returns):

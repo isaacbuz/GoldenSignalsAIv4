@@ -2,7 +2,8 @@
 feedback_loop.py
 Collects user or trading outcome feedback to refine models and strategies.
 """
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 
 class FeedbackLoop:
     def __init__(self):

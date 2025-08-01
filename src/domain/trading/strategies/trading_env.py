@@ -15,7 +15,9 @@ class TradingEnv(gym.Env):
         self.cash = 10000
         self.shares = 0
         self.action_space = spaces.Discrete(3)
-        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(len(data.columns),), dtype=np.float32)
+        self.observation_space = spaces.Box(
+            low=0, high=np.inf, shape=(len(data.columns),), dtype=np.float32
+        )
 
     def reset(self):
         self.current_step = 0
@@ -26,7 +28,7 @@ class TradingEnv(gym.Env):
         return self._get_observation()
 
     def step(self, action):
-        current_price = self.data['close'].iloc[self.current_step]
+        current_price = self.data["close"].iloc[self.current_step]
         reward = 0
         done = False
         if action == 1 and self.position == 0:

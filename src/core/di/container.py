@@ -7,11 +7,11 @@ class DIContainer:
     def __init__(self):
         self._services = {}
         self._singletons = {}
-        
+
     def register(self, interface: Type, implementation: Type, singleton: bool = False):
         """Register service"""
         self._services[interface] = (implementation, singleton)
-        
+
     def resolve(self, interface: Type) -> Any:
         """Resolve service"""
         if interface in self._services:
@@ -22,6 +22,7 @@ class DIContainer:
                 return self._singletons[interface]
             return impl()
         raise ValueError(f"Service {interface} not registered")
+
 
 # Global container
 container = DIContainer()

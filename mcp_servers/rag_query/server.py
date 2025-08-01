@@ -14,7 +14,7 @@ from datetime import datetime
 
 class RAGQueryMCPServer(MCPServer):
     """MCP server for RAG queries"""
-    
+
     def __init__(self):
         super().__init__("RAG Query Server", 8501)
         self.capabilities = [
@@ -24,17 +24,17 @@ class RAGQueryMCPServer(MCPServer):
             "rag.context_retrieve"
         ]
         self.rag_engine = None  # Will be initialized with actual RAG engine
-        
+
     async def initialize(self):
         """Initialize RAG components"""
         # In production, initialize actual RAG engine
         print(f"Initializing {self.name}...")
-        
+
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle RAG query requests"""
         method = request.get("method")
         params = request.get("params", {})
-        
+
         try:
             if method == "rag.query":
                 return await self.handle_query(params)
@@ -48,16 +48,16 @@ class RAGQueryMCPServer(MCPServer):
                 return {"capabilities": self.capabilities}
             else:
                 return {"error": f"Unknown method: {method}"}
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     async def handle_query(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle general RAG query"""
         query = params.get("query", "")
         k = params.get("k", 5)
         filters = params.get("filters", {})
-        
+
         # Mock RAG query results
         results = []
         for i in range(k):
@@ -70,20 +70,20 @@ class RAGQueryMCPServer(MCPServer):
                     "timestamp": datetime.now().isoformat()
                 }
             })
-        
+
         return {
             "query": query,
             "results": results,
             "total_found": len(results),
             "processing_time_ms": 125
         }
-    
+
     async def handle_similarity_search(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle similarity search"""
         embedding = params.get("embedding", [])
         k = params.get("k", 5)
         threshold = params.get("threshold", 0.7)
-        
+
         # Mock similarity search
         similar_items = []
         for i in range(k):
@@ -94,18 +94,18 @@ class RAGQueryMCPServer(MCPServer):
                     "similarity": similarity,
                     "data": {"type": "pattern", "confidence": similarity}
                 })
-        
+
         return {
             "similar_items": similar_items,
             "search_dimension": len(embedding) if embedding else 384
         }
-    
+
     async def handle_pattern_match(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle pattern matching request"""
         pattern_type = params.get("pattern_type", "all")
         symbol = params.get("symbol", "")
         timeframe = params.get("timeframe", "1d")
-        
+
         # Mock pattern matches
         patterns = [
             {
@@ -123,20 +123,20 @@ class RAGQueryMCPServer(MCPServer):
                 "historical_accuracy": 0.68
             }
         ]
-        
+
         return {
             "symbol": symbol,
             "patterns": patterns,
             "timeframe": timeframe,
             "analysis_timestamp": datetime.now().isoformat()
         }
-    
+
     async def handle_context_retrieve(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Retrieve context for decision making"""
         context_type = params.get("type", "general")
         symbol = params.get("symbol", "")
         lookback_hours = params.get("lookback_hours", 24)
-        
+
         # Mock context retrieval
         context = {
             "market_regime": {
@@ -156,7 +156,7 @@ class RAGQueryMCPServer(MCPServer):
                 {"type": "earnings", "date": "2024-02-15", "impact": "high"}
             ]
         }
-        
+
         return {
             "symbol": symbol,
             "context": context,

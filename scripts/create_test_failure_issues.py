@@ -223,7 +223,7 @@ created_issues = []
 for issue_data in test_issues:
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues'
     response = requests.post(url, headers=headers, json=issue_data)
-    
+
     if response.status_code == 201:
         issue = response.json()
         created_issues.append({
@@ -240,11 +240,11 @@ for issue_data in test_issues:
 if created_issues:
     with open('test_failure_issues.json', 'w') as f:
         json.dump(created_issues, f, indent=2)
-    
+
     print(f"\n✅ Successfully created {len(created_issues)} issues")
     print("\nCreated Issues:")
     for issue in created_issues:
         print(f"  - #{issue['number']}: {issue['title']}")
         print(f"    {issue['url']}")
 else:
-    print("\n❌ No issues were created") 
+    print("\n❌ No issues were created")

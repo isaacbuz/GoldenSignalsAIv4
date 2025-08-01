@@ -120,16 +120,16 @@ data:
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
-    
+
     alerting:
       alertmanagers:
       - static_configs:
         - targets:
           - alertmanager-service:9093
-    
+
     rule_files:
       - /etc/prometheus/rules/*.yml
-    
+
     scrape_configs:
     - job_name: 'kubernetes-pods'
       kubernetes_sd_configs:
@@ -320,7 +320,7 @@ data:
   alertmanager.yml: |
     global:
       slack_api_url: 'YOUR_SLACK_WEBHOOK_URL'
-    
+
     route:
       group_by: ['alertname', 'cluster', 'service']
       group_wait: 10s
@@ -331,18 +331,18 @@ data:
       - match:
           severity: critical
         receiver: critical-receiver
-    
+
     receivers:
     - name: 'default-receiver'
       slack_configs:
       - channel: '#alerts'
         title: 'GoldenSignals Alert'
         text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
-    
+
     - name: 'critical-receiver'
       slack_configs:
       - channel: '#critical-alerts'
         title: 'CRITICAL: GoldenSignals Alert'
         text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
       pagerduty_configs:
-      - service_key: 'YOUR_PAGERDUTY_SERVICE_KEY' 
+      - service_key: 'YOUR_PAGERDUTY_SERVICE_KEY'

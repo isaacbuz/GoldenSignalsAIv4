@@ -30,7 +30,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 /**
  * NotificationCenter - Placeholder component
- * 
+ *
  * This is a stub component to fix import errors.
  * In a real implementation, this would handle notifications.
  */
@@ -223,4 +223,4 @@ export const NotificationCenter: React.FC = () => {
     );
 };
 
-export default NotificationCenter; 
+export default NotificationCenter;

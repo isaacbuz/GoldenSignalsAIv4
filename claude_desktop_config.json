@@ -1,39 +1,48 @@
 {
     "mcpServers": {
         "goldensignals-trading": {
-            "command": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+            "command": "python",
             "args": [
-                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/mcp_servers/simple_trading_mcp.py"
+                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4/mcp_servers/simple_trading_mcp.py"
             ],
             "env": {
-                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2"
+                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4"
             }
         },
         "goldensignals-market-data": {
-            "command": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+            "command": "python",
             "args": [
-                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/mcp_servers/market_data_server_v2.py"
+                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4/mcp_servers/universal_market_data_mcp.py"
             ],
             "env": {
-                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2"
+                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4"
             }
         },
         "goldensignals-agent-bridge": {
-            "command": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+            "command": "python",
             "args": [
-                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/mcp_servers/agent_bridge_simplified.py"
+                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4/mcp_servers/agent_bridge_server.py"
             ],
             "env": {
-                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2"
+                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4"
             }
         },
         "goldensignals-portfolio": {
-            "command": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/.venv/bin/python",
+            "command": "python",
             "args": [
-                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2/mcp_servers/portfolio_management_server.py"
+                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4/mcp_servers/portfolio_management_server.py"
             ],
             "env": {
-                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAI_V2"
+                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4"
+            }
+        },
+        "goldensignals-gateway": {
+            "command": "python",
+            "args": [
+                "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4/mcp_servers/mcp_gateway.py"
+            ],
+            "env": {
+                "PYTHONPATH": "/Users/isaacbuz/Documents/Projects/FinTech/GoldenSignalsAIv4"
             }
         }
     }

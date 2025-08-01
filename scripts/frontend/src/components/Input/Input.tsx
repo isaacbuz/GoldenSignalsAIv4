@@ -1,6 +1,6 @@
 /**
  * Input Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -37,7 +37,7 @@ export const Input: React.FC<InputProps> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={`${styles.container} ${className || ''}`}
       data-testid={testId}
       {...props}

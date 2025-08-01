@@ -36,13 +36,13 @@
   .central-chart-container {
     min-height: 400px;
   }
-  
+
   .central-chart-container .trade-search {
     position: relative;
     bottom: auto;
     margin-top: 16px;
   }
-  
+
   .central-chart-container .prophet-orb {
     bottom: 80px;
     right: 20px;

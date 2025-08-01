@@ -398,4 +398,4 @@ export const SignalPriorityQueue: React.FC<SignalPriorityQueueProps> = ({
     );
 };
 
-export default SignalPriorityQueue; 
+export default SignalPriorityQueue;

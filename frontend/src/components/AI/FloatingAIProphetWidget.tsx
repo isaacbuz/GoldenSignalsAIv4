@@ -1,6 +1,6 @@
 /**
  * Floating AI Prophet Widget
- * 
+ *
  * A mystical and engaging AI assistant interface inspired by fortune-telling and prophecy
  * Features:
  * - Orb-like design with ethereal glow
@@ -36,19 +36,19 @@ import { styled } from '@mui/material/styles';
 // Mystical animations
 const etherealGlow = keyframes`
   0% {
-    box-shadow: 
+    box-shadow:
       0 0 20px ${alpha('#FFD700', 0.4)},
       0 0 40px ${alpha('#FFD700', 0.2)},
       0 0 60px ${alpha('#FF00FF', 0.1)};
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 30px ${alpha('#FFD700', 0.6)},
       0 0 50px ${alpha('#FFD700', 0.3)},
       0 0 80px ${alpha('#FF00FF', 0.2)};
   }
   100% {
-    box-shadow: 
+    box-shadow:
       0 0 20px ${alpha('#FFD700', 0.4)},
       0 0 40px ${alpha('#FFD700', 0.2)},
       0 0 60px ${alpha('#FF00FF', 0.1)};
@@ -248,4 +248,4 @@ export const FloatingAIProphetWidget: React.FC<FloatingAIProphetWidgetProps> = (
             />
         </ProphetOrb>
     );
-}; 
+};

@@ -22,13 +22,13 @@ def test_model_forward_pass(ml_model_fixtures, sample_market_data, model_type):
     """Test forward pass for different model types."""
     model = ml_model_fixtures[model_type]
     stock_prices = sample_market_data['stock_prices']
-    
+
     # Prepare input tensor
     input_tensor = torch.FloatTensor(stock_prices[:10]).unsqueeze(0)
-    
+
     # Perform forward pass
     output = model(input_tensor)
-    
+
     assert output is not None
     assert isinstance(output, torch.Tensor)
     assert output.shape[0] == 1  # Batch size
@@ -40,13 +40,13 @@ def test_model_performance_characteristics(ml_model_fixtures, sample_market_data
     for model_name, model in ml_model_fixtures.items():
         stock_prices = sample_market_data['stock_prices']
         input_tensor = torch.FloatTensor(stock_prices[:50]).unsqueeze(0)
-        
+
         # Measure inference time
         import time
         start_time = time.time()
         _ = model(input_tensor)
         inference_time = time.time() - start_time
-        
+
         assert inference_time < 0.1, f"{model_name} inference too slow"
 
 @pytest.mark.integration
@@ -54,10 +54,10 @@ def test_model_preprocessing(ml_model_fixtures, sample_market_data):
     """Test preprocessing capabilities of models."""
     for model_name, model in ml_model_fixtures.items():
         stock_prices = sample_market_data['stock_prices']
-        
+
         # Test preprocessing method
         preprocessed_data = model.preprocess(stock_prices)
-        
+
         assert isinstance(preprocessed_data, torch.Tensor)
         assert preprocessed_data.min() >= 0
         assert preprocessed_data.max() <= 1

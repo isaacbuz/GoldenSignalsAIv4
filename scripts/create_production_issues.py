@@ -439,16 +439,16 @@ def main():
     print("# GitHub Issues for Production Readiness")
     print(f"# Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("# Run these commands to create issues:\n")
-    
+
     for i, issue in enumerate(issues, 1):
         labels = ','.join(issue['labels'])
         title = issue['title'].replace('"', '\\"')
         body = issue['body'].replace('"', '\\"').replace('\n', '\\n')
-        
+
         print(f"# Issue {i}: {issue['title']}")
         print(f'gh issue create --title "{title}" --body "{body}" --label "{labels}"')
         print()
-    
+
     print(f"\n# Total issues to create: {len(issues)}")
     print("# To create all issues at once, save this output to a file and run:")
     print("# bash create_issues.sh")

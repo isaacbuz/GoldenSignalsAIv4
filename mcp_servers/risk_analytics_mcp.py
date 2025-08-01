@@ -61,11 +61,11 @@ class Position:
     entry_price: float
     current_price: float
     position_type: str  # long, short, call, put
-    
+
     @property
     def market_value(self) -> float:
         return self.quantity * self.current_price
-    
+
     @property
     def pnl(self) -> float:
         if self.position_type == "long":
@@ -84,11 +84,11 @@ class Portfolio:
     cash: float
     portfolio_type: PortfolioType
     created_at: datetime
-    
+
     @property
     def total_value(self) -> float:
         return self.cash + sum(pos.market_value for pos in self.positions)
-    
+
     @property
     def total_pnl(self) -> float:
         return sum(pos.pnl for pos in self.positions)
@@ -105,7 +105,7 @@ class RiskAlert:
     value: float
     threshold: float
     timestamp: datetime
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             **asdict(self),
@@ -120,31 +120,31 @@ class RiskAnalyticsMCP:
     MCP Server for centralized risk analytics
     Provides real-time risk metrics, alerts, and portfolio monitoring
     """
-    
+
     def __init__(self):
         self.app = FastAPI(title="Risk Analytics MCP Server")
-        
+
         # Portfolio storage
         self.portfolios: Dict[str, Portfolio] = {}
-        
+
         # Historical data cache
         self.price_history: Dict[str, pd.DataFrame] = {}
-        
+
         # Risk alerts
         self.alerts: List[RiskAlert] = []
         self.alert_thresholds = self._default_thresholds()
-        
+
         # WebSocket clients for real-time alerts
         self.websocket_clients: List[WebSocket] = []
-        
+
         # Metrics
         self.calculation_times: Dict[str, List[float]] = defaultdict(list)
-        
+
         self._setup_routes()
-        
+
         # Start monitoring
         asyncio.create_task(self._monitor_portfolios())
-    
+
     def _default_thresholds(self) -> Dict[str, Dict[str, float]]:
         """Default risk thresholds"""
         return {
@@ -164,10 +164,10 @@ class RiskAnalyticsMCP:
                 AlertLevel.EMERGENCY.value: 0.60
             }
         }
-    
+
     def _setup_routes(self):
         """Set up FastAPI routes"""
-        
+
         @self.app.get("/")
         async def root():
             return {
@@ -176,7 +176,7 @@ class RiskAnalyticsMCP:
                 "portfolios": len(self.portfolios),
                 "active_alerts": len([a for a in self.alerts if a.level != AlertLevel.INFO])
             }
-        
+
         @self.app.get("/tools")
         async def list_tools():
             """List available risk analytics tools"""
@@ -235,13 +235,13 @@ class RiskAnalyticsMCP:
                     }
                 ]
             }
-        
+
         @self.app.post("/call")
         async def call_tool(request: Dict[str, Any]):
             """Execute a risk analytics tool"""
             tool_name = request.get("tool")
             params = request.get("parameters", {})
-            
+
             try:
                 if tool_name == "calculate_var":
                     return await self._calculate_var(params)
@@ -257,22 +257,22 @@ class RiskAnalyticsMCP:
                     return await self._set_alert_threshold(params)
                 else:
                     raise HTTPException(status_code=400, detail=f"Unknown tool: {tool_name}")
-                    
+
             except Exception as e:
                 logger.error(f"Error in tool call {tool_name}: {e}")
                 return {"error": str(e), "tool": tool_name}
-        
+
         @self.app.post("/portfolio")
         async def create_portfolio(portfolio_data: Dict[str, Any]):
             """Create or update a portfolio"""
             import uuid
-            
+
             portfolio_id = portfolio_data.get('id', str(uuid.uuid4()))
-            
+
             positions = []
             for pos_data in portfolio_data.get('positions', []):
                 positions.append(Position(**pos_data))
-            
+
             portfolio = Portfolio(
                 id=portfolio_id,
                 name=portfolio_data.get('name', f'Portfolio {portfolio_id}'),
@@ -281,15 +281,15 @@ class RiskAnalyticsMCP:
                 portfolio_type=PortfolioType(portfolio_data.get('type', 'mixed')),
                 created_at=datetime.now()
             )
-            
+
             self.portfolios[portfolio_id] = portfolio
-            
+
             return {
                 "portfolio_id": portfolio_id,
                 "total_value": portfolio.total_value,
                 "position_count": len(positions)
             }
-        
+
         @self.app.get("/alerts")
         async def get_alerts(
             portfolio_id: Optional[str] = None,
@@ -298,62 +298,62 @@ class RiskAnalyticsMCP:
         ):
             """Get risk alerts"""
             alerts = self.alerts
-            
+
             if portfolio_id:
                 alerts = [a for a in alerts if a.portfolio_id == portfolio_id]
-            
+
             if level:
                 alert_level = AlertLevel(level)
                 alerts = [a for a in alerts if a.level == alert_level]
-            
+
             # Sort by timestamp descending
             alerts.sort(key=lambda x: x.timestamp, reverse=True)
-            
+
             return {
                 "alerts": [a.to_dict() for a in alerts[:limit]],
                 "total": len(alerts)
             }
-        
+
         @self.app.websocket("/ws/alerts")
         async def websocket_alerts(websocket: WebSocket):
             """WebSocket endpoint for real-time alerts"""
             await websocket.accept()
             self.websocket_clients.append(websocket)
-            
+
             try:
                 while True:
                     # Keep connection alive
                     await asyncio.sleep(30)
                     await websocket.send_json({"type": "ping"})
-                    
+
             except Exception as e:
                 logger.error(f"WebSocket error: {e}")
             finally:
                 self.websocket_clients.remove(websocket)
                 await websocket.close()
-    
+
     async def _calculate_var(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate Value at Risk"""
         start_time = time.time()
-        
+
         portfolio_id = params.get('portfolio_id')
         confidence_level = params.get('confidence_level', 0.95)
         time_horizon = params.get('time_horizon', 1)
         method = params.get('method', 'historical')
-        
+
         portfolio = self.portfolios.get(portfolio_id)
         if not portfolio:
             raise ValueError(f"Portfolio {portfolio_id} not found")
-        
+
         # Get portfolio returns
         returns = await self._get_portfolio_returns(portfolio, lookback_days=252)
-        
+
         if len(returns) < 30:
             raise ValueError("Insufficient data for VaR calculation")
-        
+
         # Scale returns to time horizon
         scaled_returns = returns * np.sqrt(time_horizon)
-        
+
         # Calculate VaR based on method
         if method == 'historical':
             var = np.percentile(scaled_returns, (1 - confidence_level) * 100)
@@ -365,17 +365,17 @@ class RiskAnalyticsMCP:
             var = await self._monte_carlo_var(returns, confidence_level, time_horizon)
         else:
             raise ValueError(f"Unknown VaR method: {method}")
-        
+
         # Calculate CVaR (Expected Shortfall)
         cvar = np.mean(scaled_returns[scaled_returns <= var])
-        
+
         # Record calculation time
         calc_time = time.time() - start_time
         self.calculation_times['var'].append(calc_time)
-        
+
         # Check for alerts
         await self._check_var_alert(portfolio_id, abs(var), confidence_level)
-        
+
         return {
             "portfolio_id": portfolio_id,
             "var": abs(var),  # Return as positive value
@@ -387,22 +387,22 @@ class RiskAnalyticsMCP:
             "var_amount": abs(var) * portfolio.total_value,
             "calculation_time_ms": calc_time * 1000
         }
-    
+
     async def _calculate_portfolio_metrics(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate comprehensive portfolio metrics"""
         start_time = time.time()
-        
+
         portfolio_id = params.get('portfolio_id')
         benchmark = params.get('benchmark', 'SPY')
-        
+
         portfolio = self.portfolios.get(portfolio_id)
         if not portfolio:
             raise ValueError(f"Portfolio {portfolio_id} not found")
-        
+
         # Get returns
         portfolio_returns = await self._get_portfolio_returns(portfolio)
         benchmark_returns = await self._get_benchmark_returns(benchmark, len(portfolio_returns))
-        
+
         # Calculate metrics
         metrics = {
             "total_value": portfolio.total_value,
@@ -419,27 +419,27 @@ class RiskAnalyticsMCP:
             "largest_position": self._get_largest_position(portfolio),
             "concentration_risk": self._calculate_concentration_risk(portfolio)
         }
-        
+
         # Record calculation time
         calc_time = time.time() - start_time
         self.calculation_times['portfolio_metrics'].append(calc_time)
-        
+
         return {
             "portfolio_id": portfolio_id,
             "metrics": metrics,
             "benchmark": benchmark,
             "calculation_time_ms": calc_time * 1000
         }
-    
+
     async def _run_stress_test(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Run stress test scenarios"""
         portfolio_id = params.get('portfolio_id')
         custom_scenarios = params.get('scenarios', [])
-        
+
         portfolio = self.portfolios.get(portfolio_id)
         if not portfolio:
             raise ValueError(f"Portfolio {portfolio_id} not found")
-        
+
         # Default scenarios if none provided
         if not custom_scenarios:
             scenarios = [
@@ -451,17 +451,17 @@ class RiskAnalyticsMCP:
             ]
         else:
             scenarios = custom_scenarios
-        
+
         results = []
-        
+
         for scenario in scenarios:
             # Simulate scenario impact
             scenario_result = await self._simulate_scenario(portfolio, scenario)
             results.append(scenario_result)
-        
+
         # Find worst case
         worst_case = min(results, key=lambda x: x['portfolio_value'])
-        
+
         return {
             "portfolio_id": portfolio_id,
             "current_value": portfolio.total_value,
@@ -469,27 +469,27 @@ class RiskAnalyticsMCP:
             "worst_case": worst_case,
             "survival_probability": self._calculate_survival_probability(results)
         }
-    
+
     async def _analyze_position_risk(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze risk for a specific position"""
         portfolio_id = params.get('portfolio_id')
         symbol = params.get('symbol')
-        
+
         portfolio = self.portfolios.get(portfolio_id)
         if not portfolio:
             raise ValueError(f"Portfolio {portfolio_id} not found")
-        
+
         position = next((p for p in portfolio.positions if p.symbol == symbol), None)
         if not position:
             raise ValueError(f"Position {symbol} not found in portfolio")
-        
+
         # Get position returns
         returns = await self._get_symbol_returns(symbol)
-        
+
         # Calculate position-specific metrics
         position_weight = position.market_value / portfolio.total_value
         position_var = np.percentile(returns, 5) * position.market_value
-        
+
         return {
             "symbol": symbol,
             "position_value": position.market_value,
@@ -501,29 +501,29 @@ class RiskAnalyticsMCP:
             "liquidation_cost_estimate": self._estimate_liquidation_cost(position),
             "recommendations": self._get_position_recommendations(position, position_weight)
         }
-    
+
     async def _calculate_correlation_matrix(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate portfolio correlation matrix"""
         portfolio_id = params.get('portfolio_id')
         lookback_days = params.get('lookback_days', 252)
-        
+
         portfolio = self.portfolios.get(portfolio_id)
         if not portfolio:
             raise ValueError(f"Portfolio {portfolio_id} not found")
-        
+
         # Get returns for all positions
         symbols = [p.symbol for p in portfolio.positions]
         returns_data = {}
-        
+
         for symbol in symbols:
             returns_data[symbol] = await self._get_symbol_returns(symbol, lookback_days)
-        
+
         # Create returns DataFrame
         df = pd.DataFrame(returns_data)
-        
+
         # Calculate correlation matrix
         corr_matrix = df.corr()
-        
+
         # Find highly correlated pairs
         high_correlations = []
         for i in range(len(symbols)):
@@ -534,7 +534,7 @@ class RiskAnalyticsMCP:
                         "pair": f"{symbols[i]}-{symbols[j]}",
                         "correlation": corr
                     })
-        
+
         return {
             "portfolio_id": portfolio_id,
             "correlation_matrix": corr_matrix.to_dict(),
@@ -542,25 +542,25 @@ class RiskAnalyticsMCP:
             "high_correlations": high_correlations,
             "diversification_score": self._calculate_diversification_score(corr_matrix)
         }
-    
+
     async def _set_alert_threshold(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Set custom alert thresholds"""
         metric = RiskMetric(params.get('metric'))
         level = AlertLevel(params.get('level'))
         threshold = params.get('threshold')
-        
+
         if metric.value not in self.alert_thresholds:
             self.alert_thresholds[metric.value] = {}
-        
+
         self.alert_thresholds[metric.value][level.value] = threshold
-        
+
         return {
             "metric": metric.value,
             "level": level.value,
             "threshold": threshold,
             "status": "updated"
         }
-    
+
     async def _monitor_portfolios(self):
         """Background task to monitor portfolios"""
         while True:
@@ -568,131 +568,131 @@ class RiskAnalyticsMCP:
                 for portfolio_id, portfolio in self.portfolios.items():
                     # Calculate key metrics
                     returns = await self._get_portfolio_returns(portfolio, lookback_days=20)
-                    
+
                     if len(returns) > 0:
                         # Check volatility
                         vol = np.std(returns) * np.sqrt(252)
                         await self._check_volatility_alert(portfolio_id, vol)
-                        
+
                         # Check drawdown
                         drawdown = self._calculate_max_drawdown(returns)
                         await self._check_drawdown_alert(portfolio_id, drawdown)
-                
+
                 # Sleep for 1 minute
                 await asyncio.sleep(60)
-                
+
             except Exception as e:
                 logger.error(f"Error in portfolio monitoring: {e}")
                 await asyncio.sleep(60)
-    
+
     async def _get_portfolio_returns(self, portfolio: Portfolio, lookback_days: int = 252) -> np.ndarray:
         """Get historical returns for portfolio"""
         # Simplified - in production would use actual historical data
         # Generate synthetic returns based on position volatilities
         returns = np.random.normal(0.0005, 0.02, lookback_days)
         return returns
-    
+
     async def _get_symbol_returns(self, symbol: str, lookback_days: int = 252) -> np.ndarray:
         """Get historical returns for a symbol"""
         # Simplified - in production would use actual historical data
         returns = np.random.normal(0.0005, 0.025, lookback_days)
         return returns
-    
+
     async def _get_benchmark_returns(self, benchmark: str, days: int) -> np.ndarray:
         """Get benchmark returns"""
         # Simplified - in production would use actual benchmark data
         returns = np.random.normal(0.0004, 0.015, days)
         return returns
-    
-    async def _monte_carlo_var(self, returns: np.ndarray, confidence_level: float, 
+
+    async def _monte_carlo_var(self, returns: np.ndarray, confidence_level: float,
                              time_horizon: int, simulations: int = 10000) -> float:
         """Calculate VaR using Monte Carlo simulation"""
         mean_return = np.mean(returns)
         std_return = np.std(returns)
-        
+
         # Run simulations
         simulated_returns = np.random.normal(
             mean_return * time_horizon,
             std_return * np.sqrt(time_horizon),
             simulations
         )
-        
+
         # Calculate VaR
         var = np.percentile(simulated_returns, (1 - confidence_level) * 100)
         return var
-    
+
     def _calculate_sharpe_ratio(self, returns: np.ndarray, risk_free_rate: float = 0.02) -> float:
         """Calculate Sharpe ratio"""
         excess_returns = returns - risk_free_rate / 252
         return np.mean(excess_returns) / np.std(returns) * np.sqrt(252)
-    
+
     def _calculate_sortino_ratio(self, returns: np.ndarray, risk_free_rate: float = 0.02) -> float:
         """Calculate Sortino ratio"""
         excess_returns = returns - risk_free_rate / 252
         downside_returns = returns[returns < 0]
         downside_deviation = np.std(downside_returns) if len(downside_returns) > 0 else 0.001
         return np.mean(excess_returns) / downside_deviation * np.sqrt(252)
-    
+
     def _calculate_max_drawdown(self, returns: np.ndarray) -> float:
         """Calculate maximum drawdown"""
         cum_returns = (1 + returns).cumprod()
         running_max = np.maximum.accumulate(cum_returns)
         drawdown = (cum_returns - running_max) / running_max
         return abs(np.min(drawdown))
-    
+
     def _calculate_beta(self, portfolio_returns: np.ndarray, benchmark_returns: np.ndarray) -> float:
         """Calculate portfolio beta"""
         covariance = np.cov(portfolio_returns, benchmark_returns)[0, 1]
         benchmark_variance = np.var(benchmark_returns)
         return covariance / benchmark_variance if benchmark_variance > 0 else 0
-    
+
     def _calculate_alpha(self, portfolio_returns: np.ndarray, benchmark_returns: np.ndarray,
                        risk_free_rate: float = 0.02) -> float:
         """Calculate portfolio alpha"""
         portfolio_return = np.mean(portfolio_returns) * 252
         benchmark_return = np.mean(benchmark_returns) * 252
         beta = self._calculate_beta(portfolio_returns, benchmark_returns)
-        
+
         alpha = portfolio_return - (risk_free_rate + beta * (benchmark_return - risk_free_rate))
         return alpha
-    
+
     def _get_largest_position(self, portfolio: Portfolio) -> Dict[str, Any]:
         """Get largest position in portfolio"""
         if not portfolio.positions:
             return {"symbol": "None", "weight": 0}
-        
+
         largest = max(portfolio.positions, key=lambda p: p.market_value)
         return {
             "symbol": largest.symbol,
             "weight": largest.market_value / portfolio.total_value
         }
-    
+
     def _calculate_concentration_risk(self, portfolio: Portfolio) -> float:
         """Calculate concentration risk (Herfindahl index)"""
         if not portfolio.positions:
             return 0
-        
+
         weights = [p.market_value / portfolio.total_value for p in portfolio.positions]
         return sum(w**2 for w in weights)
-    
+
     async def _simulate_scenario(self, portfolio: Portfolio, scenario: Dict[str, Any]) -> Dict[str, Any]:
         """Simulate a stress scenario"""
         market_shock = scenario.get('market_shock', 0)
         vol_shock = scenario.get('vol_shock', 1)
-        
+
         # Apply shocks to portfolio
         shocked_value = portfolio.total_value * (1 + market_shock)
-        
+
         # Estimate increased volatility impact
         normal_vol = 0.15  # 15% annual volatility
         shocked_vol = normal_vol * vol_shock
-        
+
         # Additional loss from volatility
         vol_impact = shocked_value * shocked_vol * 0.1  # Simplified
-        
+
         final_value = shocked_value - vol_impact
         loss = portfolio.total_value - final_value
-        
+
         return {
             "scenario": scenario['name'],
             "portfolio_value": final_value,
@@ -700,61 +700,61 @@ class RiskAnalyticsMCP:
             "loss_pct": (loss / portfolio.total_value) * 100,
             "survival": final_value > portfolio.total_value * 0.5
         }
-    
+
     def _calculate_survival_probability(self, stress_results: List[Dict[str, Any]]) -> float:
         """Calculate probability of surviving stress scenarios"""
         survivals = [r['survival'] for r in stress_results]
         return sum(survivals) / len(survivals) if survivals else 0
-    
+
     def _estimate_liquidation_cost(self, position: Position) -> float:
         """Estimate cost to liquidate position"""
         # Simplified - based on position size
         # Larger positions have higher liquidation costs
         size_factor = min(position.market_value / 1000000, 1)  # Cap at $1M
         base_cost = 0.001  # 10 bps base cost
-        
+
         return position.market_value * (base_cost + size_factor * 0.004)
-    
+
     def _get_position_recommendations(self, position: Position, weight: float) -> List[str]:
         """Get recommendations for position management"""
         recommendations = []
-        
+
         if weight > 0.25:
             recommendations.append(f"Position too concentrated ({weight:.1%}). Consider reducing.")
-        
+
         if position.pnl < -position.market_value * 0.20:
             recommendations.append("Position down >20%. Review stop-loss strategy.")
-        
+
         if position.position_type == "short" and position.pnl < 0:
             recommendations.append("Short position moving against you. Monitor closely.")
-        
+
         return recommendations
-    
+
     def _calculate_diversification_score(self, corr_matrix: pd.DataFrame) -> float:
         """Calculate portfolio diversification score (0-1)"""
         # Average correlation excluding diagonal
         n = len(corr_matrix)
         if n <= 1:
             return 0
-        
+
         total_corr = 0
         count = 0
-        
+
         for i in range(n):
             for j in range(n):
                 if i != j:
                     total_corr += abs(corr_matrix.iloc[i, j])
                     count += 1
-        
+
         avg_corr = total_corr / count if count > 0 else 1
-        
+
         # Convert to score (lower correlation = higher score)
         return max(0, 1 - avg_corr)
-    
+
     async def _check_var_alert(self, portfolio_id: str, var_value: float, confidence: float):
         """Check if VaR breaches alert thresholds"""
         thresholds = self.alert_thresholds.get(RiskMetric.VAR.value, {})
-        
+
         for level, threshold in thresholds.items():
             if var_value >= threshold:
                 alert = RiskAlert(
@@ -767,14 +767,14 @@ class RiskAnalyticsMCP:
                     threshold=threshold,
                     timestamp=datetime.now()
                 )
-                
+
                 await self._send_alert(alert)
                 break
-    
+
     async def _check_volatility_alert(self, portfolio_id: str, volatility: float):
         """Check if volatility breaches alert thresholds"""
         thresholds = self.alert_thresholds.get(RiskMetric.VOLATILITY.value, {})
-        
+
         for level, threshold in thresholds.items():
             if volatility >= threshold:
                 alert = RiskAlert(
@@ -787,14 +787,14 @@ class RiskAnalyticsMCP:
                     threshold=threshold,
                     timestamp=datetime.now()
                 )
-                
+
                 await self._send_alert(alert)
                 break
-    
+
     async def _check_drawdown_alert(self, portfolio_id: str, drawdown: float):
         """Check if drawdown breaches alert thresholds"""
         thresholds = self.alert_thresholds.get(RiskMetric.MAX_DRAWDOWN.value, {})
-        
+
         for level, threshold in thresholds.items():
             if drawdown >= threshold:
                 alert = RiskAlert(
@@ -807,14 +807,14 @@ class RiskAnalyticsMCP:
                     threshold=threshold,
                     timestamp=datetime.now()
                 )
-                
+
                 await self._send_alert(alert)
                 break
-    
+
     async def _send_alert(self, alert: RiskAlert):
         """Send alert to all connected clients"""
         self.alerts.append(alert)
-        
+
         # Send to WebSocket clients
         alert_data = alert.to_dict()
         for client in self.websocket_clients:
@@ -825,7 +825,7 @@ class RiskAnalyticsMCP:
                 })
             except Exception as e:
                 logger.error(f"Failed to send alert via WebSocket: {e}")
-        
+
         # Log critical alerts
         if alert.level in [AlertLevel.CRITICAL, AlertLevel.EMERGENCY]:
             logger.warning(f"RISK ALERT: {alert.message}")
@@ -835,12 +835,12 @@ class RiskAnalyticsMCP:
 async def demo_risk_analytics_mcp():
     """Demonstrate Risk Analytics MCP functionality"""
     import uvicorn
-    
+
     logger.info("Starting Risk Analytics MCP Server demo...")
-    
+
     # Create server
     server = RiskAnalyticsMCP()
-    
+
     # Add sample portfolio
     sample_portfolio = {
         "name": "Demo Portfolio",
@@ -870,11 +870,11 @@ async def demo_risk_analytics_mcp():
             }
         ]
     }
-    
+
     # Create portfolio
     response = await server.app.app.state.create_portfolio(sample_portfolio)
     logger.info(f"Created demo portfolio: {response}")
-    
+
     # Run server
     config = uvicorn.Config(
         app=server.app,
@@ -882,10 +882,10 @@ async def demo_risk_analytics_mcp():
         port=8193,
         log_level="info"
     )
-    
+
     server_instance = uvicorn.Server(config)
     await server_instance.serve()
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_risk_analytics_mcp()) 
+    asyncio.run(demo_risk_analytics_mcp())

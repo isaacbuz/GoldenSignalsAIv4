@@ -27,7 +27,7 @@ wait_for_service() {
     local name=$2
     local max_attempts=30
     local attempt=0
-    
+
     echo "⏳ Waiting for $name to be ready..."
     while [ $attempt -lt $max_attempts ]; do
         if curl -s "$url" > /dev/null; then
@@ -171,4 +171,4 @@ echo "FRONTEND_PID=$FRONTEND_PID" >> .pids
 # Keep script running and show logs
 echo "📜 Showing combined logs (Ctrl+C to exit)..."
 echo "========================================="
-tail -f logs/*.log 
+tail -f logs/*.log

@@ -86,4 +86,4 @@ resource "azurerm_application_gateway" "agw" {
     Environment = "Development"
     Application = "GoldenSignalsAI"
   }
-} 
+}

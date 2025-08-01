@@ -13,7 +13,7 @@ class PerformanceTracker:
             "symbol": symbol,
             "signal": signal,
             "price": price,
-            "timestamp": pd.Timestamp.now(tz='UTC').isoformat()
+            "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
         }
         if mode == "live":
             self.live_log.append(entry)
@@ -30,9 +30,14 @@ class PerformanceTracker:
             return pd.DataFrame()
 
         # Align signals by timestamp
-        live_df['timestamp'] = pd.to_datetime(live_df['timestamp'])
-        sim_df['timestamp'] = pd.to_datetime(sim_df['timestamp'])
+        live_df["timestamp"] = pd.to_datetime(live_df["timestamp"])
+        sim_df["timestamp"] = pd.to_datetime(sim_df["timestamp"])
 
-        merged = pd.merge_asof(sim_df.sort_values("timestamp"), live_df.sort_values("timestamp"),
-                               on="timestamp", by="symbol", suffixes=("_sim", "_live"))
+        merged = pd.merge_asof(
+            sim_df.sort_values("timestamp"),
+            live_df.sort_values("timestamp"),
+            on="timestamp",
+            by="symbol",
+            suffixes=("_sim", "_live"),
+        )
         return merged

@@ -18,46 +18,52 @@ class Validator:
             predictions.append(prediction)
         return np.array(predictions)
 
+
 class ModelService:
     """
     ModelService orchestrates all model-related operations in GoldenSignalsAI.
     It manages both custom (local) models and external foundation models via agentic workflows.
-    
+
     - Custom models: LSTM, XGBoost, LightGBM, RL, etc.
     - Foundation models: Claude, Llama, Titan, Cohere, Grok, etc., via ExternalModelService.
-    
+
     This design allows you to combine, benchmark, or ensemble custom and external models for maximum robustness and flexibility.
     """
+
     def __init__(self):
         # Custom model infrastructure
         self.model_factory = ModelFactory()
-        self.gpus = tf.config.list_physical_devices('GPU')
+        self.gpus = tf.config.list_physical_devices("GPU")
         if self.gpus:
-            tf.config.set_visible_devices(self.gpus[0], 'GPU')
-        self.validator = Validator([
-            self.model_factory.create_model("lstm"),
-            self.model_factory.create_model("xgboost"),
-            self.model_factory.create_model("lightgbm"),
-            self.model_factory.create_model("sentiment")
-        ])
+            tf.config.set_visible_devices(self.gpus[0], "GPU")
+        self.validator = Validator(
+            [
+                self.model_factory.create_model("lstm"),
+                self.model_factory.create_model("xgboost"),
+                self.model_factory.create_model("lightgbm"),
+                self.model_factory.create_model("sentiment"),
+            ]
+        )
         # Agentic foundation model abstraction layer
         # Configure providers as needed, or use default selection logic
-        self.external_models = ExternalModelService(config={
-            "sentiment_provider": "grok",  # Example: use Grok for sentiment
-            "explanation_provider": "claude",
-            "embedding_provider": "titan",
-            "vision_provider": "llama"
-        })
+        self.external_models = ExternalModelService(
+            config={
+                "sentiment_provider": "grok",  # Example: use Grok for sentiment
+                "explanation_provider": "claude",
+                "embedding_provider": "titan",
+                "vision_provider": "llama",
+            }
+        )
 
     async def train_lstm(self, X, y, symbol):
         lstm_model = self.model_factory.create_model("lstm")
-        with tf.device('/GPU:0'):
+        with tf.device("/GPU:0"):
             lstm_model.fit(X, y)
         return True
 
     async def predict_lstm(self, symbol, X, scaler):
         lstm_model = self.model_factory.create_model("lstm")
-        with tf.device('/GPU:0'):
+        with tf.device("/GPU:0"):
             prediction = lstm_model.predict(X)
         return scaler.inverse_transform(prediction)[0]
 
@@ -73,7 +79,9 @@ class ModelService:
         lightgbm_model.fit(X, y)
         return lightgbm_model.predict(X[-1:])[0]
 
-    async def analyze_sentiment(self, news_articles, use_external: bool = False, provider: str = None):
+    async def analyze_sentiment(
+        self, news_articles, use_external: bool = False, provider: str = None
+    ):
         """
         Analyze sentiment of news articles using either the custom model or an external foundation model (async).
         If use_external is True, route the request to the agentic foundation model layer (with caching, fallback, and async).
@@ -119,7 +127,7 @@ class ModelService:
         return rl_model.train(df)
 
     def _prepare_data(self, df):
-        X = df[['open', 'high', 'low', 'volume']].values
-        y = df['close'].shift(-1).values[:-1]
+        X = df[["open", "high", "low", "volume"]].values
+        y = df["close"].shift(-1).values[:-1]
         X = X[:-1]
         return X, y

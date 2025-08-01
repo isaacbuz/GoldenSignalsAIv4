@@ -349,4 +349,4 @@ export const ErrorDetails: React.FC<{ error: Error | string }> = ({ error }) => 
     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
         {typeof error === 'string' ? error : error.message}
     </Typography>
-); 
+);

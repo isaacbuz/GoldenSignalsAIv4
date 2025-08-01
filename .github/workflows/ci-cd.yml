@@ -16,7 +16,7 @@ jobs:
   backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:14
@@ -31,7 +31,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7
         options: >-
@@ -41,15 +41,15 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
     - name: Cache Python dependencies
       uses: actions/cache@v3
       with:
@@ -57,24 +57,24 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-test.txt
-    
+
     - name: Run linting
       run: |
         # Run flake8
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # Run black
         black --check src/ agents/ tests/
-    
+
     - name: Run type checking
       run: |
         mypy src/ agents/ --ignore-missing-imports
-    
+
     - name: Run backend tests
       env:
         DATABASE_URL: postgresql://testuser:testpass@localhost:5432/goldensignals_test
@@ -82,7 +82,7 @@ jobs:
         ENVIRONMENT: test
       run: |
         pytest tests/ -v --cov=src --cov=agents --cov-report=xml --cov-report=html
-    
+
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
@@ -93,35 +93,35 @@ jobs:
   frontend-test:
     name: Frontend Tests
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
-    
+
     - name: Install dependencies
       working-directory: ./frontend
       run: npm ci
-    
+
     - name: Run linting
       working-directory: ./frontend
       run: |
         npm run lint
         npm run type-check
-    
+
     - name: Run frontend tests
       working-directory: ./frontend
       run: npm test -- --coverage --watchAll=false
-    
+
     - name: Build frontend
       working-directory: ./frontend
       run: npm run build
-    
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -133,7 +133,7 @@ jobs:
     name: Integration Tests
     needs: [backend-test, frontend-test]
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:14
@@ -148,7 +148,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7
         options: >-
@@ -158,29 +158,29 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
-    
+
     - name: Install backend dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    
+
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: npm ci
-    
+
     - name: Run integration tests
       env:
         DATABASE_URL: postgresql://testuser:testpass@localhost:5432/goldensignals_test
@@ -190,7 +190,7 @@ jobs:
         # Start backend
         python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 &
         sleep 10
-        
+
         # Run integration tests
         pytest tests/integration/ -v
 
@@ -198,10 +198,10 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
@@ -209,12 +209,12 @@ jobs:
         scan-ref: '.'
         format: 'sarif'
         output: 'trivy-results.sarif'
-    
+
     - name: Upload Trivy scan results
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: 'trivy-results.sarif'
-    
+
     - name: Python security check
       run: |
         pip install safety
@@ -226,19 +226,19 @@ jobs:
     needs: [backend-test, frontend-test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    
+
     - name: Build and push backend image
       uses: docker/build-push-action@v4
       with:
@@ -250,7 +250,7 @@ jobs:
           ${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    
+
     - name: Build and push frontend image
       uses: docker/build-push-action@v4
       with:
@@ -270,10 +270,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: staging
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Deploy to staging environment
       run: |
         echo "Deploying to staging..."
@@ -287,10 +287,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Deploy to production environment
       run: |
         echo "Deploying to production..."
@@ -303,10 +303,10 @@ jobs:
     needs: [deploy-production]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Create Release
       uses: actions/create-release@v1
       env:
@@ -319,4 +319,4 @@ jobs:
           - Automated release from CI/CD pipeline
           - Commit: ${{ github.sha }}
         draft: false
-        prerelease: false 
+        prerelease: false

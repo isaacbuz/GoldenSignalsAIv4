@@ -16,4 +16,4 @@ legacy_agents:
   # Options Flow activity agent
   - adapter: src.agents.adapters.legacy.options.options_flow.OptionsFlowLegacyAdapter
     weight: 0.07
-    enabled: true 
+    enabled: true

@@ -36,4 +36,4 @@ def sample_market_data():
         'low': 149.00,
         'open': 150.50,
         'close': 151.00
-    } 
+    }

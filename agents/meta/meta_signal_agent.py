@@ -2,14 +2,14 @@
 Meta signal agent for combining signals from multiple agents.
 """
 
-from typing import List, Dict, Any, Optional
-import numpy as np
-import pandas as pd
+import asyncio
 import logging
 from datetime import datetime, timedelta
-import asyncio
-from agents.rag.news_impact_rag import NewsImpactRAG
-from agents.rag.options_flow_intelligence_rag import OptionsFlowIntelligenceRAG
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
+
 # from agents.technical.momentum.momentum_analyzer import MomentumAnalyzer
 # from agents.core.technical.trend_following_agent import TrendFollowingAgent
 # from agents.core.technical.mean_reversion_agent import MeanReversionAgent
@@ -24,6 +24,9 @@ from agents.rag.options_flow_intelligence_rag import OptionsFlowIntelligenceRAG
 # from agents.core.risk.vix_sentiment_agent import VIXSentimentAgent
 # from agents.core.risk.risk_management_agent import RiskManagementAgent
 from agents.rag.historical_market_context_rag import HistoricalMarketContextRAG
+from agents.rag.news_impact_rag import NewsImpactRAG
+from agents.rag.options_flow_intelligence_rag import OptionsFlowIntelligenceRAG
+
 
 # Mock momentum analyzer for demo
 class MomentumAnalyzer:
@@ -41,13 +44,13 @@ class MetaSignalAgent:
     def __init__(self, weight_config: Dict[str, float] = None, agent_registry=None):
         """
         Initialize the meta signal agent.
-        
+
         Args:
             weight_config (Dict[str, float], optional): Weights for each agent type.
                 Defaults to technical: 0.4, sentiment: 0.3, regime: 0.3
         """
         self.logger = logging.getLogger(__name__)
-        
+
         # Register all available agents
         self.agents = {
             # Technical agents
@@ -56,23 +59,23 @@ class MetaSignalAgent:
             # 'breakout': BreakoutAgent(),
             'momentum': MomentumAnalyzer(),
             # 'rsi': RSIAgent(),
-            
+
             # Volume agents
             # 'volume_analysis': VolumeProfileAgent(),
             # 'vwap': VWAPAgent(),
-            
+
             # Macro agents
             # 'macro_momentum': MacroMomentumAgent(),
             # 'intermarket': IntermarketAnalysisAgent(),
-            
+
             # Options agents
             # 'options_gamma': OptionsGammaAgent(),
             # 'put_call': PutCallRatioAgent(),
-            
+
             # Risk agents
             # 'vix': VIXSentimentAgent(),
             # 'risk_manager': RiskManagementAgent(),
-            
+
             # RAG agents
             'historical_context': HistoricalMarketContextRAG(use_mock_db=True),
             'news_impact': NewsImpactRAG(use_mock_db=True),
@@ -85,12 +88,12 @@ class MetaSignalAgent:
             "sentiment": 0.3,
             "regime": 0.3
         }
-        
+
         # Agent type mappings
         self.agent_types = {
             # Technical
             # 'trend_following': 'technical',
-            # 'mean_reversion': 'technical', 
+            # 'mean_reversion': 'technical',
             # 'breakout': 'technical',
             'momentum': 'technical',
             # 'rsi': 'technical',
@@ -111,7 +114,7 @@ class MetaSignalAgent:
             'news_impact': 'rag',
             'options_flow': 'rag'
         }
-        
+
         # Enhanced weights with more granularity
         self.enhanced_weights = {
             'technical': 0.25,
@@ -126,24 +129,24 @@ class MetaSignalAgent:
                                context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Aggregate signals from all available agents including RAG agents
-        
+
         Args:
             symbol: Stock symbol to analyze
             timeframe: Time period for analysis
             context: Additional context (market data, news, etc.)
-            
+
         Returns:
             Aggregated signal with comprehensive analysis
         """
         all_signals = {}
         signal_scores = {'buy': 0, 'sell': 0, 'hold': 0}
         agent_contributions = {}
-        
+
         # Collect signals from all agents
         for agent_name, agent in self.agents.items():
             try:
                 signal = None
-                
+
                 # RAG agents have different interfaces
                 if agent_name == 'historical_context':
                     result = await agent.get_historical_context(
@@ -153,14 +156,14 @@ class MetaSignalAgent:
                     )
                     # Extract signal from RAG response
                     signal = self._extract_rag_signal(result, 'historical')
-                    
+
                 elif agent_name == 'news_impact':
                     result = await agent.analyze_news_impact(
                         symbol=symbol,
                         timeframe=timeframe
                     )
                     signal = self._extract_rag_signal(result, 'news')
-                    
+
                 elif agent_name == 'options_flow':
                     # Analyze recent options flow
                     flow_data = context.get('options_flow', {
@@ -177,7 +180,7 @@ class MetaSignalAgent:
                     })
                     result = await agent.analyze_options_flow(flow_data)
                     signal = self._extract_options_flow_signal(result)
-                    
+
                 else:
                     # Traditional agents
                     if hasattr(agent, 'analyze'):
@@ -186,33 +189,33 @@ class MetaSignalAgent:
                         signal = agent.generate_signal(context.get('market_data', {}))
                     else:
                         continue
-                
+
                 if signal:
                     all_signals[agent_name] = signal
                     agent_contributions[agent_name] = signal
-                    
+
                     # Calculate weighted score
                     agent_type = self.agent_types.get(agent_name, 'technical')
                     weight = self.enhanced_weights.get(agent_type, 0.1)
-                    
+
                     signal_type = signal.get('signal', 'hold').lower()
                     confidence = signal.get('confidence', 0.5)
-                    
+
                     signal_scores[signal_type] += confidence * weight
-                    
+
             except Exception as e:
                 self.logger.warning(f"Error getting signal from {agent_name}: {e}")
                 continue
-        
+
         # Determine final signal
         total_score = sum(signal_scores.values())
         if total_score > 0:
             normalized_scores = {k: v/total_score for k, v in signal_scores.items()}
         else:
             normalized_scores = signal_scores
-            
+
         final_signal = max(signal_scores, key=signal_scores.get)
-        
+
         # Calculate conviction level
         signal_diff = abs(normalized_scores.get('buy', 0) - normalized_scores.get('sell', 0))
         if signal_diff > 0.6:
@@ -221,7 +224,7 @@ class MetaSignalAgent:
             conviction = 'medium'
         else:
             conviction = 'low'
-        
+
         return {
             'symbol': symbol,
             'timeframe': timeframe,
@@ -235,7 +238,7 @@ class MetaSignalAgent:
             'key_insights': self._extract_key_insights(all_signals),
             'timestamp': datetime.now().isoformat()
         }
-    
+
     def _extract_rag_signal(self, rag_result: Dict[str, Any], rag_type: str) -> Dict[str, Any]:
         """Extract trading signal from RAG analysis"""
         if rag_type == 'historical':
@@ -244,7 +247,7 @@ class MetaSignalAgent:
                 return {'signal': 'buy', 'confidence': pattern.get('confidence', 0.7)}
             elif pattern.get('pattern_type') == 'bearish_breakdown':
                 return {'signal': 'sell', 'confidence': pattern.get('confidence', 0.7)}
-                
+
         elif rag_type == 'news':
             sentiment = rag_result.get('aggregated_sentiment', {})
             score = sentiment.get('compound_score', 0)
@@ -252,25 +255,25 @@ class MetaSignalAgent:
                 return {'signal': 'buy', 'confidence': min(score, 0.9)}
             elif score < -0.3:
                 return {'signal': 'sell', 'confidence': min(abs(score), 0.9)}
-                
+
         return {'signal': 'hold', 'confidence': 0.5}
-    
+
     def _extract_options_flow_signal(self, flow_result: Dict[str, Any]) -> Dict[str, Any]:
         """Extract signal from options flow analysis"""
         signals = flow_result.get('trading_signals', {})
-        
+
         if signals.get('follow_smart_money'):
             action = signals.get('action', 'hold')
             confidence = signals.get('confidence', 0.5)
             return {'signal': action, 'confidence': confidence}
-            
+
         return {'signal': 'hold', 'confidence': 0.5}
-    
+
     def _get_top_contributors(self, contributions: Dict[str, Dict],
                             final_signal: str) -> List[Dict[str, Any]]:
         """Get top agents contributing to the final signal"""
         contributors = []
-        
+
         for agent_name, signal in contributions.items():
             if signal.get('signal') == final_signal:
                 contributors.append({
@@ -278,17 +281,17 @@ class MetaSignalAgent:
                     'confidence': signal.get('confidence', 0),
                     'type': self.agent_types.get(agent_name, 'unknown')
                 })
-        
+
         # Sort by confidence
         contributors.sort(key=lambda x: x['confidence'], reverse=True)
         return contributors[:5]  # Top 5
-    
+
     def _aggregate_risk_assessment(self, all_signals: Dict[str, Dict]) -> Dict[str, Any]:
         """Aggregate risk assessments from all agents"""
         risk_scores = []
         stop_losses = []
         take_profits = []
-        
+
         for agent_name, signal in all_signals.items():
             if 'risk' in signal:
                 risk_scores.append(signal['risk'])
@@ -296,19 +299,19 @@ class MetaSignalAgent:
                 stop_losses.append(signal['stop_loss'])
             if 'take_profit' in signal:
                 take_profits.append(signal['take_profit'])
-        
+
         return {
             'average_risk': np.mean(risk_scores) if risk_scores else 0.5,
             'suggested_stop_loss': np.mean(stop_losses) if stop_losses else 2.0,
             'suggested_take_profit': np.mean(take_profits) if take_profits else 5.0,
             'position_size_recommendation': self._calculate_position_size(risk_scores)
         }
-    
+
     def _calculate_position_size(self, risk_scores: List[float]) -> float:
         """Calculate recommended position size based on risk"""
         if not risk_scores:
             return 0.5
-            
+
         avg_risk = np.mean(risk_scores)
         if avg_risk < 0.3:
             return 1.0  # Full position
@@ -318,35 +321,35 @@ class MetaSignalAgent:
             return 0.5
         else:
             return 0.25  # Quarter position
-    
+
     def _extract_key_insights(self, all_signals: Dict[str, Dict]) -> List[str]:
         """Extract key insights from all agent signals"""
         insights = []
-        
+
         # Check for strong consensus
         buy_count = sum(1 for s in all_signals.values() if s.get('signal') == 'buy')
         sell_count = sum(1 for s in all_signals.values() if s.get('signal') == 'sell')
-        
+
         if buy_count > len(all_signals) * 0.7:
             insights.append("Strong bullish consensus across agents")
         elif sell_count > len(all_signals) * 0.7:
             insights.append("Strong bearish consensus across agents")
-            
+
         # Add specific insights from each agent type
         for agent_name, signal in all_signals.items():
             if 'insight' in signal:
                 insights.append(f"{agent_name}: {signal['insight']}")
-                
+
         return insights[:10]  # Limit to top 10 insights
 
     def predict(self, agent_signals: Dict[str, Dict]) -> Dict:
         """
         Combine signals from multiple agents using weighted voting.
-        
+
         Args:
             agent_signals (Dict[str, Dict]): Signals from different agents.
                 Format: { "technical": {"signal": "buy", "confidence": 0.8}, ... }
-                
+
         Returns:
             Dict: Combined signal with format:
                 {
@@ -368,4 +371,4 @@ class MetaSignalAgent:
             "signal": final_signal,
             "score": vote_scores[final_signal],
             "details": vote_scores
-        } 
+        }

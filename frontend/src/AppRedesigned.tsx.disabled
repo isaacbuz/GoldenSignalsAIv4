@@ -1,7 +1,7 @@
 /**
  * GoldenSignalsAI - Professional Signals Intelligence Platform
  * Redesigned App Component
- * 
+ *
  * This implements the new professional UI/UX design focused on:
  * - AI-powered signal generation (NOT trading)
  * - Professional quant aesthetics
@@ -373,4 +373,4 @@ export const AppRedesigned: React.FC = () => {
             </ThemeProvider>
         </QueryClientProvider>
     );
-}; 
+};

@@ -13,7 +13,7 @@ variables:
 stages:
 - stage: Build
   displayName: Build and push stage
-  jobs:  
+  jobs:
   - job: Build
     displayName: Build job
     pool:
@@ -87,4 +87,4 @@ stages:
                 $(containerRegistry)/dashboard:$(tag)
               imagePullSecrets: |
                 acr-secret
-              kubernetesServiceConnection: goldensignals-aks 
+              kubernetesServiceConnection: goldensignals-aks

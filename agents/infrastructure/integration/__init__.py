@@ -3,10 +3,10 @@ Integration utilities for external model adapters and caching.
 """
 
 from .integration_utils import (
-    ExternalCache,
-    ModelProviderAdapter,
     AnthropicClaudeAdapter,
-    MetaLlamaAdapter
+    ExternalCache,
+    MetaLlamaAdapter,
+    ModelProviderAdapter,
 )
 
 __all__ = [
@@ -14,4 +14,4 @@ __all__ = [
     'ModelProviderAdapter',
     'AnthropicClaudeAdapter',
     'MetaLlamaAdapter'
-] 
+]

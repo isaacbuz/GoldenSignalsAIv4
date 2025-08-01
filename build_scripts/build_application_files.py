@@ -577,7 +577,7 @@ class DataService:
         historical_df = await fetch_stock_data(symbol)
         news_articles = await fetch_news_articles(symbol)
         realtime_df = await fetch_realtime_data(symbol)
-        
+
         if realtime_df is not None:
             event = {
                 "type": "PriceUpdateEvent",
@@ -586,7 +586,7 @@ class DataService:
                 "timestamp": pd.Timestamp.now(tz='UTC')
             }
             await self.event_publisher.publish("price_updates", event)
-        
+
         return historical_df, news_articles, realtime_df
 
     async def fetch_multi_timeframe_data(self, symbol):

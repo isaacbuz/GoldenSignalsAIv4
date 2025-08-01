@@ -51,11 +51,11 @@ alertmanager:
 grafana:
   enabled: true
   adminPassword: "${GRAFANA_ADMIN_PASSWORD}"
-  
+
   persistence:
     enabled: true
     size: 10Gi
-    
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -84,4 +84,4 @@ grafana:
       cpu: 250m
     limits:
       memory: 512Mi
-      cpu: 500m 
+      cpu: 500m

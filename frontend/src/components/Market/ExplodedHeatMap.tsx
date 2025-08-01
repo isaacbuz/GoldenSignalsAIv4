@@ -1,6 +1,6 @@
 /**
  * ExplodedHeatMap Component - Moomoo-style Market Visualization
- * 
+ *
  * A treemap-based heat map where all tiles fit together perfectly like a puzzle
  * with no gaps, similar to moomoo's market heat map
  */
@@ -646,4 +646,4 @@ const ExplodedHeatMap: React.FC<ExplodedHeatMapProps> = ({
     );
 };
 
-export default ExplodedHeatMap; 
+export default ExplodedHeatMap;

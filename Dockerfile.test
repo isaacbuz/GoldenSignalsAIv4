@@ -28,4 +28,4 @@ ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Default command runs integration tests
-CMD ["python", "-m", "pytest", "tests/integration/", "-v", "--tb=short"] 
+CMD ["python", "-m", "pytest", "tests/integration/", "-v", "--tb=short"]

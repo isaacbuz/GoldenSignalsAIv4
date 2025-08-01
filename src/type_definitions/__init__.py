@@ -10,6 +10,7 @@ import pandas as pd
 
 class MarketData(TypedDict):
     """Market data structure"""
+
     symbol: str
     timestamp: datetime
     open: float
@@ -17,10 +18,11 @@ class MarketData(TypedDict):
     low: float
     close: float
     volume: int
-    
+
 
 class Signal(TypedDict):
     """Trading signal structure"""
+
     id: str
     symbol: str
     action: str  # BUY, SELL, HOLD
@@ -39,6 +41,7 @@ class Signal(TypedDict):
 
 class RiskAnalysis(TypedDict):
     """Risk analysis result structure"""
+
     total_risk: float
     position_size: float
     max_loss: float
@@ -48,6 +51,7 @@ class RiskAnalysis(TypedDict):
 
 class DataValidationReport(TypedDict):
     """Data validation report structure"""
+
     symbol: str
     is_valid: bool
     issues: List[str]
@@ -57,11 +61,11 @@ class DataValidationReport(TypedDict):
 
 class DataProvider(Protocol):
     """Protocol for data providers"""
-    
+
     async def fetch_data(self, symbol: str, period: str, interval: str) -> pd.DataFrame:
         """Fetch market data"""
         ...
-        
+
     async def validate_connection(self) -> bool:
         """Validate provider connection"""
         ...
@@ -69,11 +73,11 @@ class DataProvider(Protocol):
 
 class SignalGenerator(Protocol):
     """Protocol for signal generators"""
-    
+
     async def generate_signals(self, symbols: List[str]) -> List[Signal]:
         """Generate trading signals"""
         ...
-        
+
     def get_confidence_threshold(self) -> float:
         """Get confidence threshold"""
-        ... 
+        ...

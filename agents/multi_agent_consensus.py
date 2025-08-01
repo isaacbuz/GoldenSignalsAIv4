@@ -4,17 +4,18 @@ Coordinates multiple agents to reach consensus on trading decisions
 Issue #189: Agent-5: Develop Multi-Agent Consensus System
 """
 
+import asyncio
+import json
+import logging
+from abc import ABC, abstractmethod
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple, Set
-import asyncio
-from dataclasses import dataclass, field
-from enum import Enum
-import logging
-from collections import defaultdict, deque
-import json
-from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
 
@@ -103,13 +104,13 @@ class AgentPerformance:
 
 class ConsensusEngine:
     """Core consensus engine"""
-    
+
     def __init__(self):
         self.voting_weights = self._initialize_weights()
         self.performance_tracker = {}
         self.consensus_history = deque(maxlen=1000)
         self.conflict_resolution_rules = self._load_conflict_rules()
-    
+
     def _initialize_weights(self) -> Dict[AgentType, float]:
         """Initialize default agent weights"""
         return {
@@ -123,7 +124,7 @@ class ConsensusEngine:
             AgentType.ARBITRAGE: 0.10,
             AgentType.LIQUIDITY: 0.05
         }
-    
+
     def _load_conflict_rules(self) -> Dict[str, Any]:
         """Load rules for resolving conflicts"""
         return {
@@ -133,17 +134,17 @@ class ConsensusEngine:
             'super_majority': 0.75,  # % agreement for strong signal
             'tie_breaker': AgentType.FLOW  # Tie-breaker agent
         }
-    
+
     async def reach_consensus(self, signals: List[AgentSignal],
                             method: ConsensusMethod = ConsensusMethod.ADAPTIVE) -> ConsensusResult:
         """Reach consensus from agent signals"""
         if not signals:
             return self._create_no_signal_result()
-        
+
         # Select consensus method
         if method == ConsensusMethod.ADAPTIVE:
             method = self._select_best_method(signals)
-        
+
         # Apply consensus method
         if method == ConsensusMethod.WEIGHTED_VOTING:
             result = await self._weighted_voting_consensus(signals)
@@ -159,89 +160,89 @@ class ConsensusEngine:
             result = await self._ensemble_consensus(signals)
         else:
             result = await self._weighted_voting_consensus(signals)
-        
+
         # Apply conflict resolution
         result = self._resolve_conflicts(result, signals)
-        
+
         # Risk check
         result = self._apply_risk_checks(result, signals)
-        
+
         # Store in history
         self.consensus_history.append(result)
-        
+
         return result
-    
+
     def _select_best_method(self, signals: List[AgentSignal]) -> ConsensusMethod:
         """Select best consensus method based on situation"""
         # Check signal diversity
         signal_types = set(s.signal for s in signals)
         confidence_variance = np.var([s.confidence for s in signals])
-        
+
         # High disagreement -> BFT
         if len(signal_types) >= 4:
             return ConsensusMethod.BYZANTINE_FAULT_TOLERANT
-        
+
         # High confidence variance -> Performance weighted
         if confidence_variance > 0.1:
             return ConsensusMethod.PERFORMANCE_WEIGHTED
-        
+
         # Many agents -> Hierarchical
         if len(signals) > 7:
             return ConsensusMethod.HIERARCHICAL
-        
+
         # Default to adaptive weighted
         return ConsensusMethod.CONFIDENCE_WEIGHTED
-    
+
     async def _weighted_voting_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Simple weighted voting"""
         votes = defaultdict(float)
-        
+
         for signal in signals:
             weight = self.voting_weights.get(signal.agent_type, 0.1)
             votes[signal.signal] += weight
-        
+
         # Normalize votes
         total_weight = sum(votes.values())
         if total_weight > 0:
             for signal_type in votes:
                 votes[signal_type] /= total_weight
-        
+
         # Get winning signal
         final_signal = max(votes.items(), key=lambda x: x[1])[0]
         confidence = votes[final_signal]
-        
+
         return self._create_consensus_result(
             final_signal, confidence, ConsensusMethod.WEIGHTED_VOTING,
             signals, votes
         )
-    
+
     async def _confidence_weighted_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Weight by agent confidence"""
         votes = defaultdict(float)
         confidence_sum = defaultdict(float)
-        
+
         for signal in signals:
             weight = self.voting_weights.get(signal.agent_type, 0.1)
             confidence_weight = weight * signal.confidence
             votes[signal.signal] += confidence_weight
             confidence_sum[signal.signal] += signal.confidence
-        
+
         # Get winning signal
         final_signal = max(votes.items(), key=lambda x: x[1])[0]
-        
+
         # Average confidence of winning signal
         signal_count = sum(1 for s in signals if s.signal == final_signal)
         avg_confidence = confidence_sum[final_signal] / signal_count if signal_count > 0 else 0
-        
+
         return self._create_consensus_result(
             final_signal, avg_confidence, ConsensusMethod.CONFIDENCE_WEIGHTED,
             signals, votes
         )
-    
+
     async def _performance_weighted_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Weight by historical performance"""
         votes = defaultdict(float)
-        
+
         for signal in signals:
             # Get agent performance
             perf = self.performance_tracker.get(signal.agent_id)
@@ -249,37 +250,37 @@ class ConsensusEngine:
                 performance_weight = perf.accuracy * perf.sharpe_ratio
             else:
                 performance_weight = 0.5  # Default for new agents
-            
+
             base_weight = self.voting_weights.get(signal.agent_type, 0.1)
             total_weight = base_weight * performance_weight * signal.confidence
             votes[signal.signal] += total_weight
-        
+
         # Normalize and get winner
         total = sum(votes.values())
         if total > 0:
             for s in votes:
                 votes[s] /= total
-        
+
         final_signal = max(votes.items(), key=lambda x: x[1])[0]
         confidence = votes[final_signal]
-        
+
         return self._create_consensus_result(
             final_signal, confidence, ConsensusMethod.PERFORMANCE_WEIGHTED,
             signals, votes
         )
-    
+
     async def _bft_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Byzantine Fault Tolerant consensus - resistant to bad actors"""
         # Remove outliers
         filtered_signals = self._filter_byzantine_signals(signals)
-        
+
         # Multi-round voting
         rounds = 3
         votes_history = []
-        
+
         for round_num in range(rounds):
             votes = defaultdict(float)
-            
+
             for signal in filtered_signals:
                 # Adjust weight based on previous rounds
                 if round_num > 0:
@@ -288,34 +289,34 @@ class ConsensusEngine:
                     )
                 else:
                     consistency_bonus = 1.0
-                
+
                 weight = self.voting_weights.get(signal.agent_type, 0.1)
                 votes[signal.signal] += weight * signal.confidence * consistency_bonus
-            
+
             votes_history.append(votes)
-        
+
         # Final tally
         final_votes = votes_history[-1]
         final_signal = max(final_votes.items(), key=lambda x: x[1])[0]
-        
+
         # Calculate byzantine confidence
         confidence = self._calculate_bft_confidence(final_votes, len(filtered_signals))
-        
+
         return self._create_consensus_result(
             final_signal, confidence, ConsensusMethod.BYZANTINE_FAULT_TOLERANT,
             filtered_signals, final_votes
         )
-    
+
     def _filter_byzantine_signals(self, signals: List[AgentSignal]) -> List[AgentSignal]:
         """Filter out potentially malicious/faulty signals"""
         if len(signals) < 3:
             return signals
-        
+
         # Calculate median confidence
         confidences = [s.confidence for s in signals]
         median_conf = np.median(confidences)
         std_conf = np.std(confidences)
-        
+
         # Filter extreme outliers
         filtered = []
         for signal in signals:
@@ -324,98 +325,98 @@ class ConsensusEngine:
                 filtered.append(signal)
             else:
                 logger.warning(f"Filtered byzantine signal from {signal.agent_id}")
-        
+
         return filtered
-    
+
     def _calculate_consistency_bonus(self, signal: AgentSignal,
                                    votes_history: List[Dict]) -> float:
         """Calculate consistency bonus for BFT"""
         if not votes_history:
             return 1.0
-        
+
         # Check if agent has been consistent
         consistency_score = 0
         for votes in votes_history:
             if signal.signal in votes:
                 consistency_score += 1
-        
+
         return 1.0 + (consistency_score / len(votes_history)) * 0.5
-    
+
     def _calculate_bft_confidence(self, votes: Dict[SignalType, float],
                                 num_agents: int) -> float:
         """Calculate confidence for BFT consensus"""
         if not votes or num_agents == 0:
             return 0.0
-        
+
         # Get top two signals
         sorted_votes = sorted(votes.items(), key=lambda x: x[1], reverse=True)
-        
+
         if len(sorted_votes) == 1:
             return sorted_votes[0][1]
-        
+
         # Calculate margin between top two
         margin = sorted_votes[0][1] - sorted_votes[1][1]
-        
+
         # Adjust confidence based on margin and participation
         base_confidence = sorted_votes[0][1]
         margin_bonus = min(0.2, margin)
         participation_factor = min(1.0, num_agents / 5)  # Expect at least 5 agents
-        
+
         return min(1.0, base_confidence + margin_bonus) * participation_factor
-    
+
     async def _hierarchical_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Hierarchical consensus - group by agent type first"""
         # Group signals by type
         type_groups = defaultdict(list)
         for signal in signals:
             type_groups[signal.agent_type].append(signal)
-        
+
         # Get consensus within each group
         group_consensus = {}
         for agent_type, group_signals in type_groups.items():
             if group_signals:
                 group_result = await self._group_consensus(group_signals)
                 group_consensus[agent_type] = group_result
-        
+
         # Meta-consensus across groups
         meta_votes = defaultdict(float)
         for agent_type, consensus in group_consensus.items():
             weight = self.voting_weights.get(agent_type, 0.1)
             meta_votes[consensus['signal']] += weight * consensus['confidence']
-        
+
         # Final signal
         final_signal = max(meta_votes.items(), key=lambda x: x[1])[0]
         confidence = meta_votes[final_signal] / sum(meta_votes.values())
-        
+
         return self._create_consensus_result(
             final_signal, confidence, ConsensusMethod.HIERARCHICAL,
             signals, meta_votes
         )
-    
+
     async def _group_consensus(self, signals: List[AgentSignal]) -> Dict[str, Any]:
         """Get consensus within a group"""
         if not signals:
             return {'signal': SignalType.NO_SIGNAL, 'confidence': 0}
-        
+
         # Simple majority within group
         signal_counts = defaultdict(int)
         confidence_sum = defaultdict(float)
-        
+
         for signal in signals:
             signal_counts[signal.signal] += 1
             confidence_sum[signal.signal] += signal.confidence
-        
+
         # Get majority signal
         majority_signal = max(signal_counts.items(), key=lambda x: x[1])[0]
         avg_confidence = confidence_sum[majority_signal] / signal_counts[majority_signal]
-        
+
         return {
             'signal': majority_signal,
             'confidence': avg_confidence,
             'count': signal_counts[majority_signal],
             'total': len(signals)
         }
-    
+
     async def _ensemble_consensus(self, signals: List[AgentSignal]) -> ConsensusResult:
         """Ensemble method - combine multiple consensus approaches"""
         methods = [
@@ -423,7 +424,7 @@ class ConsensusEngine:
             ConsensusMethod.CONFIDENCE_WEIGHTED,
             ConsensusMethod.PERFORMANCE_WEIGHTED
         ]
-        
+
         ensemble_results = []
         for method in methods:
             if method == ConsensusMethod.WEIGHTED_VOTING:
@@ -432,26 +433,26 @@ class ConsensusEngine:
                 result = await self._confidence_weighted_consensus(signals)
             elif method == ConsensusMethod.PERFORMANCE_WEIGHTED:
                 result = await self._performance_weighted_consensus(signals)
-            
+
             ensemble_results.append(result)
-        
+
         # Combine ensemble results
         final_votes = defaultdict(float)
         for result in ensemble_results:
             final_votes[result.final_signal] += result.confidence
-        
+
         # Average the votes
         for signal in final_votes:
             final_votes[signal] /= len(methods)
-        
+
         final_signal = max(final_votes.items(), key=lambda x: x[1])[0]
         confidence = final_votes[final_signal]
-        
+
         return self._create_consensus_result(
             final_signal, confidence, ConsensusMethod.ENSEMBLE,
             signals, final_votes
         )
-    
+
     def _resolve_conflicts(self, result: ConsensusResult,
                          signals: List[AgentSignal]) -> ConsensusResult:
         """Resolve conflicts in consensus"""
@@ -466,11 +467,11 @@ class ConsensusEngine:
                         result.final_signal = SignalType.HOLD
                         result.confidence *= 0.5
                         result.metadata['risk_veto'] = True
-        
+
         # Check agreement score
         agreement = self._calculate_agreement_score(signals, result.final_signal)
         result.agreement_score = agreement
-        
+
         # Downgrade signal if low agreement
         if agreement < 0.5 and result.final_signal != SignalType.HOLD:
             result.confidence *= 0.7
@@ -478,9 +479,9 @@ class ConsensusEngine:
                 result.final_signal = SignalType.BUY
             elif result.final_signal == SignalType.STRONG_SELL:
                 result.final_signal = SignalType.SELL
-        
+
         return result
-    
+
     def _apply_risk_checks(self, result: ConsensusResult,
                          signals: List[AgentSignal]) -> ConsensusResult:
         """Apply risk management checks"""
@@ -490,32 +491,32 @@ class ConsensusEngine:
             'risk_score': 0.5,
             'warnings': []
         }
-        
+
         # Collect risk metrics
         stop_losses = [s.stop_loss for s in signals if s.stop_loss]
         position_sizes = [s.position_size for s in signals if s.position_size]
-        
+
         if stop_losses:
             risk_assessment['recommended_stop_loss'] = np.mean(stop_losses)
             risk_assessment['stop_loss_required'] = True
-        
+
         if position_sizes:
             risk_assessment['max_position_size'] = np.min(position_sizes)
-        
+
         # High confidence but high disagreement = risky
         if result.confidence > 0.8 and result.agreement_score < 0.6:
             risk_assessment['risk_score'] = 0.8
             risk_assessment['warnings'].append('High confidence but low agreement')
-        
+
         result.risk_assessment = risk_assessment
-        
+
         # Execution recommendation
         result.execution_recommendation = self._create_execution_recommendation(
             result, signals
         )
-        
+
         return result
-    
+
     def _create_execution_recommendation(self, result: ConsensusResult,
                                        signals: List[AgentSignal]) -> Dict[str, Any]:
         """Create execution recommendations"""
@@ -526,40 +527,40 @@ class ConsensusEngine:
             'urgency': 'high' if result.confidence > 0.8 else 'normal',
             'time_horizon': self._determine_time_horizon(signals)
         }
-        
+
         # Add specific parameters
         if result.risk_assessment.get('stop_loss_required'):
             exec_rec['stop_loss'] = result.risk_assessment.get('recommended_stop_loss')
-        
+
         # Get execution agent recommendations
         exec_signals = [s for s in signals if s.agent_type == AgentType.EXECUTION]
         if exec_signals:
             exec_rec['execution_notes'] = exec_signals[0].supporting_data
-        
+
         return exec_rec
-    
+
     def _determine_time_horizon(self, signals: List[AgentSignal]) -> str:
         """Determine consensus time horizon"""
         horizons = [s.time_horizon for s in signals if s.time_horizon]
         if not horizons:
             return 'medium'
-        
+
         # Get most common
         horizon_counts = defaultdict(int)
         for h in horizons:
             horizon_counts[h] += 1
-        
+
         return max(horizon_counts.items(), key=lambda x: x[1])[0]
-    
+
     def _calculate_agreement_score(self, signals: List[AgentSignal],
                                  consensus_signal: SignalType) -> float:
         """Calculate how much agents agree"""
         if not signals:
             return 0.0
-        
+
         agreeing = sum(1 for s in signals if s.signal == consensus_signal)
         return agreeing / len(signals)
-    
+
     def _create_consensus_result(self, final_signal: SignalType,
                                confidence: float,
                                method: ConsensusMethod,
@@ -570,7 +571,7 @@ class ConsensusEngine:
         supporting_signals = defaultdict(list)
         for signal in signals:
             supporting_signals[signal.signal].append(signal.agent_id)
-        
+
         # Find dissenting agents
         dissenting = []
         for signal in signals:
@@ -581,7 +582,7 @@ class ConsensusEngine:
                     'confidence': signal.confidence,
                     'reasoning': signal.reasoning
                 })
-        
+
         return ConsensusResult(
             consensus_id=f"CONSENSUS_{datetime.now().timestamp()}",
             final_signal=final_signal,
@@ -596,7 +597,7 @@ class ConsensusEngine:
             timestamp=datetime.now(),
             metadata={'vote_distribution': dict(votes)}
         )
-    
+
     def _create_no_signal_result(self) -> ConsensusResult:
         """Create result when no signals available"""
         return ConsensusResult(
@@ -613,7 +614,7 @@ class ConsensusEngine:
             timestamp=datetime.now(),
             metadata={'reason': 'no_signals'}
         )
-    
+
     def update_agent_performance(self, agent_id: str, outcome: float):
         """Update agent performance tracking"""
         if agent_id not in self.performance_tracker:
@@ -628,23 +629,23 @@ class ConsensusEngine:
                 specialties={},
                 last_updated=datetime.now()
             )
-        
+
         perf = self.performance_tracker[agent_id]
         perf.total_signals += 1
         if outcome > 0:
             perf.correct_signals += 1
-        
+
         perf.accuracy = perf.correct_signals / perf.total_signals
         perf.recent_performance.append(outcome)
         if len(perf.recent_performance) > 20:
             perf.recent_performance.pop(0)
-        
+
         # Update Sharpe ratio
         if len(perf.recent_performance) >= 5:
             returns = np.array(perf.recent_performance)
             perf.avg_return = np.mean(returns)
             perf.sharpe_ratio = np.mean(returns) / (np.std(returns) + 1e-6)
-        
+
         perf.last_updated = datetime.now()
 
 
@@ -653,14 +654,14 @@ class MultiAgentConsensus:
     Main Multi-Agent Consensus System
     Coordinates all trading agents to reach unified decisions
     """
-    
+
     def __init__(self):
         """Initialize the consensus system"""
         self.consensus_engine = ConsensusEngine()
         self.registered_agents = {}
         self.active_sessions = {}
         self.decision_history = deque(maxlen=1000)
-        
+
         # Performance metrics
         self.metrics = {
             'total_decisions': 0,
@@ -668,7 +669,7 @@ class MultiAgentConsensus:
             'consensus_time_ms': deque(maxlen=100),
             'agreement_scores': deque(maxlen=100)
         }
-    
+
     def register_agent(self, agent_id: str, agent_type: AgentType,
                       capabilities: List[str]):
         """Register an agent with the consensus system"""
@@ -680,15 +681,15 @@ class MultiAgentConsensus:
             'registered_at': datetime.now()
         }
         logger.info(f"Registered agent {agent_id} of type {agent_type.value}")
-    
-    async def request_consensus(self, symbol: str, 
+
+    async def request_consensus(self, symbol: str,
                               context: Dict[str, Any],
                               required_agents: Optional[List[AgentType]] = None,
                               timeout: float = 5.0) -> ConsensusResult:
         """Request consensus from agents"""
         start_time = datetime.now()
         session_id = f"SESSION_{symbol}_{start_time.timestamp()}"
-        
+
         # Start consensus session
         self.active_sessions[session_id] = {
             'symbol': symbol,
@@ -696,22 +697,22 @@ class MultiAgentConsensus:
             'start_time': start_time,
             'signals_received': []
         }
-        
+
         try:
             # Collect signals from agents
             signals = await self._collect_agent_signals(
                 symbol, context, required_agents, timeout
             )
-            
+
             # Reach consensus
             consensus = await self.consensus_engine.reach_consensus(signals)
-            
+
             # Record metrics
             elapsed_ms = (datetime.now() - start_time).total_seconds() * 1000
             self.metrics['consensus_time_ms'].append(elapsed_ms)
             self.metrics['agreement_scores'].append(consensus.agreement_score)
             self.metrics['total_decisions'] += 1
-            
+
             # Store decision
             self.decision_history.append({
                 'session_id': session_id,
@@ -719,21 +720,21 @@ class MultiAgentConsensus:
                 'consensus': consensus,
                 'timestamp': datetime.now()
             })
-            
+
             return consensus
-            
+
         finally:
             # Clean up session
             if session_id in self.active_sessions:
                 del self.active_sessions[session_id]
-    
+
     async def _collect_agent_signals(self, symbol: str,
                                    context: Dict[str, Any],
                                    required_agents: Optional[List[AgentType]],
                                    timeout: float) -> List[AgentSignal]:
         """Collect signals from registered agents"""
         signals = []
-        
+
         # Determine which agents to query
         if required_agents:
             agents_to_query = [
@@ -745,19 +746,19 @@ class MultiAgentConsensus:
                 (aid, info) for aid, info in self.registered_agents.items()
                 if info['active']
             ]
-        
+
         # Query agents in parallel
         tasks = []
         for agent_id, agent_info in agents_to_query:
             task = self._get_agent_signal(agent_id, agent_info, symbol, context)
             tasks.append(task)
-        
+
         # Wait for signals with timeout
         if tasks:
             done, pending = await asyncio.wait(
                 tasks, timeout=timeout, return_when=asyncio.ALL_COMPLETED
             )
-            
+
             # Collect completed signals
             for task in done:
                 try:
@@ -766,24 +767,24 @@ class MultiAgentConsensus:
                         signals.append(signal)
                 except Exception as e:
                     logger.error(f"Error getting signal: {e}")
-            
+
             # Cancel pending tasks
             for task in pending:
                 task.cancel()
-        
+
         return signals
-    
+
     async def _get_agent_signal(self, agent_id: str, agent_info: Dict[str, Any],
                               symbol: str, context: Dict[str, Any]) -> Optional[AgentSignal]:
         """Get signal from individual agent (mock for demo)"""
         # In production, this would call the actual agent
         # For demo, generate mock signals based on agent type
-        
+
         agent_type = agent_info['type']
-        
+
         # Simulate agent processing time
         await asyncio.sleep(np.random.uniform(0.1, 0.5))
-        
+
         # Generate mock signal based on agent type
         if agent_type == AgentType.SENTIMENT:
             # Sentiment agent logic
@@ -797,9 +798,9 @@ class MultiAgentConsensus:
             else:
                 signal = SignalType.HOLD
                 confidence = 0.6
-            
+
             reasoning = f"Sentiment score: {sentiment_score:.2f}"
-            
+
         elif agent_type == AgentType.TECHNICAL:
             # Technical agent logic
             rsi = context.get('technical', {}).get('rsi', 50)
@@ -815,7 +816,7 @@ class MultiAgentConsensus:
                 signal = SignalType.HOLD
                 confidence = 0.5
                 reasoning = f"RSI neutral at {rsi}"
-                
+
         elif agent_type == AgentType.FLOW:
             # Options flow agent logic
             flow_score = context.get('options_flow', {}).get('smart_money_score', 50)
@@ -831,7 +832,7 @@ class MultiAgentConsensus:
                 signal = SignalType.HOLD
                 confidence = 0.4
                 reasoning = f"Mixed flow signals, score: {flow_score}"
-                
+
         elif agent_type == AgentType.RISK:
             # Risk agent logic
             risk_score = context.get('risk', {}).get('score', 0.5)
@@ -843,13 +844,13 @@ class MultiAgentConsensus:
                 signal = SignalType.HOLD
                 confidence = 0.7
                 reasoning = f"Risk within acceptable range: {risk_score:.2f}"
-                
+
         else:
             # Default logic for other agents
             signal = SignalType.HOLD
             confidence = 0.5
             reasoning = "Default signal"
-        
+
         return AgentSignal(
             agent_id=agent_id,
             agent_type=agent_type,
@@ -866,25 +867,25 @@ class MultiAgentConsensus:
             stop_loss=0.02 if signal in [SignalType.BUY, SignalType.STRONG_BUY] else None,
             position_size=min(1.0, confidence)
         )
-    
+
     def get_consensus_analytics(self) -> Dict[str, Any]:
         """Get analytics on consensus performance"""
         recent_decisions = list(self.decision_history)[-50:]
-        
+
         # Signal distribution
         signal_distribution = defaultdict(int)
         for decision in recent_decisions:
             signal_distribution[decision['consensus'].final_signal.value] += 1
-        
+
         # Method usage
         method_usage = defaultdict(int)
         for decision in recent_decisions:
             method_usage[decision['consensus'].method_used.value] += 1
-        
+
         # Average metrics
         avg_consensus_time = np.mean(self.metrics['consensus_time_ms']) if self.metrics['consensus_time_ms'] else 0
         avg_agreement = np.mean(self.metrics['agreement_scores']) if self.metrics['agreement_scores'] else 0
-        
+
         return {
             'total_decisions': self.metrics['total_decisions'],
             'avg_consensus_time_ms': avg_consensus_time,
@@ -892,21 +893,21 @@ class MultiAgentConsensus:
             'signal_distribution': dict(signal_distribution),
             'method_usage': dict(method_usage),
             'active_agents': len([a for a in self.registered_agents.values() if a['active']]),
-            'success_rate': self.metrics['profitable_decisions'] / self.metrics['total_decisions'] 
+            'success_rate': self.metrics['profitable_decisions'] / self.metrics['total_decisions']
                           if self.metrics['total_decisions'] > 0 else 0
         }
-    
+
     def update_decision_outcome(self, session_id: str, outcome: float):
         """Update the outcome of a consensus decision"""
         # Find the decision
         for decision in self.decision_history:
             if decision.get('session_id') == session_id:
                 decision['outcome'] = outcome
-                
+
                 # Update metrics
                 if outcome > 0:
                     self.metrics['profitable_decisions'] += 1
-                
+
                 # Update individual agent performance
                 consensus = decision['consensus']
                 for agent_id in consensus.participating_agents:
@@ -920,7 +921,7 @@ class MultiAgentConsensus:
                     else:
                         # Dissenting agents get negative outcome
                         self.consensus_engine.update_agent_performance(agent_id, -abs(outcome) * 0.5)
-                
+
                 break
 
 
@@ -928,10 +929,10 @@ class MultiAgentConsensus:
 async def demo_consensus_system():
     """Demonstrate the Multi-Agent Consensus System"""
     system = MultiAgentConsensus()
-    
+
     print("Multi-Agent Consensus System Demo")
     print("="*70)
-    
+
     # Register agents
     print("\n📝 Registering Agents...")
     agents = [
@@ -942,15 +943,15 @@ async def demo_consensus_system():
         ('regime_001', AgentType.REGIME, ['market_regime']),
         ('liquidity_001', AgentType.LIQUIDITY, ['liquidity', 'execution'])
     ]
-    
+
     for agent_id, agent_type, capabilities in agents:
         system.register_agent(agent_id, agent_type, capabilities)
         print(f"  ✓ {agent_id} ({agent_type.value})")
-    
+
     # Test Case 1: Bullish Consensus
     print("\n\n📊 Case 1: Bullish Market Scenario")
     print("-"*50)
-    
+
     bullish_context = {
         'sentiment': {'score': 0.8, 'sources': 7},
         'technical': {'rsi': 45, 'macd': 'bullish'},
@@ -959,35 +960,35 @@ async def demo_consensus_system():
         'regime': {'type': 'bull_quiet', 'confidence': 0.9},
         'liquidity': {'score': 0.8, 'spread': 0.0001}
     }
-    
+
     consensus1 = await system.request_consensus('AAPL', bullish_context)
-    
+
     print(f"\n🎯 Consensus Result:")
     print(f"  Signal: {consensus1.final_signal.value.upper()}")
     print(f"  Confidence: {consensus1.confidence:.1%}")
     print(f"  Method: {consensus1.method_used.value}")
     print(f"  Agreement Score: {consensus1.agreement_score:.1%}")
-    
+
     print(f"\n📊 Vote Distribution:")
     for signal, agents in consensus1.supporting_signals.items():
         print(f"  {signal.value}: {len(agents)} agents")
-    
+
     if consensus1.dissenting_agents:
         print(f"\n⚠️ Dissenting Agents:")
         for dissent in consensus1.dissenting_agents[:2]:
             print(f"  {dissent['agent_id']}: {dissent['signal']} "
                   f"(confidence: {dissent['confidence']:.1%})")
-    
+
     print(f"\n💰 Execution Recommendation:")
     exec_rec = consensus1.execution_recommendation
     print(f"  Execute: {'YES' if exec_rec['execute'] else 'NO'}")
     print(f"  Position Size: {exec_rec['position_size']:.1%}")
     print(f"  Entry Strategy: {exec_rec['entry_strategy']}")
-    
+
     # Test Case 2: Conflicting Signals
     print("\n\n📊 Case 2: Conflicting Signals Scenario")
     print("-"*50)
-    
+
     conflicting_context = {
         'sentiment': {'score': -0.6, 'sources': 7},
         'technical': {'rsi': 75, 'macd': 'bearish'},
@@ -996,52 +997,52 @@ async def demo_consensus_system():
         'regime': {'type': 'transition', 'confidence': 0.5},
         'liquidity': {'score': 0.4, 'spread': 0.0005}
     }
-    
+
     consensus2 = await system.request_consensus('SPY', conflicting_context)
-    
+
     print(f"\n🎯 Consensus Result:")
     print(f"  Signal: {consensus2.final_signal.value.upper()}")
     print(f"  Confidence: {consensus2.confidence:.1%}")
     print(f"  Agreement Score: {consensus2.agreement_score:.1%}")
-    
+
     if consensus2.metadata.get('risk_veto'):
         print(f"\n🛑 Risk Veto Applied!")
-    
+
     print(f"\n⚠️ Risk Assessment:")
     risk = consensus2.risk_assessment
     print(f"  Risk Score: {risk.get('risk_score', 0):.2f}")
     if risk.get('warnings'):
         print(f"  Warnings: {', '.join(risk['warnings'])}")
-    
+
     # Test Case 3: Byzantine Fault Tolerance
     print("\n\n📊 Case 3: Byzantine Fault Tolerance Test")
     print("-"*50)
-    
+
     # Register a "faulty" agent
     system.register_agent('faulty_001', AgentType.TECHNICAL, ['indicators'])
-    
+
     byzantine_context = {
         'sentiment': {'score': 0.3, 'sources': 7},
         'technical': {'rsi': 50, 'macd': 'neutral'},
         'options_flow': {'smart_money_score': 55, 'call_put_ratio': 1.0},
         'risk': {'score': 0.5, 'vix': 20}
     }
-    
+
     # Force BFT method
     system.consensus_engine.reach_consensus = lambda signals, method=ConsensusMethod.BYZANTINE_FAULT_TOLERANT: \
         system.consensus_engine.reach_consensus(signals, ConsensusMethod.BYZANTINE_FAULT_TOLERANT)
-    
+
     consensus3 = await system.request_consensus('MSFT', byzantine_context)
-    
+
     print(f"\n🎯 BFT Consensus Result:")
     print(f"  Signal: {consensus3.final_signal.value.upper()}")
     print(f"  Confidence: {consensus3.confidence:.1%}")
     print(f"  Filtered Outliers: Check logs for Byzantine signals")
-    
+
     # Test Case 4: Performance Analytics
     print("\n\n📊 Case 4: Consensus Analytics")
     print("-"*50)
-    
+
     # Simulate multiple decisions
     print("\nSimulating 10 rapid consensus decisions...")
     for i in range(10):
@@ -1052,22 +1053,22 @@ async def demo_consensus_system():
             'risk': {'score': np.random.uniform(0, 1)}
         }
         await system.request_consensus(f'TEST{i}', random_context, timeout=1.0)
-    
+
     analytics = system.get_consensus_analytics()
-    
+
     print(f"\n📈 Consensus Performance:")
     print(f"  Total Decisions: {analytics['total_decisions']}")
     print(f"  Avg Consensus Time: {analytics['avg_consensus_time_ms']:.1f}ms")
     print(f"  Avg Agreement Score: {analytics['avg_agreement_score']:.1%}")
-    
+
     print(f"\n📊 Signal Distribution:")
     for signal, count in analytics['signal_distribution'].items():
         print(f"  {signal}: {count} times")
-    
+
     print(f"\n🔧 Method Usage:")
     for method, count in analytics['method_usage'].items():
         print(f"  {method}: {count} times")
-    
+
     # Summary
     print("\n\n" + "="*70)
     print("✅ Multi-Agent Consensus System demonstrates:")
@@ -1079,4 +1080,4 @@ async def demo_consensus_system():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_consensus_system()) 
+    asyncio.run(demo_consensus_system())

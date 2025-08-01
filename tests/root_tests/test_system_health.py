@@ -27,7 +27,7 @@ def check_ml_models():
     try:
         models_path = Path("ml_models")
         forecast_model = models_path / "forecast_model.pkl"
-        
+
         if forecast_model.exists():
             with open(forecast_model, 'r') as f:
                 content = f.read().strip()
@@ -40,26 +40,26 @@ def check_ml_models():
 async def main():
     print("🔍 GOLDENSIGNALS AI V3 - SYSTEM HEALTH CHECK")
     print("=" * 50)
-    
+
     # Check ML Models
     ml_status = check_ml_models()
     print(f"ML Models:     {ml_status}")
-    
+
     # Check Database
     db_status = await check_database()
     print(f"Database:      {db_status}")
-    
+
     # Check imports
     try:
         from main import app
         print(f"FastAPI:       ✅ WORKING")
     except Exception as e:
         print(f"FastAPI:       ❌ FAILED: {str(e)}")
-    
+
     print("\n🎯 CRITICAL FIXES NEEDED:")
-    print("1. Fix broken imports: python fix_imports.py") 
+    print("1. Fix broken imports: python fix_imports.py")
     print("2. Train ML models: cd ml_training && python train_models.py")
     print("3. Test database: python test_database.py")
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

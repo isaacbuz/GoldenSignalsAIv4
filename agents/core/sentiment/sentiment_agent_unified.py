@@ -3,11 +3,12 @@ Unified Sentiment Analysis Agent
 Analyzes market sentiment from multiple sources using MCP tools
 """
 
-import numpy as np
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
-from agents.unified_base_agent import UnifiedBaseAgent, SignalStrength
 import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+from agents.unified_base_agent import SignalStrength, UnifiedBaseAgent
 
 logger = logging.getLogger(__name__)
 

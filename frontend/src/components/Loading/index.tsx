@@ -6,4 +6,4 @@ export {
     SkeletonButton,
     SkeletonCard
 } from './Loading';
-export type { LoadingProps } from './Loading'; 
+export type { LoadingProps } from './Loading';

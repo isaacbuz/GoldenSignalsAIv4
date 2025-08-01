@@ -138,4 +138,4 @@ resource "kubernetes_manifest" "metrics" {
       }]
     }
   }
-} 
+}

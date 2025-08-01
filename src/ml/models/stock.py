@@ -36,12 +36,8 @@ class StockData(BaseModel):
         logger.debug({"message": f"Validating stock data for {self.symbol}"})
         try:
             self.validate()
-            logger.debug(
-                {"message": f"Stock data validated successfully for {self.symbol}"}
-            )
+            logger.debug({"message": f"Stock data validated successfully for {self.symbol}"})
             return True
         except Exception as e:
-            logger.error(
-                {"message": f"Stock data validation failed for {self.symbol}: {str(e)}"}
-            )
+            logger.error({"message": f"Stock data validation failed for {self.symbol}: {str(e)}"})
             return False

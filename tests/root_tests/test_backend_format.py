@@ -14,17 +14,17 @@ print("\nNumber of signals:", len(data.get('signals', [])))
 if data.get('signals'):
     first_signal = data['signals'][0]
     print("\nFirst signal keys:", list(first_signal.keys()))
-    
+
     # Check for expected keys
     expected_keys = ['id', 'symbol', 'signal_type', 'type', 'confidence', 'entry_trigger', 'stop_loss', 'targets']
     missing_keys = [key for key in expected_keys if key not in first_signal]
-    
+
     if missing_keys:
         print(f"\n❌ Missing expected keys: {missing_keys}")
         print("\n🔍 Actual keys found:", sorted(first_signal.keys()))
     else:
         print("\n✅ All expected keys found!")
-        
+
     # Print first signal for inspection
     print("\nFirst signal (formatted):")
-    print(json.dumps(first_signal, indent=2)) 
+    print(json.dumps(first_signal, indent=2))

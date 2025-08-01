@@ -36,4 +36,4 @@ print(f"BB_Middle type: {type(df['BB_Middle'])}")
 df['BB_Upper'] = df['BB_Middle'] + 2 * bb_std
 df['BB_Lower'] = df['BB_Middle'] - 2 * bb_std
 
-print("✅ Bollinger Bands calculated successfully!") 
+print("✅ Bollinger Bands calculated successfully!")

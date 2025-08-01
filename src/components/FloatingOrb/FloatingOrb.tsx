@@ -29,4 +29,4 @@ const FloatingOrb = ({ text }: FloatingOrbProps) => {
     );
 };
 
-export default FloatingOrb; 
+export default FloatingOrb;

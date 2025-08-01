@@ -1,6 +1,6 @@
 /**
  * Enhanced AI Prophet Chat Interface
- * 
+ *
  * A mystical and powerful AI chat interface with file upload capabilities
  * Features:
  * - File upload for chart analysis
@@ -450,4 +450,4 @@ export const EnhancedAIProphetChat: React.FC<EnhancedAIProphetChatProps> = ({ on
             </Box>
         </Box>
     );
-}; 
+};

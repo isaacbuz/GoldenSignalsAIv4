@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for GoldenSignalsAI
- * 
+ *
  * Defines the structure of options signals and related data types
  */
 
@@ -138,4 +138,4 @@ export interface Signal {
     timestamp: string;
     timeframe: string;
     signal_details: SignalDetails;
-} 
+}

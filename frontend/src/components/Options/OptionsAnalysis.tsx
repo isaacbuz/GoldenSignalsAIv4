@@ -285,4 +285,4 @@ export const OptionsAnalysis: React.FC<OptionsAnalysisProps> = ({ symbol, metric
       </CardContent>
     </Card>
   );
-}; 
+};

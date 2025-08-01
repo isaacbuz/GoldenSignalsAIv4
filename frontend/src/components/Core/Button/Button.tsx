@@ -45,7 +45,7 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
 
 /**
  * Core Button component with multiple variants and states
- * 
+ *
  * @example
  * ```tsx
  * <Button variant="primary" size="medium" onClick={handleClick}>
@@ -165,4 +165,4 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     }
 );
 
-Button.displayName = 'Button'; 
+Button.displayName = 'Button';

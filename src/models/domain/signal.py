@@ -9,19 +9,23 @@ from pydantic import BaseModel, Field
 
 class SignalType(str, Enum):
     """Signal types."""
+
     BUY = "BUY"
     SELL = "SELL"
     HOLD = "HOLD"
 
+
 class SignalStrength(str, Enum):
     """Signal strength levels."""
+
     WEAK = "WEAK"
     MEDIUM = "MEDIUM"
     STRONG = "STRONG"
 
+
 class Signal(BaseModel):
     """Trading signal domain model."""
-    
+
     id: Optional[str] = None
     symbol: str
     signal_type: SignalType
@@ -38,9 +42,8 @@ class Signal(BaseModel):
     risk_score: Optional[float] = None
     market_conditions: Optional[Dict[str, Any]] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    
+
     class Config:
         """Pydantic config."""
-        json_encoders = {
-            datetime: lambda v: v.isoformat()
-        } 
+
+        json_encoders = {datetime: lambda v: v.isoformat()}

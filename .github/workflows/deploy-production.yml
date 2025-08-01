@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Determine version
       id: version
       run: |
@@ -34,7 +34,7 @@ jobs:
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Deploying version: $VERSION"
-    
+
     - name: Verify version exists
       run: |
         docker pull ${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:${{ steps.version.outputs.version }} || exit 1
@@ -45,23 +45,23 @@ jobs:
     needs: pre-deployment
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
         ref: ${{ needs.pre-deployment.outputs.version }}
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
     - name: Install Poetry
       uses: snok/install-poetry@v1
-    
+
     - name: Install dependencies
       run: poetry install --only main
-    
+
     - name: Run database migrations
       env:
         DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
@@ -73,27 +73,27 @@ jobs:
     needs: [pre-deployment, database-migration]
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Configure kubectl
       env:
         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PROD }}
       run: |
         echo "$KUBE_CONFIG" | base64 -d > kubeconfig
         export KUBECONFIG=kubeconfig
-    
+
     - name: Deploy backend
       run: |
         # Update deployment
         kubectl set image deployment/goldensignals-backend \
           backend=${{ secrets.DOCKER_USERNAME }}/goldensignals-backend:${{ needs.pre-deployment.outputs.version }} \
           -n production
-        
+
         # Wait for rollout
         kubectl rollout status deployment/goldensignals-backend -n production --timeout=10m
-        
+
         # Verify deployment
         kubectl get pods -n production -l app=goldensignals-backend
 
@@ -102,27 +102,27 @@ jobs:
     needs: [pre-deployment, deploy-backend]
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Configure kubectl
       env:
         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PROD }}
       run: |
         echo "$KUBE_CONFIG" | base64 -d > kubeconfig
         export KUBECONFIG=kubeconfig
-    
+
     - name: Deploy frontend
       run: |
         # Update deployment
         kubectl set image deployment/goldensignals-frontend \
           frontend=${{ secrets.DOCKER_USERNAME }}/goldensignals-frontend:${{ needs.pre-deployment.outputs.version }} \
           -n production
-        
+
         # Wait for rollout
         kubectl rollout status deployment/goldensignals-frontend -n production --timeout=10m
-        
+
         # Verify deployment
         kubectl get pods -n production -l app=goldensignals-frontend
 
@@ -130,11 +130,11 @@ jobs:
   health-checks:
     needs: [deploy-backend, deploy-frontend]
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Wait for services to stabilize
       run: sleep 30
-    
+
     - name: Backend health check
       run: |
         response=$(curl -s -o /dev/null -w "%{http_code}" https://api.goldensignals.ai/health)
@@ -143,7 +143,7 @@ jobs:
           exit 1
         fi
         echo "Backend is healthy"
-    
+
     - name: Frontend health check
       run: |
         response=$(curl -s -o /dev/null -w "%{http_code}" https://goldensignals.ai)
@@ -152,7 +152,7 @@ jobs:
           exit 1
         fi
         echo "Frontend is healthy"
-    
+
     - name: Critical endpoints check
       run: |
         # Check API endpoints
@@ -161,7 +161,7 @@ jobs:
           "https://api.goldensignals.ai/api/v1/market-data"
           "https://api.goldensignals.ai/api/v1/portfolio"
         )
-        
+
         for endpoint in "${endpoints[@]}"; do
           response=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.HEALTH_CHECK_TOKEN }}" "$endpoint")
           if [ $response -ne 200 ] && [ $response -ne 401 ]; then
@@ -175,26 +175,26 @@ jobs:
   performance-validation:
     needs: health-checks
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install k6
       run: |
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
         echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
         sudo apt-get update
         sudo apt-get install k6
-    
+
     - name: Run performance tests
       run: |
         k6 run --out json=results.json tests/k6/production-smoke.js
-    
+
     - name: Analyze results
       run: |
         # Check if performance meets SLA
         python scripts/analyze_k6_results.py results.json
-    
+
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
@@ -205,7 +205,7 @@ jobs:
   update-monitoring:
     needs: health-checks
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Update Grafana annotations
       run: |
@@ -218,7 +218,7 @@ jobs:
             "tags": ["deployment", "production"],
             "text": "Deployed version ${{ needs.pre-deployment.outputs.version }}"
           }'
-    
+
     - name: Create PagerDuty maintenance window
       run: |
         curl -X POST https://api.pagerduty.com/maintenance_windows \
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     if: failure()
     environment: production
-    
+
     steps:
     - name: Configure kubectl
       env:
@@ -248,17 +248,17 @@ jobs:
       run: |
         echo "$KUBE_CONFIG" | base64 -d > kubeconfig
         export KUBECONFIG=kubeconfig
-    
+
     - name: Rollback deployments
       run: |
         echo "Rolling back due to deployment failure"
         kubectl rollout undo deployment/goldensignals-backend -n production
         kubectl rollout undo deployment/goldensignals-frontend -n production
-        
+
         # Wait for rollback
         kubectl rollout status deployment/goldensignals-backend -n production
         kubectl rollout status deployment/goldensignals-frontend -n production
-    
+
     - name: Notify rollback
       uses: 8398a7/action-slack@v3
       with:
@@ -279,7 +279,7 @@ jobs:
     needs: [health-checks, performance-validation]
     runs-on: ubuntu-latest
     if: success()
-    
+
     steps:
     - name: Update deployment tracking
       run: |
@@ -294,7 +294,7 @@ jobs:
             "deployed_at": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
             "deployed_by": "${{ github.actor }}"
           }'
-    
+
     - name: Notify success
       uses: 8398a7/action-slack@v3
       with:
@@ -321,10 +321,10 @@ jobs:
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    
+
     - name: Trigger smoke tests
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         event-type: production-smoke-tests
-        client-payload: '{"version": "${{ needs.pre-deployment.outputs.version }}"}' 
+        client-payload: '{"version": "${{ needs.pre-deployment.outputs.version }}"}'

@@ -1,7 +1,8 @@
-from typing import List, Dict, Any, Optional
-from transformers import pipeline, Pipeline
 import logging
+from typing import Any, Dict, List, Optional
+
 from agents.base import BaseAgent
+from transformers import Pipeline, pipeline
 
 logger = logging.getLogger(__name__)
 

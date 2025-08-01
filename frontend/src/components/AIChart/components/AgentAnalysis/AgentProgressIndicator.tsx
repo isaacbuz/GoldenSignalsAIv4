@@ -36,6 +36,7 @@ import {
   Security as RiskIcon,
   CheckCircle as DecisionIcon,
   Timer as TimerIcon,
+  CheckCircle,
 } from '@mui/icons-material';
 import { WorkflowStage } from '../../../../types/agent.types';
 

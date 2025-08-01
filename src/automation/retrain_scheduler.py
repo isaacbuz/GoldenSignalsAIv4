@@ -15,10 +15,11 @@ def retrain_all():
     ProphetPriceForecastAgent().train()
     logging.info("[Retrain] All models retrained successfully.")
 
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     scheduler = BackgroundScheduler()
-    scheduler.add_job(retrain_all, 'cron', hour=2)  # Retrain daily at 2am
+    scheduler.add_job(retrain_all, "cron", hour=2)  # Retrain daily at 2am
     scheduler.start()
     print("Retraining scheduler started. Press Ctrl+C to exit.")
     try:

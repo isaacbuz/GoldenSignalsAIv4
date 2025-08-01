@@ -49,4 +49,4 @@ This document outlines the remaining tasks to complete the state-of-the-art upgr
 - Medium: Backend APIs for real data/analysis.
 - Low: Advanced features and polish.
 
-Track progress here and mark as done! 
+Track progress here and mark as done!

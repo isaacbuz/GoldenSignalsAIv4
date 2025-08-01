@@ -1,12 +1,13 @@
-from starlette.concurrency import run_in_threadpool
 from typing import Any, Dict, List
 
-from agents.base import BaseAgent, AgentConfig
-from src.ml.models.signals import Signal
-from src.utils.legacy_mapper import legacy_output_to_signal
+from agents.base import AgentConfig, BaseAgent
 
 # Import the original legacy RSI agent from the old code tree
 from agents.core.technical.momentum.rsi_agent import RSIAgent as LegacyRSIAgent
+from starlette.concurrency import run_in_threadpool
+
+from src.ml.models.signals import Signal
+from src.utils.legacy_mapper import legacy_output_to_signal
 
 
 class RSILegacyAdapter(BaseAgent):
@@ -51,4 +52,4 @@ class RSILegacyAdapter(BaseAgent):
     # Metadata required by the orchestrator
     # ------------------------------------------------------------------
     def get_required_data_types(self):
-        return ["ohlcv"] 
+        return ["ohlcv"]

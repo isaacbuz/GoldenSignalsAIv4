@@ -100,4 +100,4 @@ export const LoadingStatus: React.FC<LoadingStatusProps> = ({
             </Stack>
         </Paper>
     );
-}; 
+};

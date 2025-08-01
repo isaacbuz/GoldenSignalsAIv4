@@ -1,17 +1,18 @@
 """
 Arbitrage execution module for simulating and executing trades.
 """
-from typing import Dict, Any, Optional, List
 import logging
 import random
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from .base import ArbitrageOpportunity
 
 logger = logging.getLogger(__name__)
 
 class ArbitrageExecutor:
     """Handles execution of arbitrage opportunities."""
-    
+
     def __init__(
         self,
         slippage_model: str = "random",
@@ -25,7 +26,7 @@ class ArbitrageExecutor:
     ):
         """
         Initialize arbitrage executor.
-        
+
         Args:
             slippage_model: Slippage simulation model ('random', 'volume', 'impact')
             base_slippage: Base slippage rate
@@ -44,7 +45,7 @@ class ArbitrageExecutor:
         self.min_fill_rate = min_fill_rate
         self.fee_rate = fee_rate
         self.broker_apis = broker_apis or {}
-        
+
     def simulate_slippage(
         self,
         price: float,
@@ -58,7 +59,7 @@ class ArbitrageExecutor:
                     self.base_slippage,
                     self.max_slippage
                 )
-                
+
             elif self.slippage_model == "volume":
                 if volume is None:
                     return self.base_slippage
@@ -67,7 +68,7 @@ class ArbitrageExecutor:
                 return self.base_slippage + (
                     self.max_slippage - self.base_slippage
                 ) * vol_factor
-                
+
             elif self.slippage_model == "impact":
                 if market_impact is None:
                     return self.base_slippage
@@ -76,21 +77,21 @@ class ArbitrageExecutor:
                     self.base_slippage + market_impact,
                     self.max_slippage
                 )
-                
+
             else:
                 return self.base_slippage
-                
+
         except Exception as e:
             logger.error(f"Slippage simulation failed: {str(e)}")
             return self.base_slippage
-            
+
     def simulate_latency(self) -> int:
         """Simulate execution latency in milliseconds."""
         return random.randint(
             self.min_latency_ms,
             self.max_latency_ms
         )
-        
+
     def simulate_fill(
         self,
         volume: float,
@@ -106,17 +107,17 @@ class ArbitrageExecutor:
                     spread * 10  # Scale factor
                 )
             )
-            
+
             # Add random variation
             variation = random.uniform(-0.1, 0.1)
             fill_rate = max(0.0, min(1.0, base_fill + variation))
-            
+
             return volume * fill_rate
-            
+
         except Exception as e:
             logger.error(f"Fill simulation failed: {str(e)}")
             return volume * self.min_fill_rate
-            
+
     def execute(
         self,
         opportunity: ArbitrageOpportunity,
@@ -124,11 +125,11 @@ class ArbitrageExecutor:
     ) -> Dict[str, Any]:
         """
         Simulate execution of arbitrage opportunity.
-        
+
         Args:
             opportunity: The arbitrage opportunity to execute
             market_data: Optional market data for better simulation
-        
+
         Returns:
             Dict containing execution results
         """
@@ -136,7 +137,7 @@ class ArbitrageExecutor:
             # Get execution parameters
             volume = opportunity.volume or 100.0  # Default volume
             spread = opportunity.spread
-            
+
             # Simulate execution conditions
             buy_slippage = self.simulate_slippage(
                 opportunity.buy_price,
@@ -148,28 +149,28 @@ class ArbitrageExecutor:
                 volume,
                 market_data.get("market_impact") if market_data else None
             )
-            
+
             latency = self.simulate_latency()
             filled_volume = self.simulate_fill(volume, spread)
-            
+
             # Calculate execution prices
             executed_buy = opportunity.buy_price * (1 + buy_slippage)
             executed_sell = opportunity.sell_price * (1 - sell_slippage)
             realized_spread = executed_sell - executed_buy
-            
+
             # Calculate fees
             fees = (executed_buy + executed_sell) * filled_volume * self.fee_rate
-            
+
             # Calculate PnL
             gross_pnl = realized_spread * filled_volume
             net_pnl = gross_pnl - fees
-            
+
             # Update opportunity status
             if filled_volume > 0:
                 status = "Executed"
             else:
                 status = "Failed"
-                
+
             # Record execution details
             execution_details = {
                 "timestamp": datetime.now().timestamp(),
@@ -186,19 +187,19 @@ class ArbitrageExecutor:
                 "gross_pnl": gross_pnl,
                 "net_pnl": net_pnl
             }
-            
+
             # Update opportunity
             opportunity.status = status
             opportunity.execution_details = execution_details
-            
+
             return execution_details
-            
+
         except Exception as e:
             logger.error(f"Execution simulation failed: {str(e)}")
             opportunity.status = "Failed"
             opportunity.execution_details = {"error": str(e)}
             return {"error": str(e)}
-            
+
     def execute_live(
         self,
         opportunity: ArbitrageOpportunity,
@@ -206,11 +207,11 @@ class ArbitrageExecutor:
     ) -> Dict[str, Any]:
         """
         Execute a live arbitrage trade using broker APIs.
-        
+
         Args:
             opportunity: The arbitrage opportunity to execute
             quantity: Trade quantity
-            
+
         Returns:
             Dict containing execution results
         """
@@ -218,23 +219,23 @@ class ArbitrageExecutor:
             # Get broker APIs
             buy_api = self.broker_apis.get(opportunity.buy_venue)
             sell_api = self.broker_apis.get(opportunity.sell_venue)
-            
+
             if not buy_api or not sell_api:
                 raise ValueError(f"Missing broker API for {opportunity.buy_venue} or {opportunity.sell_venue}")
-                
+
             # Execute trades
             buy_result = buy_api.buy(
                 symbol=opportunity.symbol,
                 quantity=quantity,
                 price=opportunity.buy_price
             )
-            
+
             sell_result = sell_api.sell(
                 symbol=opportunity.symbol,
                 quantity=quantity,
                 price=opportunity.sell_price
             )
-            
+
             # Calculate execution details
             buy_price = buy_result.get("executed_price", opportunity.buy_price)
             sell_price = sell_result.get("executed_price", opportunity.sell_price)
@@ -242,16 +243,16 @@ class ArbitrageExecutor:
                 buy_result.get("filled_quantity", 0),
                 sell_result.get("filled_quantity", 0)
             )
-            
+
             # Calculate PnL
             realized_spread = sell_price - buy_price
             fees = (buy_price + sell_price) * filled_quantity * self.fee_rate
             gross_pnl = realized_spread * filled_quantity
             net_pnl = gross_pnl - fees
-            
+
             # Update status
             status = "Executed" if filled_quantity > 0 else "Failed"
-            
+
             # Record execution details
             execution_details = {
                 "timestamp": datetime.now().timestamp(),
@@ -267,19 +268,19 @@ class ArbitrageExecutor:
                 "buy_result": buy_result,
                 "sell_result": sell_result
             }
-            
+
             # Update opportunity
             opportunity.status = status
             opportunity.execution_details = execution_details
-            
+
             return execution_details
-            
+
         except Exception as e:
             logger.error(f"Live execution failed: {str(e)}")
             opportunity.status = "Failed"
             opportunity.execution_details = {"error": str(e)}
             return {"error": str(e)}
-            
+
     def execute_batch(
         self,
         opportunities: List[ArbitrageOpportunity],
@@ -288,19 +289,19 @@ class ArbitrageExecutor:
     ) -> Dict[str, Any]:
         """
         Execute a batch of arbitrage opportunities.
-        
+
         Args:
             opportunities: List of opportunities to execute
             quantity: Trade quantity per opportunity
             simulate: Whether to simulate execution or trade live
-            
+
         Returns:
             Dict containing batch execution results
         """
         results = []
         success_count = 0
         total_pnl = 0.0
-        
+
         for opp in opportunities:
             try:
                 # Execute opportunity
@@ -308,22 +309,22 @@ class ArbitrageExecutor:
                     result = self.execute(opp)
                 else:
                     result = self.execute_live(opp, quantity)
-                    
+
                 results.append(result)
-                
+
                 # Update statistics
                 if result.get("status") == "Executed":
                     success_count += 1
                     total_pnl += result.get("net_pnl", 0)
-                    
+
             except Exception as e:
                 logger.error(f"Batch execution failed for {opp.symbol}: {str(e)}")
                 results.append({"error": str(e)})
-                
+
         return {
             "success_count": success_count,
             "total_count": len(opportunities),
             "success_rate": success_count / len(opportunities) if opportunities else 0,
             "total_pnl": total_pnl,
             "results": results
-        } 
+        }

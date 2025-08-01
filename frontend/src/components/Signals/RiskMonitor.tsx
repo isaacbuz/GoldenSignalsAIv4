@@ -257,4 +257,4 @@ const RiskMonitor: React.FC<RiskMonitorProps> = ({ signals }) => {
     );
 };
 
-export default RiskMonitor; 
+export default RiskMonitor;

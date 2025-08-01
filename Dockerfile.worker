@@ -22,4 +22,4 @@ COPY pyproject.toml poetry.lock* ./
 RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
 COPY . .
 EXPOSE 8000
-CMD ["celery", "-A", "application.tasks", "worker", "--loglevel=info"] 
+CMD ["celery", "-A", "application.tasks", "worker", "--loglevel=info"]

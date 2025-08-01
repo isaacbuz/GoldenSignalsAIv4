@@ -20,22 +20,22 @@ port_in_use() {
 if [ -f .pids ]; then
     echo "📋 Reading saved PIDs..."
     source .pids
-    
+
     if [ ! -z "$BACKEND_PID" ]; then
         echo "   Stopping Backend (PID: $BACKEND_PID)..."
         kill $BACKEND_PID 2>/dev/null
     fi
-    
+
     if [ ! -z "$FRONTEND_PID" ]; then
         echo "   Stopping Frontend (PID: $FRONTEND_PID)..."
         kill $FRONTEND_PID 2>/dev/null
     fi
-    
+
     if [ ! -z "$GATEWAY_PID" ]; then
         echo "   Stopping MCP Gateway (PID: $GATEWAY_PID)..."
         kill $GATEWAY_PID 2>/dev/null
     fi
-    
+
     rm -f .pids
 fi
 
@@ -69,4 +69,4 @@ echo -e "${GREEN}✅ All services stopped!${NC}"
 echo "========================================="
 echo ""
 echo "💡 To restart, run: ./start_all.sh"
-echo "" 
+echo ""

@@ -6,6 +6,7 @@ import requests
 FMP_API_KEY = os.getenv("FMP_API_KEY") or os.getenv("REACT_APP_FMP_API_KEY")
 FMP_BASE_URL = "https://financialmodelingprep.com/api/v3"
 
+
 def fetch_fmp_ohlcv(symbol, timeframe="1d", limit=100):
     """
     Fetch historical OHLCV data for a symbol from Financial Modeling Prep.
@@ -24,7 +25,8 @@ def fetch_fmp_ohlcv(symbol, timeframe="1d", limit=100):
     df = df.iloc[::-1].reset_index(drop=True)
     if limit:
         df = df.tail(limit)
-    return df[['date', 'open', 'high', 'low', 'close', 'volume']]
+    return df[["date", "open", "high", "low", "close", "volume"]]
+
 
 def fetch_fmp_quote(symbol):
     """

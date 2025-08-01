@@ -3,13 +3,14 @@ Enhanced Pattern Recognition Agent
 Detects chart patterns and generates trading signals using unified base
 """
 
+import logging
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List, Optional, Tuple
+from agents.unified_base_agent import SignalStrength, UnifiedBaseAgent
 from scipy import stats
 from scipy.signal import argrelextrema
-from agents.unified_base_agent import UnifiedBaseAgent, SignalStrength
-import logging
 
 logger = logging.getLogger(__name__)
 

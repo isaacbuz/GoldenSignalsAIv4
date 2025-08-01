@@ -1,6 +1,6 @@
 /**
  * Settings Page - Institutional Grade Configuration
- * 
+ *
  * Comprehensive settings and configuration management
  */
 
@@ -26,4 +26,4 @@ export const SettingsPage: React.FC = () => {
   );
 };
 
-export default SettingsPage; 
+export default SettingsPage;

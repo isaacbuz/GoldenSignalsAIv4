@@ -41,4 +41,4 @@ ENV MCP_SERVICE=${MCP_SERVICE}
 EXPOSE 8190 8191 8192 8193 8194
 
 # Run the specified MCP service
-CMD ["sh", "-c", "python -m uvicorn mcp_servers.${MCP_SERVICE}:app --host 0.0.0.0 --port $(echo ${MCP_SERVICE} | grep -o '[0-9]*$')"] 
+CMD ["sh", "-c", "python -m uvicorn mcp_servers.${MCP_SERVICE}:app --host 0.0.0.0 --port $(echo ${MCP_SERVICE} | grep -o '[0-9]*$')"]

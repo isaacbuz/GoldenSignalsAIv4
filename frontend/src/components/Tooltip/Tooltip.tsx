@@ -23,7 +23,7 @@ interface TooltipPosition {
 
 /**
  * Tooltip Component
- * 
+ *
  * A lightweight, accessible tooltip that appears on hover/focus.
  * Reuses patterns from other components:
  * - Portal rendering (like Alert)
@@ -255,4 +255,4 @@ export const RichTooltip: React.FC<{
     >
         {children}
     </Tooltip>
-); 
+);

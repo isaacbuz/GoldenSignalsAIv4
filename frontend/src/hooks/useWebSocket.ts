@@ -164,4 +164,4 @@ export const useAlertMessages = () => {
 
 export const useTradeMessages = () => {
     return useWebSocket({ messageType: 'trade' });
-}; 
+};

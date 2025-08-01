@@ -1,6 +1,6 @@
 /**
  * Card Component
- * 
+ *
  * TODO: Add component description
  */
 
@@ -37,7 +37,7 @@ export const Card: React.FC<CardProps> = ({
   logger.debug('Rendering', { props });
 
   return (
-    <div 
+    <div
       className={`${styles.container} ${className || ''}`}
       data-testid={testId}
       {...props}

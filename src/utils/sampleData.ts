@@ -6,4 +6,4 @@ export const sampleStockData = [
 export const samplePredictions = [
     { time: '2025-07-01', value: 153 },
     // Matching entries
-]; 
+];

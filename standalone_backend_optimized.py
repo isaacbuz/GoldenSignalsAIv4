@@ -50,7 +50,7 @@ class ErrorTracker:
         self.error_counts = defaultdict(int)
         self.error_patterns = defaultdict(list)
         self.max_errors = 1000
-        
+
     def track_error(self, error: Exception, context: dict = None):
         """Track an error with context"""
         error_data = {
@@ -60,35 +60,35 @@ class ErrorTracker:
             'traceback': traceback.format_exc(),
             'context': context or {}
         }
-        
+
         # Add to errors list
         self.errors.append(error_data)
-        
+
         # Keep only recent errors
         if len(self.errors) > self.max_errors:
             self.errors = self.errors[-self.max_errors:]
-        
+
         # Count error types
         error_key = f"{type(error).__name__}:{str(error)[:100]}"
         self.error_counts[error_key] += 1
-        
+
         # Track error patterns
         self.error_patterns[type(error).__name__].append({
             'timestamp': error_data['timestamp'],
             'message': str(error),
             'context': context or {}
         })
-        
+
         # Log the error
-        logger.error(f"Error tracked: {type(error).__name__}: {str(error)}", 
+        logger.error(f"Error tracked: {type(error).__name__}: {str(error)}",
                     extra={'context': context, 'traceback': traceback.format_exc()})
-    
+
     def get_error_summary(self) -> dict:
         """Get summary of tracked errors"""
-        recent_errors = [e for e in self.errors if 
-                        (datetime.now(timezone.utc) - 
+        recent_errors = [e for e in self.errors if
+                        (datetime.now(timezone.utc) -
                          datetime.fromisoformat(e['timestamp'].replace('Z', '+00:00'))).total_seconds() < 3600]
-        
+
         return {
             'total_errors': len(self.errors),
             'recent_errors_1h': len(recent_errors),
@@ -112,15 +112,15 @@ class PerformanceMonitor:
             'min_time': float('inf'),
             'errors': 0
         })
-        
+
     def track_request(self, endpoint: str, duration: float, status_code: int):
         """Track request performance"""
         self.request_times[endpoint].append(duration)
-        
+
         # Keep only recent requests (last 1000 per endpoint)
         if len(self.request_times[endpoint]) > 1000:
             self.request_times[endpoint] = self.request_times[endpoint][-1000:]
-        
+
         # Update endpoint stats
         stats = self.endpoint_stats[endpoint]
         stats['count'] += 1
@@ -128,10 +128,10 @@ class PerformanceMonitor:
         stats['avg_time'] = stats['total_time'] / stats['count']
         stats['max_time'] = max(stats['max_time'], duration)
         stats['min_time'] = min(stats['min_time'], duration)
-        
+
         if status_code >= 400:
             stats['errors'] += 1
-    
+
     def get_performance_summary(self) -> dict:
         """Get performance summary"""
         slow_endpoints = []
@@ -145,7 +145,7 @@ class PerformanceMonitor:
                         'max_time': max(times),
                         'request_count': len(times)
                     })
-        
+
         return {
             'total_requests': sum(len(times) for times in self.request_times.values()),
             'endpoints': dict(self.endpoint_stats),
@@ -177,7 +177,7 @@ request_times = defaultdict(list)
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("🚀 Optimized backend started with caching and batch processing")
-    
+
     # Try to initialize optional services
     global data_validator, signal_engine, signal_pipeline, monitoring_service
     try:
@@ -187,7 +187,7 @@ async def lifespan(app: FastAPI):
     except ImportError:
         logger.debug("ℹ️ Data Quality Validator not available, using direct yfinance")
         data_validator = None
-    
+
     try:
         from agents.signals.integrated_signal_system import SignalGenerationEngine
         from agents.pipeline.signal_filtering_pipeline import SignalFilteringPipeline
@@ -198,7 +198,7 @@ async def lifespan(app: FastAPI):
         logger.debug("ℹ️ Signal Generation Engine not available, using legacy signal generation")
         signal_engine = None
         signal_pipeline = None
-    
+
     try:
         from agents.monitoring.signal_monitoring_service import SignalMonitoringService
         monitoring_service = SignalMonitoringService()
@@ -206,13 +206,13 @@ async def lifespan(app: FastAPI):
     except ImportError:
         logger.debug("ℹ️ Signal Monitoring Service not available")
         monitoring_service = None
-    
+
     # Start background tasks
     asyncio.create_task(manager.batch_sender())
     asyncio.create_task(periodic_signal_updates())
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down optimized backend...")
     executor.shutdown(wait=False)
@@ -241,31 +241,31 @@ async def error_tracking_middleware(request: Request, call_next):
     """Enhanced error tracking and performance monitoring middleware"""
     start_time = time.time()
     response = None
-    
+
     try:
         response = await call_next(request)
         process_time = time.time() - start_time
-        
+
         # Track performance
         performance_monitor.track_request(
             endpoint=request.url.path,
             duration=process_time,
             status_code=response.status_code
         )
-        
+
         # Add performance headers
         response.headers["X-Process-Time"] = str(process_time)
         response.headers["X-Request-ID"] = f"req_{int(time.time() * 1000)}"
-        
+
         # Log slow requests
         if process_time > 2.0:
             logger.warning(f"Slow request: {request.method} {request.url.path} took {process_time:.2f}s")
-        
+
         return response
-        
+
     except Exception as e:
         process_time = time.time() - start_time
-        
+
         # Track the error
         error_tracker.track_error(e, {
             'endpoint': request.url.path,
@@ -273,14 +273,14 @@ async def error_tracking_middleware(request: Request, call_next):
             'duration': process_time,
             'client_ip': request.client.host if request.client else 'unknown'
         })
-        
+
         # Track performance even for errors
         performance_monitor.track_request(
             endpoint=request.url.path,
             duration=process_time,
             status_code=500
         )
-        
+
         # Return structured error response
         return JSONResponse(
             status_code=500,
@@ -335,9 +335,9 @@ class MarketData(BaseModel):
 def calculate_indicators_cached(symbol: str, prices_tuple: tuple) -> dict:
     """Calculate technical indicators with caching"""
     prices = np.array(prices_tuple)
-    
+
     indicators = {}
-    
+
     # RSI calculation
     if len(prices) >= 14:
         deltas = np.diff(prices)
@@ -346,12 +346,12 @@ def calculate_indicators_cached(symbol: str, prices_tuple: tuple) -> dict:
         down = -seed[seed < 0].sum() / 14
         rs = up / down if down != 0 else 0
         indicators['rsi'] = 100 - (100 / (1 + rs))
-    
+
     # SMA calculations
     if len(prices) >= 20:
         indicators['sma_20'] = np.mean(prices[-20:])
         indicators['sma_50'] = np.mean(prices[-50:]) if len(prices) >= 50 else np.mean(prices)
-    
+
     # Bollinger Bands
     if len(prices) >= 20:
         sma = np.mean(prices[-20:])
@@ -359,7 +359,7 @@ def calculate_indicators_cached(symbol: str, prices_tuple: tuple) -> dict:
         indicators['bb_upper'] = sma + (2 * std)
         indicators['bb_lower'] = sma - (2 * std)
         indicators['bb_percent'] = (prices[-1] - indicators['bb_lower']) / (indicators['bb_upper'] - indicators['bb_lower'])
-    
+
     return indicators
 
 # Optimized market data fetching
@@ -370,7 +370,7 @@ async def get_market_data_cached(symbol: str) -> Optional[MarketData]:
     if not symbol or symbol.lower() in ['latest', 'all', 'batch'] or len(symbol) > 10 or not symbol.replace('-', '').replace('.', '').isalnum():
         logger.warning(f"Invalid symbol for market data: {symbol}")
         return None
-    
+
     try:
         # Use data validator if available
         if data_validator:
@@ -379,7 +379,7 @@ async def get_market_data_cached(symbol: str) -> Optional[MarketData]:
                 if data is not None and not data.empty:
                     # Extract latest data point
                     latest = data.iloc[-1]
-                    
+
                     return MarketData(
                         symbol=symbol,
                         price=float(latest.get('Close', 0)),
@@ -396,14 +396,14 @@ async def get_market_data_cached(symbol: str) -> Optional[MarketData]:
             except Exception as e:
                 logger.warning(f"Data validator failed for market data {symbol}: {e}")
                 # Fall through to direct yfinance
-        
+
         # Fallback to direct yfinance
         loop = asyncio.get_event_loop()
         ticker = await loop.run_in_executor(executor, yf.Ticker, symbol)
-        
+
         # Try to get current info
         info = await loop.run_in_executor(executor, lambda: ticker.info)
-        
+
         # Get current price
         current_price = info.get('currentPrice') or info.get('regularMarketPrice', 0)
         if current_price == 0:
@@ -414,9 +414,9 @@ async def get_market_data_cached(symbol: str) -> Optional[MarketData]:
             )
             if not hist.empty:
                 current_price = float(hist['Close'].iloc[-1])
-        
+
         previous_close = info.get('previousClose', current_price)
-        
+
         return MarketData(
             symbol=symbol,
             price=current_price,
@@ -430,7 +430,7 @@ async def get_market_data_cached(symbol: str) -> Optional[MarketData]:
             low=info.get('dayLow', current_price),
             open=info.get('open', current_price)
         )
-        
+
     except Exception as e:
         logger.error(f"Error fetching market data for {symbol}: {e}")
         # Return mock data as fallback
@@ -455,12 +455,12 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
     if not symbol or symbol.lower() in ['latest', 'all', 'batch'] or len(symbol) > 10 or not symbol.replace('-', '').replace('.', '').isalnum():
         logger.warning(f"Invalid symbol for historical data: {symbol}")
         return None
-    
+
     cache_key = f"hist:{symbol}:{period}:{interval}"
-    
+
     if cache_key in historical_cache:
         return historical_cache[cache_key]
-    
+
     try:
         # Use data validator if available
         if data_validator:
@@ -475,7 +475,7 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
             except Exception as e:
                 logger.warning(f"Data validator failed for {symbol}: {e}")
                 # Fall through to direct yfinance
-        
+
         # Fallback to direct yfinance
         loop = asyncio.get_event_loop()
         ticker = await loop.run_in_executor(executor, yf.Ticker, symbol)
@@ -483,11 +483,11 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
             executor,
             lambda: ticker.history(period=period, interval=interval)
         )
-        
+
         if not data.empty:
             historical_cache[cache_key] = data
             return data
-        
+
         # Generate mock historical data if all else fails
         logger.warning(f"Using mock historical data for {symbol}")
         dates = pd.date_range(end=pd.Timestamp.now(tz='UTC'), periods=30, freq='D')
@@ -498,11 +498,11 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
             'Close': np.random.uniform(100, 500, len(dates)),
             'Volume': np.random.randint(1000000, 10000000, len(dates))
         }, index=dates)
-        
+
         # Ensure logical consistency
         mock_data['High'] = mock_data[['Open', 'High', 'Low', 'Close']].max(axis=1)
         mock_data['Low'] = mock_data[['Open', 'High', 'Low', 'Close']].min(axis=1)
-        
+
         return mock_data
     except Exception as e:
         logger.error(f"Error fetching historical data for {symbol}: {e}")
@@ -515,11 +515,11 @@ async def get_historical_data_cached(symbol: str, period: str = "1mo", interval:
             'Close': np.random.uniform(100, 500, len(dates)),
             'Volume': np.random.randint(1000000, 10000000, len(dates))
         }, index=dates)
-        
+
         # Ensure logical consistency
         mock_data['High'] = mock_data[['Open', 'High', 'Low', 'Close']].max(axis=1)
         mock_data['Low'] = mock_data[['Open', 'High', 'Low', 'Close']].min(axis=1)
-        
+
         return mock_data
 
 # Optimized signal generation
@@ -530,18 +530,18 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
     if not symbol or symbol.lower() in ['latest', 'all', 'batch'] or len(symbol) > 10 or not symbol.replace('-', '').replace('.', '').isalnum():
         logger.warning(f"Invalid symbol for signal generation: {symbol}")
         return []
-    
+
     signals = []
-    
+
     # Use new signal engine if available
     if signal_engine and signal_pipeline:
         try:
             # Generate signals using the new engine
             trading_signals = await signal_engine.generate_signals([symbol])
-            
+
             # Filter signals through the pipeline
             filtered_signals = signal_pipeline.filter_signals(trading_signals)
-            
+
             # Convert TradingSignal to Signal (API model)
             for ts in filtered_signals:
                 signal = Signal(
@@ -559,33 +559,33 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
                     take_profit=ts.take_profit
                 )
                 signals.append(signal)
-                
+
             if signals:
                 return signals
         except Exception as e:
             logger.error(f"Error using new signal engine: {e}")
             # Fall back to legacy generation
-    
+
     # Legacy signal generation
     # Get historical data
     hist_data = await get_historical_data_cached(symbol, period="1mo", interval="1d")
-    
+
     if hist_data is not None and not hist_data.empty:
         # Convert prices to tuple for caching
         prices_tuple = tuple(hist_data['Close'].values)
-        
+
         # Calculate indicators using cached function
         indicators = calculate_indicators_cached(symbol, prices_tuple)
-        
+
         # Get current market data
         market_data = await get_market_data_cached(symbol)
-        
+
         if market_data:
             # Generate signal based on indicators
             confidence = 0.0
             signal_type = "HOLD"
             reasons = []
-            
+
             # RSI signal
             if 'rsi' in indicators:
                 if indicators['rsi'] < 30:
@@ -596,7 +596,7 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
                     confidence += 0.3
                     signal_type = "SELL"
                     reasons.append("RSI overbought")
-            
+
             # Bollinger Bands signal
             if 'bb_percent' in indicators:
                 if indicators['bb_percent'] < 0.2:
@@ -609,7 +609,7 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
                     reasons.append("Near upper Bollinger Band")
                     if signal_type != "BUY":
                         signal_type = "SELL"
-            
+
             # Create signal if we have enough confidence
             if confidence > 0 and signal_type != "HOLD":
                 signal = Signal(
@@ -627,12 +627,12 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
                     take_profit=market_data.price * 1.05 if signal_type == "BUY" else market_data.price * 0.95
                 )
                 signals.append(signal)
-    
+
     # If no signals generated, create a mock signal
     if not signals:
         actions = ["BUY", "SELL", "HOLD"]
         action = random.choice(actions)
-        
+
         signal = Signal(
             id=f"{symbol}_{int(time.time() * 1000)}_{random.randint(1, 100)}",
             symbol=symbol,
@@ -652,7 +652,7 @@ async def generate_signals_cached(symbol: str) -> List[Signal]:
             take_profit=round(random.uniform(101, 110), 2)
         )
         signals.append(signal)
-    
+
     return signals
 
 # Batch processing for multiple symbols
@@ -663,10 +663,10 @@ async def generate_signals_batch(symbols: List[str]) -> List[Signal]:
         try:
             # Generate all signals at once
             trading_signals = await signal_engine.generate_signals(symbols)
-            
+
             # Filter signals through the pipeline
             filtered_signals = signal_pipeline.filter_signals(trading_signals)
-            
+
             # Convert TradingSignal to Signal (API model)
             all_signals = []
             for ts in filtered_signals:
@@ -685,21 +685,21 @@ async def generate_signals_batch(symbols: List[str]) -> List[Signal]:
                     take_profit=ts.take_profit
                 )
                 all_signals.append(signal)
-            
+
             return all_signals
         except Exception as e:
             logger.error(f"Error using new signal engine for batch: {e}")
             # Fall back to legacy generation
-    
+
     # Legacy batch processing
     tasks = [generate_signals_cached(symbol) for symbol in symbols]
     results = await asyncio.gather(*tasks, return_exceptions=True)
-    
+
     all_signals = []
     for result in results:
         if isinstance(result, list):
             all_signals.extend(result)
-    
+
     return all_signals
 
 # WebSocket manager
@@ -727,7 +727,7 @@ class ConnectionManager:
         while True:
             updates = []
             deadline = time.time() + self.batch_interval
-            
+
             # Collect updates for batch_interval seconds
             while time.time() < deadline:
                 try:
@@ -740,7 +740,7 @@ class ConnectionManager:
                         updates.append(update)
                 except asyncio.TimeoutError:
                     break
-            
+
             if updates and self.active_connections:
                 # Send batch to all connections
                 batch_data = {
@@ -748,14 +748,14 @@ class ConnectionManager:
                     "updates": updates,
                     "timestamp": datetime.now(timezone.utc).isoformat()
                 }
-                
+
                 disconnected = []
                 for connection in self.active_connections:
                     try:
                         await connection.send_json(batch_data)
                     except:
                         disconnected.append(connection)
-                
+
                 # Remove disconnected clients
                 for conn in disconnected:
                     if conn in self.active_connections:
@@ -767,20 +767,20 @@ manager = ConnectionManager()
 async def periodic_signal_updates():
     """Send periodic signal updates via WebSocket"""
     await asyncio.sleep(5)  # Initial delay
-    
+
     symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA", "META", "AMZN", "SPY"]
-    
+
     while True:
         try:
             # Generate signals for all symbols using batch processing
             all_signals = await generate_signals_batch(symbols)
-            
+
             if all_signals and manager.active_connections:
                 await manager.queue_update({
                     "type": "signals",
                     "data": [s.model_dump() for s in all_signals]
                 })
-            
+
             # Also send market updates for a few symbols
             for symbol in symbols[:3]:
                 market_data = await get_market_data_cached(symbol)
@@ -789,10 +789,10 @@ async def periodic_signal_updates():
                         "type": "market_update",
                         "data": market_data.model_dump()
                     })
-            
+
         except Exception as e:
             logger.error(f"Error in periodic updates: {e}")
-        
+
         await asyncio.sleep(30)  # Update every 30 seconds
 
 
@@ -820,9 +820,9 @@ async def get_market_status():
     # Simple market hours check (NYSE: 9:30 AM - 4:00 PM ET)
     market_open = now.replace(hour=9, minute=30, second=0, microsecond=0)
     market_close = now.replace(hour=16, minute=0, second=0, microsecond=0)
-    
+
     is_open = market_open <= now <= market_close and now.weekday() < 5
-    
+
     return {
         "market_open": is_open,
         "market_hours": {
@@ -840,7 +840,7 @@ async def get_ai_insights(symbol: str):
     try:
         # Get market data for analysis
         market_data = await get_market_data_cached(symbol)
-        
+
         # Generate AI insights
         insights = [
             {
@@ -858,7 +858,7 @@ async def get_ai_insights(symbol: str):
                 "priority": "medium"
             }
         ]
-        
+
         return {
             "symbol": symbol,
             "insights": insights,
@@ -915,7 +915,7 @@ async def get_agents_performance():
             "status": "active"
         }
     ]
-    
+
     return {
         "agents": agents,
         "overall_performance": {
@@ -954,10 +954,10 @@ async def get_latest_signals(limit: int = Query(10, ge=1, le=50)):
     logger.info(f"DEBUG: get_latest_signals called with limit={limit}")
     symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA", "META", "AMZN", "SPY"]
     all_signals = await generate_signals_batch(symbols)
-    
+
     # Sort by timestamp (newest first) and limit
     all_signals.sort(key=lambda x: x.timestamp, reverse=True)
-    
+
     return all_signals[:limit]
 
 @app.get("/api/v1/signals/{symbol}")
@@ -972,11 +972,11 @@ async def get_market_data(symbol: str):
     """Get market data for symbol"""
     if not symbol or len(symbol) > 10 or not symbol.isalnum():
         raise HTTPException(status_code=400, detail=f"Invalid symbol: {symbol}")
-    
+
     data = await get_market_data_cached(symbol)
     if not data:
         raise HTTPException(status_code=404, detail=f"Market data not found for {symbol}")
-    
+
     return data
 
 @app.get("/api/v1/market-data/{symbol}/historical")
@@ -987,10 +987,10 @@ async def get_historical_data(
 ):
     """Get historical data"""
     data = await get_historical_data_cached(symbol, period, interval)
-    
+
     if data is None:
         return {"data": []}
-    
+
     # Convert to JSON-serializable format with the correct field names for the chart
     records = []
     for index, row in data.iterrows():
@@ -1002,7 +1002,7 @@ async def get_historical_data(
             "close": float(row["Close"]) if "Close" in row else 0,
             "volume": int(row["Volume"]) if "Volume" in row else 0
         })
-    
+
     return {"data": records}
 
 @app.get("/api/v1/performance")
@@ -1017,7 +1017,7 @@ async def get_performance_stats():
                 'max_ms': round(max(times) * 1000, 2),
                 'p95_ms': round(np.percentile(times, 95) * 1000, 2) if len(times) > 10 else 0
             }
-    
+
     # Add cache statistics
     cache_stats = {
         'market_data_cache_size': len(market_data_cache),
@@ -1025,7 +1025,7 @@ async def get_performance_stats():
         'historical_cache_size': len(historical_cache),
         'total_requests': sum(len(times) for times in request_times.values())
     }
-    
+
     return {
         "endpoints": stats,
         "cache": cache_stats,
@@ -1083,25 +1083,25 @@ async def websocket_signals_endpoint(websocket: WebSocket):
 async def get_signal_insights(symbol: str):
     """Get insights for a symbol using cached data"""
     signals = await generate_signals_cached(symbol)
-    
+
     if not signals:
         return {
             "symbol": symbol,
             "signal_count": 0,
             "recommendation": "NO_DATA"
         }
-    
+
     # Aggregate signals
     buy_signals = sum(1 for s in signals if s.action == "BUY")
     sell_signals = sum(1 for s in signals if s.action == "SELL")
     avg_confidence = np.mean([s.confidence for s in signals])
-    
+
     recommendation = "HOLD"
     if buy_signals > sell_signals:
         recommendation = "BUY"
     elif sell_signals > buy_signals:
         recommendation = "SELL"
-    
+
     return {
         "symbol": symbol,
         "signal_count": len(signals),
@@ -1116,19 +1116,19 @@ async def get_signal_insights(symbol: str):
 async def get_market_opportunities():
     """Get market opportunities using batch processing"""
     symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "SPY"]
-    
+
     # Get signals for all symbols
     all_signals = await generate_signals_batch(symbols)
-    
+
     # Filter high confidence signals
     opportunities = [
-        s for s in all_signals 
+        s for s in all_signals
         if s.confidence > 0.7 and s.action in ["BUY", "SELL"]
     ]
-    
+
     # Sort by confidence
     opportunities.sort(key=lambda x: x.confidence, reverse=True)
-    
+
     return {"opportunities": [opp.model_dump() for opp in opportunities[:10]]}
 
 # Precise options endpoint (cached)
@@ -1140,13 +1140,13 @@ async def get_precise_options_signals(
     """Get precise options signals"""
     # For now, return regular signals (can be enhanced with options-specific logic)
     signals = await generate_signals_cached(symbol)
-    
+
     # Add options-specific fields
     for signal in signals:
         signal.indicators["options_volume"] = random.randint(1000, 50000)
         signal.indicators["implied_volatility"] = round(random.uniform(0.2, 0.8), 2)
         signal.indicators["options_flow"] = random.choice(["bullish", "bearish", "neutral"])
-    
+
     return signals
 
 # New API endpoints for signal engine and pipeline management
@@ -1155,7 +1155,7 @@ async def get_pipeline_stats():
     """Get signal filtering pipeline statistics"""
     if not signal_pipeline:
         return {"error": "Signal pipeline not available"}
-    
+
     return signal_pipeline.get_pipeline_stats()
 
 @app.post("/api/v1/pipeline/configure")
@@ -1163,12 +1163,12 @@ async def configure_pipeline(config: Dict[str, Any]):
     """Configure the signal filtering pipeline"""
     if not signal_pipeline:
         return {"error": "Signal pipeline not available"}
-    
+
     try:
         # Apply configuration
         for filter_obj in signal_pipeline.filters:
             filter_name = filter_obj.name.lower()
-            
+
             if "confidence_filter" in filter_name and "min_confidence" in config:
                 filter_obj.min_confidence = config["min_confidence"]
             elif "quality" in filter_name and "min_quality_score" in config:
@@ -1177,7 +1177,7 @@ async def configure_pipeline(config: Dict[str, Any]):
                 filter_obj.allowed_risk_levels = config["allowed_risk_levels"]
             elif "volume" in filter_name and "min_volume_ratio" in config:
                 filter_obj.min_volume_ratio = config["min_volume_ratio"]
-        
+
         return {"status": "configured", "config": config}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -1187,12 +1187,12 @@ async def get_signal_quality_report():
     """Get comprehensive signal quality report"""
     if not signal_engine or not signal_pipeline:
         return {"error": "Signal engine not available"}
-    
+
     # Generate signals for test symbols
     test_symbols = ["AAPL", "GOOGL", "MSFT", "SPY"]
     all_trading_signals = await signal_engine.generate_signals(test_symbols)
     filtered_signals = signal_pipeline.filter_signals(all_trading_signals)
-    
+
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_signals_generated": len(all_trading_signals),
@@ -1209,17 +1209,17 @@ async def get_signal_quality_report():
             }
         }
     }
-    
+
     # Analyze filtered signals
     for signal in filtered_signals:
         # By action
         report["signal_breakdown"]["by_action"][signal.action] = \
             report["signal_breakdown"]["by_action"].get(signal.action, 0) + 1
-        
+
         # By risk level
         report["signal_breakdown"]["by_risk_level"][signal.risk_level] = \
             report["signal_breakdown"]["by_risk_level"].get(signal.risk_level, 0) + 1
-        
+
         # By confidence
         if signal.confidence >= 0.8:
             report["signal_breakdown"]["by_confidence"]["high"] += 1
@@ -1227,7 +1227,7 @@ async def get_signal_quality_report():
             report["signal_breakdown"]["by_confidence"]["medium"] += 1
         else:
             report["signal_breakdown"]["by_confidence"]["low"] += 1
-    
+
     return report
 
 @app.post("/api/v1/signals/feedback")
@@ -1247,9 +1247,9 @@ async def submit_signal_feedback(
         "notes": notes,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
-    
+
     logger.info(f"Signal feedback received: {feedback}")
-    
+
     # If pipeline is available, adjust parameters based on feedback
     if signal_pipeline and outcome == "failure":
         # Increase filtering strictness on failures
@@ -1258,7 +1258,7 @@ async def submit_signal_feedback(
             "signal_accuracy": 0.4  # Simulated
         }
         signal_pipeline.adjust_filter_parameters(performance_metrics)
-    
+
     return {"status": "feedback_received", "feedback": feedback}
 
 # Monitoring service endpoints
@@ -1267,7 +1267,7 @@ async def track_signal_entry(signal_data: Dict[str, Any]):
     """Track when a signal is acted upon"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     monitoring_service.track_signal_entry(signal_data)
     return {"status": "tracking_started", "signal_id": signal_data.get('id')}
 
@@ -1281,7 +1281,7 @@ async def track_signal_exit(
     """Track when a signal position is closed"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     monitoring_service.track_signal_exit(signal_id, exit_price, outcome, notes or "")
     return {"status": "exit_tracked", "signal_id": signal_id}
 
@@ -1293,7 +1293,7 @@ async def get_performance_metrics(
     """Get comprehensive performance metrics"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     timeframe = timedelta(days=timeframe_days) if timeframe_days else None
     metrics = monitoring_service.get_performance_metrics(timeframe, symbol)
     return metrics.to_dict()
@@ -1303,7 +1303,7 @@ async def get_improvement_recommendations():
     """Get recommendations for improving signal generation"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     recommendations = monitoring_service.generate_improvement_recommendations()
     return {"recommendations": recommendations}
 
@@ -1312,7 +1312,7 @@ async def get_feedback_summary():
     """Get summary of signal feedback"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     return monitoring_service.get_signal_feedback_summary()
 
 @app.post("/api/v1/monitoring/snapshot")
@@ -1320,7 +1320,7 @@ async def save_performance_snapshot():
     """Save a performance snapshot"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     monitoring_service.save_performance_snapshot()
     return {"status": "snapshot_saved", "timestamp": datetime.now(timezone.utc).isoformat()}
 
@@ -1329,7 +1329,7 @@ async def get_active_signals():
     """Get currently active (pending) signals"""
     if not monitoring_service:
         return {"error": "Monitoring service not available"}
-    
+
     active_signals = [
         {**outcome.to_dict(), 'signal_id': signal_id}
         for signal_id, outcome in monitoring_service.active_signals.items()
@@ -1347,9 +1347,9 @@ async def run_backtest(
     """Run ML-enhanced backtest with signal quality metrics"""
     try:
         from ml_enhanced_backtest_system import MLBacktestEngine
-        
+
         engine = MLBacktestEngine()
-        
+
         # Use default dates if not provided
         if not end_date:
             end_date = datetime.now(tz=timezone.utc).strftime('%Y-%m-%d')
@@ -1357,14 +1357,14 @@ async def run_backtest(
             # Quick mode: 3 months, normal: 1 year
             days_back = 90 if quick_mode else 365
             start_date = (datetime.now(tz=timezone.utc) - timedelta(days=days_back)).strftime('%Y-%m-%d')
-        
+
         # Run backtest
         results = await engine.run_comprehensive_backtest(
             symbols=symbols[:5],  # Limit to 5 symbols
             start_date=start_date,
             end_date=end_date
         )
-        
+
         # Format results for API response
         formatted_results = {}
         for symbol, data in results.items():
@@ -1380,13 +1380,13 @@ async def run_backtest(
                 "signal_quality": data.get('signal_quality', {}),
                 "top_features": data['feature_importance'][:5]
             }
-        
+
         return {
             "status": "success",
             "backtest_period": f"{start_date} to {end_date}",
             "results": formatted_results
         }
-        
+
     except Exception as e:
         logger.error(f"Error running backtest: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1398,17 +1398,17 @@ async def get_backtest_recommendations(
     """Get signal improvement recommendations from backtesting"""
     try:
         from ml_enhanced_backtest_system import SignalAccuracyImprover
-        
+
         improver = SignalAccuracyImprover()
         improvements = await improver.improve_signals(symbols[:5])
-        
+
         return {
             "recommended_features": improvements['recommended_features'][:10],
             "optimal_parameters": improvements['optimal_parameters'],
             "risk_management": improvements['risk_management'],
             "signal_filters": improvements['signal_filters']
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting recommendations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1421,15 +1421,15 @@ async def log_frontend_message(request: Request):
         log_level = body.get('level', 'info')
         message = body.get('message', '')
         data = body.get('data', {})
-        
+
         # Filter out empty or repetitive messages
         if not message.strip() or (not data or data == {}):
             return {"status": "ignored", "timestamp": datetime.now(timezone.utc).isoformat()}
-        
+
         # Only log important messages (warnings and errors)
         if log_level.lower() in ['warn', 'warning', 'error', 'critical']:
             logger.info(f"Frontend [{log_level.upper()}]: {message} - {data}")
-        
+
         return {"status": "logged", "timestamp": datetime.now(timezone.utc).isoformat()}
     except Exception as e:
         error_tracker.track_error(e, {
@@ -1469,11 +1469,11 @@ async def get_system_health():
     try:
         error_summary = error_tracker.get_error_summary()
         performance_summary = performance_monitor.get_performance_summary()
-        
+
         # Determine health status
         recent_errors = error_summary['recent_errors_1h']
         total_requests = performance_summary['total_requests']
-        
+
         if recent_errors > 50:
             health_status = "critical"
         elif recent_errors > 20:
@@ -1482,7 +1482,7 @@ async def get_system_health():
             health_status = "degraded"
         else:
             health_status = "healthy"
-        
+
         return {
             "status": health_status,
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -1538,7 +1538,7 @@ if __name__ == "__main__":
         print("🔍 Error tracking at /api/v1/monitoring/errors")
         print("🏥 Health monitoring at /api/v1/monitoring/health")
         print("🌐 API docs available at http://localhost:8000/docs")
-        
+
         uvicorn.run(app, host="0.0.0.0", port=8000)
     except Exception as e:
         error_tracker.track_error(e, {

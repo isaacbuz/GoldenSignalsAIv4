@@ -1,9 +1,11 @@
+import os
+
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-import joblib
-import os
+
 
 class AutoAdaptiveAgent:
     def __init__(self, model_path="adaptive_agent.pkl", retrain_interval=100):

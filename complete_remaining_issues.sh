@@ -101,7 +101,7 @@ const MarketIntelligence: React.FC = () => {
   const [view, setView] = useState<'sentiment' | 'flow' | 'patterns' | 'anomalies'>('sentiment');
   const [timeframe, setTimeframe] = useState('1d');
   const [loading, setLoading] = useState(false);
-  
+
   // Mock data
   const [sentimentData] = useState<SentimentData[]>([
     { sector: 'Technology', sentiment: 0.75, volume: 1234567, change: 2.3 },
@@ -253,7 +253,7 @@ const MarketIntelligence: React.FC = () => {
       .attr('height', d => d.y1 - d.y0)
       .attr('fill', d => {
         const sentiment = d.data.sentiment;
-        return sentiment === 'bullish' ? '#4CAF50' : 
+        return sentiment === 'bullish' ? '#4CAF50' :
                sentiment === 'bearish' ? '#F44336' : '#FFA500';
       })
       .attr('opacity', 0.8);
@@ -353,7 +353,7 @@ const MarketIntelligence: React.FC = () => {
               </CardContent>
             </StyledCard>
           </Grid>
-          
+
           <Grid item xs={12} md={6}>
             <StyledCard>
               <CardContent>
@@ -368,7 +368,7 @@ const MarketIntelligence: React.FC = () => {
                     <Box key={sector.sector} sx={{ mb: 2 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="body2">{sector.sector}</Typography>
-                        <Chip 
+                        <Chip
                           label={`+${(sector.sentiment * 100).toFixed(1)}%`}
                           size="small"
                           sx={{ backgroundColor: 'rgba(76, 175, 80, 0.1)', color: '#4CAF50' }}
@@ -669,7 +669,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       newSet.delete(id);
       return newSet;
     });
-    
+
     // Remove from list after animation
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
@@ -706,7 +706,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   return (
     <NotificationContext.Provider value={{ notifications, showNotification, removeNotification, clearAll }}>
       {children}
-      
+
       {/* Render notifications */}
       {notifications.map((notification, index) => (
         <Snackbar
@@ -716,7 +716,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
           onClose={() => removeNotification(notification.id)}
           TransitionComponent={SlideTransition}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          sx={{ 
+          sx={{
             bottom: (theme) => theme.spacing(8 + index * 10),
             zIndex: 1400 + index,
           }}
@@ -859,8 +859,8 @@ const NotificationCenter: React.FC = () => {
     }
   };
 
-  const filteredNotifications = tab === 0 
-    ? notifications 
+  const filteredNotifications = tab === 0
+    ? notifications
     : notifications.filter(n => n.type === 'signal');
 
   return (
@@ -1316,66 +1316,66 @@ const AdvancedSignalChart: React.FC<AdvancedSignalChartProps> = ({
     if (!containerRef.current) return;
 
     const width = containerRef.current.getBoundingClientRect().width;
-    
+
     // Three.js scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0d1117);
-    
+
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 5;
-    
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     containerRef.current.appendChild(renderer.domElement);
-    
+
     // Add lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
-    
+
     const pointLight = new THREE.PointLight(0xffd700, 0.8);
     pointLight.position.set(2, 3, 4);
     scene.add(pointLight);
-    
+
     // Create 3D visualization
     const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-    
+
     data.forEach((point, index) => {
       const material = new THREE.MeshPhongMaterial({
-        color: point.signal === 'BUY' ? 0x4caf50 : 
+        color: point.signal === 'BUY' ? 0x4caf50 :
                point.signal === 'SELL' ? 0xf44336 : 0xffa500,
         emissive: 0xffd700,
         emissiveIntensity: point.confidence / 100,
       });
-      
+
       const sphere = new THREE.Mesh(geometry, material);
-      
+
       // Position based on time and confidence
       sphere.position.x = (index / data.length) * 6 - 3;
       sphere.position.y = (point.confidence / 100) * 3 - 1.5;
       sphere.position.z = (point.accuracy / 100) * 2 - 1;
-      
+
       // Scale based on volume
       const scale = 0.5 + (point.volume / 1000000);
       sphere.scale.set(scale, scale, scale);
-      
+
       scene.add(sphere);
     });
-    
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-      
+
       // Rotate camera around scene
       const time = Date.now() * 0.001;
       camera.position.x = Math.cos(time * 0.5) * 5;
       camera.position.z = Math.sin(time * 0.5) * 5;
       camera.lookAt(0, 0, 0);
-      
+
       renderer.render(scene, camera);
     };
-    
+
     animate();
-    
+
     // Cleanup
     return () => {
       renderer.dispose();

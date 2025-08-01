@@ -27,6 +27,7 @@ router = APIRouter()
 
 class BacktestStrategy(str, Enum):
     """Available backtest strategies"""
+
     MOMENTUM = "momentum"
     MEAN_REVERSION = "mean_reversion"
     TECHNICAL = "technical"
@@ -37,6 +38,7 @@ class BacktestStrategy(str, Enum):
 
 class BacktestStatus(str, Enum):
     """Backtest execution status"""
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -46,29 +48,30 @@ class BacktestStatus(str, Enum):
 
 class BacktestConfig(BaseModel):
     """Backtest configuration"""
+
     name: str = Field(..., description="Backtest name")
     strategy: BacktestStrategy
     symbols: List[str] = Field(..., min_items=1, max_items=50)
     start_date: datetime
     end_date: datetime
     initial_capital: float = Field(default=100000, gt=0)
-    
+
     # Risk parameters
     position_size: float = Field(default=0.1, gt=0, le=1)
     stop_loss: Optional[float] = Field(default=0.02, ge=0, le=0.5)
     take_profit: Optional[float] = Field(default=0.05, ge=0, le=1)
     max_positions: int = Field(default=10, ge=1, le=100)
-    
+
     # Advanced options
     use_margin: bool = False
     margin_ratio: float = Field(default=2.0, ge=1, le=4)
     commission: float = Field(default=0.001, ge=0, le=0.1)
     slippage: float = Field(default=0.0005, ge=0, le=0.01)
-    
+
     # ML specific
     use_ml_signals: bool = True
     ml_confidence_threshold: float = Field(default=0.7, ge=0, le=1)
-    
+
     # Monte Carlo
     run_monte_carlo: bool = False
     monte_carlo_runs: int = Field(default=1000, ge=100, le=10000)
@@ -76,11 +79,12 @@ class BacktestConfig(BaseModel):
 
 class BacktestResult(BaseModel):
     """Backtest result summary"""
+
     backtest_id: str
     name: str
     status: BacktestStatus
     strategy: BacktestStrategy
-    
+
     # Performance metrics
     total_return: float
     annualized_return: float
@@ -88,7 +92,7 @@ class BacktestResult(BaseModel):
     sortino_ratio: float
     max_drawdown: float
     win_rate: float
-    
+
     # Trade statistics
     total_trades: int
     winning_trades: int
@@ -96,18 +100,18 @@ class BacktestResult(BaseModel):
     avg_win: float
     avg_loss: float
     profit_factor: float
-    
+
     # Risk metrics
     volatility: float
     var_95: float
     cvar_95: float
-    
+
     # Execution details
     start_date: datetime
     end_date: datetime
     execution_time: float
     created_at: datetime
-    
+
     # Optional detailed results
     equity_curve: Optional[List[Dict[str, Any]]] = None
     trades: Optional[List[Dict[str, Any]]] = None
@@ -116,6 +120,7 @@ class BacktestResult(BaseModel):
 
 class BacktestListResponse(BaseModel):
     """List of backtests"""
+
     backtests: List[BacktestResult]
     total: int
     page: int
@@ -124,6 +129,7 @@ class BacktestListResponse(BaseModel):
 
 class BacktestCompareRequest(BaseModel):
     """Request model for comparing backtests"""
+
     backtest_ids: List[str] = Field(..., min_items=2, max_items=5)
 
 
@@ -132,13 +138,13 @@ async def create_backtest(
     config: BacktestConfig,
     background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Create and run a new backtest"""
     try:
         # Generate backtest ID
         backtest_id = str(uuid.uuid4())
-        
+
         # Create initial result
         result = BacktestResult(
             backtest_id=backtest_id,
@@ -163,19 +169,16 @@ async def create_backtest(
             start_date=config.start_date,
             end_date=config.end_date,
             execution_time=0,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
-        
+
         # Add background task to run backtest
         background_tasks.add_task(
-            run_backtest_task,
-            backtest_id=backtest_id,
-            config=config,
-            user_id=current_user.id
+            run_backtest_task, backtest_id=backtest_id, config=config, user_id=current_user.id
         )
-        
+
         return result
-        
+
     except Exception as e:
         logger.error(f"Error creating backtest: {e}")
         raise HTTPException(status_code=500, detail="Failed to create backtest")
@@ -188,7 +191,7 @@ async def list_backtests(
     status: Optional[BacktestStatus] = None,
     strategy: Optional[BacktestStrategy] = None,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """List user's backtests"""
     try:
@@ -218,17 +221,14 @@ async def list_backtests(
                 start_date=datetime.utcnow() - timedelta(days=365),
                 end_date=datetime.utcnow(),
                 execution_time=45.2,
-                created_at=datetime.utcnow() - timedelta(hours=2)
+                created_at=datetime.utcnow() - timedelta(hours=2),
             )
         ]
-        
+
         return BacktestListResponse(
-            backtests=backtests,
-            total=len(backtests),
-            page=page,
-            page_size=page_size
+            backtests=backtests, total=len(backtests), page=page, page_size=page_size
         )
-        
+
     except Exception as e:
         logger.error(f"Error listing backtests: {e}")
         raise HTTPException(status_code=500, detail="Failed to list backtests")
@@ -240,7 +240,7 @@ async def get_backtest_details(
     include_trades: bool = False,
     include_equity_curve: bool = False,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Get detailed backtest results"""
     try:
@@ -268,17 +268,19 @@ async def get_backtest_details(
             start_date=datetime.utcnow() - timedelta(days=180),
             end_date=datetime.utcnow(),
             execution_time=62.5,
-            created_at=datetime.utcnow() - timedelta(days=1)
+            created_at=datetime.utcnow() - timedelta(days=1),
         )
-        
+
         if include_equity_curve:
             # Generate sample equity curve
             result.equity_curve = [
-                {"date": (datetime.utcnow() - timedelta(days=i)).isoformat(), 
-                 "value": 100000 * (1 + 0.002 * i + 0.001 * (i % 10))}
+                {
+                    "date": (datetime.utcnow() - timedelta(days=i)).isoformat(),
+                    "value": 100000 * (1 + 0.002 * i + 0.001 * (i % 10)),
+                }
                 for i in range(180, 0, -1)
             ]
-        
+
         if include_trades:
             # Include sample trades
             result.trades = [
@@ -290,14 +292,14 @@ async def get_backtest_details(
                     "exit_price": 151 + i * 0.1,
                     "quantity": 100,
                     "profit": 100 * (1 + i * 0.001),
-                    "entry_time": (datetime.utcnow() - timedelta(days=180-i)).isoformat(),
-                    "exit_time": (datetime.utcnow() - timedelta(days=179-i)).isoformat()
+                    "entry_time": (datetime.utcnow() - timedelta(days=180 - i)).isoformat(),
+                    "exit_time": (datetime.utcnow() - timedelta(days=179 - i)).isoformat(),
                 }
                 for i in range(5)
             ]
-        
+
         return result
-        
+
     except Exception as e:
         logger.error(f"Error fetching backtest details: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch backtest details")
@@ -307,13 +309,13 @@ async def get_backtest_details(
 async def delete_backtest(
     backtest_id: str,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Delete a backtest"""
     try:
         # TODO: Delete from database
         return {"message": "Backtest deleted", "backtest_id": backtest_id}
-        
+
     except Exception as e:
         logger.error(f"Error deleting backtest: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete backtest")
@@ -323,13 +325,13 @@ async def delete_backtest(
 async def cancel_backtest(
     backtest_id: str,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Cancel a running backtest"""
     try:
         # TODO: Implement cancellation logic
         return {"message": "Backtest cancelled", "backtest_id": backtest_id}
-        
+
     except Exception as e:
         logger.error(f"Error cancelling backtest: {e}")
         raise HTTPException(status_code=500, detail="Failed to cancel backtest")
@@ -340,7 +342,7 @@ async def generate_backtest_report(
     backtest_id: str,
     format: str = "json",  # json, pdf, html
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Generate a detailed backtest report"""
     try:
@@ -353,18 +355,18 @@ async def generate_backtest_report(
                     "performance": {
                         "total_return": "32%",
                         "sharpe_ratio": 1.8,
-                        "max_drawdown": "-15%"
+                        "max_drawdown": "-15%",
                     },
                     "recommendations": [
                         "Consider reducing position size during high volatility",
                         "Strategy performs best in trending markets",
-                        "Risk-adjusted returns are above benchmark"
-                    ]
-                }
+                        "Risk-adjusted returns are above benchmark",
+                    ],
+                },
             }
         else:
             raise HTTPException(status_code=400, detail=f"Format {format} not yet supported")
-            
+
     except Exception as e:
         logger.error(f"Error generating report: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate report")
@@ -374,7 +376,7 @@ async def generate_backtest_report(
 async def compare_backtests(
     request: BacktestCompareRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Compare multiple backtests"""
     try:
@@ -385,46 +387,36 @@ async def compare_backtests(
                 "backtest_ids": backtest_ids,
                 "best_performer": backtest_ids[0],
                 "metrics": {
-                    "sharpe_ratio": {
-                        backtest_ids[0]: 1.8,
-                        backtest_ids[1]: 1.5
-                    },
-                    "total_return": {
-                        backtest_ids[0]: 0.32,
-                        backtest_ids[1]: 0.25
-                    }
-                }
+                    "sharpe_ratio": {backtest_ids[0]: 1.8, backtest_ids[1]: 1.5},
+                    "total_return": {backtest_ids[0]: 0.32, backtest_ids[1]: 0.25},
+                },
             }
         }
-        
+
     except Exception as e:
         logger.error(f"Error comparing backtests: {e}")
         raise HTTPException(status_code=500, detail="Failed to compare backtests")
 
 
-async def run_backtest_task(
-    backtest_id: str,
-    config: BacktestConfig,
-    user_id: int
-):
+async def run_backtest_task(backtest_id: str, config: BacktestConfig, user_id: int):
     """Background task to run backtest"""
     try:
         logger.info(f"Starting backtest {backtest_id} for user {user_id}")
-        
+
         # Initialize components
         data_manager = BacktestDataManager()
         metrics_calculator = MetricsCalculator()
         report_generator = BacktestReporter()
-        
+
         # TODO: Implement actual backtest execution
         # 1. Fetch historical data
         # 2. Run strategy
         # 3. Calculate metrics
         # 4. Generate report
         # 5. Save results to database
-        
+
         logger.info(f"Backtest {backtest_id} completed successfully")
-        
+
     except Exception as e:
         logger.error(f"Error in backtest task: {e}")
-        # TODO: Update backtest status to FAILED in database 
+        # TODO: Update backtest status to FAILED in database

@@ -29,7 +29,7 @@ def test_market_data_preparation(backtest_engine, historical_data):
         texts=["Test news"] * len(historical_data),
         window=window
     )
-    
+
     assert "close_prices" in data
     assert "texts" in data
     assert "timestamp" in data
@@ -48,7 +48,7 @@ def test_trade_execution(backtest_engine):
     assert backtest_engine.position > 0
     assert len(backtest_engine.trades) == 1
     assert backtest_engine.trades[0]["action"] == "buy"
-    
+
     # Test sell execution
     backtest_engine.execute_trade(
         price=110.0,
@@ -59,7 +59,7 @@ def test_trade_execution(backtest_engine):
     assert backtest_engine.position == 0
     assert len(backtest_engine.trades) == 2
     assert backtest_engine.trades[1]["action"] == "sell"
-    
+
     # Verify profit calculation
     assert backtest_engine.trades[1]["profit"] > 0
 
@@ -68,7 +68,7 @@ def test_equity_calculation(backtest_engine):
     # Initial equity
     equity = backtest_engine.calculate_equity(100.0)
     assert equity == backtest_engine.initial_capital
-    
+
     # Buy position
     backtest_engine.execute_trade(
         price=100.0,
@@ -76,7 +76,7 @@ def test_equity_calculation(backtest_engine):
         confidence=1.0,
         timestamp=datetime.now()
     )
-    
+
     # Calculate equity with price increase
     equity = backtest_engine.calculate_equity(110.0)
     assert equity > backtest_engine.initial_capital
@@ -88,7 +88,7 @@ def test_backtest_run(backtest_engine, historical_data):
         texts=["Market update"] * len(historical_data),
         window=100
     )
-    
+
     assert "total_return" in results
     assert "annual_return" in results
     assert "sharpe_ratio" in results
@@ -106,7 +106,7 @@ def test_statistics_calculation(backtest_engine, historical_data):
         texts=["Market update"] * len(historical_data),
         window=100
     )
-    
+
     # Generate some trades
     for i in range(10):
         price = 100.0 * (1 + i/100)
@@ -116,10 +116,10 @@ def test_statistics_calculation(backtest_engine, historical_data):
             confidence=0.8,
             timestamp=datetime.now()
         )
-    
+
     # Calculate statistics
     results = backtest_engine.calculate_statistics(pd.DataFrame())
-    
+
     assert -1 <= results["total_return"] <= 1
     assert -1 <= results["annual_return"] <= 1
     assert isinstance(results["sharpe_ratio"], float)
@@ -132,15 +132,15 @@ def test_commission_impact(orchestrator):
     # Create engines with different commission rates
     low_commission = BacktestEngine(orchestrator, commission=0.001)
     high_commission = BacktestEngine(orchestrator, commission=0.01)
-    
+
     # Generate test data
     prices = pd.Series([100.0 * (1 + i/100) for i in range(100)])
     texts = ["Update"] * len(prices)
-    
+
     # Run backtests
     low_results = low_commission.run(prices, texts)
     high_results = high_commission.run(prices, texts)
-    
+
     # Higher commission should result in lower returns
     assert low_results["total_return"] > high_results["total_return"]
 
@@ -150,14 +150,14 @@ def test_edge_cases(backtest_engine):
     results = backtest_engine.calculate_statistics(pd.DataFrame())
     assert results["total_return"] == 0.0
     assert results["win_rate"] == 0.0
-    
+
     # Test with single price
     with pytest.raises(ValueError):
         backtest_engine.run(pd.Series([100.0]), ["Test"])
-    
+
     # Test with mismatched data lengths
     with pytest.raises(ValueError):
         backtest_engine.run(
             pd.Series([100.0] * 100),
             ["Test"] * 50  # Different length
-        ) 
+        )

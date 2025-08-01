@@ -1,1 +1,1 @@
-export default SignalPanel; 
+export default SignalPanel;

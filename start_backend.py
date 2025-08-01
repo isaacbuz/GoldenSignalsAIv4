@@ -38,4 +38,4 @@ print("\nPress Ctrl+C to stop the server")
 try:
     subprocess.run(cmd, env=env)
 except KeyboardInterrupt:
-    print("\n✅ Backend stopped") 
+    print("\n✅ Backend stopped")

@@ -34,4 +34,4 @@ export const formatDate = (date: Date | string): string => {
         hour: 'numeric',
         minute: '2-digit',
     }).format(d);
-}; 
+};

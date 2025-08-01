@@ -59,7 +59,7 @@ export const AIBrainDashboard: React.FC<AIBrainDashboardProps> = ({
     const statuses: Array<'HUNTING' | 'ANALYZING' | 'SIGNAL_FOUND'> = ['HUNTING', 'ANALYZING', 'SIGNAL_FOUND'];
     const interval = setInterval(() => {
       setAiStatus(statuses[Math.floor(Math.random() * statuses.length)]);
-      
+
       // Simulate processing data stream
       const newData = [
         'Analyzing volume patterns...',
@@ -335,4 +335,4 @@ export const AIBrainDashboard: React.FC<AIBrainDashboardProps> = ({
       </Grid>
     </MotionPaper>
   );
-}; 
+};

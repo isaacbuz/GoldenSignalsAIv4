@@ -18,20 +18,20 @@ REPO_NAME = "GoldenSignalsAIv4"
 def create_github_issue(issue_data, repo_owner, repo_name, token):
     """Create a single issue on GitHub"""
     url = f"{GITHUB_API_URL}/repos/{repo_owner}/{repo_name}/issues"
-    
+
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     issue_payload = {
         "title": issue_data["title"],
         "body": issue_data["body"],
         "labels": issue_data.get("labels", [])
     }
-    
+
     response = requests.post(url, json=issue_payload, headers=headers)
-    
+
     if response.status_code == 201:
         return response.json()
     else:
@@ -52,9 +52,9 @@ failed_issues = []
 # Create each issue
 for i, issue in enumerate(issues, 1):
     print(f"\nCreating issue {i}/{len(issues)}: {issue['title']}...")
-    
+
     result = create_github_issue(issue, REPO_OWNER, REPO_NAME, GITHUB_TOKEN)
-    
+
     if result:
         created_issues.append(result)
         print(f"✅ Created: #{result['number']} - {result['title']}")
@@ -62,7 +62,7 @@ for i, issue in enumerate(issues, 1):
     else:
         failed_issues.append(issue)
         print(f"❌ Failed to create: {issue['title']}")
-    
+
     # Rate limiting
     if i < len(issues):
         time.sleep(2)
@@ -99,4 +99,4 @@ results = {
 with open('rag_issues_creation_results.json', 'w') as f:
     json.dump(results, f, indent=2)
 
-print(f"\n📁 Results saved to: rag_issues_creation_results.json") 
+print(f"\n📁 Results saved to: rag_issues_creation_results.json")

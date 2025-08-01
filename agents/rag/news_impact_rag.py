@@ -4,16 +4,17 @@ Links news events to historical price movements for predictive insights
 Issue #181: RAG-2: Implement News & Event Impact RAG
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
 import asyncio
 import json
-from dataclasses import dataclass
 import logging
 import re
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,8 @@ class NewsCategory(Enum):
     SECTOR = "sector_news"
     ANALYST = "analyst_rating"
     REGULATORY = "regulatory"
-    
-    
+
+
 class SentimentLevel(Enum):
     """Sentiment levels for news"""
     VERY_NEGATIVE = -2
@@ -57,7 +58,7 @@ class NewsEvent:
     volume_spike: float  # Volume increase ratio
     volatility_change: float  # IV change
     market_reaction_time: int  # Minutes to peak reaction
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             'id': self.id,
@@ -74,7 +75,7 @@ class NewsEvent:
             'volatility_change': self.volatility_change,
             'market_reaction_time': self.market_reaction_time
         }
-    
+
     def to_search_text(self) -> str:
         """Convert to searchable text for embedding"""
         return f"""
@@ -93,17 +94,17 @@ class NewsImpactRAG:
     RAG system for linking news to historical price movements
     Provides predictive insights for news-driven trading
     """
-    
+
     def __init__(self, use_mock_db: bool = True):
         """Initialize the News Impact RAG system"""
         self.use_mock_db = use_mock_db
         self.news_events: List[NewsEvent] = []
         self.embeddings: Dict[str, np.ndarray] = {}
         self.sentiment_patterns: Dict[str, List[float]] = {}
-        
+
         if use_mock_db:
             self._load_mock_news_events()
-            
+
     def _load_mock_news_events(self):
         """Load mock historical news events with impact data"""
         mock_events = [
@@ -210,10 +211,10 @@ class NewsImpactRAG:
                 market_reaction_time=5
             )
         ]
-        
+
         self.news_events.extend(mock_events)
         self._generate_mock_embeddings()
-        
+
     def _generate_mock_embeddings(self):
         """Generate embeddings for news events"""
         for event in self.news_events:
@@ -229,8 +230,8 @@ class NewsImpactRAG:
                 event.market_reaction_time / 60.0,  # Normalized reaction time
             ])
             self.embeddings[event.id] = embedding
-            
-    def _calculate_similarity(self, query_embedding: np.ndarray, 
+
+    def _calculate_similarity(self, query_embedding: np.ndarray,
                             news_embedding: np.ndarray) -> float:
         """Calculate cosine similarity between embeddings"""
         dot_product = np.dot(query_embedding, news_embedding)
@@ -238,19 +239,19 @@ class NewsImpactRAG:
         if norm_product == 0:
             return 0.0
         return dot_product / norm_product
-    
+
     async def analyze_sentiment(self, text: str) -> SentimentLevel:
         """Analyze sentiment of news text"""
         # Simple keyword-based sentiment analysis
         # In production, use transformer models like FinBERT
-        
+
         text_lower = text.lower()
-        
+
         very_negative_words = ['crash', 'plunge', 'collapse', 'crisis', 'bankruptcy']
         negative_words = ['fall', 'decline', 'miss', 'cut', 'weak', 'concern']
         positive_words = ['rise', 'gain', 'beat', 'strong', 'upgrade', 'growth']
         very_positive_words = ['surge', 'soar', 'record', 'breakthrough', 'exceptional']
-        
+
         score = 0
         for word in very_negative_words:
             if word in text_lower:
@@ -264,7 +265,7 @@ class NewsImpactRAG:
         for word in very_positive_words:
             if word in text_lower:
                 score += 2
-                
+
         if score <= -2:
             return SentimentLevel.VERY_NEGATIVE
         elif score < 0:
@@ -275,11 +276,11 @@ class NewsImpactRAG:
             return SentimentLevel.POSITIVE
         else:
             return SentimentLevel.VERY_POSITIVE
-            
+
     def _categorize_news(self, headline: str, content: str) -> NewsCategory:
         """Categorize news based on content"""
         text = (headline + " " + content).lower()
-        
+
         if any(word in text for word in ['fed', 'fomc', 'powell', 'monetary policy']):
             return NewsCategory.FED
         elif any(word in text for word in ['earnings', 'revenue', 'eps', 'quarterly']):
@@ -296,18 +297,18 @@ class NewsImpactRAG:
             return NewsCategory.CORPORATE
         else:
             return NewsCategory.SECTOR
-            
-    async def get_similar_news_impacts(self, news_item: Dict[str, Any], 
+
+    async def get_similar_news_impacts(self, news_item: Dict[str, Any],
                                      top_k: int = 5) -> Dict[str, Any]:
         """Get historical impacts of similar news events"""
-        
+
         # Analyze the new news item
         sentiment = await self.analyze_sentiment(news_item.get('text', news_item.get('headline', '')))
         category = self._categorize_news(
             news_item.get('headline', ''),
             news_item.get('text', news_item.get('content', ''))
         )
-        
+
         # Create embedding for the query
         query_embedding = np.array([
             sentiment.value / 2.0,
@@ -319,7 +320,7 @@ class NewsImpactRAG:
             0.0,  # Unknown volatility change
             0.5,  # Average reaction time
         ])
-        
+
         # Find similar historical news
         similarities = []
         for event in self.news_events:
@@ -327,15 +328,15 @@ class NewsImpactRAG:
             if 'symbols' in news_item:
                 if not any(s in event.symbols for s in news_item['symbols']):
                     continue
-                    
+
             news_embedding = self.embeddings[event.id]
             similarity = self._calculate_similarity(query_embedding, news_embedding)
             similarities.append((similarity, event))
-            
+
         # Sort by similarity and get top K
         similarities.sort(key=lambda x: x[0], reverse=True)
         top_matches = similarities[:top_k]
-        
+
         # Calculate expected impact
         if top_matches:
             avg_price_move = np.mean([e.price_impact_1d for _, e in top_matches])
@@ -347,7 +348,7 @@ class NewsImpactRAG:
             avg_reaction_time = 30
             avg_volume_spike = 1.0
             confidence = 0.0
-            
+
         return {
             'query': news_item,
             'sentiment': sentiment.name,
@@ -374,13 +375,13 @@ class NewsImpactRAG:
                 sentiment, category, avg_price_move, confidence
             )
         }
-        
-    def _generate_trading_recommendation(self, sentiment: SentimentLevel, 
+
+    def _generate_trading_recommendation(self, sentiment: SentimentLevel,
                                        category: NewsCategory,
                                        expected_move: float,
                                        confidence: float) -> Dict[str, Any]:
         """Generate trading recommendation based on news analysis"""
-        
+
         # Determine action
         if confidence < 0.5:
             action = "hold"
@@ -397,7 +398,7 @@ class NewsImpactRAG:
         else:
             action = "monitor"
             size = 0
-            
+
         # Determine urgency
         if category in [NewsCategory.FED, NewsCategory.ECONOMIC]:
             urgency = "immediate"  # These move markets fast
@@ -405,11 +406,11 @@ class NewsImpactRAG:
             urgency = "high"
         else:
             urgency = "medium"
-            
+
         # Risk management
         stop_loss = abs(expected_move) * 0.5
         take_profit = abs(expected_move) * 1.5
-        
+
         return {
             'action': action,
             'size': float(size),
@@ -421,11 +422,11 @@ class NewsImpactRAG:
             'hold_period': "1-3 days",
             'rationale': f"{sentiment.name} {category.value} news typically moves {expected_move:.1f}%"
         }
-        
+
     async def get_category_statistics(self, category: NewsCategory) -> Dict[str, Any]:
         """Get historical statistics for a news category"""
         category_events = [e for e in self.news_events if e.category == category]
-        
+
         if not category_events:
             return {
                 'category': category.value,
@@ -433,11 +434,11 @@ class NewsImpactRAG:
                 'avg_impact': 0.0,
                 'avg_reaction_time': 0
             }
-            
+
         impacts_1d = [e.price_impact_1d for e in category_events]
         reaction_times = [e.market_reaction_time for e in category_events]
         volume_spikes = [e.volume_spike for e in category_events]
-        
+
         return {
             'category': category.value,
             'event_count': len(category_events),
@@ -448,15 +449,15 @@ class NewsImpactRAG:
             'avg_volume_spike': float(np.mean(volume_spikes)),
             'typical_sentiment': self._get_typical_sentiment(category_events)
         }
-        
+
     def _get_typical_sentiment(self, events: List[NewsEvent]) -> str:
         """Get the most common sentiment for a set of events"""
         if not events:
             return "NEUTRAL"
-            
+
         sentiments = [e.sentiment.value for e in events]
         avg_sentiment = np.mean(sentiments)
-        
+
         if avg_sentiment <= -1.5:
             return "VERY_NEGATIVE"
         elif avg_sentiment <= -0.5:
@@ -467,22 +468,22 @@ class NewsImpactRAG:
             return "POSITIVE"
         else:
             return "VERY_POSITIVE"
-            
+
     async def track_news_accuracy(self, news_id: str, actual_impact: Dict[str, float]):
         """Track prediction accuracy for continuous learning"""
         # In production, this would update the model with actual outcomes
         logger.info(f"Tracking accuracy for news {news_id}: {actual_impact}")
         # Store for future model updates
-        
-        
+
+
 # Demo function
 async def demo_news_impact_rag():
     """Demonstrate the News Impact RAG system"""
     rag = NewsImpactRAG(use_mock_db=True)
-    
+
     print("News Impact RAG Demo")
     print("="*60)
-    
+
     # Test different news scenarios
     test_news = [
         {
@@ -504,14 +505,14 @@ async def demo_news_impact_rag():
             "timestamp": datetime.now()
         }
     ]
-    
+
     for news in test_news:
         print(f"\n{'='*60}")
         print(f"News: {news['headline']}")
         print(f"Symbols: {', '.join(news['symbols'])}")
-        
+
         result = await rag.get_similar_news_impacts(news, top_k=3)
-        
+
         print(f"\nSentiment: {result['sentiment']}")
         print(f"Category: {result['category']}")
         print(f"\nExpected Impact:")
@@ -519,7 +520,7 @@ async def demo_news_impact_rag():
         print(f"  Reaction Time: {result['expected_impact']['reaction_time_minutes']} minutes")
         print(f"  Volume Spike: {result['expected_impact']['volume_spike']:.1f}x")
         print(f"  Confidence: {result['expected_impact']['confidence']:.1%}")
-        
+
         print(f"\nTrading Recommendation:")
         rec = result['trading_recommendation']
         print(f"  Action: {rec['action'].upper()}")
@@ -527,13 +528,13 @@ async def demo_news_impact_rag():
         print(f"  Urgency: {rec['urgency']}")
         print(f"  Stop Loss: {rec['stop_loss_percent']:.1f}%")
         print(f"  Take Profit: {rec['take_profit_percent']:.1f}%")
-        
+
         if result['similar_events']:
             print(f"\nSimilar Historical Events:")
             for i, event in enumerate(result['similar_events'][:2], 1):
                 print(f"  {i}. {event['headline'][:60]}...")
                 print(f"     Impact: {event['price_impact_1d']:.2f}% (Similarity: {event['similarity']:.1%})")
-    
+
     # Show category statistics
     print(f"\n{'='*60}")
     print("Category Statistics:")
@@ -547,4 +548,4 @@ async def demo_news_impact_rag():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_news_impact_rag()) 
+    asyncio.run(demo_news_impact_rag())

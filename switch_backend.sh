@@ -31,13 +31,13 @@ start_mock() {
 # Function to start full backend
 start_full() {
     echo "🚀 Starting Full Backend (with real market data)..."
-    
+
     # Check dependencies
     python3 -c "import yfinance, pandas, numpy, cachetools" 2>/dev/null || {
         echo "📦 Installing required dependencies..."
         pip3 install yfinance pandas numpy cachetools
     }
-    
+
     python3 standalone_backend_optimized.py &
     sleep 5
     if curl -s http://localhost:8000/docs > /dev/null 2>&1; then
@@ -89,4 +89,4 @@ case "$1" in
         show_current
         exit 1
         ;;
-esac 
+esac

@@ -2,8 +2,8 @@
 base_agent.py
 Purpose: Defines the abstract base class for all trading agents in GoldenSignalsAI. Provides a common interface for agent implementations with the process_signal method.
 """
-from typing import Dict, Any
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 
 
 class BaseAgent(ABC):

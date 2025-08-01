@@ -133,8 +133,8 @@ export class ChartSignalAgent {
    */
   public updateSignalsFromConsensus(consensus: any): void {
     // Extract high-confidence signals from consensus
-    const signals: ChartSignal[] = consensus.signals
-      .filter((s: any) => s.confidence >= this.config.showConfidenceThreshold)
+    const signals: ChartSignal[] = (consensus.signals || [])
+      .filter((s: any) => s.confidence >= (this.config?.showConfidenceThreshold || 0.7))
       .map((s: any) => ({
         id: `consensus-${Date.now()}-${Math.random()}`,
         type: s.action.toLowerCase() as 'buy' | 'sell',
@@ -208,7 +208,10 @@ export class ChartSignalAgent {
     signals.forEach(signal => {
       try {
         const x = this.chart!.timeScale().timeToCoordinate(signal.time);
-        const y = this.chart!.priceScale('right').priceToCoordinate(signal.price);
+        // Use coordinateToPrice as a workaround for missing priceToCoordinate
+        const priceScale = this.chart!.priceScale('right');
+        const y = (priceScale as any).priceToCoordinate ? 
+          (priceScale as any).priceToCoordinate(signal.price) : null;
 
         if (x !== null && y !== null && !isNaN(x) && !isNaN(y)) {
           signal.coordinates = { x, y };
@@ -233,7 +236,10 @@ export class ChartSignalAgent {
     const updatedSignals = this.signals.value.map(signal => {
       try {
         const x = this.chart!.timeScale().timeToCoordinate(signal.time);
-        const y = this.chart!.priceScale('right').priceToCoordinate(signal.price);
+        // Use coordinateToPrice as a workaround for missing priceToCoordinate
+        const priceScale = this.chart!.priceScale('right');
+        const y = (priceScale as any).priceToCoordinate ? 
+          (priceScale as any).priceToCoordinate(signal.price) : null;
 
         if (x !== null && y !== null && !isNaN(x) && !isNaN(y)) {
           return {

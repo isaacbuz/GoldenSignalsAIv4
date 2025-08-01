@@ -1,6 +1,6 @@
 /**
  * Portfolio Page
- * 
+ *
  * Portfolio tracking with performance metrics, positions, and P&L analysis
  */
 
@@ -22,4 +22,4 @@ export const PortfolioPage: React.FC = () => {
   );
 };
 
-export default PortfolioPage; 
+export default PortfolioPage;

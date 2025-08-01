@@ -435,4 +435,4 @@ const SignalAlerts: React.FC<SignalAlertsProps> = ({
     );
 };
 
-export default SignalAlerts; 
+export default SignalAlerts;

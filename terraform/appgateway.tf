@@ -103,7 +103,7 @@ resource "azurerm_application_gateway" "agw" {
     protocol             = "Http"
     request_timeout      = 30
     probe_name           = "frontend-static-probe"
-    
+
     compression {
       enabled = true
       mime_types = [
@@ -134,7 +134,7 @@ resource "azurerm_application_gateway" "agw" {
     protocol             = "Http"
     request_timeout      = 60
     probe_name           = "backend-probe"
-    
+
     custom_response_headers = {
       "X-Content-Type-Options"  = "nosniff"
       "X-Frame-Options"         = "DENY"
@@ -322,4 +322,4 @@ resource "azurerm_key_vault_certificate" "goldensignals" {
       }
     }
   }
-} 
+}

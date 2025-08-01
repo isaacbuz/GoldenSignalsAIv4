@@ -302,4 +302,4 @@ describe('UnifiedAIChat - TDD Tests', () => {
             expect(sendButton).toHaveAttribute('aria-label', expect.stringContaining('Send message'))
         })
     })
-}) 
+})

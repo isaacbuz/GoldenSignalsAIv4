@@ -1,6 +1,7 @@
 import json
 import os
 
+
 class StrategyProfileRouter:
     def __init__(self, config_path="strategy_profiles.json"):
         with open(config_path, "r") as f:

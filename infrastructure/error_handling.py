@@ -3,6 +3,7 @@
 import logging
 import traceback
 
+
 class ApplicationError(Exception):
     """Generic application-level error for GoldenSignalsAI."""
     def __init__(self, message, severity=None, context=None):

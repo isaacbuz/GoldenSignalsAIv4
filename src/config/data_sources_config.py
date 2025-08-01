@@ -34,8 +34,8 @@ class DataSourceConfig:
     rate_limit: Optional[str]
     estimated_cost: Optional[str]
     priority: int  # 1-5, where 1 is highest priority
-    
-    
+
+
 # Premium Financial News Sources
 BLOOMBERG_CONFIG = DataSourceConfig(
     name="Bloomberg Terminal API",
@@ -46,11 +46,11 @@ BLOOMBERG_CONFIG = DataSourceConfig(
         "Real-time news sentiment",
         "Earnings transcripts",
         "Analyst ratings",
-        "Economic forecasts"
+        "Economic forecasts",
     ],
     rate_limit="Unlimited",
     estimated_cost="$24,000+/year",
-    priority=1
+    priority=1,
 )
 
 REFINITIV_CONFIG = DataSourceConfig(
@@ -58,15 +58,10 @@ REFINITIV_CONFIG = DataSourceConfig(
     category=DataCategory.NEWS,
     tier=DataSourceTier.ENTERPRISE,
     api_endpoint="https://api.refinitiv.com/",
-    features=[
-        "Machine-readable news",
-        "Sentiment scores",
-        "Entity recognition",
-        "ESG data"
-    ],
+    features=["Machine-readable news", "Sentiment scores", "Entity recognition", "ESG data"],
     rate_limit="Based on subscription",
     estimated_cost="$20,000+/year",
-    priority=1
+    priority=1,
 )
 
 BENZINGA_CONFIG = DataSourceConfig(
@@ -78,11 +73,11 @@ BENZINGA_CONFIG = DataSourceConfig(
         "Real-time newsfeeds",
         "Pre-market movers",
         "Unusual options activity",
-        "Analyst ratings"
+        "Analyst ratings",
     ],
     rate_limit="10 requests/second",
     estimated_cost="$2,000/year",
-    priority=2
+    priority=2,
 )
 
 # Social Media Sources
@@ -91,15 +86,10 @@ STOCKTWITS_CONFIG = DataSourceConfig(
     category=DataCategory.SOCIAL,
     tier=DataSourceTier.FREEMIUM,
     api_endpoint="https://api.stocktwits.com/api/2/",
-    features=[
-        "Sentiment indicators",
-        "Trending tickers",
-        "Message volume",
-        "User watchlists"
-    ],
+    features=["Sentiment indicators", "Trending tickers", "Message volume", "User watchlists"],
     rate_limit="200 requests/hour",
     estimated_cost="Free - $500/month",
-    priority=2
+    priority=2,
 )
 
 DISCORD_CONFIG = DataSourceConfig(
@@ -111,11 +101,11 @@ DISCORD_CONFIG = DataSourceConfig(
         "Real-time chat monitoring",
         "Sentiment analysis",
         "Trending topics",
-        "Community alerts"
+        "Community alerts",
     ],
     rate_limit="Based on bot limits",
     estimated_cost="Free",
-    priority=3
+    priority=3,
 )
 
 # Market Data Providers
@@ -124,15 +114,10 @@ IEX_CLOUD_CONFIG = DataSourceConfig(
     category=DataCategory.MARKET,
     tier=DataSourceTier.FREEMIUM,
     api_endpoint="https://cloud.iexapis.com/stable/",
-    features=[
-        "Real-time quotes",
-        "Historical data",
-        "Corporate actions",
-        "Options data"
-    ],
+    features=["Real-time quotes", "Historical data", "Corporate actions", "Options data"],
     rate_limit="Based on plan",
     estimated_cost="$9-$999/month",
-    priority=1
+    priority=1,
 )
 
 TRADIER_CONFIG = DataSourceConfig(
@@ -140,15 +125,10 @@ TRADIER_CONFIG = DataSourceConfig(
     category=DataCategory.MARKET,
     tier=DataSourceTier.FREEMIUM,
     api_endpoint="https://api.tradier.com/v1/",
-    features=[
-        "Options chains",
-        "Greeks calculation",
-        "Streaming quotes",
-        "Paper trading"
-    ],
+    features=["Options chains", "Greeks calculation", "Streaming quotes", "Paper trading"],
     rate_limit="60 requests/minute",
     estimated_cost="Free sandbox, $10+/month live",
-    priority=2
+    priority=2,
 )
 
 ALPACA_CONFIG = DataSourceConfig(
@@ -156,15 +136,10 @@ ALPACA_CONFIG = DataSourceConfig(
     category=DataCategory.MARKET,
     tier=DataSourceTier.FREE,
     api_endpoint="https://api.alpaca.markets/",
-    features=[
-        "Real-time data",
-        "Historical bars",
-        "Crypto data",
-        "Paper trading"
-    ],
+    features=["Real-time data", "Historical bars", "Crypto data", "Paper trading"],
     rate_limit="200 requests/minute",
     estimated_cost="Free",
-    priority=2
+    priority=2,
 )
 
 # Alternative Data Sources
@@ -173,15 +148,10 @@ THINKNUM_CONFIG = DataSourceConfig(
     category=DataCategory.ALTERNATIVE,
     tier=DataSourceTier.ENTERPRISE,
     api_endpoint="https://api.thinknum.com/",
-    features=[
-        "Web scraping data",
-        "Company KPIs",
-        "Job postings",
-        "Product listings"
-    ],
+    features=["Web scraping data", "Company KPIs", "Job postings", "Product listings"],
     rate_limit="Based on plan",
     estimated_cost="$3,000+/month",
-    priority=3
+    priority=3,
 )
 
 SATELLITE_CONFIG = DataSourceConfig(
@@ -193,11 +163,11 @@ SATELLITE_CONFIG = DataSourceConfig(
         "Parking lot traffic",
         "Retail foot traffic",
         "Industrial activity",
-        "Supply chain monitoring"
+        "Supply chain monitoring",
     ],
     rate_limit="Custom",
     estimated_cost="$10,000+/month",
-    priority=4
+    priority=4,
 )
 
 # Economic Data Sources
@@ -206,15 +176,10 @@ FRED_CONFIG = DataSourceConfig(
     category=DataCategory.ECONOMIC,
     tier=DataSourceTier.FREE,
     api_endpoint="https://api.stlouisfed.org/fred/",
-    features=[
-        "800,000+ time series",
-        "GDP data",
-        "Interest rates",
-        "Employment statistics"
-    ],
+    features=["800,000+ time series", "GDP data", "Interest rates", "Employment statistics"],
     rate_limit="120 requests/minute",
     estimated_cost="Free",
-    priority=1
+    priority=1,
 )
 
 QUANDL_CONFIG = DataSourceConfig(
@@ -222,15 +187,10 @@ QUANDL_CONFIG = DataSourceConfig(
     category=DataCategory.ECONOMIC,
     tier=DataSourceTier.FREEMIUM,
     api_endpoint="https://data.nasdaq.com/api/v3/",
-    features=[
-        "Futures data",
-        "Commodities",
-        "Economic indicators",
-        "Alternative datasets"
-    ],
+    features=["Futures data", "Commodities", "Economic indicators", "Alternative datasets"],
     rate_limit="Based on plan",
     estimated_cost="$0-$2,000/month",
-    priority=2
+    priority=2,
 )
 
 # Options Flow Data
@@ -243,11 +203,11 @@ FLOWALGO_CONFIG = DataSourceConfig(
         "Real-time options flow",
         "Unusual activity alerts",
         "Dark pool prints",
-        "Smart money tracking"
+        "Smart money tracking",
     ],
     rate_limit="Based on plan",
     estimated_cost="$200-$500/month",
-    priority=2
+    priority=2,
 )
 
 UNUSUAL_WHALES_CONFIG = DataSourceConfig(
@@ -255,15 +215,10 @@ UNUSUAL_WHALES_CONFIG = DataSourceConfig(
     category=DataCategory.OPTIONS,
     tier=DataSourceTier.PREMIUM,
     api_endpoint="https://api.unusualwhales.com/",
-    features=[
-        "Congressional trading",
-        "Options flow",
-        "Whale alerts",
-        "ETF flows"
-    ],
+    features=["Congressional trading", "Options flow", "Whale alerts", "ETF flows"],
     rate_limit="Based on plan",
     estimated_cost="$50-$200/month",
-    priority=3
+    priority=3,
 )
 
 
@@ -273,27 +228,22 @@ ALL_DATA_SOURCES = [
     BLOOMBERG_CONFIG,
     REFINITIV_CONFIG,
     BENZINGA_CONFIG,
-    
     # Social Sources
     STOCKTWITS_CONFIG,
     DISCORD_CONFIG,
-    
     # Market Data
     IEX_CLOUD_CONFIG,
     TRADIER_CONFIG,
     ALPACA_CONFIG,
-    
     # Alternative Data
     THINKNUM_CONFIG,
     SATELLITE_CONFIG,
-    
     # Economic Data
     FRED_CONFIG,
     QUANDL_CONFIG,
-    
     # Options Flow
     FLOWALGO_CONFIG,
-    UNUSUAL_WHALES_CONFIG
+    UNUSUAL_WHALES_CONFIG,
 ]
 
 
@@ -318,13 +268,13 @@ INTEGRATION_PHASES = {
         "IEX Cloud",  # Affordable, high-quality market data
         "FRED API",  # Free economic data
         "StockTwits API",  # Social sentiment
-        "Alpaca Markets API"  # Free real-time data
+        "Alpaca Markets API",  # Free real-time data
     ],
     "Phase 2 - Enhanced": [
         "Benzinga Pro API",  # Professional news
         "Tradier API",  # Options data
         "Quandl",  # Alternative datasets
-        "Unusual Whales API"  # Options flow
+        "Unusual Whales API",  # Options flow
     ],
     "Phase 3 - Premium": [
         "Bloomberg Terminal API",  # Enterprise news
@@ -334,5 +284,5 @@ INTEGRATION_PHASES = {
     "Phase 4 - Enterprise": [
         "Refinitiv Eikon",  # Comprehensive analytics
         "RS Metrics",  # Satellite data
-    ]
-} 
+    ],
+}

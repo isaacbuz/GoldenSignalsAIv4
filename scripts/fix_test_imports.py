@@ -14,10 +14,10 @@ def get_import_errors():
         capture_output=True,
         text=True
     )
-    
+
     errors = {}
     current_file = None
-    
+
     for line in result.stderr.split('\n'):
         if "ERROR collecting" in line:
             match = re.search(r'ERROR collecting (.+\.py)', line)
@@ -38,47 +38,47 @@ def get_import_errors():
                 if current_file not in errors:
                     errors[current_file] = []
                 errors[current_file].append(('ImportError', f"{name} from {from_module}"))
-    
+
     return errors
 
 def fix_common_imports(file_path):
     """Fix common import issues in a test file."""
     with open(file_path, 'r') as f:
         content = f.read()
-    
+
     original_content = content
-    
+
     # Common replacements
     replacements = [
         # Fix legacy imports
         (r'from agents\.legacy_backend_agents\.\w+ import', '# Removed legacy import: '),
         (r'from agents\.predictive import', '# Removed predictive import: '),
         (r'from src\.agents\.predictive import', '# Removed predictive import: '),
-        
+
         # Fix sentiment imports
         (r'from agents\.sentiment import SentimentAgent', 'from agents.core.sentiment.sentiment_agent import SentimentAgent'),
         (r'from agents\.news import NewsAgent', 'from agents.core.sentiment.news_agent import NewsAgent'),
-        
+
         # Fix technical imports
         (r'from agents\.technical import', 'from agents.core.technical import'),
         (r'from agents\.rsi import RSIAgent', 'from agents.core.technical.momentum.rsi_agent import RSIAgent'),
-        
+
         # Fix orchestrator imports
         (r'from agents import Orchestrator', 'from agents.orchestrator import Orchestrator'),
-        
+
         # Fix base imports
         (r'from src\.base import', 'from agents.base_agent import'),
-        
+
         # Fix API imports
         (r'from src\.api\.endpoints import', 'from src.api.v1 import'),
         (r'from src\.main import app', 'import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.main import app'),
     ]
-    
+
     for pattern, replacement in replacements:
         content = re.sub(pattern, replacement, content)
-    
+
     # Remove tests that depend on non-existent modules
     if 'legacy_backend_agents' in content or 'predictive' in content:
         # Comment out the entire test
@@ -90,7 +90,7 @@ from src.main import app'),
             else:
                 new_lines.append(line)
         content = '\n'.join(new_lines)
-    
+
     if content != original_content:
         with open(file_path, 'w') as f:
             f.write(content)
@@ -101,22 +101,22 @@ def main():
     """Fix all test import errors."""
     print("Analyzing test import errors...")
     errors = get_import_errors()
-    
+
     print(f"\nFound {len(errors)} test files with import errors")
-    
+
     fixed_count = 0
     for file_path, error_list in errors.items():
         print(f"\n{file_path}:")
         for error_type, details in error_list:
             print(f"  - {error_type}: {details}")
-        
+
         if os.path.exists(file_path):
             if fix_common_imports(file_path):
                 print(f"  ✅ Fixed common imports")
                 fixed_count += 1
-    
+
     print(f"\n✅ Fixed {fixed_count} test files")
-    
+
     # Show remaining errors
     print("\nChecking remaining errors...")
     remaining_errors = get_import_errors()
@@ -128,4 +128,4 @@ def main():
         print("\n✅ All import errors fixed!")
 
 if __name__ == "__main__":
-    main() 
+    main()

@@ -21,4 +21,4 @@ const AISignalProphet: React.FC<AISignalProphetProps> = ({ onSignalGenerated }) 
 };
 
 export default AISignalProphet;
-export { AISignalProphet }; 
+export { AISignalProphet };

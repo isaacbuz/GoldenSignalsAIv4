@@ -196,4 +196,4 @@ print_status "To view the changes on GitHub, visit:"
 echo "https://github.com/isaacbuz/GoldenSignalsAIv4"
 echo
 print_status "Your backup branch is: backup-local-changes-$(date +%Y%m%d)"
-echo "================================================" 
+echo "================================================"

@@ -18,10 +18,10 @@ class MockDatabaseManager:
     def __init__(self):
         self.connection = Mock()
         self.session = Mock()
-    
+
     def get_session(self):
         return self.session
-    
+
     def close(self):
         pass
 
@@ -30,13 +30,13 @@ class MockRedisManager:
     def __init__(self):
         self.client = Mock()
         self.cache = {}
-    
+
     def get(self, key: str) -> Any:
         return self.cache.get(key)
-    
+
     def set(self, key: str, value: Any, expire: int = None):
         self.cache[key] = value
-    
+
     def delete(self, key: str):
         self.cache.pop(key, None)
 

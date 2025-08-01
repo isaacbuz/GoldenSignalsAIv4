@@ -249,4 +249,4 @@ const MarketScreener: React.FC<MarketScreenerProps> = ({ onSymbolSelect }) => {
     );
 };
 
-export default MarketScreener; 
+export default MarketScreener;

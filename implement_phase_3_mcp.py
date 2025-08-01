@@ -10,11 +10,11 @@ import json
 def create_mcp_infrastructure():
     """Create MCP server infrastructure"""
     print("📦 Creating MCP server infrastructure...")
-    
+
     os.makedirs('mcp_servers/rag_query', exist_ok=True)
     os.makedirs('mcp_servers/risk_analytics', exist_ok=True)
     os.makedirs('mcp_servers/execution', exist_ok=True)
-    
+
     # MCP Base Server
     mcp_base = '''"""
 MCP (Model Context Protocol) Base Server
@@ -33,23 +33,23 @@ logger = logging.getLogger(__name__)
 
 class MCPServer(ABC):
     """Base class for MCP servers"""
-    
+
     def __init__(self, name: str, port: int):
         self.name = name
         self.port = port
         self.clients = set()
         self.capabilities = []
-        
+
     @abstractmethod
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle incoming MCP request"""
         pass
-    
+
     async def start(self):
         """Start MCP server"""
         logger.info(f"Starting {self.name} MCP server on port {self.port}")
         await websockets.serve(self.handle_client, "localhost", self.port)
-        
+
     async def handle_client(self, websocket, path):
         """Handle WebSocket client connection"""
         self.clients.add(websocket)
@@ -60,7 +60,7 @@ class MCPServer(ABC):
                 await websocket.send(json.dumps(response))
         finally:
             self.clients.remove(websocket)
-    
+
     async def broadcast(self, message: Dict[str, Any]):
         """Broadcast message to all clients"""
         if self.clients:
@@ -68,14 +68,14 @@ class MCPServer(ABC):
                 *[client.send(json.dumps(message)) for client in self.clients]
             )
 '''
-    
+
     with open('mcp_servers/base_server.py', 'w') as f:
         f.write(mcp_base)
 
 def create_rag_query_mcp():
     """Issue #191: RAG Query MCP Server"""
     print("📦 Creating RAG Query MCP Server...")
-    
+
     rag_mcp_code = '''"""
 RAG Query MCP Server
 Provides RAG query capabilities via MCP protocol
@@ -92,7 +92,7 @@ from datetime import datetime
 
 class RAGQueryMCPServer(MCPServer):
     """MCP server for RAG queries"""
-    
+
     def __init__(self):
         super().__init__("RAG Query Server", 8501)
         self.capabilities = [
@@ -102,17 +102,17 @@ class RAGQueryMCPServer(MCPServer):
             "rag.context_retrieve"
         ]
         self.rag_engine = None  # Will be initialized with actual RAG engine
-        
+
     async def initialize(self):
         """Initialize RAG components"""
         # In production, initialize actual RAG engine
         print(f"Initializing {self.name}...")
-        
+
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle RAG query requests"""
         method = request.get("method")
         params = request.get("params", {})
-        
+
         try:
             if method == "rag.query":
                 return await self.handle_query(params)
@@ -126,16 +126,16 @@ class RAGQueryMCPServer(MCPServer):
                 return {"capabilities": self.capabilities}
             else:
                 return {"error": f"Unknown method: {method}"}
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     async def handle_query(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle general RAG query"""
         query = params.get("query", "")
         k = params.get("k", 5)
         filters = params.get("filters", {})
-        
+
         # Mock RAG query results
         results = []
         for i in range(k):
@@ -148,20 +148,20 @@ class RAGQueryMCPServer(MCPServer):
                     "timestamp": datetime.now().isoformat()
                 }
             })
-        
+
         return {
             "query": query,
             "results": results,
             "total_found": len(results),
             "processing_time_ms": 125
         }
-    
+
     async def handle_similarity_search(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle similarity search"""
         embedding = params.get("embedding", [])
         k = params.get("k", 5)
         threshold = params.get("threshold", 0.7)
-        
+
         # Mock similarity search
         similar_items = []
         for i in range(k):
@@ -172,18 +172,18 @@ class RAGQueryMCPServer(MCPServer):
                     "similarity": similarity,
                     "data": {"type": "pattern", "confidence": similarity}
                 })
-        
+
         return {
             "similar_items": similar_items,
             "search_dimension": len(embedding) if embedding else 384
         }
-    
+
     async def handle_pattern_match(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle pattern matching request"""
         pattern_type = params.get("pattern_type", "all")
         symbol = params.get("symbol", "")
         timeframe = params.get("timeframe", "1d")
-        
+
         # Mock pattern matches
         patterns = [
             {
@@ -201,20 +201,20 @@ class RAGQueryMCPServer(MCPServer):
                 "historical_accuracy": 0.68
             }
         ]
-        
+
         return {
             "symbol": symbol,
             "patterns": patterns,
             "timeframe": timeframe,
             "analysis_timestamp": datetime.now().isoformat()
         }
-    
+
     async def handle_context_retrieve(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Retrieve context for decision making"""
         context_type = params.get("type", "general")
         symbol = params.get("symbol", "")
         lookback_hours = params.get("lookback_hours", 24)
-        
+
         # Mock context retrieval
         context = {
             "market_regime": {
@@ -234,7 +234,7 @@ class RAGQueryMCPServer(MCPServer):
                 {"type": "earnings", "date": "2024-02-15", "impact": "high"}
             ]
         }
-        
+
         return {
             "symbol": symbol,
             "context": context,
@@ -252,14 +252,14 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 '''
-    
+
     with open('mcp_servers/rag_query/server.py', 'w') as f:
         f.write(rag_mcp_code)
 
 def create_risk_analytics_mcp():
     """Issue #193: Risk Analytics MCP Server"""
     print("📦 Creating Risk Analytics MCP Server...")
-    
+
     risk_mcp_code = '''"""
 Risk Analytics MCP Server
 Provides risk analysis capabilities via MCP protocol
@@ -276,7 +276,7 @@ from datetime import datetime
 
 class RiskAnalyticsMCPServer(MCPServer):
     """MCP server for risk analytics"""
-    
+
     def __init__(self):
         super().__init__("Risk Analytics Server", 8502)
         self.capabilities = [
@@ -286,12 +286,12 @@ class RiskAnalyticsMCPServer(MCPServer):
             "risk.stress_test",
             "risk.get_recommendations"
         ]
-        
+
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle risk analytics requests"""
         method = request.get("method")
         params = request.get("params", {})
-        
+
         try:
             if method == "risk.calculate_var":
                 return await self.calculate_var(params)
@@ -307,20 +307,20 @@ class RiskAnalyticsMCPServer(MCPServer):
                 return {"capabilities": self.capabilities}
             else:
                 return {"error": f"Unknown method: {method}"}
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     async def calculate_var(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate Value at Risk"""
         positions = params.get("positions", [])
         confidence_level = params.get("confidence_level", 0.95)
         time_horizon = params.get("time_horizon", 1)
-        
+
         # Mock VaR calculation
         portfolio_value = sum(p.get("value", 0) for p in positions)
         var_amount = portfolio_value * 0.02 * time_horizon  # 2% daily VaR
-        
+
         return {
             "var": var_amount,
             "confidence_level": confidence_level,
@@ -332,14 +332,14 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "beta": 1.1
             }
         }
-    
+
     async def assess_portfolio(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Assess portfolio risk"""
         positions = params.get("positions", [])
-        
+
         # Mock risk assessment
         risk_score = 0.65  # 0-1 scale
-        
+
         risks = {
             "concentration_risk": {
                 "score": 0.7,
@@ -358,7 +358,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "details": "Elevated due to market conditions"
             }
         }
-        
+
         return {
             "overall_risk_score": risk_score,
             "risk_breakdown": risks,
@@ -367,12 +367,12 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "Add hedging positions for downside protection"
             ]
         }
-    
+
     async def predict_risk_events(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Predict potential risk events"""
         symbol = params.get("symbol", "")
         horizon_days = params.get("horizon_days", 30)
-        
+
         # Mock risk event prediction
         events = [
             {
@@ -390,19 +390,19 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "confidence": 0.6
             }
         ]
-        
+
         return {
             "symbol": symbol,
             "risk_events": events,
             "horizon_days": horizon_days,
             "overall_risk_level": "medium"
         }
-    
+
     async def run_stress_test(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Run portfolio stress test"""
         positions = params.get("positions", [])
         scenarios = params.get("scenarios", ["market_crash", "rate_hike"])
-        
+
         # Mock stress test results
         results = {}
         for scenario in scenarios:
@@ -420,7 +420,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                     "best_position": "BANK_STOCK",
                     "recovery_time_estimate": 90
                 }
-        
+
         return {
             "stress_test_results": results,
             "recommendations": [
@@ -428,12 +428,12 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "Consider tail risk hedging strategies"
             ]
         }
-    
+
     async def get_risk_recommendations(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get risk management recommendations"""
         risk_tolerance = params.get("risk_tolerance", "moderate")
         current_positions = params.get("positions", [])
-        
+
         recommendations = {
             "position_sizing": {
                 "max_position_size": 0.1,
@@ -452,7 +452,7 @@ class RiskAnalyticsMCPServer(MCPServer):
                 "suggestions": ["Add international exposure", "Include commodities"]
             }
         }
-        
+
         return {
             "risk_tolerance": risk_tolerance,
             "recommendations": recommendations,
@@ -472,14 +472,14 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 '''
-    
+
     with open('mcp_servers/risk_analytics/server.py', 'w') as f:
         f.write(risk_mcp_code)
 
 def create_execution_mcp():
     """Issue #194: Execution Management MCP Server"""
     print("📦 Creating Execution Management MCP Server...")
-    
+
     execution_mcp_code = '''"""
 Execution Management MCP Server
 Provides trade execution capabilities via MCP protocol
@@ -505,7 +505,7 @@ class OrderStatus(Enum):
 
 class ExecutionMCPServer(MCPServer):
     """MCP server for execution management"""
-    
+
     def __init__(self):
         super().__init__("Execution Management Server", 8503)
         self.capabilities = [
@@ -518,12 +518,12 @@ class ExecutionMCPServer(MCPServer):
         ]
         self.orders = {}
         self.executions = []
-        
+
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle execution requests"""
         method = request.get("method")
         params = request.get("params", {})
-        
+
         try:
             if method == "execution.submit_order":
                 return await self.submit_order(params)
@@ -541,14 +541,14 @@ class ExecutionMCPServer(MCPServer):
                 return {"capabilities": self.capabilities}
             else:
                 return {"error": f"Unknown method: {method}"}
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     async def submit_order(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Submit new order"""
         order_id = str(uuid.uuid4())
-        
+
         order = {
             "order_id": order_id,
             "symbol": params.get("symbol"),
@@ -564,22 +564,22 @@ class ExecutionMCPServer(MCPServer):
             "average_price": 0,
             "commission": 0
         }
-        
+
         self.orders[order_id] = order
-        
+
         # Simulate order processing
         asyncio.create_task(self._process_order(order_id))
-        
+
         return {
             "order_id": order_id,
             "status": "submitted",
             "message": "Order submitted successfully"
         }
-    
+
     async def _process_order(self, order_id: str):
         """Simulate order processing"""
         await asyncio.sleep(1)  # Simulate processing delay
-        
+
         order = self.orders.get(order_id)
         if order and order["status"] == OrderStatus.PENDING.value:
             # Mock fill
@@ -587,7 +587,7 @@ class ExecutionMCPServer(MCPServer):
             order["filled_quantity"] = order["quantity"]
             order["average_price"] = order.get("limit_price", 100.0)
             order["filled_at"] = datetime.now().isoformat()
-            
+
             # Create execution record
             execution = {
                 "execution_id": str(uuid.uuid4()),
@@ -599,49 +599,49 @@ class ExecutionMCPServer(MCPServer):
                 "commission": order["quantity"] * 0.001,  # $0.001 per share
                 "executed_at": datetime.now().isoformat()
             }
-            
+
             self.executions.append(execution)
-            
+
             # Broadcast fill
             await self.broadcast({
                 "event": "order_filled",
                 "order_id": order_id,
                 "execution": execution
             })
-    
+
     async def cancel_order(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Cancel existing order"""
         order_id = params.get("order_id")
-        
+
         if order_id not in self.orders:
             return {"error": "Order not found"}
-        
+
         order = self.orders[order_id]
-        
+
         if order["status"] in [OrderStatus.FILLED.value, OrderStatus.CANCELLED.value]:
             return {"error": f"Cannot cancel {order['status']} order"}
-        
+
         order["status"] = OrderStatus.CANCELLED.value
         order["cancelled_at"] = datetime.now().isoformat()
-        
+
         return {
             "order_id": order_id,
             "status": "cancelled",
             "message": "Order cancelled successfully"
         }
-    
+
     async def modify_order(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Modify existing order"""
         order_id = params.get("order_id")
-        
+
         if order_id not in self.orders:
             return {"error": "Order not found"}
-        
+
         order = self.orders[order_id]
-        
+
         if order["status"] != OrderStatus.PENDING.value:
             return {"error": "Can only modify pending orders"}
-        
+
         # Update allowed fields
         if "quantity" in params:
             order["quantity"] = params["quantity"]
@@ -649,53 +649,53 @@ class ExecutionMCPServer(MCPServer):
             order["limit_price"] = params["limit_price"]
         if "stop_price" in params:
             order["stop_price"] = params["stop_price"]
-            
+
         order["modified_at"] = datetime.now().isoformat()
-        
+
         return {
             "order_id": order_id,
             "status": "modified",
             "message": "Order modified successfully"
         }
-    
+
     async def get_order_status(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get order status"""
         order_id = params.get("order_id")
-        
+
         if order_id not in self.orders:
             return {"error": "Order not found"}
-        
+
         order = self.orders[order_id]
-        
+
         return {
             "order": order,
             "can_cancel": order["status"] == OrderStatus.PENDING.value,
             "can_modify": order["status"] == OrderStatus.PENDING.value
         }
-    
+
     async def get_executions(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get execution history"""
         symbol = params.get("symbol")
         start_time = params.get("start_time")
         end_time = params.get("end_time")
-        
+
         filtered_executions = self.executions
-        
+
         if symbol:
             filtered_executions = [e for e in filtered_executions if e["symbol"] == symbol]
-            
+
         return {
             "executions": filtered_executions[-100:],  # Last 100
             "total_count": len(filtered_executions)
         }
-    
+
     async def optimize_execution(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Optimize order execution"""
         symbol = params.get("symbol")
         quantity = params.get("quantity")
         side = params.get("side")
         urgency = params.get("urgency", "normal")  # normal, high, low
-        
+
         # Mock execution optimization
         recommendations = {
             "execution_strategy": "TWAP" if urgency == "low" else "VWAP",
@@ -715,11 +715,11 @@ class ExecutionMCPServer(MCPServer):
                 {"name": "ECN", "percentage": 10}
             ]
         }
-        
+
         if urgency == "high":
             recommendations["execution_strategy"] = "AGGRESSIVE"
             recommendations["slice_count"] = 1
-            
+
         return {
             "symbol": symbol,
             "quantity": quantity,
@@ -738,14 +738,14 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 '''
-    
+
     with open('mcp_servers/execution/server.py', 'w') as f:
         f.write(execution_mcp_code)
 
 def create_mcp_client():
     """Create MCP client for testing"""
     print("📦 Creating MCP client library...")
-    
+
     client_code = '''"""
 MCP Client Library
 For connecting to MCP servers
@@ -758,35 +758,35 @@ from typing import Dict, Any, Optional
 
 class MCPClient:
     """Client for connecting to MCP servers"""
-    
+
     def __init__(self, server_url: str):
         self.server_url = server_url
         self.websocket = None
-        
+
     async def connect(self):
         """Connect to MCP server"""
         self.websocket = await websockets.connect(self.server_url)
-        
+
     async def disconnect(self):
         """Disconnect from server"""
         if self.websocket:
             await self.websocket.close()
-            
+
     async def request(self, method: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Send request to server"""
         if not self.websocket:
             raise Exception("Not connected to server")
-            
+
         request = {
             "method": method,
             "params": params or {}
         }
-        
+
         await self.websocket.send(json.dumps(request))
         response = await self.websocket.recv()
-        
+
         return json.loads(response)
-    
+
     async def get_capabilities(self) -> List[str]:
         """Get server capabilities"""
         response = await self.request("capabilities")
@@ -797,24 +797,24 @@ async def example():
     # Connect to RAG Query server
     rag_client = MCPClient("ws://localhost:8501")
     await rag_client.connect()
-    
+
     # Get capabilities
     capabilities = await rag_client.get_capabilities()
     print(f"RAG Server capabilities: {capabilities}")
-    
+
     # Query RAG
     result = await rag_client.request("rag.query", {
         "query": "What are the historical patterns for AAPL?",
         "k": 3
     })
     print(f"RAG Query result: {result}")
-    
+
     await rag_client.disconnect()
 
 if __name__ == "__main__":
     asyncio.run(example())
 '''
-    
+
     with open('mcp_servers/client.py', 'w') as f:
         f.write(client_code)
 

@@ -48,4 +48,4 @@ export const ConsoleViewer: React.FC = () => {
             </div>
         </div>
     );
-}; 
+};

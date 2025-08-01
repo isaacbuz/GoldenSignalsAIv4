@@ -1,6 +1,6 @@
 /**
  * DebugPanel Component
- * 
+ *
  * Development tool for viewing frontend logs and errors in real-time
  */
 

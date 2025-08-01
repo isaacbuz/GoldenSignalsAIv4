@@ -1,6 +1,6 @@
 /**
  * Live Data Status Component
- * 
+ *
  * Shows real-time connection status, data flow statistics, and system health
  */
 
@@ -386,4 +386,4 @@ export const LiveDataStatus: React.FC<LiveDataStatusProps> = ({
     );
 };
 
-export default LiveDataStatus; 
+export default LiveDataStatus;

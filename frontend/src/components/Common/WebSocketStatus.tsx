@@ -7,7 +7,7 @@ interface WebSocketStatusProps {
 
 /**
  * WebSocketStatus - Shows WebSocket connection status
- * 
+ *
  * This is a placeholder component to fix import errors.
  * In a real implementation, this would show the actual WebSocket connection status.
  */
@@ -25,4 +25,4 @@ export const WebSocketStatus: React.FC<WebSocketStatusProps> = ({
     );
 };
 
-export default WebSocketStatus; 
+export default WebSocketStatus;

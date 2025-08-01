@@ -5,9 +5,9 @@ Purpose: Implements a PortfolioAgent that manages portfolio positions and adjust
 
 import asyncio
 import logging
-import pandas as pd
-from typing import Dict, Any
+from typing import Any, Dict
 
+import pandas as pd
 from agents.base import BaseAgent
 
 # Configure logging with JSON-like format
@@ -127,10 +127,10 @@ class PortfolioAgent(BaseAgent):
     async def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Trading signal to process.
-        
+
         Returns:
             Dict[str, Any]: Processed trading signal with potential modifications.
         """

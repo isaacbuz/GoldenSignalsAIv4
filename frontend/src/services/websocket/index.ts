@@ -12,4 +12,4 @@ export {
 } from './SignalWebSocketManager';
 
 // Export the unified service as the default
-export { unifiedWebSocketService as default } from './unifiedWebSocket'; 
+export { unifiedWebSocketService as default } from './unifiedWebSocket';

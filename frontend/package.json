@@ -65,6 +65,7 @@
     "howler": "^2.2.4",
     "lightweight-charts": "^4.2.3",
     "lucide-react": "^0.525.0",
+    "notistack": "^3.0.2",
     "postcss": "^8.5.6",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.0",

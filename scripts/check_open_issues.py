@@ -30,14 +30,14 @@ response = requests.get(issues_url, headers=headers, params=params)
 
 if response.status_code == 200:
     issues = response.json()
-    
+
     print(f"# Open Issues Summary for {REPO_OWNER}/{REPO_NAME}")
     print(f"Total open issues: {len(issues)}\n")
-    
+
     # Group by milestone
     by_milestone = {}
     no_milestone = []
-    
+
     for issue in issues:
         milestone = issue.get('milestone')
         if milestone:
@@ -47,7 +47,7 @@ if response.status_code == 200:
             by_milestone[milestone_title].append(issue)
         else:
             no_milestone.append(issue)
-    
+
     # Print by milestone
     for milestone, milestone_issues in by_milestone.items():
         print(f"\n## Milestone: {milestone}")
@@ -57,7 +57,7 @@ if response.status_code == 200:
             print(f"- #{issue['number']}: {issue['title']}")
             print(f"  Labels: {labels}")
             print(f"  Created: {issue['created_at'][:10]}")
-    
+
     # Print issues without milestone
     if no_milestone:
         print(f"\n## No Milestone")
@@ -67,11 +67,11 @@ if response.status_code == 200:
             print(f"- #{issue['number']}: {issue['title']}")
             print(f"  Labels: {labels}")
             print(f"  Created: {issue['created_at'][:10]}")
-    
+
     # Priority breakdown
     print("\n## Priority Breakdown")
     priority_count = {'P0': 0, 'P1': 0, 'P2': 0, 'P3': 0, 'Other': 0}
-    
+
     for issue in issues:
         found_priority = False
         for label in issue['labels']:
@@ -81,21 +81,21 @@ if response.status_code == 200:
                 break
         if not found_priority:
             priority_count['Other'] += 1
-    
+
     for priority, count in priority_count.items():
         if count > 0:
             print(f"- {priority}: {count} issues")
-    
+
     # Recent activity
     print("\n## Issues from our recent work")
     our_issues = [i for i in issues if i['number'] >= 209 and i['number'] <= 216]
-    
+
     if our_issues:
         print(f"Found {len(our_issues)} issues from #209-#216:")
         for issue in our_issues:
             status = "🚧 In Progress" if any(label['name'] == 'in-progress' for label in issue['labels']) else "📋 Open"
             print(f"- #{issue['number']}: {issue['title']} - {status}")
-    
+
 else:
     print(f"Error fetching issues: {response.status_code}")
-    print(response.text) 
+    print(response.text)

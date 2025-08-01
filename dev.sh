@@ -40,11 +40,11 @@ kill_port() {
 # Function to handle cleanup
 cleanup() {
     echo -e "\n${RED}Shutting down development environment...${NC}"
-    
+
     # Kill processes on our ports
     kill_port $BACKEND_PORT
     kill_port $FRONTEND_PORT
-    
+
     # Kill any remaining background processes
     kill $(jobs -p) 2>/dev/null
     exit 0
@@ -80,4 +80,4 @@ echo -e "${GREEN}Frontend: http://localhost:$FRONTEND_PORT${NC}"
 echo -e "${GREEN}Press Ctrl+C to stop all services${NC}"
 
 # Keep script running and handle cleanup
-wait 
+wait

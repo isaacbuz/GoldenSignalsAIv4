@@ -140,4 +140,4 @@ const MarketContextBar: React.FC = () => {
     );
 };
 
-export default MarketContextBar; 
+export default MarketContextBar;

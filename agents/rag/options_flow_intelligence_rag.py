@@ -4,16 +4,17 @@ Detects and analyzes institutional options flow patterns for early signals
 Issue #182: RAG-3: Implement Options Flow Intelligence RAG
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
 import asyncio
 import json
-from dataclasses import dataclass
 import logging
-from enum import Enum
 import re
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +79,7 @@ class OptionsFlow:
     price_after_3d: Optional[float] = None
     price_after_7d: Optional[float] = None
     max_profit_percent: Optional[float] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             'id': self.id,
@@ -101,12 +102,12 @@ class OptionsFlow:
             'aggressiveness': self.aggressiveness,
             'smart_money_score': self.smart_money_score
         }
-    
+
     def to_search_text(self) -> str:
         """Convert flow to searchable text"""
         moneyness = (self.strike / self.underlying_price - 1) * 100
         dte = (self.expiry - self.timestamp).days
-        
+
         return f"""
         {self.symbol} {self.call_put} Strike: ${self.strike:.2f} ({moneyness:+.1f}% OTM)
         Expiry: {dte} days, Size: {self.size:,} contracts (${self.notional:,.0f})
@@ -119,7 +120,7 @@ class OptionsFlow:
 
 class FlowAnalyzer:
     """Analyzes options flow characteristics"""
-    
+
     def __init__(self):
         self.institution_patterns = {
             InstitutionType.HEDGE_FUND: {
@@ -141,31 +142,31 @@ class FlowAnalyzer:
                 'protective': True
             }
         }
-    
+
     def identify_institution_type(self, flow: Dict[str, Any]) -> InstitutionType:
         """Identify likely institution type based on flow characteristics"""
         size = flow['size']
         dte = flow.get('days_to_expiry', 30)
         aggressive = flow.get('aggressive_order', False)
-        
+
         # Large size + long dated = Insurance/Pension
         if size > 5000 and dte > 60:
             return InstitutionType.INSURANCE
-        
+
         # Medium size + short dated + aggressive = Hedge Fund
         if 500 <= size <= 5000 and dte < 45 and aggressive:
             return InstitutionType.HEDGE_FUND
-        
+
         # Very short dated + large = Market Maker
         if dte < 7 and size > 1000:
             return InstitutionType.MARKET_MAKER
-        
+
         # Small size = Retail
         if size < 100:
             return InstitutionType.RETAIL
-        
+
         return InstitutionType.UNKNOWN
-    
+
     def infer_position_intent(self, flow: Dict[str, Any]) -> PositionIntent:
         """Infer the intent behind the position"""
         call_put = flow['call_put']
@@ -173,35 +174,35 @@ class FlowAnalyzer:
         delta = flow.get('delta', 0.5)
         iv = flow.get('implied_volatility', 0.3)
         moneyness = flow.get('moneyness', 0)
-        
+
         # Directional plays
         if side == 'BUY':
             if call_put == 'C' and delta > 0.6:
                 return PositionIntent.DIRECTIONAL_BULLISH
             elif call_put == 'P' and delta < -0.6:
                 return PositionIntent.DIRECTIONAL_BEARISH
-        
+
         # Selling premium (income)
         if side == 'SELL' and abs(moneyness) < 5:
             return PositionIntent.INCOME
-        
+
         # Volatility plays
         if abs(moneyness) > 10:  # Far OTM
             if side == 'BUY':
                 return PositionIntent.VOLATILITY_LONG
             else:
                 return PositionIntent.VOLATILITY_SHORT
-        
+
         # Protective hedges
         if call_put == 'P' and side == 'BUY' and moneyness < -5:
             return PositionIntent.HEDGE
-        
+
         return PositionIntent.SPREAD
-    
+
     def calculate_smart_money_score(self, flow: Dict[str, Any]) -> float:
         """Calculate how likely this is smart money"""
         score = 50.0  # Base score
-        
+
         # Size factor
         size = flow['size']
         if size > 1000:
@@ -210,26 +211,26 @@ class FlowAnalyzer:
             score += 10
         elif size < 100:
             score -= 20
-        
+
         # Aggressiveness (sweep orders)
         if flow.get('flow_type') == FlowType.SWEEP.value:
             score += 15
-        
+
         # Timing (before events)
         if flow.get('days_to_event', 999) < 5:
             score += 10
-        
+
         # Unusual activity
         if flow.get('volume_ratio', 1) > 3:
             score += 15
-        
+
         # Institution type
         inst_type = flow.get('institution_type')
         if inst_type == InstitutionType.HEDGE_FUND.value:
             score += 10
         elif inst_type == InstitutionType.RETAIL.value:
             score -= 15
-        
+
         return max(0, min(100, score))
 
 
@@ -238,7 +239,7 @@ class OptionsFlowIntelligenceRAG:
     RAG system for institutional options flow patterns
     Detects smart money movements and predicts price action
     """
-    
+
     def __init__(self, use_mock_db: bool = True):
         """Initialize the Options Flow Intelligence RAG"""
         self.use_mock_db = use_mock_db
@@ -246,10 +247,10 @@ class OptionsFlowIntelligenceRAG:
         self.options_flows: List[OptionsFlow] = []
         self.embeddings: Dict[str, np.ndarray] = {}
         self.pattern_library: Dict[str, Dict[str, Any]] = {}
-        
+
         if use_mock_db:
             self._load_mock_options_flows()
-    
+
     def _load_mock_options_flows(self):
         """Load mock historical options flow data"""
         mock_flows = [
@@ -389,17 +390,17 @@ class OptionsFlowIntelligenceRAG:
                 max_profit_percent=150.0
             )
         ]
-        
+
         self.options_flows.extend(mock_flows)
         self._generate_mock_embeddings()
-    
+
     def _generate_mock_embeddings(self):
         """Generate embeddings for options flows"""
         for flow in self.options_flows:
             # Create embedding based on flow characteristics
             moneyness = (flow.strike / flow.underlying_price - 1) * 100
             dte = (flow.expiry - flow.timestamp).days
-            
+
             embedding = np.array([
                 1.0 if flow.call_put == 'C' else -1.0,
                 1.0 if flow.side == 'BUY' else -1.0,
@@ -412,9 +413,9 @@ class OptionsFlowIntelligenceRAG:
                 flow.smart_money_score / 100,
                 flow.notional / 1000000  # Millions
             ])
-            
+
             self.embeddings[flow.id] = embedding
-    
+
     def _calculate_similarity(self, query_embedding: np.ndarray,
                             flow_embedding: np.ndarray) -> float:
         """Calculate cosine similarity between embeddings"""
@@ -423,22 +424,22 @@ class OptionsFlowIntelligenceRAG:
         if norm_product == 0:
             return 0.0
         return dot_product / norm_product
-    
+
     async def analyze_options_flow(self, flow_data: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze a new options flow for institutional patterns"""
         # Identify institution type
         institution_type = self.flow_analyzer.identify_institution_type(flow_data)
-        
+
         # Infer position intent
         position_intent = self.flow_analyzer.infer_position_intent(flow_data)
-        
+
         # Calculate smart money score
         smart_money_score = self.flow_analyzer.calculate_smart_money_score(flow_data)
-        
+
         # Create embedding for similarity search
         moneyness = ((flow_data['strike'] / flow_data['underlying_price']) - 1) * 100
         dte = flow_data.get('days_to_expiry', 30)
-        
+
         query_embedding = np.array([
             1.0 if flow_data['call_put'] == 'C' else -1.0,
             1.0 if flow_data['side'] == 'BUY' else -1.0,
@@ -451,7 +452,7 @@ class OptionsFlowIntelligenceRAG:
             smart_money_score / 100,
             flow_data.get('notional', flow_data['size'] * flow_data['price'] * 100) / 1000000
         ])
-        
+
         # Find similar historical flows
         similarities = []
         for flow in self.options_flows:
@@ -459,24 +460,24 @@ class OptionsFlowIntelligenceRAG:
                 flow_embedding = self.embeddings[flow.id]
                 similarity = self._calculate_similarity(query_embedding, flow_embedding)
                 similarities.append((similarity, flow))
-        
+
         # Sort and get top matches
         similarities.sort(key=lambda x: x[0], reverse=True)
         top_matches = similarities[:5]
-        
+
         # Calculate expected outcomes
         if top_matches:
-            avg_1d_move = np.mean([(f.price_after_1d / f.underlying_price - 1) * 100 
+            avg_1d_move = np.mean([(f.price_after_1d / f.underlying_price - 1) * 100
                                   for _, f in top_matches if f.price_after_1d])
-            avg_3d_move = np.mean([(f.price_after_3d / f.underlying_price - 1) * 100 
+            avg_3d_move = np.mean([(f.price_after_3d / f.underlying_price - 1) * 100
                                   for _, f in top_matches if f.price_after_3d])
-            avg_profit = np.mean([f.max_profit_percent for _, f in top_matches 
+            avg_profit = np.mean([f.max_profit_percent for _, f in top_matches
                                 if f.max_profit_percent])
         else:
             avg_1d_move = 0
             avg_3d_move = 0
             avg_profit = 0
-        
+
         return {
             'flow_analysis': {
                 'institution_type': institution_type.value,
@@ -504,11 +505,11 @@ class OptionsFlowIntelligenceRAG:
                 'confidence': float(np.mean([s for s, _ in top_matches])) if top_matches else 0
             },
             'trading_signals': self._generate_trading_signals(
-                flow_data, institution_type, position_intent, 
+                flow_data, institution_type, position_intent,
                 smart_money_score, avg_3d_move
             )
         }
-    
+
     def _generate_trading_signals(self, flow_data: Dict[str, Any],
                                 institution_type: InstitutionType,
                                 position_intent: PositionIntent,
@@ -524,7 +525,7 @@ class OptionsFlowIntelligenceRAG:
             'position_size': 0.0,
             'risk_management': {}
         }
-        
+
         # High smart money score + directional intent = follow
         if smart_money_score > 75:
             if position_intent == PositionIntent.DIRECTIONAL_BULLISH:
@@ -542,7 +543,7 @@ class OptionsFlowIntelligenceRAG:
                 signals['action'] = 'hedge'
                 signals['strategy'] = 'buy_straddle'
                 signals['confidence'] = smart_money_score / 100 * 0.8
-        
+
         # Determine entry timing
         if institution_type == InstitutionType.HEDGE_FUND and signals['follow_smart_money']:
             signals['entry_timing'] = 'immediate'
@@ -550,7 +551,7 @@ class OptionsFlowIntelligenceRAG:
             signals['entry_timing'] = 'scale_in'
         else:
             signals['entry_timing'] = 'wait_confirmation'
-        
+
         # Position sizing based on confidence
         if signals['confidence'] > 0.8:
             signals['position_size'] = 1.0
@@ -558,7 +559,7 @@ class OptionsFlowIntelligenceRAG:
             signals['position_size'] = 0.5
         else:
             signals['position_size'] = 0.25
-        
+
         # Risk management
         if abs(expected_move) > 5:
             signals['risk_management'] = {
@@ -572,26 +573,26 @@ class OptionsFlowIntelligenceRAG:
                 'take_profit': 5.0,
                 'max_risk': '1% of portfolio'
             }
-        
+
         return signals
-    
-    async def detect_unusual_activity(self, symbol: str, 
+
+    async def detect_unusual_activity(self, symbol: str,
                                     timeframe: str = '1d') -> Dict[str, Any]:
         """Detect unusual options activity for a symbol"""
         # Filter flows for the symbol
         symbol_flows = [f for f in self.options_flows if f.symbol == symbol]
-        
+
         if not symbol_flows:
             return {
                 'symbol': symbol,
                 'unusual_activity': False,
                 'message': 'No options flow data available'
             }
-        
+
         # Calculate metrics
         total_volume = sum(f.size for f in symbol_flows)
         total_notional = sum(f.notional for f in symbol_flows)
-        
+
         # Identify unusual patterns
         unusual_flows = []
         for flow in symbol_flows:
@@ -603,7 +604,7 @@ class OptionsFlowIntelligenceRAG:
                     'institution_type': flow.institution_type.value,
                     'intent': flow.position_intent.value
                 })
-        
+
         # Aggregate by intent
         intent_summary = {}
         for flow in symbol_flows:
@@ -612,13 +613,13 @@ class OptionsFlowIntelligenceRAG:
                 intent_summary[intent] = {'count': 0, 'notional': 0}
             intent_summary[intent]['count'] += 1
             intent_summary[intent]['notional'] += flow.notional
-        
+
         # Determine overall bias
         bullish_notional = sum(intent_summary.get(intent, {}).get('notional', 0)
                               for intent in ['directional_bullish'])
         bearish_notional = sum(intent_summary.get(intent, {}).get('notional', 0)
                               for intent in ['directional_bearish', 'hedge'])
-        
+
         if bullish_notional > bearish_notional * 2:
             overall_bias = 'strongly_bullish'
         elif bullish_notional > bearish_notional * 1.5:
@@ -629,7 +630,7 @@ class OptionsFlowIntelligenceRAG:
             overall_bias = 'bearish'
         else:
             overall_bias = 'neutral'
-        
+
         return {
             'symbol': symbol,
             'unusual_activity': len(unusual_flows) > 0,
@@ -643,7 +644,7 @@ class OptionsFlowIntelligenceRAG:
                 unusual_flows, overall_bias, intent_summary
             )
         }
-    
+
     def _generate_activity_recommendation(self, unusual_flows: List[Dict],
                                         overall_bias: str,
                                         intent_summary: Dict) -> Dict[str, Any]:
@@ -653,7 +654,7 @@ class OptionsFlowIntelligenceRAG:
                 'action': 'no_action',
                 'reason': 'No unusual activity detected'
             }
-        
+
         # Strong smart money signal
         if any(f['smart_money_score'] > 85 for f in unusual_flows):
             if overall_bias in ['strongly_bullish', 'bullish']:
@@ -670,7 +671,7 @@ class OptionsFlowIntelligenceRAG:
                     'reason': 'Strong institutional hedging/selling detected',
                     'suggested_strategy': 'Buy puts or reduce longs'
                 }
-        
+
         # Mixed signals
         return {
             'action': 'monitor',
@@ -684,14 +685,14 @@ class OptionsFlowIntelligenceRAG:
 async def demo_options_flow_rag():
     """Demonstrate the Options Flow Intelligence RAG"""
     rag = OptionsFlowIntelligenceRAG(use_mock_db=True)
-    
+
     print("Options Flow Intelligence RAG Demo")
     print("="*70)
-    
+
     # Test 1: Analyze a new bullish flow
     print("\n1. Analyzing Bullish Call Sweep:")
     print("-"*50)
-    
+
     new_flow = {
         'symbol': 'AAPL',
         'underlying_price': 195.0,
@@ -708,51 +709,51 @@ async def demo_options_flow_rag():
         'aggressive_order': True,
         'volume_ratio': 5.0  # 5x normal volume
     }
-    
+
     result = await rag.analyze_options_flow(new_flow)
-    
+
     print(f"Institution Type: {result['flow_analysis']['institution_type']}")
     print(f"Position Intent: {result['flow_analysis']['position_intent']}")
     print(f"Smart Money Score: {result['flow_analysis']['smart_money_score']:.0f}/100")
-    
+
     print(f"\nExpected Impact:")
     print(f"  1-Day Move: {result['expected_impact']['1d_price_move']:.1f}%")
     print(f"  3-Day Move: {result['expected_impact']['3d_price_move']:.1f}%")
     print(f"  Option Profit: {result['expected_impact']['option_profit_potential']:.0f}%")
-    
+
     print(f"\nTrading Signal:")
     signals = result['trading_signals']
     print(f"  Action: {signals['action'].upper()}")
     print(f"  Strategy: {signals['strategy']}")
     print(f"  Confidence: {signals['confidence']:.1%}")
     print(f"  Position Size: {signals['position_size']:.1%}")
-    
+
     # Test 2: Detect unusual activity
     print("\n\n2. Detecting Unusual Activity for AAPL:")
     print("-"*50)
-    
+
     activity = await rag.detect_unusual_activity('AAPL')
-    
+
     print(f"Unusual Activity: {'YES' if activity['unusual_activity'] else 'NO'}")
     print(f"Overall Bias: {activity['overall_bias'].upper()}")
     print(f"Smart Money Detected: {'YES' if activity['smart_money_detected'] else 'NO'}")
-    
+
     if activity['unusual_flows']:
         print(f"\nUnusual Flows Detected ({len(activity['unusual_flows'])}):")
         for flow in activity['unusual_flows'][:3]:
             print(f"  - {flow['description']} (Score: {flow['smart_money_score']:.0f})")
-    
+
     print(f"\nRecommendation:")
     rec = activity['recommendation']
     print(f"  Action: {rec['action'].upper()}")
     print(f"  Reason: {rec['reason']}")
     if 'suggested_strategy' in rec:
         print(f"  Strategy: {rec['suggested_strategy']}")
-    
+
     # Test 3: Analyze bearish hedge flow
     print("\n\n3. Analyzing Protective Put Buying:")
     print("-"*50)
-    
+
     hedge_flow = {
         'symbol': 'SPY',
         'underlying_price': 450.0,
@@ -768,13 +769,13 @@ async def demo_options_flow_rag():
         'flow_type': FlowType.BLOCK.value,
         'volume_ratio': 3.0
     }
-    
+
     hedge_result = await rag.analyze_options_flow(hedge_flow)
-    
+
     print(f"Institution Type: {hedge_result['flow_analysis']['institution_type']}")
     print(f"Position Intent: {hedge_result['flow_analysis']['position_intent']}")
     print(f"Smart Money Score: {hedge_result['flow_analysis']['smart_money_score']:.0f}/100")
-    
+
     print(f"\nRisk Management Suggestion:")
     rm = hedge_result['trading_signals']['risk_management']
     print(f"  Stop Loss: {rm['stop_loss']:.1f}%")
@@ -783,4 +784,4 @@ async def demo_options_flow_rag():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_options_flow_rag()) 
+    asyncio.run(demo_options_flow_rag())

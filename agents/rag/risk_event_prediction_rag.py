@@ -4,16 +4,17 @@ Predicts and monitors potential risk events using historical patterns and real-t
 Issue #184: RAG-5: Implement Risk Event Prediction RAG
 """
 
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
 import asyncio
-from dataclasses import dataclass
-from enum import Enum
+import json
 import logging
 from collections import defaultdict, deque
-import json
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -84,12 +85,12 @@ class RiskAlert:
 
 class RiskEventDatabase:
     """Mock database for risk event patterns"""
-    
+
     def __init__(self):
         self.historical_events = self._load_historical_events()
         self.risk_patterns = self._load_risk_patterns()
         self.event_precedents = self._load_event_precedents()
-    
+
     def _load_historical_events(self) -> List[Dict[str, Any]]:
         """Load historical risk events"""
         return [
@@ -120,7 +121,7 @@ class RiskEventDatabase:
                     'correlation_spike': 0.95
                 }
             },
-            
+
             # Volatility Events
             {
                 'date': '2018-02-05',
@@ -135,7 +136,7 @@ class RiskEventDatabase:
                     'put_call_ratio': 1.8
                 }
             },
-            
+
             # Liquidity Crisis
             {
                 'date': '2008-09-15',
@@ -150,7 +151,7 @@ class RiskEventDatabase:
                     'credit_spreads': 6.0
                 }
             },
-            
+
             # Correlation Breakdown
             {
                 'date': '2007-08-09',
@@ -165,7 +166,7 @@ class RiskEventDatabase:
                 }
             }
         ]
-    
+
     def _load_risk_patterns(self) -> Dict[RiskEventType, Dict[str, Any]]:
         """Load risk event patterns"""
         return {
@@ -180,7 +181,7 @@ class RiskEventDatabase:
                 'typical_duration': '30-60 minutes',
                 'recovery_pattern': 'V-shaped'
             },
-            
+
             RiskEventType.VOLATILITY_SPIKE: {
                 'indicators': [
                     {'name': 'vix_level', 'threshold': 25, 'weight': 0.2},
@@ -192,7 +193,7 @@ class RiskEventDatabase:
                 'typical_duration': '1-5 days',
                 'recovery_pattern': 'gradual'
             },
-            
+
             RiskEventType.LIQUIDITY_CRISIS: {
                 'indicators': [
                     {'name': 'bid_ask_spread', 'threshold': 2.0, 'weight': 0.3},
@@ -204,7 +205,7 @@ class RiskEventDatabase:
                 'typical_duration': 'days to weeks',
                 'recovery_pattern': 'slow'
             },
-            
+
             RiskEventType.CORRELATION_BREAKDOWN: {
                 'indicators': [
                     {'name': 'correlation_spike', 'threshold': 0.8, 'weight': 0.4},
@@ -216,7 +217,7 @@ class RiskEventDatabase:
                 'recovery_pattern': 'factor_rotation'
             }
         }
-    
+
     def _load_event_precedents(self) -> Dict[str, List[Dict[str, Any]]]:
         """Load similar event precedents for pattern matching"""
         return {
@@ -249,11 +250,11 @@ class RiskEventDatabase:
                 }
             ]
         }
-    
+
     def query_similar_events(self, current_conditions: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Find similar historical events"""
         similar_events = []
-        
+
         for event in self.historical_events:
             similarity_score = self._calculate_similarity(current_conditions, event['market_conditions'])
             if similarity_score > 0.7:
@@ -261,15 +262,15 @@ class RiskEventDatabase:
                     'event': event,
                     'similarity': similarity_score
                 })
-        
+
         return sorted(similar_events, key=lambda x: x['similarity'], reverse=True)
-    
+
     def _calculate_similarity(self, current: Dict[str, Any], historical: Dict[str, Any]) -> float:
         """Calculate similarity between current and historical conditions"""
         # Simple similarity based on matching conditions
         matches = 0
         total = 0
-        
+
         for key in historical:
             if key in current:
                 total += 1
@@ -279,7 +280,7 @@ class RiskEventDatabase:
                         matches += 1
                 elif current.get(key) == historical[key]:
                     matches += 1
-        
+
         return matches / total if total > 0 else 0
 
 
@@ -288,7 +289,7 @@ class RiskEventPredictionRAG:
     Risk Event Prediction using Retrieval-Augmented Generation
     Monitors market conditions and predicts potential risk events
     """
-    
+
     def __init__(self, use_mock_db: bool = True):
         """Initialize the Risk Event Prediction RAG"""
         self.db = RiskEventDatabase() if use_mock_db else None
@@ -299,7 +300,7 @@ class RiskEventPredictionRAG:
             'active_warnings': [],
             'monitoring_events': []
         }
-        
+
         # Risk thresholds
         self.risk_thresholds = {
             RiskLevel.MINIMAL: 0.1,
@@ -309,11 +310,11 @@ class RiskEventPredictionRAG:
             RiskLevel.SEVERE: 0.8,
             RiskLevel.CRITICAL: 0.95
         }
-    
+
     def _calculate_risk_indicators(self, market_data: Dict[str, Any]) -> Dict[str, RiskIndicator]:
         """Calculate current risk indicators"""
         indicators = {}
-        
+
         # VIX-based indicators
         vix_level = market_data.get('vix', 15)
         indicators['vix_level'] = RiskIndicator(
@@ -325,7 +326,7 @@ class RiskEventPredictionRAG:
             severity=min(1.0, (vix_level - 10) / 40),
             description=f"VIX at {vix_level:.1f}"
         )
-        
+
         # Liquidity indicators
         volume_ratio = market_data.get('volume_ratio', 1.0)
         indicators['liquidity_ratio'] = RiskIndicator(
@@ -337,7 +338,7 @@ class RiskEventPredictionRAG:
             severity=max(0, 1 - volume_ratio),
             description=f"Volume {volume_ratio:.1f}x normal"
         )
-        
+
         # Market microstructure
         spread = market_data.get('spread_bps', 5)
         indicators['bid_ask_spread'] = RiskIndicator(
@@ -349,7 +350,7 @@ class RiskEventPredictionRAG:
             severity=min(1.0, spread / 50),
             description=f"Spread at {spread:.1f} bps"
         )
-        
+
         # Correlation indicators
         correlation = market_data.get('correlation', 0.5)
         indicators['correlation_spike'] = RiskIndicator(
@@ -361,7 +362,7 @@ class RiskEventPredictionRAG:
             severity=max(0, (correlation - 0.5) / 0.5),
             description=f"Correlation at {correlation:.2f}"
         )
-        
+
         # Put/Call ratio
         pc_ratio = market_data.get('put_call_ratio', 1.0)
         indicators['put_call_ratio'] = RiskIndicator(
@@ -373,23 +374,23 @@ class RiskEventPredictionRAG:
             severity=min(1.0, (pc_ratio - 0.8) / 1.2),
             description=f"P/C Ratio at {pc_ratio:.2f}"
         )
-        
+
         return indicators
-    
+
     async def predict_risk_events(self, market_data: Dict[str, Any]) -> List[RiskEvent]:
         """Predict potential risk events based on current market conditions"""
         # Calculate risk indicators
         indicators = self._calculate_risk_indicators(market_data)
-        
+
         # Identify potential events
         potential_events = []
-        
+
         # Check each event type
         for event_type, pattern in self.db.risk_patterns.items():
             event_probability = self._calculate_event_probability(
                 indicators, pattern['indicators']
             )
-            
+
             if event_probability > 0.3:  # 30% threshold
                 # Find historical precedents
                 current_conditions = {
@@ -397,9 +398,9 @@ class RiskEventPredictionRAG:
                     'volume_spike': market_data.get('volume_ratio', 1.0),
                     'correlation_spike': market_data.get('correlation', 0.5)
                 }
-                
+
                 precedents = self.db.query_similar_events(current_conditions)
-                
+
                 # Create risk event
                 event = RiskEvent(
                     event_type=event_type,
@@ -411,30 +412,30 @@ class RiskEventPredictionRAG:
                     mitigation_strategies=self._get_mitigation_strategies(event_type),
                     confidence=self._calculate_confidence(event_probability, len(precedents))
                 )
-                
+
                 potential_events.append(event)
-        
+
         return sorted(potential_events, key=lambda x: x.probability, reverse=True)
-    
+
     def _calculate_event_probability(self, indicators: Dict[str, RiskIndicator],
                                    pattern_indicators: List[Dict[str, Any]]) -> float:
         """Calculate probability of a risk event"""
         total_weight = 0
         triggered_weight = 0
-        
+
         for pattern_ind in pattern_indicators:
             ind_name = pattern_ind['name']
             if ind_name in indicators:
                 indicator = indicators[ind_name]
                 weight = pattern_ind['weight']
                 total_weight += weight
-                
+
                 if indicator.triggered:
                     # Weight by severity
                     triggered_weight += weight * indicator.severity
-        
+
         return triggered_weight / total_weight if total_weight > 0 else 0
-    
+
     def _estimate_impact(self, event_type: RiskEventType,
                         precedents: List[Dict[str, Any]]) -> Dict[str, float]:
         """Estimate impact of risk event"""
@@ -447,7 +448,7 @@ class RiskEventPredictionRAG:
                 RiskEventType.CORRELATION_BREAKDOWN: {'FACTORS': -10.0, 'DISPERSION': +5.0}
             }
             return default_impacts.get(event_type, {'SPY': -2.0})
-        
+
         # Average impact from precedents
         impacts = defaultdict(list)
         for precedent in precedents[:3]:
@@ -455,15 +456,15 @@ class RiskEventPredictionRAG:
             for asset, move in event_impact.items():
                 if isinstance(move, (int, float)):
                     impacts[asset].append(move)
-        
+
         return {asset: np.mean(moves) for asset, moves in impacts.items()}
-    
+
     def _estimate_time_horizon(self, event_type: RiskEventType,
                              indicators: Dict[str, RiskIndicator]) -> str:
         """Estimate time horizon for risk event"""
         # Check urgency based on indicator severity
         max_severity = max((ind.severity for ind in indicators.values() if ind.triggered), default=0)
-        
+
         if max_severity > 0.8:
             return "immediate"
         elif max_severity > 0.6:
@@ -472,7 +473,7 @@ class RiskEventPredictionRAG:
             return "days"
         else:
             return "monitoring"
-    
+
     def _get_mitigation_strategies(self, event_type: RiskEventType) -> List[str]:
         """Get mitigation strategies for risk event"""
         strategies = {
@@ -505,48 +506,48 @@ class RiskEventPredictionRAG:
                 "Prepare for factor rotation"
             ]
         }
-        
+
         return strategies.get(event_type, [
             "Reduce risk exposure",
             "Increase cash reserves",
             "Monitor closely",
             "Prepare contingency plans"
         ])
-    
+
     def _calculate_confidence(self, probability: float, precedent_count: int) -> float:
         """Calculate confidence in prediction"""
         # Base confidence on probability
         base_confidence = probability
-        
+
         # Adjust for historical precedents
         precedent_bonus = min(0.2, precedent_count * 0.05)
-        
+
         return min(0.95, base_confidence + precedent_bonus)
-    
+
     async def generate_risk_alert(self, market_data: Dict[str, Any]) -> Optional[RiskAlert]:
         """Generate risk alert if conditions warrant"""
         # Predict risk events
         risk_events = await self.predict_risk_events(market_data)
-        
+
         if not risk_events:
             return None
-        
+
         # Calculate overall risk level
         max_probability = max(event.probability for event in risk_events)
         risk_level = self._probability_to_risk_level(max_probability)
-        
+
         # Only generate alert for moderate or higher risk
         if risk_level.value in ['minimal', 'low']:
             return None
-        
+
         # Determine affected assets
         affected_assets = set()
         for event in risk_events:
             affected_assets.update(event.expected_impact.keys())
-        
+
         # Generate recommendations
         recommendations = self._generate_recommendations(risk_events, market_data)
-        
+
         # Create alert
         alert = RiskAlert(
             alert_id=f"RISK_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
@@ -558,29 +559,29 @@ class RiskEventPredictionRAG:
             market_context=market_data,
             urgency=self._determine_urgency(risk_events)
         )
-        
+
         # Store alert
         self.alert_history.append(alert)
-        
+
         return alert
-    
+
     def _probability_to_risk_level(self, probability: float) -> RiskLevel:
         """Convert probability to risk level"""
-        for level, threshold in sorted(self.risk_thresholds.items(), 
+        for level, threshold in sorted(self.risk_thresholds.items(),
                                      key=lambda x: x[1], reverse=True):
             if probability >= threshold:
                 return level
         return RiskLevel.MINIMAL
-    
+
     def _generate_recommendations(self, events: List[RiskEvent],
                                 market_data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate actionable recommendations"""
         recommendations = []
-        
+
         # Position sizing recommendation
         max_prob = max(event.probability for event in events)
         position_reduction = min(75, int(max_prob * 100))
-        
+
         recommendations.append({
             'action': 'reduce_positions',
             'parameters': {
@@ -589,7 +590,7 @@ class RiskEventPredictionRAG:
             },
             'reason': f"Risk probability at {max_prob:.1%}"
         })
-        
+
         # Hedging recommendation
         if any(event.event_type == RiskEventType.VOLATILITY_SPIKE for event in events):
             recommendations.append({
@@ -601,7 +602,7 @@ class RiskEventPredictionRAG:
                 },
                 'reason': "Volatility spike predicted"
             })
-        
+
         # Liquidity recommendation
         if any(event.event_type == RiskEventType.LIQUIDITY_CRISIS for event in events):
             recommendations.append({
@@ -612,13 +613,13 @@ class RiskEventPredictionRAG:
                 },
                 'reason': "Liquidity crisis risk detected"
             })
-        
+
         return recommendations
-    
+
     def _determine_urgency(self, events: List[RiskEvent]) -> str:
         """Determine urgency of alert"""
         time_horizons = [event.time_horizon for event in events]
-        
+
         if 'immediate' in time_horizons:
             return 'immediate'
         elif 'hours' in time_horizons:
@@ -627,21 +628,21 @@ class RiskEventPredictionRAG:
             return 'medium'
         else:
             return 'low'
-    
+
     async def monitor_risk_evolution(self, market_data_stream: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Monitor how risk evolves over time"""
         risk_trajectory = []
-        
+
         for market_data in market_data_stream:
             # Calculate risk indicators
             indicators = self._calculate_risk_indicators(market_data)
-            
+
             # Get current risk score
             risk_score = np.mean([ind.severity for ind in indicators.values()])
-            
+
             # Predict events
             events = await self.predict_risk_events(market_data)
-            
+
             risk_trajectory.append({
                 'timestamp': market_data.get('timestamp', datetime.now()),
                 'risk_score': risk_score,
@@ -649,7 +650,7 @@ class RiskEventPredictionRAG:
                 'active_warnings': len([e for e in events if e.probability > 0.5]),
                 'top_risk': events[0].event_type.value if events else None
             })
-        
+
         # Analyze trajectory
         analysis = {
             'current_risk': risk_trajectory[-1]['risk_level'].value,
@@ -658,25 +659,25 @@ class RiskEventPredictionRAG:
             'warnings_generated': sum(r['active_warnings'] for r in risk_trajectory),
             'risk_evolution': risk_trajectory
         }
-        
+
         return analysis
-    
+
     def _calculate_risk_trend(self, trajectory: List[Dict[str, Any]]) -> str:
         """Calculate risk trend from trajectory"""
         if len(trajectory) < 2:
             return 'stable'
-        
+
         recent_scores = [r['risk_score'] for r in trajectory[-5:]]
         older_scores = [r['risk_score'] for r in trajectory[-10:-5]]
-        
+
         if not older_scores:
             return 'stable'
-        
+
         recent_avg = np.mean(recent_scores)
         older_avg = np.mean(older_scores)
-        
+
         change = (recent_avg - older_avg) / (older_avg + 1e-6)
-        
+
         if change > 0.2:
             return 'escalating'
         elif change < -0.2:
@@ -689,14 +690,14 @@ class RiskEventPredictionRAG:
 async def demo_risk_prediction():
     """Demonstrate the Risk Event Prediction RAG"""
     rag = RiskEventPredictionRAG(use_mock_db=True)
-    
+
     print("Risk Event Prediction RAG Demo")
     print("="*70)
-    
+
     # Test Case 1: Normal market conditions
     print("\n📊 Case 1: Normal Market Conditions")
     print("-"*50)
-    
+
     normal_market = {
         'vix': 16,
         'volume_ratio': 1.1,
@@ -704,19 +705,19 @@ async def demo_risk_prediction():
         'correlation': 0.6,
         'put_call_ratio': 0.9
     }
-    
+
     events = await rag.predict_risk_events(normal_market)
     alert = await rag.generate_risk_alert(normal_market)
-    
+
     if alert:
         print(f"Risk Level: {alert.risk_level.value.upper()}")
     else:
         print("No significant risk detected - Markets normal")
-    
+
     # Test Case 2: Pre-flash crash conditions
     print("\n\n📊 Case 2: Flash Crash Warning Conditions")
     print("-"*50)
-    
+
     flash_crash_conditions = {
         'vix': 22,
         'volume_ratio': 0.3,  # Low liquidity
@@ -726,9 +727,9 @@ async def demo_risk_prediction():
         'hft_participation': 0.75,
         'order_imbalance': 0.9
     }
-    
+
     events = await rag.predict_risk_events(flash_crash_conditions)
-    
+
     print(f"Detected {len(events)} potential risk events:")
     for event in events[:2]:
         print(f"\n🚨 {event.event_type.value.upper()}")
@@ -736,11 +737,11 @@ async def demo_risk_prediction():
         print(f"   Time Horizon: {event.time_horizon}")
         print(f"   Expected Impact: {event.expected_impact}")
         print(f"   Triggered by: {', '.join([t.name for t in event.triggers[:3]])}")
-    
+
     # Test Case 3: Volatility spike conditions
     print("\n\n📊 Case 3: Volatility Spike Prediction")
     print("-"*50)
-    
+
     vol_spike_conditions = {
         'vix': 12,  # Very low VIX
         'volume_ratio': 1.5,
@@ -750,26 +751,26 @@ async def demo_risk_prediction():
         'vix_acceleration': 0.4,
         'term_structure': -0.15  # Inverted
     }
-    
+
     alert = await rag.generate_risk_alert(vol_spike_conditions)
-    
+
     if alert:
         print(f"⚠️ RISK ALERT: {alert.alert_id}")
         print(f"Risk Level: {alert.risk_level.value.upper()}")
         print(f"Urgency: {alert.urgency.upper()}")
-        
+
         print("\nRecommended Actions:")
         for rec in alert.recommended_actions[:3]:
             print(f"  - {rec['action']}: {rec['reason']}")
-    
+
     # Test Case 4: Risk evolution monitoring
     print("\n\n📊 Case 4: Risk Evolution Monitoring")
     print("-"*50)
-    
+
     # Simulate evolving market conditions
     market_stream = []
     base_vix = 15
-    
+
     for i in range(10):
         # Simulate deteriorating conditions
         market_stream.append({
@@ -780,19 +781,19 @@ async def demo_risk_prediction():
             'correlation': 0.5 + i * 0.05,
             'put_call_ratio': 1.0 + i * 0.1
         })
-    
+
     evolution = await rag.monitor_risk_evolution(market_stream)
-    
+
     print(f"Risk Trend: {evolution['trend'].upper()}")
     print(f"Current Risk: {evolution['current_risk'].upper()}")
     print(f"Peak Risk Score: {evolution['peak_risk']:.2f}")
     print(f"Total Warnings: {evolution['warnings_generated']}")
-    
+
     print("\nRisk Evolution:")
     for i, point in enumerate(evolution['risk_evolution'][::3]):  # Show every 3rd point
         print(f"  T+{i*15}min: {point['risk_level'].value} "
               f"(score: {point['risk_score']:.2f})")
-    
+
     # Summary
     print("\n\n" + "="*70)
     print("Risk Event Prediction Summary:")
@@ -803,4 +804,4 @@ async def demo_risk_prediction():
 
 
 if __name__ == "__main__":
-    asyncio.run(demo_risk_prediction()) 
+    asyncio.run(demo_risk_prediction())

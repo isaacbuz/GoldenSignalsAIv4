@@ -129,4 +129,4 @@ def mock_signal():
             "macd": "bullish_crossover",
             "volume_spike": True
         }
-    } 
+    }

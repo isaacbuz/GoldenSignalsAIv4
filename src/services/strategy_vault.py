@@ -27,14 +27,16 @@ class StrategyVault:
             "author": author,
             "tags": tags or [],
             "version": 1,
-            "timestamp": str(Path().stat().st_ctime)
+            "timestamp": str(Path().stat().st_ctime),
         }
         data.append(entry)
         self._save(data)
 
     def import_strategy(self, json_string: str) -> Dict:
         entry = json.loads(json_string)
-        self.save_strategy(entry["name"], entry["logic"], entry.get("author", "unknown"), entry.get("tags", []))
+        self.save_strategy(
+            entry["name"], entry["logic"], entry.get("author", "unknown"), entry.get("tags", [])
+        )
         return entry
 
     def export_strategy(self, name: str) -> str:

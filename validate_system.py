@@ -41,14 +41,14 @@ def print_info(message: str):
 async def check_environment() -> Dict[str, bool]:
     """Check environment variables"""
     results = {}
-    
+
     print("\n🔍 Checking Environment Variables...")
-    
+
     # Check if .env exists
     env_exists = os.path.exists('.env')
     print_status(".env file exists", env_exists)
     results['.env'] = env_exists
-    
+
     # Check critical environment variables
     critical_vars = [
         'DATABASE_URL',
@@ -57,27 +57,27 @@ async def check_environment() -> Dict[str, bool]:
         'POLYGON_API_KEY',
         'FINNHUB_API_KEY'
     ]
-    
+
     for var in critical_vars:
         value = os.getenv(var)
         exists = value is not None and value != ''
         if var.endswith('API_KEY'):
             # Don't show actual API keys
-            print_status(f"{var}", exists, 
+            print_status(f"{var}", exists,
                         "Set" if exists else "Not set - will use mock data")
         else:
-            print_status(f"{var}", exists, 
+            print_status(f"{var}", exists,
                         f"Value: {value[:20]}..." if exists else "Not set")
         results[var] = exists
-    
+
     return results
 
 async def check_services() -> Dict[str, bool]:
     """Check if services are running"""
     results = {}
-    
+
     print("\n🔍 Checking Services...")
-    
+
     # Check Redis
     try:
         r = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
@@ -87,7 +87,7 @@ async def check_services() -> Dict[str, bool]:
     except Exception as e:
         print_status("Redis", False, f"Error: {str(e)}")
         results['redis'] = False
-    
+
     # Check PostgreSQL
     try:
         conn = await asyncpg.connect(
@@ -104,7 +104,7 @@ async def check_services() -> Dict[str, bool]:
         print_status("PostgreSQL", False, f"Error: {str(e)}")
         print_warning("Will use SQLite as fallback")
         results['postgresql'] = False
-    
+
     # Check Backend API
     try:
         async with httpx.AsyncClient() as client:
@@ -118,7 +118,7 @@ async def check_services() -> Dict[str, bool]:
     except Exception as e:
         print_status("Backend API", False, "Not running")
         results['backend'] = False
-    
+
     # Check Frontend
     try:
         async with httpx.AsyncClient() as client:
@@ -132,15 +132,15 @@ async def check_services() -> Dict[str, bool]:
     except Exception as e:
         print_status("Frontend", False, "Not running")
         results['frontend'] = False
-    
+
     return results
 
 async def check_api_endpoints() -> Dict[str, bool]:
     """Check API endpoints"""
     results = {}
-    
+
     print("\n🔍 Checking API Endpoints...")
-    
+
     endpoints = [
         ("/", "Root"),
         ("/api/v1/market-data/SPY", "Market Data"),
@@ -148,25 +148,25 @@ async def check_api_endpoints() -> Dict[str, bool]:
         ("/api/v1/market/opportunities", "Market Opportunities"),
         ("/docs", "API Documentation")
     ]
-    
+
     async with httpx.AsyncClient() as client:
         for endpoint, name in endpoints:
             try:
                 response = await client.get(f"http://localhost:8000{endpoint}", timeout=5.0)
                 success = response.status_code == 200
-                print_status(f"{name} ({endpoint})", success, 
+                print_status(f"{name} ({endpoint})", success,
                            f"Status: {response.status_code}")
                 results[endpoint] = success
             except Exception as e:
                 print_status(f"{name} ({endpoint})", False, "Failed to connect")
                 results[endpoint] = False
-    
+
     return results
 
 async def check_websocket() -> bool:
     """Check WebSocket connection"""
     print("\n🔍 Checking WebSocket...")
-    
+
     try:
         import websockets
         async with websockets.connect("ws://localhost:8000/ws") as websocket:
@@ -179,9 +179,9 @@ async def check_websocket() -> bool:
 def check_python_packages() -> Dict[str, bool]:
     """Check required Python packages"""
     results = {}
-    
+
     print("\n🔍 Checking Python Packages...")
-    
+
     required_packages = [
         'fastapi',
         'uvicorn',
@@ -195,7 +195,7 @@ def check_python_packages() -> Dict[str, bool]:
         'httpx',
         'pytz'
     ]
-    
+
     for package in required_packages:
         try:
             __import__(package)
@@ -204,54 +204,54 @@ def check_python_packages() -> Dict[str, bool]:
         except ImportError:
             print_status(f"{package}", False, "Not installed")
             results[package] = False
-    
+
     return results
 
-def generate_report(env_results: Dict, service_results: Dict, 
-                   api_results: Dict, ws_result: bool, 
+def generate_report(env_results: Dict, service_results: Dict,
+                   api_results: Dict, ws_result: bool,
                    package_results: Dict):
     """Generate final validation report"""
     print("\n" + "="*50)
     print("📊 VALIDATION REPORT")
     print("="*50)
-    
+
     # Calculate scores
     env_score = sum(1 for v in env_results.values() if v)
     service_score = sum(1 for v in service_results.values() if v)
     api_score = sum(1 for v in api_results.values() if v)
     package_score = sum(1 for v in package_results.values() if v)
-    
-    total_checks = (len(env_results) + len(service_results) + 
+
+    total_checks = (len(env_results) + len(service_results) +
                    len(api_results) + 1 + len(package_results))
     passed_checks = env_score + service_score + api_score + (1 if ws_result else 0) + package_score
-    
+
     print(f"\n📈 Overall Score: {passed_checks}/{total_checks} ({passed_checks/total_checks*100:.1f}%)")
-    
+
     print(f"\n🔧 Environment: {env_score}/{len(env_results)}")
     print(f"🖥️  Services: {service_score}/{len(service_results)}")
     print(f"🌐 API Endpoints: {api_score}/{len(api_results)}")
     print(f"🔌 WebSocket: {'✅' if ws_result else '❌'}")
     print(f"📦 Python Packages: {package_score}/{len(package_results)}")
-    
+
     # Recommendations
     print("\n💡 Recommendations:")
-    
+
     if not env_results.get('ALPHA_VANTAGE_API_KEY'):
         print_warning("Add API keys to .env for live market data")
-    
+
     if not service_results.get('postgresql'):
         print_warning("PostgreSQL not running - using SQLite fallback")
-    
+
     if not service_results.get('backend'):
         print_warning("Start backend with: python simple_backend.py")
-    
+
     if not service_results.get('frontend'):
         print_warning("Start frontend with: cd frontend && npm run dev")
-    
+
     missing_packages = [p for p, v in package_results.items() if not v]
     if missing_packages:
         print_warning(f"Install missing packages: pip install {' '.join(missing_packages)}")
-    
+
     # Final status
     print("\n" + "="*50)
     if passed_checks == total_checks:
@@ -267,12 +267,12 @@ async def main():
     print("🚀 GoldenSignalsAI System Validation")
     print("="*50)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
+
     # Run checks
     env_results = await check_environment()
     package_results = check_python_packages()
     service_results = await check_services()
-    
+
     # Only check API and WebSocket if backend is running
     if service_results.get('backend'):
         api_results = await check_api_endpoints()
@@ -281,12 +281,12 @@ async def main():
         api_results = {}
         ws_result = False
         print_info("Skipping API and WebSocket checks (backend not running)")
-    
+
     # Generate report
     generate_report(env_results, service_results, api_results, ws_result, package_results)
-    
+
     print("\n✨ To start the system, run: ./start_all.sh")
     print("📚 For more information, see: PERFECT_IMPLEMENTATION_SUMMARY.md")
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

@@ -248,9 +248,9 @@ export const ShimmerSkeleton: React.FC<{ width?: string | number; height?: strin
             sx={{
                 width,
                 height,
-                background: `linear-gradient(90deg, 
-          ${alpha(theme.palette.action.hover, 0.05)} 0%, 
-          ${alpha(theme.palette.action.hover, 0.1)} 50%, 
+                background: `linear-gradient(90deg,
+          ${alpha(theme.palette.action.hover, 0.05)} 0%,
+          ${alpha(theme.palette.action.hover, 0.1)} 50%,
           ${alpha(theme.palette.action.hover, 0.05)} 100%)`,
                 backgroundSize: '200% 100%',
                 animation: 'shimmer 1.5s infinite',

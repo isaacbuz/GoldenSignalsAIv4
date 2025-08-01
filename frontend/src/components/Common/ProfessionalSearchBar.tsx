@@ -339,4 +339,4 @@ export const ProfessionalSearchBar: React.FC<ProfessionalSearchBarProps> = ({
     );
 };
 
-export default ProfessionalSearchBar; 
+export default ProfessionalSearchBar;

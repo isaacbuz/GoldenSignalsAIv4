@@ -6,4 +6,3 @@ def analyze_sentiment(headlines: list) -> tuple:
     summary = " ".join(headlines[:2])
     score = round(random.uniform(-1, 1), 2)
     return summary, score
-

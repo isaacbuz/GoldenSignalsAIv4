@@ -116,4 +116,4 @@ echo "Press Ctrl+C to stop both servers"
 echo "=================================================="
 
 # Keep the script running
-wait 
+wait

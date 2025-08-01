@@ -4,10 +4,9 @@ Purpose: Implements an OptionsFlowAgent that analyzes options flow data to detec
 """
 
 import logging
+from typing import Any, Dict
 
 import pandas as pd
-from typing import Dict, Any
-
 from agents.base import BaseAgent
 
 # Configure logging with JSON-like format
@@ -95,10 +94,10 @@ class OptionsFlowAgent(BaseAgent):
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process and potentially modify a trading signal.
-        
+
         Args:
             signal (Dict[str, Any]): Trading signal to process.
-        
+
         Returns:
             Dict[str, Any]: Processed trading signal with potential modifications.
         """

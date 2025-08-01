@@ -333,4 +333,4 @@ export const usePerformanceMonitoring = () => {
     return {
         recordPerformanceMetric,
     };
-}; 
+};

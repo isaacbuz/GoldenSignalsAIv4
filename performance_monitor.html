@@ -15,15 +15,15 @@
     <div class="chart-container">
         <canvas id="latencyChart"></canvas>
     </div>
-    
+
     <script>
         async function updateMetrics() {
             const response = await fetch('http://localhost:8000/api/v1/performance');
             const data = await response.json();
-            
+
             const metricsDiv = document.getElementById('metrics');
             metricsDiv.innerHTML = '';
-            
+
             for (const [endpoint, stats] of Object.entries(data)) {
                 if (typeof stats === 'object' && stats.avg_ms) {
                     const metric = document.createElement('div');
@@ -38,7 +38,7 @@
                 }
             }
         }
-        
+
         // Update every 5 seconds
         setInterval(updateMetrics, 5000);
         updateMetrics();

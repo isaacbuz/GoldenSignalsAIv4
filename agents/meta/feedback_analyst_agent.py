@@ -4,8 +4,10 @@ FeedbackAnalystAgent
 Uses LLM (OpenAI GPT-4 or Grok) to analyze recent win/loss feedback and explain patterns or lessons learned for the user.
 """
 import os
-from openai import OpenAI
+
 from agents.grok_agents import GrokStrategyAgent
+from openai import OpenAI
+
 
 class FeedbackAnalystAgent:
     def __init__(self, api_key=None, model="gpt-4", use_grok=False, grok_api_key=None):

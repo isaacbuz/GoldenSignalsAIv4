@@ -6,4 +6,4 @@ from .alert_agent import AlertAgent
 
 __all__ = [
     'AlertAgent'
-] 
+]

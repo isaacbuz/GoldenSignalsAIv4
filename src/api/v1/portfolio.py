@@ -18,6 +18,7 @@ router = APIRouter()
 
 class Position(BaseModel):
     """Portfolio position model"""
+
     symbol: str
     quantity: float
     avg_cost: float
@@ -31,6 +32,7 @@ class Position(BaseModel):
 
 class PortfolioSummary(BaseModel):
     """Portfolio summary model"""
+
     total_value: float
     total_cost: float
     total_pnl: float
@@ -44,6 +46,7 @@ class PortfolioSummary(BaseModel):
 
 class Trade(BaseModel):
     """Trade model"""
+
     id: str
     symbol: str
     side: str  # "buy" or "sell"
@@ -71,14 +74,14 @@ async def get_portfolio_summary() -> PortfolioSummary:
             day_change_percent=1.27,
             cash_balance=25000.0,
             buying_power=50000.0,
-            positions_count=8
+            positions_count=8,
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting portfolio summary: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve portfolio summary"
+            detail="Failed to retrieve portfolio summary",
         )
 
 
@@ -99,7 +102,7 @@ async def get_positions() -> List[Position]:
                 unrealized_pnl=500.0,
                 unrealized_pnl_percent=3.33,
                 day_change=200.0,
-                day_change_percent=1.31
+                day_change_percent=1.31,
             ),
             Position(
                 symbol="GOOGL",
@@ -110,7 +113,7 @@ async def get_positions() -> List[Position]:
                 unrealized_pnl=2500.0,
                 unrealized_pnl_percent=1.79,
                 day_change=750.0,
-                day_change_percent=0.53
+                day_change_percent=0.53,
             ),
             Position(
                 symbol="MSFT",
@@ -121,17 +124,16 @@ async def get_positions() -> List[Position]:
                 unrealized_pnl=375.0,
                 unrealized_pnl_percent=1.56,
                 day_change=150.0,
-                day_change_percent=0.62
-            )
+                day_change_percent=0.62,
+            ),
         ]
-        
+
         return positions
-        
+
     except Exception as e:
         logger.error(f"Error getting positions: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve positions"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve positions"
         )
 
 
@@ -152,29 +154,26 @@ async def get_position(symbol: str) -> Position:
                 unrealized_pnl=500.0,
                 unrealized_pnl_percent=3.33,
                 day_change=200.0,
-                day_change_percent=1.31
+                day_change_percent=1.31,
             )
         else:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Position not found for symbol '{symbol}'"
+                detail=f"Position not found for symbol '{symbol}'",
             )
-        
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error getting position for {symbol}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve position for '{symbol}'"
+            detail=f"Failed to retrieve position for '{symbol}'",
         )
 
 
 @router.get("/trades", response_model=List[Trade])
-async def get_trades(
-    limit: int = 50,
-    offset: int = 0
-) -> List[Trade]:
+async def get_trades(limit: int = 50, offset: int = 0) -> List[Trade]:
     """
     Get trade history with pagination.
     """
@@ -190,7 +189,7 @@ async def get_trades(
                 total_value=15000.0,
                 timestamp=datetime.now(),
                 status="filled",
-                commission=1.0
+                commission=1.0,
             ),
             Trade(
                 id="trade_002",
@@ -201,18 +200,17 @@ async def get_trades(
                 total_value=140000.0,
                 timestamp=datetime.now(),
                 status="filled",
-                commission=1.0
-            )
+                commission=1.0,
+            ),
         ]
-        
+
         # Apply pagination
-        return trades[offset:offset + limit]
-        
+        return trades[offset : offset + limit]
+
     except Exception as e:
         logger.error(f"Error getting trades: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve trades"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve trades"
         )
 
 
@@ -236,14 +234,14 @@ async def get_performance_metrics() -> Dict[str, Any]:
             "avg_win": 2.8,
             "avg_loss": -1.5,
             "largest_win": 12.5,
-            "largest_loss": -6.8
+            "largest_loss": -6.8,
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting performance metrics: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve performance metrics"
+            detail="Failed to retrieve performance metrics",
         )
 
 
@@ -260,22 +258,18 @@ async def get_risk_analytics() -> Dict[str, Any]:
             "concentration_risk": {
                 "top_position_weight": 0.35,
                 "top_3_positions_weight": 0.68,
-                "sector_concentration": {
-                    "Technology": 0.75,
-                    "Healthcare": 0.15,
-                    "Finance": 0.10
-                }
+                "sector_concentration": {"Technology": 0.75, "Healthcare": 0.15, "Finance": 0.10},
             },
             "correlation_matrix": {
                 "AAPL": {"GOOGL": 0.65, "MSFT": 0.72},
                 "GOOGL": {"AAPL": 0.65, "MSFT": 0.58},
-                "MSFT": {"AAPL": 0.72, "GOOGL": 0.58}
-            }
+                "MSFT": {"AAPL": 0.72, "GOOGL": 0.58},
+            },
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting risk analytics: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve risk analytics"
-        ) 
+            detail="Failed to retrieve risk analytics",
+        )

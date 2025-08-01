@@ -14,7 +14,7 @@ def get_live_quote(symbol):
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
-        
+
         # Get current data
         return {
             'symbol': symbol,
@@ -36,24 +36,24 @@ def get_options_data(symbol):
     try:
         ticker = yf.Ticker(symbol)
         expirations = ticker.options
-        
+
         if not expirations:
             print(f"No options available for {symbol}")
             return None
-            
+
         # Get first expiration
         exp = expirations[0]
         opt_chain = ticker.option_chain(exp)
-        
+
         # Count calls and puts
         calls_count = len(opt_chain.calls)
         puts_count = len(opt_chain.puts)
-        
+
         # Calculate put/call ratio
         call_volume = opt_chain.calls['volume'].sum()
         put_volume = opt_chain.puts['volume'].sum()
         pc_ratio = put_volume / call_volume if call_volume > 0 else 0
-        
+
         return {
             'expiration': exp,
             'calls_count': calls_count,
@@ -70,16 +70,16 @@ def calculate_simple_signal(quote_data):
     """Calculate a simple trading signal"""
     if not quote_data or quote_data['price'] == 0:
         return "HOLD", 0
-        
+
     price = quote_data['price']
     prev_close = quote_data['previousClose']
-    
+
     if prev_close == 0:
         return "HOLD", 0
-        
+
     # Calculate percentage change
     change_pct = ((price - prev_close) / prev_close) * 100
-    
+
     # Simple momentum signal
     if change_pct > 1.0:
         return "SELL", min(abs(change_pct) * 10, 80)  # Overbought
@@ -97,33 +97,33 @@ def main():
     ║  Testing Yahoo Finance connection (no API key required)    ║
     ╚════════════════════════════════════════════════════════════╝
     """)
-    
+
     symbols = ['AAPL', 'GOOGL', 'TSLA', 'SPY']
-    
+
     print(f"\n📊 Monitoring symbols: {', '.join(symbols)}")
     print("Press Ctrl+C to stop...\n")
-    
+
     try:
         while True:
             print(f"\n{'='*60}")
             print(f"Update Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             print(f"{'='*60}")
-            
+
             for symbol in symbols:
                 # Get quote
                 quote = get_live_quote(symbol)
-                
+
                 if quote and quote['price'] > 0:
                     # Calculate signal
                     signal, confidence = calculate_simple_signal(quote)
-                    
+
                     # Display results
                     print(f"\n📈 {symbol}")
                     print(f"   Price: ${quote['price']:.2f}")
                     print(f"   Bid/Ask: ${quote['bid']:.2f} / ${quote['ask']:.2f}")
                     print(f"   Volume: {quote['volume']:,}")
                     print(f"   Day Range: ${quote['dayLow']:.2f} - ${quote['dayHigh']:.2f}")
-                    
+
                     # Signal
                     if signal == "BUY":
                         print(f"   🟢 Signal: {signal} (Confidence: {confidence}%)")
@@ -131,7 +131,7 @@ def main():
                         print(f"   🔴 Signal: {signal} (Confidence: {confidence}%)")
                     else:
                         print(f"   ⚪ Signal: {signal} (Confidence: {confidence}%)")
-                    
+
                     # Get options data
                     options = get_options_data(symbol)
                     if options:
@@ -140,11 +140,11 @@ def main():
                         print(f"      Puts: {options['puts_count']} contracts, Volume: {options['put_volume']:,}")
                 else:
                     print(f"\n❌ {symbol}: No data available")
-            
+
             # Wait before next update
             print(f"\n⏳ Next update in 30 seconds...")
             time.sleep(30)
-            
+
     except KeyboardInterrupt:
         print("\n\n✅ Test stopped by user")
     except Exception as e:
@@ -158,6 +158,6 @@ if __name__ == "__main__":
     except ImportError:
         print("❌ yfinance not installed. Run: pip install yfinance")
         exit(1)
-        
+
     # Run the test
-    main() 
+    main()

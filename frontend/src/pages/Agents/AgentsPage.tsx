@@ -1,6 +1,6 @@
 /**
  * AI Agents Page
- * 
+ *
  * Monitor and manage AI trading agents with real-time performance metrics
  */
 
@@ -309,4 +309,4 @@ export default function AgentsPage() {
       </Grid>
     </Container>
   );
-} 
+}

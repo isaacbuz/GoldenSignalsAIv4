@@ -51,4 +51,4 @@ else
     fi
 fi
 
-echo -e "\n${GREEN}All services stopped.${NC}" 
+echo -e "\n${GREEN}All services stopped.${NC}"

@@ -4,8 +4,10 @@ SignalSummarizerAgent
 Uses LLM (OpenAI GPT-4 or Grok) to summarize agent outputs and meta signals in plain English for user guidance.
 """
 import os
-from openai import OpenAI
+
 from agents.grok_agents import GrokStrategyAgent
+from openai import OpenAI
+
 
 class SignalSummarizerAgent:
     def __init__(self, api_key=None, model="gpt-4", use_grok=False, grok_api_key=None):

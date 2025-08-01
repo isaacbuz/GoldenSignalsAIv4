@@ -11,12 +11,13 @@ settings = {
         "email": os.getenv("TEST_EMAIL", ""),
         "sms": os.getenv("TEST_SMS", ""),
         "push": False,
-        "highConfidenceOnly": False
+        "highConfidenceOnly": False,
     }
 }
 
 with open("user_notification_settings.json", "w") as f:
     import json
+
     json.dump(settings, f, indent=2)
 
 # Simulate a trading decision
@@ -26,7 +27,7 @@ trading_decision = {
     "action": "BUY",
     "price": 123.45,
     "confidence": 0.95,
-    "metadata": {"symbol": "AAPL"}
+    "metadata": {"symbol": "AAPL"},
 }
 
 alert_mgr.send_trading_alert(trading_decision)

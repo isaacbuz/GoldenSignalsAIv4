@@ -15,13 +15,13 @@ from .data_source_agent import (
 )
 
 __all__ = [
-    'DataSourceAgent',
-    'AlphaVantageAgent',
-    'FinnhubAgent',
-    'PolygonAgent',
-    'BenzingaNewsAgent',
-    'StockTwitsAgent',
-    'BloombergAgent',
-    'DataAggregator',
-    'get_default_data_aggregator'
-] 
+    "DataSourceAgent",
+    "AlphaVantageAgent",
+    "FinnhubAgent",
+    "PolygonAgent",
+    "BenzingaNewsAgent",
+    "StockTwitsAgent",
+    "BloombergAgent",
+    "DataAggregator",
+    "get_default_data_aggregator",
+]

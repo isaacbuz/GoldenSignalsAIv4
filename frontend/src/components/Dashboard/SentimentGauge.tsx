@@ -38,7 +38,7 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
             stroke="#1E293B"
             strokeWidth="20"
           />
-          
+
           {/* Colored segments */}
           <path
             d="M 20 80 A 60 60 0 0 1 70 40"
@@ -61,7 +61,7 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
             strokeWidth="20"
             opacity="0.3"
           />
-          
+
           {/* Needle */}
           <motion.g
             initial={{ rotate: 0 }}
@@ -80,13 +80,13 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
             <circle cx="100" cy="80" r="6" fill={getSentimentColor()} />
           </motion.g>
         </svg>
-        
+
         {/* Labels */}
         <span className="absolute left-0 bottom-0 text-xs text-red-500">🔴</span>
         <span className="absolute left-1/2 -translate-x-1/2 top-0 text-xs text-gray-500">⚪</span>
         <span className="absolute right-0 bottom-0 text-xs text-green-500">🟢</span>
       </div>
-      
+
       {/* Sentiment Text */}
       <div className="text-center">
         <p className={`text-lg font-bold ${
@@ -97,7 +97,7 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
           {sentiment.toUpperCase()} {Math.round(confidence * 100)}%
         </p>
       </div>
-      
+
       {/* Momentum Indicator */}
       {showMomentum && momentum !== undefined && (
         <div className="mt-2 flex items-center gap-1">
@@ -115,7 +115,7 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
           ))}
         </div>
       )}
-      
+
       {/* Confidence Bar */}
       <div className="w-full mt-2">
         <div className="text-xs text-text-secondary mb-1">Confidence</div>
@@ -132,4 +132,4 @@ const SentimentGauge: React.FC<SentimentGaugeProps> = ({
   );
 };
 
-export default SentimentGauge; 
+export default SentimentGauge;

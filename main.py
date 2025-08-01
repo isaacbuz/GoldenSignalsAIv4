@@ -25,11 +25,11 @@ def main():
     """Main entry point for the application"""
     try:
         import uvicorn
-        
+
         # Get configuration from environment
         host = os.getenv("HOST", "0.0.0.0")
         port = int(os.getenv("PORT", 8000))
-        
+
         # Check for command line port override
         for arg in sys.argv:
             if arg.startswith("--port="):
@@ -37,9 +37,9 @@ def main():
                     port = int(arg.split("=")[1])
                 except ValueError:
                     logger.warning(f"Invalid port argument: {arg}")
-        
+
         logger.info(f"🚀 Starting GoldenSignalsAI V3 on {host}:{port}")
-        
+
         uvicorn.run(
             app,
             host=host,
@@ -47,7 +47,7 @@ def main():
             reload=os.getenv("RELOAD", "false").lower() == "true",
             log_level="info"
         )
-        
+
     except ImportError:
         logger.error("❌ uvicorn not installed. Please install with: pip install uvicorn")
         sys.exit(1)

@@ -522,4 +522,4 @@ export const sublimeStyles = {
         background: 'rgba(248, 248, 242, 0.05)',
         cursor: 'pointer',
     },
-}; 
+};

@@ -287,4 +287,4 @@ const EnhancedSearchDemo: React.FC = () => {
     );
 };
 
-export default EnhancedSearchDemo; 
+export default EnhancedSearchDemo;

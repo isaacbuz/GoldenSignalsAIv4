@@ -1,7 +1,9 @@
 import json
 import os
-import requests
 from datetime import datetime
+
+import requests
+
 
 class NotifyAgent:
     def __init__(self, prefs_path="user_notification_settings.json"):

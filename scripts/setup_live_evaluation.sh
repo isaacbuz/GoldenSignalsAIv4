@@ -40,4 +40,4 @@ fi
 
 echo "✅ Setup complete!"
 echo "To start the live evaluation, run:"
-echo "python ml_training/evaluate_live_transformer.py" 
+echo "python ml_training/evaluate_live_transformer.py"

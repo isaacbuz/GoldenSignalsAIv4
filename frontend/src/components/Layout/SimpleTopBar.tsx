@@ -73,4 +73,4 @@ export const SimpleTopBar: React.FC<SimpleTopBarProps> = ({
             </Toolbar>
         </AppBar>
     );
-}; 
+};

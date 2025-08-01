@@ -6,9 +6,12 @@ Includes BacktestResearchAgent for strategy optimization via backtesting.
 """
 
 import logging
+from typing import Any, Dict
+
 import pandas as pd
-from typing import Dict, Any
+
 from src.services.backtest import Backtester
+
 from .base_agent import BaseAgent
 
 # Configure logging with JSON-like format
@@ -18,10 +21,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 class BacktestResearchAgent(BaseAgent):
     """Agent that researches optimal trading strategies through backtesting.
     Integrates with the GoldenSignalsAI agent framework. Not registered by default; import and use for research/experimentation.
     """
+
     def __init__(self, max_strategies: int = 10):
         """Initialize the BacktestResearchAgent.
         Args:
@@ -31,9 +36,9 @@ class BacktestResearchAgent(BaseAgent):
         self.backtester = Backtester()
         self.tested_strategies = []
         self.results = []
-        logger.info({
-            "message": f"BacktestResearchAgent initialized with max_strategies={max_strategies}"
-        })
+        logger.info(
+            {"message": f"BacktestResearchAgent initialized with max_strategies={max_strategies}"}
+        )
 
     def process_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """Process and potentially modify a trading signal. Add backtesting logic here."""

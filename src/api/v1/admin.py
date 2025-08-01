@@ -17,6 +17,7 @@ router = APIRouter()
 
 class SystemStatus(BaseModel):
     """System status model"""
+
     status: str
     uptime: str
     version: str
@@ -30,6 +31,7 @@ class SystemStatus(BaseModel):
 
 class SystemMetrics(BaseModel):
     """System metrics model"""
+
     requests_per_minute: float
     avg_response_time: float
     error_rate: float
@@ -54,14 +56,14 @@ async def get_system_status() -> SystemStatus:
             redis_status="connected",
             agents_status="running",
             memory_usage=68.5,
-            cpu_usage=23.2
+            cpu_usage=23.2,
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting system status: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve system status"
+            detail="Failed to retrieve system status",
         )
 
 
@@ -78,22 +80,19 @@ async def get_system_metrics() -> SystemMetrics:
             error_rate=0.02,
             active_connections=23,
             cache_hit_rate=0.94,
-            database_connections=8
+            database_connections=8,
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting system metrics: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve system metrics"
+            detail="Failed to retrieve system metrics",
         )
 
 
 @router.get("/logs")
-async def get_logs(
-    level: str = "INFO",
-    limit: int = 100
-) -> List[Dict[str, Any]]:
+async def get_logs(level: str = "INFO", limit: int = 100) -> List[Dict[str, Any]]:
     """
     Get system logs with filtering.
     """
@@ -104,31 +103,30 @@ async def get_logs(
                 "timestamp": "2024-01-15T10:30:00Z",
                 "level": "INFO",
                 "message": "Agent orchestrator started successfully",
-                "module": "orchestrator"
+                "module": "orchestrator",
             },
             {
                 "timestamp": "2024-01-15T10:29:45Z",
                 "level": "INFO",
                 "message": "Market data service initialized",
-                "module": "market_data"
+                "module": "market_data",
             },
             {
                 "timestamp": "2024-01-15T10:29:30Z",
                 "level": "WARNING",
                 "message": "High memory usage detected",
-                "module": "monitoring"
-            }
+                "module": "monitoring",
+            },
         ]
-        
+
         # Filter by level and apply limit
         filtered_logs = [log for log in logs if log["level"] == level]
         return filtered_logs[:limit]
-        
+
     except Exception as e:
         logger.error(f"Error getting logs: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve logs"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve logs"
         )
 
 
@@ -141,12 +139,11 @@ async def restart_system() -> Dict[str, str]:
         # Mock restart - in real implementation, trigger system restart
         logger.warning("System restart requested by admin")
         return {"message": "System restart initiated"}
-        
+
     except Exception as e:
         logger.error(f"Error restarting system: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to restart system"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to restart system"
         )
 
 
@@ -159,12 +156,11 @@ async def clear_cache() -> Dict[str, str]:
         # Mock cache clear - in real implementation, clear Redis cache
         logger.info("Cache clear requested by admin")
         return {"message": "Cache cleared successfully"}
-        
+
     except Exception as e:
         logger.error(f"Error clearing cache: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to clear cache"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to clear cache"
         )
 
 
@@ -183,17 +179,16 @@ async def get_users() -> List[Dict[str, Any]]:
                 "last_name": "User",
                 "is_active": True,
                 "created_at": "2024-01-01T00:00:00Z",
-                "last_login": "2024-01-15T10:30:00Z"
+                "last_login": "2024-01-15T10:30:00Z",
             }
         ]
-        
+
         return users
-        
+
     except Exception as e:
         logger.error(f"Error getting users: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve users"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve users"
         )
 
 
@@ -210,19 +205,13 @@ async def get_configuration() -> Dict[str, Any]:
             "database_url": "postgresql://***",
             "redis_url": "redis://***",
             "cors_origins": ["http://localhost:3000"],
-            "rate_limiting": {
-                "enabled": True,
-                "requests_per_minute": 60
-            },
-            "monitoring": {
-                "prometheus_enabled": True,
-                "sentry_enabled": True
-            }
+            "rate_limiting": {"enabled": True, "requests_per_minute": 60},
+            "monitoring": {"prometheus_enabled": True, "sentry_enabled": True},
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting configuration: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve configuration"
-        ) 
+            detail="Failed to retrieve configuration",
+        )

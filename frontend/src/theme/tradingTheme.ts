@@ -123,4 +123,4 @@ export const formatMarketValue = (value: number, prefix = '', suffix = '') => {
     return `${sign}${prefix}${value.toFixed(2)}${suffix}`;
 };
 
-export { tradingColors }; 
+export { tradingColors };

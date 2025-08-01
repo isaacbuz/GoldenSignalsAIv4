@@ -9,16 +9,16 @@ import pandas as pd
 
 class PerformanceBenchmark:
     """Run performance benchmarks."""
-    
+
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
         self.results = []
-    
+
     async def benchmark_endpoint(self, endpoint: str, method: str = "GET", iterations: int = 100):
         """Benchmark a single endpoint."""
         times = []
         errors = 0
-        
+
         async with aiohttp.ClientSession() as session:
             for _ in range(iterations):
                 start = time.time()
@@ -29,9 +29,9 @@ class PerformanceBenchmark:
                             errors += 1
                 except Exception:
                     errors += 1
-                
+
                 times.append(time.time() - start)
-        
+
         return {
             "endpoint": endpoint,
             "method": method,
@@ -44,7 +44,7 @@ class PerformanceBenchmark:
             "p95_time": statistics.quantiles(times, n=20)[18],  # 95th percentile
             "p99_time": statistics.quantiles(times, n=100)[98],  # 99th percentile
         }
-    
+
     async def run_benchmarks(self):
         """Run all benchmarks."""
         endpoints = [
@@ -53,18 +53,18 @@ class PerformanceBenchmark:
             ("/api/v1/signals/latest", "GET"),
             ("/api/v1/portfolio/status", "GET"),
         ]
-        
+
         for endpoint, method in endpoints:
             result = await self.benchmark_endpoint(endpoint, method)
             self.results.append(result)
             print(f"✅ Benchmarked {endpoint}: avg={result['avg_time']:.3f}s, p95={result['p95_time']:.3f}s")
-    
+
     def save_results(self, filename: str = "benchmark_results.csv"):
         """Save benchmark results."""
         df = pd.DataFrame(self.results)
         df.to_csv(filename, index=False)
         print(f"✅ Saved benchmark results to {filename}")
-    
+
     def check_sla(self):
         """Check if results meet SLA requirements."""
         sla_requirements = {
@@ -72,14 +72,14 @@ class PerformanceBenchmark:
             "/api/v1/signals/": 0.5,  # 500ms
             "/api/v1/portfolio/": 1.0,  # 1s
         }
-        
+
         violations = []
         for result in self.results:
             for endpoint_prefix, max_time in sla_requirements.items():
                 if result["endpoint"].startswith(endpoint_prefix):
                     if result["p95_time"] > max_time:
                         violations.append(f"{result['endpoint']}: p95={result['p95_time']:.3f}s > SLA={max_time}s")
-        
+
         if violations:
             print("❌ SLA Violations:")
             for violation in violations:

@@ -15,14 +15,14 @@ def get_milestones(token: str, owner: str, repo: str) -> Dict[str, int]:
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     response = requests.get(url, headers=headers)
     milestones = {}
-    
+
     if response.status_code == 200:
         for milestone in response.json():
             milestones[milestone['title']] = milestone['number']
-    
+
     return milestones
 
 def update_issue_milestone(token: str, owner: str, repo: str, issue_num: str, milestone_num: int):
@@ -32,13 +32,13 @@ def update_issue_milestone(token: str, owner: str, repo: str, issue_num: str, mi
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     data = {
         "milestone": milestone_num
     }
-    
+
     response = requests.patch(url, json=data, headers=headers)
-    
+
     if response.status_code == 200:
         print(f"✅ Updated issue #{issue_num} with milestone")
     else:
@@ -52,7 +52,7 @@ def update_epic_issue(token: str, owner: str, repo: str):
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     # Updated body with correct issue numbers
     updated_body = """## Overview
 This epic tracks the comprehensive frontend enhancement to fully utilize all backend capabilities of GoldenSignalsAI V2.
@@ -105,7 +105,7 @@ This epic tracks the comprehensive frontend enhancement to fully utilize all bac
 ## Cross-Cutting Concerns
 These issues should be addressed throughout all phases:
 - Frontend Performance Optimization (#205)
-- UI/UX Design System Enhancement (#206)  
+- UI/UX Design System Enhancement (#206)
 - Frontend Testing Strategy (#207)
 - Frontend Documentation (#208)
 
@@ -129,13 +129,13 @@ Track progress on our [Project Board](https://github.com/isaacbuz/GoldenSignalsA
 - Slack channel: #frontend-enhancement
 - Technical discussions in issue comments
 """
-    
+
     data = {
         "body": updated_body
     }
-    
+
     response = requests.patch(url, json=data, headers=headers)
-    
+
     if response.status_code == 200:
         print("✅ Updated EPIC issue #198 with correct cross-references")
     else:
@@ -144,20 +144,20 @@ Track progress on our [Project Board](https://github.com/isaacbuz/GoldenSignalsA
 
 def assign_milestones_to_issues(token: str, owner: str, repo: str, milestones: Dict[str, int]):
     """Assign milestones to each issue based on phase"""
-    
+
     # Issue to milestone mapping
     issue_milestone_map = {
         "199": "Phase 1: Core Infrastructure",
-        "200": "Phase 2: Advanced Backtesting Suite", 
+        "200": "Phase 2: Advanced Backtesting Suite",
         "201": "Phase 3: AI & Multimodal Integration",
         "202": "Phase 4: Hybrid Signal Intelligence",
         "203": "Phase 5: Portfolio & Risk Management",
         "204": "Phase 6: Admin & System Monitoring"
     }
-    
+
     # Cross-cutting issues don't get phase milestones
     # They span all phases
-    
+
     for issue_num, milestone_title in issue_milestone_map.items():
         if milestone_title in milestones:
             update_issue_milestone(token, owner, repo, issue_num, milestones[milestone_title])
@@ -166,7 +166,7 @@ def assign_milestones_to_issues(token: str, owner: str, repo: str, milestones: D
 
 def add_issue_dependencies(token: str, owner: str, repo: str):
     """Add dependency information to issues"""
-    
+
     # Dependencies to add in issue comments
     dependencies = {
         "200": ["Depends on #199 (Core Infrastructure)"],
@@ -179,19 +179,19 @@ def add_issue_dependencies(token: str, owner: str, repo: str):
         "207": ["Affects all phases - should be ongoing"],
         "208": ["Affects all phases - should be ongoing"]
     }
-    
+
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
+
     for issue_num, deps in dependencies.items():
         if deps:
             comment_body = "## Dependencies\n\n" + "\n".join(f"- {dep}" for dep in deps)
-            
+
             url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_num}/comments"
             response = requests.post(url, json={"body": comment_body}, headers=headers)
-            
+
             if response.status_code == 201:
                 print(f"✅ Added dependencies to issue #{issue_num}")
             else:
@@ -204,30 +204,30 @@ def main():
     if not token:
         print("❌ Error: GITHUB_TOKEN environment variable not set")
         return
-    
+
     # Repository details
     owner = "isaacbuz"
     repo = "GoldenSignalsAIv4"
-    
+
     print("🚀 Updating GitHub Issues...")
-    
+
     # Get existing milestones
     print("\n📍 Fetching milestones...")
     milestones = get_milestones(token, owner, repo)
     print(f"Found {len(milestones)} milestones")
-    
+
     # Update EPIC issue with correct references
     print("\n📝 Updating EPIC issue...")
     update_epic_issue(token, owner, repo)
-    
+
     # Assign milestones to issues
     print("\n🏷️  Assigning milestones to issues...")
     assign_milestones_to_issues(token, owner, repo, milestones)
-    
+
     # Add dependency information
     print("\n🔗 Adding dependency information...")
     add_issue_dependencies(token, owner, repo)
-    
+
     print("\n✅ Issue updates complete!")
     print("\n📊 Summary:")
     print("- Updated EPIC issue with correct cross-references")
@@ -236,4 +236,4 @@ def main():
     print("\nVisit https://github.com/isaacbuz/GoldenSignalsAIv4/issues to see the updates")
 
 if __name__ == "__main__":
-    main() 
+    main()

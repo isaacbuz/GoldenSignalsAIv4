@@ -11,7 +11,7 @@ interface TradingAppShellProps {
 
 /**
  * TradingAppShell - Wrapper around existing Layout component
- * 
+ *
  * This demonstrates the reuse principle:
  * - We're NOT creating a new layout system
  * - We're configuring the existing 383-line Layout.tsx
@@ -47,4 +47,4 @@ export const TradingAppShell: React.FC<TradingAppShellProps> = ({
             </Layout>
         </ErrorBoundary>
     );
-}; 
+};

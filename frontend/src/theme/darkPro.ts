@@ -484,4 +484,4 @@ export const darkProStyles = {
         slideUp: 'slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         pulse: 'pulse 2s infinite',
     },
-}; 
+};

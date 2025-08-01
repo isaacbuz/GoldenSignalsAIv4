@@ -121,4 +121,4 @@ export const Breadcrumbs: React.FC = () => {
             </MuiBreadcrumbs>
         </Box>
     );
-}; 
+};

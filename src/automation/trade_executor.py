@@ -8,6 +8,7 @@ class DummyBrokerAPI:
     def place_order(self, symbol, side, quantity):
         return {"symbol": symbol, "side": side, "quantity": quantity, "status": "filled"}
 
+
 class TradeExecutor:
     def __init__(self, broker_api=None, portfolio_value=100000):
         self.broker = broker_api or DummyBrokerAPI()
@@ -25,7 +26,7 @@ class TradeExecutor:
         order = self.broker.place_order(
             symbol=signal["symbol"],
             side="buy" if signal["signal"] == "bullish" else "sell",
-            quantity=size
+            quantity=size,
         )
         self.risk.track(order)
         logging.info(f"Trade executed: {order}")

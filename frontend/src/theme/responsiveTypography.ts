@@ -278,4 +278,4 @@ export const componentSizes = {
 export const getResponsiveValue = (
     breakpoint: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     values: Record<string, any>
-) => values[breakpoint] || values.md; 
+) => values[breakpoint] || values.md;

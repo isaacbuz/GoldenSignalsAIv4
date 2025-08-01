@@ -21,12 +21,12 @@ import {
 
 /**
  * TopBar Component
- * 
+ *
  * Demonstrates maximum component reuse:
  * - Uses existing SymbolSearchBar (368 lines)
  * - Uses existing CommandPalette (573 lines)
  * - Uses existing Button component
- * 
+ *
  * Total reused: ~950 lines
  * New code: ~150 lines
  * Efficiency: 86% reuse
@@ -106,4 +106,4 @@ export const TopBar: React.FC = () => {
             </Toolbar>
         </AppBar>
     );
-}; 
+};

@@ -1,6 +1,6 @@
 /**
  * RiskMonitor Component - Real-time Risk Management Display
- * 
+ *
  * Shows current risk exposure, position limits, and risk metrics
  */
 
@@ -205,4 +205,4 @@ const RiskMonitor: React.FC<RiskMonitorProps> = ({ metrics, activeSignals = [] }
     );
 };
 
-export default RiskMonitor; 
+export default RiskMonitor;

@@ -19,70 +19,70 @@ jobs:
   build-test:
     name: Build and Test
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-        
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        
+
     - name: Install backend dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
-        
+
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: npm ci
-      
+
     - name: Run backend tests
       run: pytest tests/ -v
-      
+
     - name: Run frontend tests
       working-directory: ./frontend
       run: npm test
-      
+
     - name: Build frontend
       working-directory: ./frontend
       run: npm run build
-      
+
   # Build Docker Images
   build-docker:
     name: Build Docker Images
     runs-on: ubuntu-latest
     needs: build-test
-    
+
     outputs:
       backend-image: ${{ steps.meta-backend.outputs.tags }}
       frontend-image: ${{ steps.meta-frontend.outputs.tags }}
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        
+
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Extract metadata (backend)
       id: meta-backend
       uses: docker/metadata-action@v5
@@ -96,7 +96,7 @@ jobs:
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
           type=sha
-          
+
     - name: Build and push backend
       uses: docker/build-push-action@v5
       with:
@@ -107,7 +107,7 @@ jobs:
         labels: ${{ steps.meta-backend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        
+
     - name: Extract metadata (frontend)
       id: meta-frontend
       uses: docker/metadata-action@v5
@@ -121,7 +121,7 @@ jobs:
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
           type=sha
-          
+
     - name: Build and push frontend
       uses: docker/build-push-action@v5
       with:
@@ -132,71 +132,71 @@ jobs:
         labels: ${{ steps.meta-frontend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        
+
   # Deploy to Production
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build-docker
     environment: production
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-        
+
     - name: Update ECS service
       run: |
         # Update task definition with new image
         aws ecs describe-task-definition --task-definition goldensignals-backend \
           --query taskDefinition > task-def-backend.json
-          
+
         echo $(cat task-def-backend.json | jq '.containerDefinitions[0].image = "${{ needs.build-docker.outputs.backend-image }}"') > task-def-backend.json
-        
+
         aws ecs register-task-definition --cli-input-json file://task-def-backend.json
-        
+
         # Update service
         aws ecs update-service \
           --cluster goldensignals-prod \
           --service goldensignals-backend \
           --task-definition goldensignals-backend
-          
+
     - name: Deploy frontend to CloudFront
       run: |
         # Sync frontend build to S3
         aws s3 sync ./frontend/build s3://${{ secrets.FRONTEND_BUCKET }} --delete
-        
+
         # Invalidate CloudFront cache
         aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
           --paths "/*"
-          
+
     - name: Run smoke tests
       run: |
         # Wait for deployment to stabilize
         sleep 60
-        
+
         # Run smoke tests
         npm install -g newman
         newman run tests/postman/production-smoke-tests.json \
           --environment tests/postman/production-env.json
-          
+
   # Create Release Notes
   release-notes:
     name: Generate Release Notes
     runs-on: ubuntu-latest
     needs: deploy-production
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        
+
     - name: Generate changelog
       uses: orhun/git-cliff-action@v3
       with:
@@ -204,19 +204,19 @@ jobs:
         args: --latest --strip header
       env:
         OUTPUT: CHANGELOG.md
-        
+
     - name: Update release
       uses: softprops/action-gh-release@v2
       with:
         body_path: CHANGELOG.md
-        
+
   # Notify
   notify-release:
     name: Notify Release
     runs-on: ubuntu-latest
     needs: [deploy-production, release-notes]
     if: always()
-    
+
     steps:
     - name: Send Slack notification
       uses: 8398a7/action-slack@v3
@@ -227,7 +227,7 @@ jobs:
           Status: ${{ job.status }}
           Release Notes: ${{ github.event.release.html_url }}
         webhook_url: ${{ secrets.SLACK_WEBHOOK }}
-        
+
     - name: Send email notification
       uses: dawidd6/action-send-mail@v3
       with:
@@ -240,8 +240,8 @@ jobs:
         from: GoldenSignals CI/CD
         body: |
           A new version of GoldenSignals has been released to production.
-          
+
           Version: ${{ github.event.release.tag_name || github.event.inputs.version }}
           Status: ${{ job.status }}
-          
-          View release notes: ${{ github.event.release.html_url }} 
+
+          View release notes: ${{ github.event.release.html_url }}

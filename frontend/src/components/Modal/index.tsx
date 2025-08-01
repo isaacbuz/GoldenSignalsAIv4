@@ -7,4 +7,4 @@ export type {
     ModalProps,
     ConfirmModalProps,
     AlertModalProps
-} from './Modal'; 
+} from './Modal';

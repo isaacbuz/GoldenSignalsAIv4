@@ -7,7 +7,7 @@ class StrategySelector:
         self.regime_map = regime_map or {
             "bull": "breakout_agent",
             "bear": "reversal_agent",
-            "sideways": "mean_reversion_agent"
+            "sideways": "mean_reversion_agent",
         }
 
     def predict(self, regime_features: Dict[str, Any]) -> str:

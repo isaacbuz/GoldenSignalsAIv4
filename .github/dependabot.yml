@@ -27,7 +27,7 @@ updates:
           - "pydantic*"
           - "sqlalchemy*"
           - "redis*"
-    
+
   # Frontend dependencies
   - package-ecosystem: "npm"
     directory: "/frontend"
@@ -60,7 +60,7 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-        
+
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -73,7 +73,7 @@ updates:
     labels:
       - "dependencies"
       - "ci/cd"
-      
+
   # Docker dependencies
   - package-ecosystem: "docker"
     directory: "/"
@@ -85,4 +85,4 @@ updates:
       - "isaacbuz"
     labels:
       - "dependencies"
-      - "docker" 
+      - "docker"

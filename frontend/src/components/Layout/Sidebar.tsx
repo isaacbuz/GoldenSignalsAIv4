@@ -35,18 +35,18 @@ interface SidebarProps {
 
 /**
  * Sidebar Component - Navigation for SIGNALS app
- * 
+ *
  * Updated to reflect signals-only focus:
  * - No trading/portfolio references
  * - Focus on signals, analytics, research
  * - Educational content emphasis
- * 
+ *
  * Reuses:
  * - MetricCard (49 lines) x3 = 147 lines of functionality
  * - CommandPalette (573 lines) - accessed via keyboard shortcut
  * - Button component
  * - Heroicons
- * 
+ *
  * Total reused: ~720 lines
  * New code: ~200 lines
  */
@@ -164,4 +164,4 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </List>
         </Box>
     );
-}; 
+};

@@ -76,11 +76,7 @@ class TechnicalIndicators:
         Returns:
             pd.Series: MACD line values.
         """
-        logger.debug(
-            {
-                "message": f"Computing MACD with fast={fast}, slow={slow}, signal={signal}"
-            }
-        )
+        logger.debug({"message": f"Computing MACD with fast={fast}, slow={slow}, signal={signal}"})
         try:
             ema_fast = prices.ewm(span=fast, adjust=False).mean()
             ema_slow = prices.ewm(span=slow, adjust=False).mean()
@@ -94,37 +90,37 @@ class TechnicalIndicators:
         """Detect the current market regime based on price action and volatility."""
         try:
             # Calculate volatility
-            returns = self.stock_data['close'].pct_change()
+            returns = self.stock_data["close"].pct_change()
             volatility = returns.std() * np.sqrt(252)  # Annualized volatility
-            
+
             # Calculate trend strength using ADX
-            high = self.stock_data['high']
-            low = self.stock_data['low']
-            close = self.stock_data['close']
-            
+            high = self.stock_data["high"]
+            low = self.stock_data["low"]
+            close = self.stock_data["close"]
+
             # Calculate +DM and -DM
             plus_dm = high.diff()
             minus_dm = low.diff()
-            
+
             # Calculate TR (True Range)
             tr1 = high - low
             tr2 = abs(high - close.shift())
             tr3 = abs(low - close.shift())
             tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
-            
+
             # Calculate ATR
             atr = tr.rolling(window=14).mean()
-            
+
             # Trend strength
             trend_strength = atr.iloc[-1] / close.iloc[-1]
-            
+
             if volatility > 0.25:  # High volatility threshold
                 return "volatile"
             elif trend_strength > 0.02:  # Strong trend threshold
                 return "trending"
             else:
                 return "mean_reverting"
-                
+
         except Exception as e:
             logger.error(f"Failed to detect market regime: {str(e)}")
             return "unknown"
@@ -134,16 +130,16 @@ class TechnicalIndicators:
         try:
             regime = self.detect_market_regime()
             signals = {}
-            
+
             for indicator in indicators:
                 if indicator == "RSI":
-                    rsi = self.compute_rsi(self.stock_data['close'])
+                    rsi = self.compute_rsi(self.stock_data["close"])
                     signal = -1 if rsi.iloc[-1] > 70 else 1 if rsi.iloc[-1] < 30 else 0
                 elif indicator == "MACD":
-                    macd_line = self.compute_macd(self.stock_data['close'])
-                    signal_line = self.compute_macd(self.stock_data['close'], 12, 26, 9)
+                    macd_line = self.compute_macd(self.stock_data["close"])
+                    signal_line = self.compute_macd(self.stock_data["close"], 12, 26, 9)
                     signal = 1 if macd_line.iloc[-1] > signal_line.iloc[-1] else -1
-                
+
                 # Adjust signal based on regime
                 if regime == "trending":
                     signals[indicator] = signal * 1.2  # Amplify in trending markets
@@ -151,9 +147,9 @@ class TechnicalIndicators:
                     signals[indicator] = signal * 1.5  # Amplify in mean-reverting markets
                 else:  # volatile
                     signals[indicator] = signal * 0.8  # Reduce in volatile markets
-            
+
             return signals
-            
+
         except Exception as e:
             logger.error(f"Failed to compute regime-adjusted signals: {str(e)}")
             return {}

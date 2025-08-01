@@ -38,19 +38,19 @@ async def receive_frontend_logs(request: Request):
     """Receive and store frontend logs"""
     try:
         data = await request.json()
-        
+
         # Add server timestamp
         log_entry = {
             **data,
             "server_timestamp": datetime.now().isoformat(),
             "client_ip": request.client.host
         }
-        
+
         # Write to daily log file
         log_file = logs_dir / f"frontend-{datetime.now().strftime('%Y-%m-%d')}.log"
         with open(log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
-        
+
         return {
             "status": "success",
             "message": "Log received",
@@ -96,7 +96,7 @@ async def websocket_endpoint(websocket: WebSocket):
             "status": "connected",
             "message": "Connected to signals WebSocket"
         }))
-        
+
         while True:
             data = await websocket.receive_text()
             # Echo back or process
@@ -110,4 +110,4 @@ if __name__ == "__main__":
     print("📍 API endpoints:")
     print("   - POST http://localhost:8001/api/logs/frontend")
     print("   - WS   ws://localhost:8001/ws/signals")
-    uvicorn.run(app, host="0.0.0.0", port=8001) 
+    uvicorn.run(app, host="0.0.0.0", port=8001)

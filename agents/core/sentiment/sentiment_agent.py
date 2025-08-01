@@ -1,10 +1,12 @@
 """
 Sentiment analysis agent using NLTK for basic sentiment analysis.
 """
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
 from agents.base.base_agent import BaseAgent
+from nltk.sentiment import SentimentIntensityAnalyzer
+
 
 class SentimentAgent(BaseAgent):
     def __init__(self, name: str = "Sentiment"):
@@ -14,16 +16,16 @@ class SentimentAgent(BaseAgent):
         except LookupError:
             nltk.download('vader_lexicon')
         self.analyzer = SentimentIntensityAnalyzer()
-        
+
     def analyze_text(self, text: str) -> Dict[str, float]:
         """Analyze sentiment of a single text"""
         return self.analyzer.polarity_scores(text)
-        
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process news/social media data and generate sentiment signals"""
         if "texts" not in data:
             raise ValueError("No text data found in input")
-            
+
         texts = data["texts"]
         if not texts:
             return {
@@ -31,14 +33,14 @@ class SentimentAgent(BaseAgent):
                 "confidence": 0.0,
                 "metadata": {"error": "No texts to analyze"}
             }
-            
+
         # Analyze each text
         sentiments = [self.analyze_text(text) for text in texts]
-        
+
         # Calculate aggregate sentiment
         compound_scores = [s['compound'] for s in sentiments]
         avg_sentiment = sum(compound_scores) / len(compound_scores)
-        
+
         # Convert sentiment to trading signal
         if avg_sentiment > 0.2:
             action = "buy"
@@ -49,7 +51,7 @@ class SentimentAgent(BaseAgent):
         else:
             action = "hold"
             confidence = 0.0
-            
+
         return {
             "action": action,
             "confidence": confidence,
@@ -62,4 +64,4 @@ class SentimentAgent(BaseAgent):
                 },
                 "analyzed_texts": len(texts)
             }
-        } 
+        }

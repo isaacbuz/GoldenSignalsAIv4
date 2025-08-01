@@ -311,10 +311,10 @@ for phase_key, phase_data in roadmap.items():
     print(f"   Duration: {phase_data['duration']}")
     print(f"   Issues: {len(phase_data['issues'])}")
     print(f"   Week(s): {week} - {week + int(phase_data['duration'].split()[0]) - 1}")
-    
+
     for issue in phase_data['issues']:
         print(f"     #{issue['number']}: {issue['title'][:50]}...")
-    
+
     timeline.append({
         "phase": phase_key,
         "name": phase_data["name"],
@@ -322,7 +322,7 @@ for phase_key, phase_data in roadmap.items():
         "end_week": week + int(phase_data['duration'].split()[0]) - 1,
         "issues": phase_data["issues"]
     })
-    
+
     week += int(phase_data['duration'].split()[0])
 
 # Save roadmap to JSON

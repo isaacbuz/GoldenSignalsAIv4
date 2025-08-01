@@ -182,4 +182,4 @@ const QuickStats: React.FC<QuickStatsProps> = ({ signals }) => {
     );
 };
 
-export default QuickStats; 
+export default QuickStats;

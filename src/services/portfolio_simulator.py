@@ -25,11 +25,11 @@ class PortfolioSimulator:
             return {}
 
         returns = self.portfolio_history.pct_change().dropna()
-        sharpe = returns.mean() / returns.std() * (252 ** 0.5)
+        sharpe = returns.mean() / returns.std() * (252**0.5)
         max_dd = (self.portfolio_history / self.portfolio_history.cummax() - 1).min()
 
         return {
             "sharpe_ratio": round(sharpe, 2),
             "max_drawdown": round(max_dd, 2),
-            "final_return": round(self.portfolio_history.iloc[-1] - 1, 2)
+            "final_return": round(self.portfolio_history.iloc[-1] - 1, 2),
         }

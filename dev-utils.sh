@@ -32,7 +32,7 @@ log_error() {
 # Check if required tools are installed
 check_dependencies() {
     log_info "Checking dependencies..."
-    
+
     # Check Python
     if command -v python3 &> /dev/null; then
         log_success "Python3 is installed"
@@ -40,7 +40,7 @@ check_dependencies() {
         log_error "Python3 is required but not installed"
         exit 1
     fi
-    
+
     # Check Node.js
     if command -v node &> /dev/null; then
         log_success "Node.js is installed"
@@ -48,7 +48,7 @@ check_dependencies() {
         log_error "Node.js is required but not installed"
         exit 1
     fi
-    
+
     # Check npm
     if command -v npm &> /dev/null; then
         log_success "npm is installed"
@@ -56,7 +56,7 @@ check_dependencies() {
         log_error "npm is required but not installed"
         exit 1
     fi
-    
+
     # Check if virtual environment exists
     if [ -d "venv" ]; then
         log_success "Python virtual environment exists"
@@ -71,20 +71,20 @@ check_dependencies() {
 # Setup the project
 setup() {
     log_info "Setting up GoldenSignalsAI V3..."
-    
+
     check_dependencies
-    
+
     # Activate virtual environment and install Python dependencies
     log_info "Installing Python dependencies..."
     source venv/bin/activate
     pip install -r requirements.txt 2>/dev/null || log_warning "requirements.txt not found, skipping Python deps"
-    
+
     # Install Node.js dependencies
     log_info "Installing Node.js dependencies..."
     cd frontend
     npm install
     cd ..
-    
+
     log_success "Setup complete!"
 }
 
@@ -92,7 +92,7 @@ setup() {
 kill_port() {
     local port=$1
     log_info "Killing processes on port $port..."
-    
+
     if lsof -ti:$port > /dev/null 2>&1; then
         lsof -ti:$port | xargs kill -9
         log_success "Killed processes on port $port"
@@ -104,38 +104,38 @@ kill_port() {
 # Clean development environment
 clean() {
     log_info "Cleaning development environment..."
-    
+
     # Kill development servers
     kill_port 8000
     kill_port 3000
-    
+
     # Clean Python cache
     find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
     find . -type f -name "*.pyc" -delete 2>/dev/null || true
-    
+
     # Clean Node.js cache
     if [ -d "frontend/node_modules/.cache" ]; then
         rm -rf frontend/node_modules/.cache
         log_success "Cleared Vite cache"
     fi
-    
+
     log_success "Environment cleaned!"
 }
 
 # Start backend server
 start_backend() {
     log_info "Starting backend server..."
-    
+
     # Check if virtual environment is activated
     if [[ "$VIRTUAL_ENV" == "" ]]; then
         source venv/bin/activate
     fi
-    
+
     cd src
     python main_simple.py &
     BACKEND_PID=$!
     cd ..
-    
+
     # Wait a moment and check if server started
     sleep 3
     if curl -s http://localhost:8000/health > /dev/null; then
@@ -150,12 +150,12 @@ start_backend() {
 # Start frontend server
 start_frontend() {
     log_info "Starting frontend server..."
-    
+
     cd frontend
     npx vite --port 3000 &
     FRONTEND_PID=$!
     cd ..
-    
+
     # Wait a moment and check if server started
     sleep 3
     if curl -s http://localhost:3000 > /dev/null; then
@@ -170,17 +170,17 @@ start_frontend() {
 # Start both servers
 start_all() {
     log_info "Starting all services..."
-    
+
     # Clean any existing processes
     kill_port 8000
     kill_port 3000
-    
+
     # Start backend
     start_backend
-    
+
     # Start frontend
     start_frontend
-    
+
     log_success "All services started!"
     log_info "Backend: http://localhost:8000"
     log_info "Frontend: http://localhost:3000"
@@ -190,24 +190,24 @@ start_all() {
 # Stop all services
 stop_all() {
     log_info "Stopping all services..."
-    
+
     # Kill using saved PIDs if available
     if [ -f ".backend.pid" ]; then
         BACKEND_PID=$(cat .backend.pid)
         kill $BACKEND_PID 2>/dev/null || true
         rm .backend.pid
     fi
-    
+
     if [ -f ".frontend.pid" ]; then
         FRONTEND_PID=$(cat .frontend.pid)
         kill $FRONTEND_PID 2>/dev/null || true
         rm .frontend.pid
     fi
-    
+
     # Fallback to port killing
     kill_port 8000
     kill_port 3000
-    
+
     log_success "All services stopped!"
 }
 
@@ -215,14 +215,14 @@ stop_all() {
 status() {
     echo "🔍 GoldenSignalsAI V3 Status"
     echo "============================"
-    
+
     # Check backend
     if curl -s http://localhost:8000/health > /dev/null; then
         log_success "Backend: Running on port 8000"
     else
         log_error "Backend: Not running"
     fi
-    
+
     # Check frontend
     if curl -s http://localhost:3000 > /dev/null; then
         log_success "Frontend: Running on port 3000"
@@ -234,7 +234,7 @@ status() {
 # Show logs
 logs() {
     local service=$1
-    
+
     if [ "$service" = "backend" ] && [ -f ".backend.pid" ]; then
         BACKEND_PID=$(cat .backend.pid)
         tail -f /proc/$BACKEND_PID/fd/1 2>/dev/null || log_error "Backend logs not available"
@@ -249,16 +249,16 @@ logs() {
 # Test API endpoints
 test_api() {
     log_info "Testing API endpoints..."
-    
+
     if ! curl -s http://localhost:8000/health > /dev/null; then
         log_error "Backend is not running"
         exit 1
     fi
-    
+
     # Test health endpoint
     HEALTH=$(curl -s http://localhost:8000/health | jq -r '.status // "unknown"')
     log_success "Health: $HEALTH"
-    
+
     # Test signals endpoint
     if curl -s http://localhost:8000/api/v1/signals/AAPL > /dev/null; then
         SIGNAL=$(curl -s http://localhost:8000/api/v1/signals/AAPL | jq -r '.signal // "N/A"')
@@ -266,7 +266,7 @@ test_api() {
     else
         log_error "Signals API failed"
     fi
-    
+
     # Test agents endpoint
     if curl -s http://localhost:8000/api/v1/agents/performance > /dev/null; then
         AGENTS=$(curl -s http://localhost:8000/api/v1/agents/performance | jq '.agents | length')
@@ -333,4 +333,4 @@ case "${1:-help}" in
         echo "  ./dev-utils.sh status    # Check status"
         echo "  ./dev-utils.sh logs backend  # View backend logs"
         ;;
-esac 
+esac

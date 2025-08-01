@@ -17,7 +17,7 @@ data:
       allowUiUpdates: true
       options:
         path: /var/lib/grafana/dashboards
-  
+
   service-overview.json: |
     {
       "dashboard": {
@@ -71,7 +71,7 @@ data:
         ]
       }
     }
-  
+
   mcp-servers.json: |
     {
       "dashboard": {
@@ -144,7 +144,7 @@ data:
         ]
       }
     }
-  
+
   business-metrics.json: |
     {
       "dashboard": {
@@ -209,7 +209,7 @@ data:
         ]
       }
     }
-  
+
   infrastructure.json: |
     {
       "dashboard": {
@@ -282,7 +282,7 @@ data:
         ]
       }
     }
-  
+
   alerts.json: |
     {
       "dashboard": {
@@ -314,4 +314,4 @@ data:
           }
         ]
       }
-    } 
+    }

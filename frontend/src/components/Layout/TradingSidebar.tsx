@@ -300,4 +300,4 @@ export const TradingSidebar: React.FC<SidebarProps> = ({
             )}
         </Box>
     );
-}; 
+};

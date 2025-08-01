@@ -190,4 +190,4 @@ const DesignSwitcher: React.FC = () => {
     );
 };
 
-export default DesignSwitcher; 
+export default DesignSwitcher;

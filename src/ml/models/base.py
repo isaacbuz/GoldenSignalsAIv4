@@ -16,15 +16,13 @@ class BaseModel(Base):
     """
     Base model class with common fields and methods
     """
+
     __abstract__ = True
-    
+
     def to_dict(self):
         """Convert model instance to dictionary"""
-        return {
-            column.name: getattr(self, column.name)
-            for column in self.__table__.columns
-        }
-    
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
     def update_from_dict(self, data: dict):
         """Update model instance from dictionary"""
         for key, value in data.items():
@@ -33,4 +31,4 @@ class BaseModel(Base):
 
 
 # Export Base for use in other models
-__all__ = ["BaseModel", "Base"] 
+__all__ = ["BaseModel", "Base"]

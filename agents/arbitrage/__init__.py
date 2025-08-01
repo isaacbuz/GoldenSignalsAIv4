@@ -2,10 +2,10 @@
 Arbitrage agents for cross-exchange and statistical arbitrage.
 """
 
-from .base import BaseArbitrageAgent, ArbitrageOpportunity
+from .base import ArbitrageOpportunity, BaseArbitrageAgent
 from .cross_exchange import CrossExchangeArbitrageAgent
-from .statistical import StatisticalArbitrageAgent
 from .execution import ArbitrageExecutor
+from .statistical import StatisticalArbitrageAgent
 
 __all__ = [
     'BaseArbitrageAgent',
@@ -13,4 +13,4 @@ __all__ = [
     'CrossExchangeArbitrageAgent',
     'StatisticalArbitrageAgent',
     'ArbitrageExecutor'
-] 
+]

@@ -97,16 +97,16 @@ async def run_backtest_async(backtest_id: str, request: BacktestRequest):
     """Run backtest in background"""
     try:
         running_backtests[backtest_id] = {"status": "running", "progress": 0.1}
-        
+
         # Set date range
         if not request.start_date:
             request.start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
         if not request.end_date:
             request.end_date = datetime.now().strftime('%Y-%m-%d')
-        
+
         # Update progress
         running_backtests[backtest_id]["progress"] = 0.2
-        
+
         # Run appropriate backtest based on strategy type
         if request.strategy_type == "ml_ensemble":
             results = await ml_engine.run_comprehensive_backtest(
@@ -143,14 +143,14 @@ async def run_backtest_async(backtest_id: str, request: BacktestRequest):
                     position_size=0.1
                 )
                 technical_results[symbol] = result
-            
+
             # Merge results
             results = {
                 "ml_results": ml_results,
                 "technical_results": technical_results,
                 "combined_metrics": calculate_combined_metrics(ml_results, technical_results)
             }
-        
+
         # Store results
         backtest_cache[backtest_id] = {
             "id": backtest_id,
@@ -159,9 +159,9 @@ async def run_backtest_async(backtest_id: str, request: BacktestRequest):
             "request": request.dict(),
             "results": results
         }
-        
+
         running_backtests[backtest_id] = {"status": "completed", "progress": 1.0}
-        
+
     except Exception as e:
         logger.error(f"Backtest failed: {str(e)}")
         running_backtests[backtest_id] = {
@@ -185,31 +185,31 @@ def calculate_combined_metrics(ml_results: Dict, technical_results: Dict) -> Dic
         "best_strategy": None,
         "recommendations": []
     }
-    
+
     # Calculate averages
     ml_sharpes = []
     tech_sharpes = []
-    
+
     for symbol, data in ml_results.items():
         if 'backtest_metrics' in data:
             ml_sharpes.append(data['backtest_metrics']['sharpe_ratio'])
-    
+
     for symbol, data in technical_results.items():
         if 'metrics' in data:
             tech_sharpes.append(data['metrics']['sharpe_ratio'])
-    
+
     ml_avg_sharpe = np.mean(ml_sharpes) if ml_sharpes else 0
     tech_avg_sharpe = np.mean(tech_sharpes) if tech_sharpes else 0
-    
+
     combined['average_sharpe_ratio'] = (ml_avg_sharpe + tech_avg_sharpe) / 2
     combined['best_strategy'] = "ml_ensemble" if ml_avg_sharpe > tech_avg_sharpe else "technical"
-    
+
     # Add recommendations
     if ml_avg_sharpe > 1.5:
         combined['recommendations'].append("ML models showing strong performance - consider increasing position sizes")
     if tech_avg_sharpe > 1.5:
         combined['recommendations'].append("Technical indicators performing well - maintain current strategy")
-    
+
     return combined
 
 
@@ -220,10 +220,10 @@ async def run_backtest(request: BacktestRequest, background_tasks: BackgroundTas
     """
     # Generate unique backtest ID
     backtest_id = f"backtest_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hash(str(request.symbols))}"
-    
+
     # Start backtest in background
     background_tasks.add_task(run_backtest_async, backtest_id, request)
-    
+
     return BacktestResponse(
         backtest_id=backtest_id,
         status="started",
@@ -238,7 +238,7 @@ async def get_backtest_results(backtest_id: str):
     """
     if backtest_id in running_backtests:
         status_info = running_backtests[backtest_id]
-        
+
         if status_info["status"] == "completed" and backtest_id in backtest_cache:
             return BacktestResponse(
                 backtest_id=backtest_id,
@@ -259,7 +259,7 @@ async def get_backtest_results(backtest_id: str):
                 status=status_info["status"],
                 progress=status_info.get("progress", 0)
             )
-    
+
     raise HTTPException(status_code=404, detail="Backtest not found")
 
 
@@ -272,23 +272,23 @@ async def validate_signal(request: SignalValidationRequest):
         # Fetch historical data for the symbol
         end_date = datetime.now()
         start_date = end_date - timedelta(days=90)  # Last 90 days
-        
+
         df = ml_engine.fetch_historical_data(
             request.symbol,
             start_date.strftime('%Y-%m-%d'),
             end_date.strftime('%Y-%m-%d')
         )
-        
+
         if df.empty:
             raise HTTPException(status_code=404, detail=f"No data available for {request.symbol}")
-        
+
         # Engineer features
         df = ml_engine.engineer_features(df)
-        
+
         # Simple validation based on recent performance
         recent_returns = df['returns'].tail(20)
         volatility = recent_returns.std() * np.sqrt(252)
-        
+
         # Calculate expected return based on action and confidence
         if request.action == "BUY":
             expected_return = request.confidence * recent_returns.mean() * 252
@@ -296,21 +296,21 @@ async def validate_signal(request: SignalValidationRequest):
             expected_return = -request.confidence * recent_returns.mean() * 252
         else:  # HOLD
             expected_return = 0
-        
+
         # Risk-adjusted validation
         risk_adjusted_score = expected_return / volatility if volatility > 0 else 0
-        
+
         # Historical win rate for similar conditions
         similar_signals = df[df['rsi'].between(
             df['rsi'].iloc[-1] - 5,
             df['rsi'].iloc[-1] + 5
         )]
-        
+
         if len(similar_signals) > 10:
             historical_win_rate = (similar_signals['target'] == 1).mean()
         else:
             historical_win_rate = 0.5  # Default if not enough data
-        
+
         return {
             "symbol": request.symbol,
             "action": request.action,
@@ -324,7 +324,7 @@ async def validate_signal(request: SignalValidationRequest):
                 "confidence_level": "HIGH" if request.confidence > 0.8 and historical_win_rate > 0.6 else "MEDIUM" if request.confidence > 0.6 else "LOW"
             }
         }
-        
+
     except Exception as e:
         logger.error(f"Signal validation error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -337,14 +337,14 @@ async def improve_signals(request: SignalImprovementRequest):
     """
     try:
         improvements = await accuracy_improver.improve_signals(request.symbols)
-        
+
         # Filter recommendations based on accuracy threshold
         filtered_features = [
-            (feature, importance) 
+            (feature, importance)
             for feature, importance in improvements['recommended_features']
             if importance > request.min_accuracy_threshold
         ]
-        
+
         return {
             "symbols": request.symbols,
             "improvements": {
@@ -366,7 +366,7 @@ async def improve_signals(request: SignalImprovementRequest):
                 "5. Monitor performance and adjust"
             ]
         }
-        
+
     except Exception as e:
         logger.error(f"Signal improvement error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -383,7 +383,7 @@ async def get_backtest_history(limit: int = 10):
         key=lambda x: x.get('timestamp', ''),
         reverse=True
     )[:limit]
-    
+
     return {
         "count": len(backtest_cache),
         "backtests": sorted_backtests
@@ -397,22 +397,22 @@ async def get_performance_metrics():
     """
     # Calculate aggregate metrics from recent backtests
     recent_backtests = list(backtest_cache.values())[-5:]  # Last 5 backtests
-    
+
     if not recent_backtests:
         return {
             "message": "No backtests available",
             "metrics": {}
         }
-    
+
     # Aggregate metrics
     all_sharpe_ratios = []
     all_returns = []
     all_drawdowns = []
-    
+
     for backtest in recent_backtests:
         if backtest.get('status') == 'completed' and 'results' in backtest:
             results = backtest['results']
-            
+
             # Handle different result formats
             if isinstance(results, dict):
                 for symbol, data in results.items():
@@ -421,7 +421,7 @@ async def get_performance_metrics():
                         all_sharpe_ratios.append(metrics.get('sharpe_ratio', 0))
                         all_returns.append(metrics.get('annual_return', 0))
                         all_drawdowns.append(abs(metrics.get('max_drawdown', 0)))
-    
+
     return {
         "aggregate_metrics": {
             "average_sharpe_ratio": np.mean(all_sharpe_ratios) if all_sharpe_ratios else 0,
@@ -445,8 +445,8 @@ async def get_performance_metrics():
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     print("🚀 Starting ML Backtesting API on port 8001")
     print("📊 Access API docs at http://localhost:8001/docs")
-    
-    uvicorn.run(app, host="0.0.0.0", port=8001) 
+
+    uvicorn.run(app, host="0.0.0.0", port=8001)

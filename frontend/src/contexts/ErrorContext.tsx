@@ -76,4 +76,4 @@ export const useError = (): ErrorContextType => {
   return context;
 };
 
-export default ErrorContext; 
+export default ErrorContext;

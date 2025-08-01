@@ -32,4 +32,4 @@ class SignalGatekeeper:
             return "confidence_below_threshold"
         if signal.risk_score is not None and signal.risk_score > self.max_risk_score:
             return "risk_score_too_high"
-        return None 
+        return None

@@ -15,31 +15,31 @@ if curl -s http://localhost:8000/health > /dev/null; then
     echo "✅ Backend is running"
     BACKEND_STATUS=$(curl -s http://localhost:8000/health | jq -r '.status // "unknown"')
     echo "   Status: $BACKEND_STATUS"
-    
+
     # Test API endpoints
     echo "   Testing API endpoints..."
-    
+
     # Test signals endpoint
     if curl -s http://localhost:8000/api/v1/signals/AAPL > /dev/null; then
         echo "   ✅ Signals API working"
     else
         echo "   ❌ Signals API failed"
     fi
-    
+
     # Test market data endpoint
     if curl -s http://localhost:8000/api/v1/market-data/AAPL > /dev/null; then
         echo "   ✅ Market Data API working"
     else
         echo "   ❌ Market Data API failed"
     fi
-    
+
     # Test agent performance endpoint
     if curl -s http://localhost:8000/api/v1/agents/performance > /dev/null; then
         echo "   ✅ Agent Performance API working"
     else
         echo "   ❌ Agent Performance API failed"
     fi
-    
+
 else
     echo "❌ Backend is not running"
     echo "   To start: cd src && python main_simple.py"
@@ -75,8 +75,8 @@ fi
 
 echo ""
 echo "🎯 Quick Start Commands:"
-echo "========================" 
+echo "========================"
 echo "Backend:  cd src && python main_simple.py &"
 echo "Frontend: cd frontend && npm run dev &"
 echo "Status:   ./check_status.sh"
-echo "" 
+echo ""

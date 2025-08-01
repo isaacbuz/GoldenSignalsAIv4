@@ -1,8 +1,9 @@
-import requests
-from textblob import TextBlob
-from typing import List, Dict, Any
 import logging
+from typing import Any, Dict, List
+
+import requests
 from agents.base import BaseAgent
+from textblob import TextBlob
 
 logger = logging.getLogger(__name__)
 

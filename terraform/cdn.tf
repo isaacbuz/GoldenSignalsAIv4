@@ -113,4 +113,4 @@ resource "azurerm_cdn_endpoint" "frontend" {
   content_types_to_compress          = ["text/plain", "text/html", "text/css", "text/javascript", "application/x-javascript", "application/javascript", "application/json", "application/xml"]
   querystring_caching_behaviour      = "IgnoreQueryString"
   response_timeout_seconds           = 30
-} 
+}

@@ -48,4 +48,4 @@ export const useAppStore = () => {
     };
 
     return { settings, updateSettings };
-}; 
+};

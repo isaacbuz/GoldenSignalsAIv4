@@ -73,33 +73,33 @@ data:
       gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
       gzip_min_length 1000;
       gzip_proxied any;
-      
+
       client_max_body_size 100M;
       client_body_buffer_size 128k;
-      
+
       proxy_buffer_size 128k;
       proxy_buffers 4 256k;
       proxy_busy_buffers_size 256k;
-      
+
       fastcgi_buffers 16 16k;
       fastcgi_buffer_size 32k;
-      
+
       # Browser cache - static files
       location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff|woff2)$ {
         expires 7d;
         add_header Cache-Control "public, no-transform";
       }
-      
+
       # Security headers
       add_header X-Content-Type-Options "nosniff" always;
       add_header X-Frame-Options "SAMEORIGIN" always;
       add_header X-XSS-Protection "1; mode=block" always;
       add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
       add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;" always;
-      
+
       # Enable HTTP/2
       listen 443 ssl http2;
-      
+
       # OCSP Stapling
       ssl_stapling on;
       ssl_stapling_verify on;
@@ -263,4 +263,4 @@ echo "Application Gateway WAF: https://portal.azure.com/#resource/subscriptions/
 echo "CDN Analytics: https://portal.azure.com/#resource/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Cdn/profiles/$CDN_PROFILE/endpoints/$CDN_ENDPOINT/analytics"
 echo "Grafana: https://dashboard.goldensignals.ai/grafana"
 echo "Prometheus: https://dashboard.goldensignals.ai/prometheus"
-echo "Alert Manager: https://dashboard.goldensignals.ai/alertmanager" 
+echo "Alert Manager: https://dashboard.goldensignals.ai/alertmanager"

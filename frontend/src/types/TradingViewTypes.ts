@@ -279,4 +279,4 @@ declare global {
             version: () => string;
         };
     }
-} 
+}

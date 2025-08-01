@@ -9,4 +9,4 @@ flake8>=3.9.0  # Code linting
 mypy>=0.910  # Type checking
 coverage>=6.2  # Coverage reporting
 hypothesis>=6.75.3  # Property-based testing
-psutil>=5.8.0  # System and process monitoring 
+psutil>=5.8.0  # System and process monitoring

@@ -199,4 +199,4 @@ export const TradingTopBar: React.FC<TradingTopBarProps> = ({ onAIChatOpen }) =>
             </Stack>
         </Box>
     );
-}; 
+};

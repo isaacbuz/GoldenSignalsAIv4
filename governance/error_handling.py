@@ -12,16 +12,16 @@ class ErrorSeverity(Enum):
 
 class ApplicationError(Exception):
     """Base application-specific error with enhanced metadata."""
-    
+
     def __init__(
-        self, 
-        message: str, 
+        self,
+        message: str,
         severity: ErrorSeverity = ErrorSeverity.MEDIUM,
         context: Optional[Dict[str, Any]] = None
     ):
         """
         Initialize an application-specific error.
-        
+
         Args:
             message (str): Error description
             severity (ErrorSeverity): Error severity level
@@ -31,7 +31,7 @@ class ApplicationError(Exception):
         self.severity = severity
         self.context = context or {}
         self.trace = traceback.format_exc()
-        
+
         # Log the error
         logger = logging.getLogger('application_errors')
         log_method = {
@@ -40,7 +40,7 @@ class ApplicationError(Exception):
             ErrorSeverity.HIGH: logger.error,
             ErrorSeverity.CRITICAL: logger.critical
         }.get(severity, logger.error)
-        
+
         log_method({
             'message': message,
             'severity': severity.name,
@@ -50,19 +50,19 @@ class ApplicationError(Exception):
 
 class ErrorHandler:
     """Centralized error management and recovery strategies."""
-    
+
     @staticmethod
     def handle_error(
-        error: Exception, 
+        error: Exception,
         recovery_strategy: Optional[callable] = None
     ) -> Dict[str, Any]:
         """
         Handle and potentially recover from an error.
-        
+
         Args:
             error (Exception): The error to handle
             recovery_strategy (callable, optional): Function to attempt recovery
-        
+
         Returns:
             Dict[str, Any]: Error report and recovery status
         """
@@ -70,14 +70,14 @@ class ErrorHandler:
             severity = error.severity
         else:
             severity = ErrorSeverity.MEDIUM
-        
+
         error_report = {
             'type': type(error).__name__,
             'message': str(error),
             'severity': severity.name,
             'recoverable': recovery_strategy is not None
         }
-        
+
         try:
             if recovery_strategy:
                 recovery_result = recovery_strategy(error)
@@ -88,7 +88,7 @@ class ErrorHandler:
         except Exception as recovery_error:
             error_report['recovery_status'] = 'failed'
             error_report['recovery_error'] = str(recovery_error)
-        
+
         return error_report
 
 # Example recovery strategies

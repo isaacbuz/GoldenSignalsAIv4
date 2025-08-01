@@ -10,5 +10,5 @@ class StrategyService:
         return {
             "total_return": result["total_return"],
             "sharpe_ratio": result["sharpe_ratio"],
-            "max_drawdown": result["max_drawdown"]
+            "max_drawdown": result["max_drawdown"],
         }

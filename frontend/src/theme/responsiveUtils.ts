@@ -211,4 +211,4 @@ export const responsive = {
     tableCell: responsiveTableCell,
     appBarHeight: responsiveAppBarHeight,
     createSx: createResponsiveSx,
-}; 
+};

@@ -11,7 +11,7 @@ API_DESCRIPTION = """
 # GoldenSignalsAI Trading Signal Platform API
 
 ## Overview
-GoldenSignalsAI provides AI-powered trading signals with advanced technical analysis, 
+GoldenSignalsAI provides AI-powered trading signals with advanced technical analysis,
 machine learning predictions, and risk management capabilities.
 
 ## Features
@@ -69,6 +69,7 @@ TAGS_METADATA = [
     },
 ]
 
+
 # Custom OpenAPI schema
 def custom_openapi_schema() -> Dict[str, Any]:
     """Generate custom OpenAPI schema with additional documentation"""
@@ -82,22 +83,13 @@ def custom_openapi_schema() -> Dict[str, Any]:
             "contact": {
                 "name": "GoldenSignalsAI Support",
                 "url": "https://goldensignalsai.com/support",
-                "email": "support@goldensignalsai.com"
+                "email": "support@goldensignalsai.com",
             },
-            "license": {
-                "name": "MIT",
-                "url": "https://opensource.org/licenses/MIT"
-            }
+            "license": {"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
         },
         "servers": [
-            {
-                "url": "http://localhost:8000",
-                "description": "Development server"
-            },
-            {
-                "url": "https://api.goldensignalsai.com",
-                "description": "Production server"
-            }
+            {"url": "http://localhost:8000", "description": "Development server"},
+            {"url": "https://api.goldensignalsai.com", "description": "Production server"},
         ],
         "components": {
             "securitySchemes": {
@@ -105,7 +97,7 @@ def custom_openapi_schema() -> Dict[str, Any]:
                     "type": "apiKey",
                     "in": "header",
                     "name": "X-API-Key",
-                    "description": "API key for authentication (required in production)"
+                    "description": "API key for authentication (required in production)",
                 }
             },
             "responses": {
@@ -116,14 +108,11 @@ def custom_openapi_schema() -> Dict[str, Any]:
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "detail": {
-                                        "type": "string",
-                                        "example": "Invalid API key"
-                                    }
-                                }
+                                    "detail": {"type": "string", "example": "Invalid API key"}
+                                },
                             }
                         }
-                    }
+                    },
                 },
                 "RateLimitError": {
                     "description": "Rate limit exceeded",
@@ -134,15 +123,15 @@ def custom_openapi_schema() -> Dict[str, Any]:
                                 "properties": {
                                     "detail": {
                                         "type": "string",
-                                        "example": "Rate limit exceeded. Try again in 60 seconds."
+                                        "example": "Rate limit exceeded. Try again in 60 seconds.",
                                     }
-                                }
+                                },
                             }
                         }
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        },
     }
 
 
@@ -164,22 +153,18 @@ EXAMPLE_RESPONSES = {
             "sma_50": 180.10,
             "bb_upper": 190.50,
             "bb_lower": 176.00,
-            "volume_ratio": 1.25
+            "volume_ratio": 1.25,
         },
         "risk_level": "medium",
         "entry_price": 185.50,
         "stop_loss": 181.00,
         "take_profit": 195.00,
-        "metadata": {
-            "data_source": "yahoo",
-            "data_quality_score": 0.95,
-            "volume": 52341234
-        },
-        "quality_score": 0.85
+        "metadata": {"data_source": "yahoo", "data_quality_score": 0.95, "volume": 52341234},
+        "quality_score": 0.85,
     },
     "error": {
         "detail": "Invalid symbol provided",
         "code": "INVALID_SYMBOL",
-        "timestamp": "2024-01-11T00:00:00Z"
-    }
-} 
+        "timestamp": "2024-01-11T00:00:00Z",
+    },
+}

@@ -20,4 +20,4 @@ const SignalStream: React.FC = () => {
     );
 };
 
-export default SignalStream; 
+export default SignalStream;

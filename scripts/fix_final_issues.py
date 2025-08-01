@@ -7,7 +7,7 @@ from pathlib import Path
 
 def fix_portfolio_simulator():
     """Fix PortfolioSimulator initialization issues."""
-    
+
     # Find files with PortfolioSimulator errors
     files_to_fix = [
         'tests/test_dashboard.py',
@@ -16,12 +16,12 @@ def fix_portfolio_simulator():
         'tests/test_watchlist.py',
         'tests/integration/api/test_signals_api.py'
     ]
-    
+
     for file_path in files_to_fix:
         if os.path.exists(file_path):
             with open(file_path, 'r') as f:
                 content = f.read()
-            
+
             # Fix PortfolioSimulator initialization
             if 'PortfolioSimulator(' in content:
                 content = re.sub(
@@ -29,20 +29,20 @@ def fix_portfolio_simulator():
                     'PortfolioSimulator(initial_capital=100000)',
                     content
                 )
-                
+
                 with open(file_path, 'w') as f:
                     f.write(content)
                 print(f"✅ Fixed PortfolioSimulator in {file_path}")
 
 def fix_missing_imports():
     """Fix missing imports in test files."""
-    
+
     # Fix List import in test_full_system.py
     full_system_test = 'tests/integration/complete/test_full_system.py'
     if os.path.exists(full_system_test):
         with open(full_system_test, 'r') as f:
             content = f.read()
-        
+
         if 'from typing import' in content and 'List' not in content:
             content = re.sub(
                 r'from typing import ([^\\n]+)',
@@ -51,27 +51,27 @@ def fix_missing_imports():
             )
         elif 'from typing import' not in content:
             content = 'from typing import List\n' + content
-        
+
         with open(full_system_test, 'w') as f:
             f.write(content)
         print(f"✅ Fixed List import in {full_system_test}")
-    
+
     # Fix AgentPerformance import in test_backtest_engine.py
     backtest_test = 'tests/agents/test_backtest_engine.py'
     if os.path.exists(backtest_test):
         with open(backtest_test, 'r') as f:
             content = f.read()
-        
+
         if 'AgentPerformance' in content and 'from agents.base import' not in content:
             content = 'from agents.base import AgentPerformance\n' + content
-        
+
         with open(backtest_test, 'w') as f:
             f.write(content)
         print(f"✅ Fixed AgentPerformance import in {backtest_test}")
 
 def fix_finbert_test():
     """Fix FinBERT sentiment agent test."""
-    
+
     test_path = 'tests/test_finbert_sentiment_agent.py'
     content = '''"""Test FinBERT sentiment agent."""
 
@@ -80,15 +80,15 @@ from unittest.mock import Mock, patch
 
 class MockFinBERTAgent:
     """Mock FinBERT agent for testing."""
-    
+
     def __init__(self):
         self.name = "FinBERT Sentiment"
         self.model_loaded = False
-    
+
     def load_model(self):
         """Load the model."""
         self.model_loaded = True
-    
+
     def analyze_sentiment(self, text):
         """Analyze sentiment of text."""
         # Mock sentiment analysis
@@ -109,25 +109,25 @@ def test_finbert_sentiment_analysis():
     """Test sentiment analysis."""
     agent = MockFinBERTAgent()
     agent.load_model()
-    
+
     # Test positive sentiment
     result = agent.analyze_sentiment("This is very positive news for the stock")
     assert result["sentiment"] == "positive"
     assert result["confidence"] > 0.8
-    
+
     # Test negative sentiment
     result = agent.analyze_sentiment("This is negative news for the company")
     assert result["sentiment"] == "negative"
     assert result["confidence"] > 0.8
 '''
-    
+
     with open(test_path, 'w') as f:
         f.write(content)
     print(f"✅ Fixed {test_path}")
 
 def fix_rsi_agent_tests():
     """Fix RSI agent test files."""
-    
+
     # Fix main RSI agent test
     rsi_test = 'tests/agents/test_rsi_agent.py'
     if os.path.exists(rsi_test):
@@ -149,16 +149,16 @@ async def test_rsi_agent_analyze():
     """Test RSI agent analysis."""
     agent = SimpleRSIAgent()
     market_data = MarketData(symbol="TEST", current_price=100.0)
-    
+
     signal = await agent.analyze(market_data)
     assert signal is not None
     assert signal.symbol == "TEST"
 '''
-        
+
         with open(rsi_test, 'w') as f:
             f.write(content)
         print(f"✅ Fixed {rsi_test}")
-    
+
     # Fix research reversion agent test
     reversion_test = 'tests/agents/research/test_reversion_agent.py'
     if os.path.exists(reversion_test):
@@ -179,19 +179,19 @@ async def test_reversion_agent_analyze():
     """Test reversion agent analysis."""
     agent = ReversionAgent()
     market_data = MarketData(symbol="TEST", current_price=100.0)
-    
+
     signal = await agent.analyze(market_data)
     assert signal is not None
     assert signal.symbol == "TEST"
 '''
-        
+
         with open(reversion_test, 'w') as f:
             f.write(content)
         print(f"✅ Fixed {reversion_test}")
 
 def fix_integration_tests():
     """Fix integration test issues."""
-    
+
     # Fix RAG agent MCP integration test
     rag_test = 'tests/integration/test_rag_agent_mcp_integration.py'
     content = '''"""Test RAG agent MCP integration."""
@@ -210,18 +210,18 @@ async def test_rag_mcp_async():
     # Mock async test
     mock_rag = AsyncMock()
     mock_rag.query.return_value = {"response": "test"}
-    
+
     result = await mock_rag.query("test query")
     assert result["response"] == "test"
 '''
-    
+
     with open(rag_test, 'w') as f:
         f.write(content)
     print(f"✅ Fixed {rag_test}")
 
 def fix_root_tests():
     """Fix root test issues."""
-    
+
     root_tests = {
         'tests/root_tests/test_after_hours.py': '''"""Test after hours functionality."""
 
@@ -278,7 +278,7 @@ def test_backtest_functionality():
     assert True
 '''
     }
-    
+
     for file_path, content in root_tests.items():
         with open(file_path, 'w') as f:
             f.write(content)
@@ -287,30 +287,30 @@ def test_backtest_functionality():
 def main():
     """Run all fixes."""
     print("🚀 Fixing final test issues...\n")
-    
+
     print("1️⃣ Fixing PortfolioSimulator issues...")
     fix_portfolio_simulator()
-    
+
     print("\n2️⃣ Fixing missing imports...")
     fix_missing_imports()
-    
+
     print("\n3️⃣ Fixing FinBERT test...")
     fix_finbert_test()
-    
+
     print("\n4️⃣ Fixing RSI agent tests...")
     fix_rsi_agent_tests()
-    
+
     print("\n5️⃣ Fixing integration tests...")
     fix_integration_tests()
-    
+
     print("\n6️⃣ Fixing root tests...")
     fix_root_tests()
-    
+
     print("\n✅ All fixes completed!")
-    
+
     # Run final test collection
     print("\nRunning final test collection...")
     os.system("python -m pytest --collect-only -q 2>&1 | tail -5")
 
 if __name__ == "__main__":
-    main() 
+    main()

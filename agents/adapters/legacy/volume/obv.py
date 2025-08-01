@@ -1,13 +1,12 @@
-from starlette.concurrency import run_in_threadpool
 from typing import Any, Dict, List
 
 import pandas as pd
-
-from agents.base import BaseAgent, AgentConfig
-from src.utils.legacy_mapper import legacy_output_to_signal
-from src.ml.models.signals import Signal
-
+from agents.base import AgentConfig, BaseAgent
 from agents.legacy_backend_agents.volume.obv_agent import OBVAgent as LegacyOBVAgent
+from starlette.concurrency import run_in_threadpool
+
+from src.ml.models.signals import Signal
+from src.utils.legacy_mapper import legacy_output_to_signal
 
 
 class OBVLegacyAdapter(BaseAgent):
@@ -52,4 +51,4 @@ class OBVLegacyAdapter(BaseAgent):
         )
 
     def get_required_data_types(self):
-        return ["ohlcv"] 
+        return ["ohlcv"]

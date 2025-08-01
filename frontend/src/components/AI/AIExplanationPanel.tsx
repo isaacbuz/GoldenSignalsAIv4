@@ -371,4 +371,4 @@ const AIExplanationPanel: React.FC<AIExplanationPanelProps> = ({
     );
 };
 
-export default AIExplanationPanel; 
+export default AIExplanationPanel;

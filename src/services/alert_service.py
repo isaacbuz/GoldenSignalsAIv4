@@ -9,7 +9,11 @@ class AlertService:
         self.twilio_sms_client = twilio_sms_client
         self.twilio_whatsapp_client = twilio_whatsapp_client
         self.x_client = x_client
-        self.alert_channels = {"sms": self.twilio_sms_client, "whatsapp": self.twilio_whatsapp_client, "x": self.x_client}
+        self.alert_channels = {
+            "sms": self.twilio_sms_client,
+            "whatsapp": self.twilio_whatsapp_client,
+            "x": self.x_client,
+        }
 
     async def send_alert(self, user_preferences: UserPreferences, event):
         message = self._format_message(event)

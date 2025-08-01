@@ -2,10 +2,12 @@
 Chart Vision Model Loader & Inference
 Loads a YOLOv8 or compatible model and predicts chart patterns from images.
 """
+from typing import Any, Dict, List
+
+import numpy as np
 import torch
 from PIL import Image
-import numpy as np
-from typing import List, Dict, Any
+
 
 class ChartPatternModel:
     def __init__(self, model_path="models/yolov8_chart.pt"):

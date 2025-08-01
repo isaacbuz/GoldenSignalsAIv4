@@ -264,4 +264,5 @@ const UnifiedSearchBar: React.FC<UnifiedSearchBarProps> = ({
     );
 };
 
-export default UnifiedSearchBar; 
+export default UnifiedSearchBar;
+export { UnifiedSearchBar };

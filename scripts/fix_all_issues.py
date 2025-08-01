@@ -14,20 +14,20 @@ from pathlib import Path
 
 def create_missing_modules():
     """Create all missing modules that tests are trying to import."""
-    
+
     modules_to_create = {
         # Infrastructure modules
         'infrastructure/error_handler.py': '''"""Error handling utilities."""
 
 class ErrorHandler:
     """Handles errors in the application."""
-    
+
     @staticmethod
     def handle_error(error):
         """Handle an error."""
         print(f"Error handled: {error}")
         return {"error": str(error)}
-    
+
     @staticmethod
     def log_error(error, context=None):
         """Log an error with context."""
@@ -53,15 +53,15 @@ from typing import Dict, Any, Optional
 
 class AgentFactory:
     """Factory for creating trading agents."""
-    
+
     def __init__(self):
         self.agents = {}
-    
+
     def create_agent(self, agent_type: str, config: Dict[str, Any]):
         """Create an agent of the specified type."""
         # Mock implementation
         return {"type": agent_type, "config": config}
-    
+
     def register_agent(self, agent_type: str, agent_class):
         """Register an agent class."""
         self.agents[agent_type] = agent_class
@@ -81,11 +81,11 @@ from src.ml.models.signals import Signal, SignalType, SignalStrength, SignalSour
 
 class LSTMForecastAgent(BaseAgent):
     """Agent that uses LSTM for price forecasting."""
-    
+
     def __init__(self, name: str = "LSTM Forecast"):
         super().__init__(name=name, agent_type="ml")
         self.model = None
-    
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process data and generate forecast."""
         return {
@@ -93,7 +93,7 @@ class LSTMForecastAgent(BaseAgent):
             "confidence": 0.5,
             "metadata": {"forecast": "neutral"}
         }
-    
+
     async def analyze(self, market_data: MarketData) -> Signal:
         """Analyze market data using LSTM."""
         result = self.process({"data": market_data})
@@ -105,7 +105,7 @@ class LSTMForecastAgent(BaseAgent):
             source=SignalSource.TECHNICAL_ANALYSIS,
             current_price=market_data.current_price
         )
-    
+
     def get_required_data_types(self) -> List[str]:
         """Get required data types."""
         return ["close_prices", "volume", "ohlcv"]
@@ -120,11 +120,11 @@ from src.ml.models.signals import Signal, SignalType, SignalStrength, SignalSour
 
 class MLClassifierAgent(BaseAgent):
     """Agent that uses ML classification for signals."""
-    
+
     def __init__(self, name: str = "ML Classifier"):
         super().__init__(name=name, agent_type="ml")
         self.classifier = None
-    
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process data and classify signal."""
         return {
@@ -132,7 +132,7 @@ class MLClassifierAgent(BaseAgent):
             "confidence": 0.6,
             "metadata": {"classification": "neutral"}
         }
-    
+
     async def analyze(self, market_data: MarketData) -> Signal:
         """Analyze market data using ML classifier."""
         result = self.process({"data": market_data})
@@ -144,7 +144,7 @@ class MLClassifierAgent(BaseAgent):
             source=SignalSource.TECHNICAL_ANALYSIS,
             current_price=market_data.current_price
         )
-    
+
     def get_required_data_types(self) -> List[str]:
         """Get required data types."""
         return ["close_prices", "volume", "indicators"]
@@ -159,11 +159,11 @@ from src.ml.models.signals import Signal, SignalType, SignalStrength, SignalSour
 
 class ReversionAgent(BaseAgent):
     """Agent that trades mean reversion strategies."""
-    
+
     def __init__(self, name: str = "Mean Reversion", lookback: int = 20):
         super().__init__(name=name, agent_type="technical")
         self.lookback = lookback
-    
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process data for mean reversion signals."""
         return {
@@ -171,7 +171,7 @@ class ReversionAgent(BaseAgent):
             "confidence": 0.5,
             "metadata": {"deviation": 0.0}
         }
-    
+
     async def analyze(self, market_data: MarketData) -> Signal:
         """Analyze for mean reversion opportunities."""
         result = self.process({"data": market_data})
@@ -183,7 +183,7 @@ class ReversionAgent(BaseAgent):
             source=SignalSource.TECHNICAL_ANALYSIS,
             current_price=market_data.current_price
         )
-    
+
     def get_required_data_types(self) -> List[str]:
         """Get required data types."""
         return ["close_prices", "ohlcv"]
@@ -194,22 +194,22 @@ class ReversionAgent(BaseAgent):
 
 class ExternalModelService:
     """Service for integrating external ML models."""
-    
+
     def __init__(self, api_key: str = None):
         self.api_key = api_key
         self.connected = False
-    
+
     def connect(self):
         """Connect to external service."""
         self.connected = True
         return True
-    
+
     def predict(self, data):
         """Get prediction from external model."""
         if not self.connected:
             raise Exception("Not connected to external service")
         return {"prediction": "neutral", "confidence": 0.5}
-    
+
     def disconnect(self):
         """Disconnect from service."""
         self.connected = False
@@ -224,26 +224,26 @@ from typing import Dict, Any, Optional
 
 class ConfigManager:
     """Manages application configuration."""
-    
+
     def __init__(self, config_file: str = "config.json"):
         self.config_file = config_file
         self.config = self._load_config()
-    
+
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from file."""
         if os.path.exists(self.config_file):
             with open(self.config_file, 'r') as f:
                 return json.load(f)
         return {}
-    
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value."""
         return self.config.get(key, default)
-    
+
     def set(self, key: str, value: Any):
         """Set configuration value."""
         self.config[key] = value
-    
+
     def save(self):
         """Save configuration to file."""
         with open(self.config_file, 'w') as f:
@@ -285,10 +285,10 @@ def create_mock_response(status_code=200, json_data=None):
         def __init__(self, status_code, json_data):
             self.status_code = status_code
             self._json_data = json_data or {}
-        
+
         def json(self):
             return self._json_data
-    
+
     return MockResponse(status_code, json_data)
 ''',
 
@@ -324,12 +324,12 @@ def mock_db():
     return db_mock
 ''',
     }
-    
+
     # Create all missing modules
     for file_path, content in modules_to_create.items():
         full_path = Path(file_path)
         full_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         if not full_path.exists():
             with open(full_path, 'w') as f:
                 f.write(content)
@@ -337,7 +337,7 @@ def mock_db():
 
 def fix_test_imports():
     """Fix import issues in test files."""
-    
+
     test_fixes = {
         'tests/test_config_manager.py': '''"""Test configuration manager."""
 
@@ -348,7 +348,7 @@ def test_config_manager_basic():
     """Test basic config manager functionality."""
     config = ConfigManager()
     assert config is not None
-    
+
 def test_config_get_set():
     """Test getting and setting config values."""
     config = ConfigManager()
@@ -367,7 +367,7 @@ def test_external_service_connection():
     service = ExternalModelService()
     assert service.connect() == True
     assert service.connected == True
-    
+
 def test_external_service_prediction():
     """Test external service prediction."""
     service = ExternalModelService()
@@ -388,7 +388,7 @@ def test_lstm_agent_creation():
     agent = LSTMForecastAgent()
     assert agent is not None
     assert agent.name == "LSTM Forecast"
-    
+
 @pytest.mark.asyncio
 async def test_lstm_agent_analyze():
     """Test LSTM agent analysis."""
@@ -410,7 +410,7 @@ def test_ml_classifier_creation():
     agent = MLClassifierAgent()
     assert agent is not None
     assert agent.name == "ML Classifier"
-    
+
 def test_ml_classifier_process():
     """Test ML classifier processing."""
     agent = MLClassifierAgent()
@@ -430,7 +430,7 @@ def test_reversion_agent_creation():
     agent = ReversionAgent()
     assert agent is not None
     assert agent.lookback == 20
-    
+
 def test_reversion_agent_custom_lookback():
     """Test reversion agent with custom lookback."""
     agent = ReversionAgent(lookback=50)
@@ -448,15 +448,15 @@ def test_error_handler():
     handler = ErrorHandler()
     result = handler.handle_error("Test error")
     assert "error" in result
-    
+
 def test_custom_exceptions():
     """Test custom exceptions."""
     with pytest.raises(ModelInferenceError):
         raise ModelInferenceError("Model failed")
-    
+
     with pytest.raises(DataFetchError):
         raise DataFetchError("Data fetch failed")
-    
+
 def test_config_manager():
     """Test config manager."""
     config = ConfigManager()
@@ -464,7 +464,7 @@ def test_config_manager():
     assert config.get("test") == "value"
 ''',
     }
-    
+
     # Fix or create test files
     for file_path, content in test_fixes.items():
         with open(file_path, 'w') as f:
@@ -473,7 +473,7 @@ def test_config_manager():
 
 def fix_remaining_imports():
     """Fix remaining import issues in existing files."""
-    
+
     # Fix common import patterns
     import_fixes = [
         # Fix test files that import from src.main
@@ -481,30 +481,30 @@ def fix_remaining_imports():
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.main import app'''),
-        
+
         # Fix agent imports
         ('agents/', r'from agents\.predictive', '# from agents.predictive'),
         ('tests/', r'from agents\.predictive', '# from agents.predictive'),
-        
+
         # Fix service imports
         ('', r'from agents\.services\.', 'from src.services.'),
         ('', r'from agents\.core\.dependencies', 'from src.core.dependencies'),
     ]
-    
+
     for directory, pattern, replacement in import_fixes:
         for root, dirs, files in os.walk(directory or '.'):
             if any(skip in root for skip in ['.venv', '__pycache__', 'node_modules']):
                 continue
-                
+
             for file in files:
                 if file.endswith('.py'):
                     file_path = os.path.join(root, file)
                     try:
                         with open(file_path, 'r') as f:
                             content = f.read()
-                        
+
                         new_content = re.sub(pattern, replacement, content)
-                        
+
                         if new_content != content:
                             with open(file_path, 'w') as f:
                                 f.write(new_content)
@@ -514,7 +514,7 @@ from src.main import app'''),
 
 def create_missing_init_files():
     """Ensure all directories have __init__.py files."""
-    
+
     directories = [
         'tests/utils',
         'tests/unit',
@@ -528,7 +528,7 @@ def create_missing_init_files():
         'agents/core/options',
         'infrastructure',
     ]
-    
+
     for directory in directories:
         init_file = os.path.join(directory, '__init__.py')
         if not os.path.exists(init_file):
@@ -540,24 +540,24 @@ def create_missing_init_files():
 def main():
     """Run all fixes."""
     print("🚀 Starting comprehensive fix process...\n")
-    
+
     print("1️⃣ Creating missing modules...")
     create_missing_modules()
-    
+
     print("\n2️⃣ Fixing test imports...")
     fix_test_imports()
-    
+
     print("\n3️⃣ Fixing remaining imports...")
     fix_remaining_imports()
-    
+
     print("\n4️⃣ Creating missing __init__.py files...")
     create_missing_init_files()
-    
+
     print("\n✅ All fixes completed!")
     print("\nNow running test collection to verify...")
-    
+
     # Run pytest to check if all issues are fixed
     os.system("python -m pytest --collect-only -q 2>&1 | tail -5")
 
 if __name__ == "__main__":
-    main() 
+    main()

@@ -212,4 +212,4 @@ const MarketNews: React.FC<MarketNewsProps> = ({
     );
 };
 
-export default MarketNews; 
+export default MarketNews;

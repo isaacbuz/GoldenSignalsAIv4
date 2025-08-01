@@ -51,4 +51,4 @@
 #             memory: 1G
 #           limits:
 #             cpu: 4800m
-#             memory: 4G 
+#             memory: 4G

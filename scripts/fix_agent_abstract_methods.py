@@ -12,10 +12,10 @@ METHODS_TEMPLATE = '''
     async def analyze(self, market_data: MarketData) -> Signal:
         """
         Analyze market data and generate trading signal.
-        
+
         Args:
             market_data: Market data for analysis
-            
+
         Returns:
             Signal: Trading signal with analysis
         """
@@ -25,17 +25,17 @@ METHODS_TEMPLATE = '''
         else:
             # Fallback to mock data if no real data
             close_prices = [market_data.current_price] * 100
-        
+
         # Process the data
         result = self.process({"close_prices": close_prices})
-        
+
         # Map action to signal type
         signal_type_map = {
             "buy": SignalType.BUY,
             "sell": SignalType.SELL,
             "hold": SignalType.HOLD
         }
-        
+
         # Determine signal strength based on confidence
         if result["confidence"] >= 0.8:
             strength = SignalStrength.STRONG
@@ -45,7 +45,7 @@ METHODS_TEMPLATE = '''
             strength = SignalStrength.MEDIUM
         else:
             strength = SignalStrength.WEAK
-        
+
         # Create and return signal
         signal = Signal(
             symbol=market_data.symbol,
@@ -57,13 +57,13 @@ METHODS_TEMPLATE = '''
             reasoning=f"{self.name} analysis: {result.get('action', 'hold')} signal with {result.get('confidence', 0.0):.2%} confidence",
             indicators=result.get("metadata", {})
         )
-        
+
         return signal
-    
+
     def get_required_data_types(self) -> List[str]:
         """
         Returns list of required data types for analysis.
-        
+
         Returns:
             List of data type strings
         """
@@ -80,32 +80,32 @@ def needs_fixing(file_path):
     """Check if a file needs the abstract methods."""
     with open(file_path, 'r') as f:
         content = f.read()
-    
+
     # Check if it's an agent that inherits from BaseAgent
     if 'BaseAgent' not in content:
         return False
-    
+
     # Check if it already has the methods
     if 'async def analyze' in content and 'def get_required_data_types' in content:
         return False
-    
+
     # Skip test files
     if 'test_' in str(file_path) or '/tests/' in str(file_path):
         return False
-    
+
     return True
 
 def fix_imports(content):
     """Add necessary imports if they're missing."""
     lines = content.split('\n')
     import_section_end = 0
-    
+
     # Find where imports end
     for i, line in enumerate(lines):
         if line.strip() and not line.startswith(('import ', 'from ', '#', '"""')):
             import_section_end = i
             break
-    
+
     # Check which imports are missing
     imports_to_insert = []
     for imp in IMPORTS_TO_ADD:
@@ -120,29 +120,29 @@ def fix_imports(content):
                         break
             else:
                 imports_to_insert.append(imp)
-    
+
     # Insert missing imports
     if imports_to_insert:
         for imp in reversed(imports_to_insert):
             lines.insert(import_section_end, imp)
-    
+
     return '\n'.join(lines)
 
 def fix_agent_file(file_path):
     """Fix a single agent file."""
     print(f"Fixing {file_path}...")
-    
+
     with open(file_path, 'r') as f:
         content = f.read()
-    
+
     # Add imports
     content = fix_imports(content)
-    
+
     # Find the last method in the class
     lines = content.split('\n')
     last_method_line = -1
     indent_level = ""
-    
+
     for i in range(len(lines) - 1, -1, -1):
         line = lines[i]
         if line.strip().startswith('def ') and not line.strip().startswith('def __'):
@@ -150,11 +150,11 @@ def fix_agent_file(file_path):
             # Get the indentation level
             indent_level = line[:len(line) - len(line.lstrip())]
             break
-    
+
     if last_method_line == -1:
         print(f"  Could not find where to insert methods in {file_path}")
         return
-    
+
     # Find the end of the last method
     method_end = last_method_line
     for i in range(last_method_line + 1, len(lines)):
@@ -163,7 +163,7 @@ def fix_agent_file(file_path):
             break
     else:
         method_end = len(lines) - 1
-    
+
     # Insert the new methods
     methods_lines = METHODS_TEMPLATE.split('\n')
     # Adjust indentation
@@ -173,15 +173,15 @@ def fix_agent_file(file_path):
             adjusted_methods.append(indent_level + line[4:])  # Remove 4 spaces and add proper indent
         else:
             adjusted_methods.append('')
-    
+
     # Insert methods after the last method
     for i, method_line in enumerate(reversed(adjusted_methods)):
         lines.insert(method_end + 1, method_line)
-    
+
     # Write back
     with open(file_path, 'w') as f:
         f.write('\n'.join(lines))
-    
+
     print(f"  ✅ Fixed {file_path}")
 
 def main():
@@ -216,10 +216,10 @@ def main():
         "agents/core/volume/volume_profile_agent.py",
         "agents/core/volume/volume_spike_agent.py",
     ]
-    
+
     fixed_count = 0
     skipped_count = 0
-    
+
     for agent_file in agent_files:
         if os.path.exists(agent_file):
             if needs_fixing(agent_file):
@@ -230,9 +230,9 @@ def main():
                 skipped_count += 1
         else:
             print(f"File not found: {agent_file}")
-    
+
     print(f"\n✅ Fixed {fixed_count} files")
     print(f"⏭️  Skipped {skipped_count} files (already fixed)")
 
 if __name__ == "__main__":
-    main() 
+    main()

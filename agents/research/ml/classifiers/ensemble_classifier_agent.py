@@ -1,21 +1,22 @@
 """
 Ensemble classifier agent combining multiple ML models for robust market predictions.
 """
-from typing import Dict, Any, List, Optional
+import os
+from typing import Any, Dict, List, Optional
+
+import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
-from sklearn.preprocessing import StandardScaler
-import joblib
-import os
-
 from agents.common.base_agent import BaseAgent
+from lightgbm import LGBMClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+
 
 class EnsembleClassifierAgent(BaseAgent):
     """Agent that combines multiple ML classifiers for market prediction."""
-    
+
     def __init__(
         self,
         name: str = "ensemble_classifier",
@@ -24,7 +25,7 @@ class EnsembleClassifierAgent(BaseAgent):
     ):
         """
         Initialize ensemble classifier agent.
-        
+
         Args:
             name: Agent identifier
             config: Configuration dictionary
@@ -35,7 +36,7 @@ class EnsembleClassifierAgent(BaseAgent):
         self.models = {}
         self.scaler = StandardScaler()
         self._initialize_models()
-        
+
     def _initialize_models(self) -> None:
         """Initialize ML models with default parameters."""
         self.models["rf"] = RandomForestClassifier(
@@ -55,14 +56,14 @@ class EnsembleClassifierAgent(BaseAgent):
             learning_rate=0.1,
             random_state=42
         )
-        
+
     def _prepare_features(self, data: Dict[str, Any]) -> Optional[pd.DataFrame]:
         """
         Prepare feature matrix from input data.
-        
+
         Args:
             data: Input market data
-            
+
         Returns:
             DataFrame of features or None if invalid input
         """
@@ -71,58 +72,58 @@ class EnsembleClassifierAgent(BaseAgent):
             if "close" not in df.columns:
                 self.logger.error("Missing required price data")
                 return None
-                
+
             # Calculate technical features
             df["returns"] = df["close"].pct_change()
             df["volatility"] = df["returns"].rolling(20).std()
             df["sma_20"] = df["close"].rolling(20).mean()
             df["sma_50"] = df["close"].rolling(50).mean()
-            
+
             # Add volume features if available
             if "volume" in df.columns:
                 df["volume_sma"] = df["volume"].rolling(20).mean()
                 df["volume_ratio"] = df["volume"] / df["volume_sma"]
-                
+
             # Drop missing values and select features
             feature_cols = [c for c in df.columns if c not in ["close", "returns"]]
             features = df[feature_cols].dropna()
-            
+
             return features
-            
+
         except Exception as e:
             self.logger.error(f"Feature preparation failed: {e}")
             return None
-            
+
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Generate predictions using ensemble of models.
-        
+
         Args:
             data: Market data dictionary
-            
+
         Returns:
             Dictionary containing predictions and metadata
         """
         if not self.validate_input(data):
             return {"error": "Invalid input data"}
-            
+
         features = self._prepare_features(data)
         if features is None:
             return {"error": "Feature preparation failed"}
-            
+
         try:
             # Scale features
             features_scaled = self.scaler.fit_transform(features)
-            
+
             # Get predictions from each model
             predictions = {}
             probabilities = []
-            
+
             for name, model in self.models.items():
                 pred_proba = model.predict_proba(features_scaled)[-1]
                 predictions[f"{name}_probability"] = float(pred_proba[1])
                 probabilities.append(pred_proba[1])
-                
+
             # Ensemble decision
             avg_probability = np.mean(probabilities)
             if avg_probability > 0.6:
@@ -131,31 +132,31 @@ class EnsembleClassifierAgent(BaseAgent):
                 signal = "sell"
             else:
                 signal = "hold"
-                
+
             return {
                 "signal": signal,
                 "confidence": float(avg_probability),
                 "model_predictions": predictions,
                 "timestamp": pd.Timestamp.now(tz='UTC').isoformat()
             }
-            
+
         except Exception as e:
             self.logger.error(f"Prediction failed: {e}")
             return {"error": str(e)}
-            
+
     def validate_input(self, data: Dict[str, Any]) -> bool:
         """
         Validate input data contains required fields.
-        
+
         Args:
             data: Input data dictionary
-            
+
         Returns:
             True if valid, False otherwise
         """
         required_fields = ["close"]
         return all(field in data for field in required_fields)
-        
+
     def save_models(self) -> None:
         """Save trained models to disk."""
         try:
@@ -168,7 +169,7 @@ class EnsembleClassifierAgent(BaseAgent):
             joblib.dump(self.scaler, scaler_path)
         except Exception as e:
             self.logger.error(f"Failed to save models: {e}")
-            
+
     def load_models(self) -> None:
         """Load trained models from disk."""
         try:
@@ -181,4 +182,4 @@ class EnsembleClassifierAgent(BaseAgent):
             if os.path.exists(scaler_path):
                 self.scaler = joblib.load(scaler_path)
         except Exception as e:
-            self.logger.error(f"Failed to load models: {e}") 
+            self.logger.error(f"Failed to load models: {e}")

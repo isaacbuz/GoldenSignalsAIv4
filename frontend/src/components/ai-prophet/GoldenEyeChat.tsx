@@ -1,6 +1,6 @@
 /**
  * Golden Eye AI Prophet Chat
- * 
+ *
  * Simplified mystical chat interface with the AI Prophet.
  * Preserves the golden theme while being stable and performant.
  */
@@ -341,4 +341,4 @@ export const GoldenEyeChat: React.FC = () => {
     );
 };
 
-export default GoldenEyeChat; 
+export default GoldenEyeChat;

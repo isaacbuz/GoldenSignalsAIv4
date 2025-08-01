@@ -1,6 +1,6 @@
 /**
  * Professional Trading Platform Layout
- * 
+ *
  * Design Features:
  * - Sleek, minimal navigation bar inspired by Bloomberg Terminal
  * - Enhanced typography with larger, more readable fonts
@@ -36,11 +36,12 @@ import { UnifiedSearchBar } from '../Common/UnifiedSearchBar';
 import { SimpleSearchBar } from '../Common/SimpleSearchBar';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: 'rgba(10, 13, 20, 0.95)',
-  backdropFilter: 'blur(20px)',
-  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-  boxShadow: 'none',
-  height: '64px',
+  background: 'linear-gradient(180deg, rgba(10, 13, 20, 0.98) 0%, rgba(10, 13, 20, 0.95) 100%)',
+  backdropFilter: 'blur(24px)',
+  borderBottom: `1px solid ${alpha('#FFD700', 0.1)}`,
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+  height: '56px',
+  transition: 'all 0.3s ease',
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
@@ -50,14 +51,15 @@ const LogoContainer = styled(Box)(({ theme }) => ({
 }));
 
 const LogoText = styled(Typography)(({ theme }) => ({
-  fontSize: '1.5rem',
-  fontWeight: 800,
+  fontSize: '1.4rem',
+  fontWeight: 700,
   letterSpacing: '-0.02em',
-  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+  background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FF9800 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   display: 'flex',
   alignItems: 'center',
+  textShadow: '0 0 30px rgba(255, 215, 0, 0.3)',
 }));
 
 const NavSection = styled(Box)(({ theme }) => ({
@@ -68,33 +70,38 @@ const NavSection = styled(Box)(({ theme }) => ({
 }));
 
 const NavButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  fontSize: '0.95rem',
+  color: alpha(theme.palette.text.secondary, 0.8),
+  fontSize: '0.875rem',
   fontWeight: 500,
-  letterSpacing: '0.01em',
-  padding: theme.spacing(1, 2),
-  borderRadius: theme.shape.borderRadius,
+  letterSpacing: '0.02em',
+  padding: theme.spacing(0.75, 1.5),
+  borderRadius: '8px',
   textTransform: 'none',
   minWidth: 'auto',
   position: 'relative',
-  transition: 'all 0.2s ease',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   '&:hover': {
-    color: theme.palette.text.primary,
-    backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    color: theme.palette.primary.main,
+    backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    transform: 'translateY(-1px)',
+    boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.25)}`,
   },
   '&.active': {
     color: theme.palette.primary.main,
     fontWeight: 600,
+    backgroundColor: alpha(theme.palette.primary.main, 0.15),
+    boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.3)}`,
     '&::after': {
       content: '""',
       position: 'absolute',
-      bottom: -1,
+      bottom: -8,
       left: '50%',
       transform: 'translateX(-50%)',
-      width: '70%',
-      height: '2px',
+      width: '60%',
+      height: '3px',
       backgroundColor: theme.palette.primary.main,
-      borderRadius: '2px 2px 0 0',
+      borderRadius: '3px 3px 0 0',
+      boxShadow: `0 -2px 8px ${alpha(theme.palette.primary.main, 0.5)}`,
     },
   },
 }));
@@ -107,11 +114,18 @@ const UserControls = styled(Box)(({ theme }) => ({
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  transition: 'all 0.2s ease',
+  color: alpha(theme.palette.text.secondary, 0.7),
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  padding: theme.spacing(1),
   '&:hover': {
-    color: theme.palette.text.primary,
-    backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    color: theme.palette.primary.main,
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    transform: 'scale(1.05)',
+    boxShadow: `0 0 16px ${alpha(theme.palette.primary.main, 0.3)}`,
+  },
+  '& .MuiBadge-badge': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.background.default,
   },
 }));
 
@@ -149,7 +163,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, onSymbolSelect }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <StyledAppBar position="fixed">
-        <Toolbar sx={{ height: '64px' }}>
+        <Toolbar sx={{ height: '56px', px: 3 }}>
           <LogoContainer>
             <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
               <LogoText variant="h6">
@@ -222,41 +236,42 @@ export const Layout: React.FC<LayoutProps> = ({ children, onSymbolSelect }) => {
       </StyledAppBar>
 
       {/* Enhanced Search Bar - Fixed Below Navigation */}
-      <Box sx={{ height: '64px' }} /> {/* Spacer for fixed nav */}
+      <Box sx={{ height: '56px' }} /> {/* Spacer for fixed nav */}
       <Box sx={{
         position: 'fixed',
-        top: '64px',
+        top: '56px',
         left: 0,
         right: 0,
         zIndex: 1100,
-        bgcolor: alpha(theme.palette.background.default, 0.95),
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        bgcolor: alpha(theme.palette.background.default, 0.98),
+        backdropFilter: 'blur(24px)',
+        borderBottom: `1px solid ${alpha('#FFD700', 0.08)}`,
+        boxShadow: '0 1px 4px rgba(0, 0, 0, 0.2)',
       }}>
-        <Container maxWidth={false} sx={{ py: 1 }}>
+        <Container maxWidth={false} sx={{ py: 0.75 }}>
           <SimpleSearchBar
             onSymbolChange={onSymbolSelect}
             placeholder="Search symbols, ask AI, or analyze markets..."
           />
         </Container>
       </Box>
-      <Box sx={{ height: '48px' }} /> {/* Further reduced spacer for fixed search bar */}
+      <Box sx={{ height: '52px' }} /> {/* Spacer for fixed search bar */}
 
-      <Container
+      <Box
         component="main"
         sx={{
           flexGrow: 1,
-          pt: 0, // Removed padding to eliminate gap
-          pb: 3,
-          px: { xs: 2, sm: 3, md: 4 },
+          pt: 0,
+          pb: 0,
+          px: 0,
+          height: 'calc(100vh - 108px)', // Full height minus navbar (56px) and search bar (52px)
         }}
-        maxWidth={false}
       >
         <Outlet context={{ currentSymbol, onSymbolChange: handleSymbolChange }} />
-      </Container>
+      </Box>
 
     </Box>
   );
 };
 
-export default Layout; 
+export default Layout;

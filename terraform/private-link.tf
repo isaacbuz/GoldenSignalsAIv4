@@ -109,4 +109,4 @@ resource "azurerm_network_security_group" "endpoints" {
 resource "azurerm_subnet_network_security_group_association" "endpoints" {
   subnet_id                 = azurerm_subnet.endpoints.id
   network_security_group_id = azurerm_network_security_group.endpoints.id
-} 
+}

@@ -22,7 +22,7 @@ scrape_configs:
   # MCP Servers
   - job_name: 'mcp-servers'
     static_configs:
-      - targets: 
+      - targets:
           - 'market-data-mcp:8190'
           - 'rag-query-mcp:8191'
           - 'agent-comm-mcp:8192'
@@ -36,4 +36,4 @@ scrape_configs:
     static_configs:
       - targets: ['integration-tests:8000']
     metrics_path: '/metrics'
-    scrape_interval: 30s 
+    scrape_interval: 30s

@@ -1,6 +1,6 @@
 /**
  * AI Command Center Page
- * 
+ *
  * Central hub for AI system monitoring and control
  */
 
@@ -22,4 +22,4 @@ export const AICommandCenter: React.FC = () => {
     );
 };
 
-export default AICommandCenter; 
+export default AICommandCenter;

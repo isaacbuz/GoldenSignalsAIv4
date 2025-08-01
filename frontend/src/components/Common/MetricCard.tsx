@@ -46,4 +46,4 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       </CardContent>
     </Card>
   );
-}; 
+};

@@ -5,7 +5,7 @@ export const fetchSignals = async (symbol) => {
     const res = await api.get(`/signals?symbol=${symbol}`);
     return res.data;
 };
-// Similar for predictions, options 
+// Similar for predictions, options
 
 export const fetchStockData = async (symbol: string, timeframe: string) => {
     const response = await axios.get(`/api/fetch-data?symbol=${symbol}&timeframe=${timeframe}`);
@@ -18,4 +18,4 @@ export const runAIAnalysis = async (data: any, symbol: string, timeframe: string
 };
 
 export default api;
-export { fetchSignals }; 
+export { fetchSignals };

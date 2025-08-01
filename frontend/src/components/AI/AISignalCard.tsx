@@ -317,4 +317,4 @@ export const AISignalCard: React.FC<AISignalCardProps> = ({
       </CardContent>
     </MotionCard>
   );
-}; 
+};

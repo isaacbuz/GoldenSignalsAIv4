@@ -1,6 +1,8 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
+
 
 class CorrelationAgent:
     """

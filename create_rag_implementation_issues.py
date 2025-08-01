@@ -9,9 +9,9 @@ from typing import List, Dict
 
 def create_rag_implementation_issues() -> List[Dict]:
     """Create comprehensive GitHub issues for RAG implementation"""
-    
+
     issues = []
-    
+
     # Epic Issue
     issues.append({
         "title": "🚀 [EPIC] Implement RAG (Retrieval-Augmented Generation) for Enhanced Backtesting",
@@ -69,7 +69,7 @@ RAG will enhance our trading decisions by:
 """,
         "labels": ["enhancement", "epic", "high-priority", "rag", "machine-learning"]
     })
-    
+
     # Issue 1: Core RAG Infrastructure
     issues.append({
         "title": "🏗️ Core RAG Infrastructure Setup",
@@ -104,11 +104,11 @@ class RAGInfrastructure:
         self.vector_store = self._init_vector_store(config)
         self.embeddings = self._init_embeddings(config)
         self.text_splitter = self._init_splitter(config)
-    
+
     async def add_documents(self, documents: List[Dict]):
         # Chunk, embed, and store documents
         pass
-    
+
     async def similarity_search(self, query: str, k: int = 10):
         # Retrieve relevant documents
         pass
@@ -174,7 +174,7 @@ class RAGInfrastructure:
 """,
         "labels": ["enhancement", "infrastructure", "rag", "high-priority"]
     })
-    
+
     # Issue 2: Historical Pattern Matching
     issues.append({
         "title": "📊 Implement Historical Pattern Matching System",
@@ -216,7 +216,7 @@ class PatternMatcher:
         price_sim = self._price_similarity(current, historical)
         volume_sim = self._volume_similarity(current, historical)
         indicator_sim = self._indicator_similarity(current, historical)
-        
+
         # Weighted average
         weights = {'price': 0.4, 'volume': 0.2, 'indicators': 0.4}
         return weighted_average(similarities, weights)
@@ -229,17 +229,17 @@ class RAGEnhancedBacktest(BacktestEngine):
     async def make_decision(self, data: pd.DataFrame, symbol: str):
         # Extract current pattern
         current_pattern = self.pattern_extractor.extract(data)
-        
+
         # Find similar historical patterns
         similar_patterns = await self.pattern_matcher.find_similar(
             current_pattern,
             k=20,
             min_similarity=0.75
         )
-        
+
         # Analyze outcomes
         pattern_insights = self.analyze_pattern_outcomes(similar_patterns)
-        
+
         # Enhance decision
         return self.enhance_with_patterns(base_decision, pattern_insights)
 ```
@@ -289,7 +289,7 @@ class RAGEnhancedBacktest(BacktestEngine):
 """,
         "labels": ["enhancement", "rag", "pattern-matching", "high-priority"]
     })
-    
+
     # Issue 3: Real-time News Integration
     issues.append({
         "title": "📰 Real-time News and Sentiment Integration",
@@ -318,11 +318,11 @@ class NewsAggregator:
             'benzinga': BenzingaClient(api_key=BENZINGA_KEY),
             'reddit': RedditSentiment(client_id=REDDIT_ID)
         }
-    
+
     async def fetch_news(self, symbol: str, lookback_hours: int = 24):
         # Aggregate from all sources
         all_news = await asyncio.gather(*[
-            source.fetch(symbol, lookback_hours) 
+            source.fetch(symbol, lookback_hours)
             for source in self.sources.values()
         ])
         return self.deduplicate_and_rank(all_news)
@@ -338,14 +338,14 @@ class NewsSentimentAnalyzer:
             'gpt_sentiment': GPTSentimentAnalyzer(),
             'custom_model': load_model('models/news_sentiment.pkl')
         }
-    
+
     async def analyze_sentiment(self, news_item: Dict) -> Dict:
         # Multi-model sentiment analysis
         sentiments = await asyncio.gather(*[
-            model.analyze(news_item['text']) 
+            model.analyze(news_item['text'])
             for model in self.models.values()
         ])
-        
+
         return {
             'overall_sentiment': self.ensemble_sentiment(sentiments),
             'confidence': self.calculate_confidence(sentiments),
@@ -388,23 +388,23 @@ class NewsRAGIntegration:
     ) -> Dict:
         # Get recent news
         recent_news = await self.news_aggregator.fetch_news(symbol, 24)
-        
+
         # Analyze sentiment
         news_sentiments = await self.analyze_all_news(recent_news)
-        
+
         # Find similar historical news impacts
         similar_impacts = await self.rag_engine.find_similar_news_impacts(
             news_sentiments,
             symbol,
             k=10
         )
-        
+
         # Predict likely impact
         predicted_impact = self.predict_news_impact(
             news_sentiments,
             similar_impacts
         )
-        
+
         # Adjust decision
         return self.adjust_for_news(base_decision, predicted_impact)
 ```
@@ -432,7 +432,7 @@ class NewsRAGIntegration:
 """,
         "labels": ["enhancement", "rag", "news-integration", "sentiment-analysis"]
     })
-    
+
     # Issue 4: Market Regime Classification
     issues.append({
         "title": "🌡️ Market Regime Classification System",
@@ -474,17 +474,17 @@ class RegimeDetector:
             'market_breadth': BreadthIndicator(),
             'risk_appetite': RiskAppetiteGauge()
         }
-    
+
     async def classify_regime(self, market_data: Dict) -> MarketRegime:
         # Calculate all indicators
         indicators = await self.calculate_indicators(market_data)
-        
+
         # ML-based classification
         regime = self.regime_classifier.predict(indicators)
-        
+
         # Confidence scoring
         confidence = self.calculate_regime_confidence(indicators, regime)
-        
+
         return {
             'regime': regime,
             'confidence': confidence,
@@ -530,17 +530,17 @@ class RegimeAdaptiveStrategy:
                 'position_sizing': 0.3
             }
         }
-    
+
     async def adapt_to_regime(self, current_regime: Dict, base_strategy: Dict):
         # Get regime-specific adjustments
         adjustments = self.regime_strategies[current_regime['regime']]
-        
+
         # Retrieve historical performance in similar regimes
         historical_performance = await self.rag.get_regime_performance(
             current_regime,
             base_strategy
         )
-        
+
         # Adapt strategy
         return self.apply_regime_adjustments(
             base_strategy,
@@ -572,7 +572,7 @@ class RegimeAdaptiveStrategy:
 """,
         "labels": ["enhancement", "rag", "market-regime", "adaptive-strategy"]
     })
-    
+
     # Issue 5: Risk Event Prediction
     issues.append({
         "title": "⚠️ Risk Event Prediction System",
@@ -603,14 +603,14 @@ class RiskIndicatorFramework:
             'sentiment_extreme': SentimentExtremeDetector(),
             'technical_breakdown': TechnicalBreakdownDetector()
         }
-    
+
     async def calculate_risk_score(self, market_data: Dict) -> Dict:
         # Calculate all risk indicators
         scores = await asyncio.gather(*[
-            indicator.calculate(market_data) 
+            indicator.calculate(market_data)
             for indicator in self.indicators.values()
         ])
-        
+
         # Aggregate into overall risk score
         return {
             'overall_risk': self.aggregate_risk_scores(scores),
@@ -631,22 +631,22 @@ class EarlyWarningSystem:
             'high': 0.7,
             'critical': 0.85
         }
-        
+
     async def scan_for_warnings(self, market_data: Dict) -> List[Dict]:
         warnings = []
-        
+
         # Check each risk factor
         risk_scores = await self.risk_framework.calculate_risk_score(market_data)
-        
+
         # Pattern-based warnings
         pattern_warnings = await self.detect_risk_patterns(market_data)
-        
+
         # RAG-enhanced warnings
         historical_warnings = await self.rag.find_similar_risk_setups(
             risk_scores,
             k=10
         )
-        
+
         # Generate actionable warnings
         for risk in self.evaluate_risks(risk_scores, pattern_warnings, historical_warnings):
             if risk['score'] > self.warning_thresholds['medium']:
@@ -657,7 +657,7 @@ class EarlyWarningSystem:
                     'recommended_actions': risk['actions'],
                     'historical_outcomes': risk['similar_events']
                 })
-        
+
         return warnings
 ```
 
@@ -695,7 +695,7 @@ class RiskAwareTrading:
     async def execute_with_risk_check(self, trade_signal: Dict) -> Dict:
         # Get current risk assessment
         risk_assessment = await self.early_warning.assess_current_risk()
-        
+
         # Adjust based on risk level
         if risk_assessment['level'] == 'critical':
             trade_signal['action'] = 'BLOCKED'
@@ -703,10 +703,10 @@ class RiskAwareTrading:
         elif risk_assessment['level'] == 'high':
             trade_signal['size'] *= 0.3  # Reduce position size
             trade_signal['stop_loss'] *= 1.5  # Widen stops
-        
+
         # Add risk context to signal
         trade_signal['risk_context'] = risk_assessment
-        
+
         return trade_signal
 ```
 
@@ -733,7 +733,7 @@ class RiskAwareTrading:
 """,
         "labels": ["enhancement", "rag", "risk-management", "prediction", "high-priority"]
     })
-    
+
     # Issue 6: Strategy Performance Context
     issues.append({
         "title": "🎯 Strategy Performance Context Engine",
@@ -763,7 +763,7 @@ class StrategyPerformanceTracker:
             'consistency': ConsistencyMetrics(),
             'market_correlation': CorrelationAnalyzer()
         }
-    
+
     async def track_performance(self, strategy_id: str, trades: List[Dict]) -> Dict:
         # Calculate comprehensive metrics
         performance = {
@@ -773,10 +773,10 @@ class StrategyPerformanceTracker:
             'market_conditions': await self.get_market_conditions(trades),
             'relative_performance': await self.compare_to_benchmark(trades)
         }
-        
+
         # Store in performance database
         await self.store_performance(performance)
-        
+
         return performance
 ```
 
@@ -797,20 +797,20 @@ class StrategyContextAnalyzer:
             'failure_points': await self.identify_failure_patterns(performance),
             'optimal_conditions': await self.find_optimal_conditions(strategy)
         }
-        
+
         # Find similar historical periods
         similar_contexts = await self.rag.find_similar_performance_contexts(
             context_analysis,
             k=20
         )
-        
+
         # Generate insights
         insights = self.generate_contextual_insights(
             performance,
             context_analysis,
             similar_contexts
         )
-        
+
         return insights
 ```
 
@@ -825,7 +825,7 @@ class StrategyRecommender:
         risk_tolerance: float
     ) -> Dict:
         recommendations = []
-        
+
         # For each strategy, find historical performance in similar conditions
         for strategy in available_strategies:
             historical_performance = await self.rag.get_strategy_performance(
@@ -833,20 +833,20 @@ class StrategyRecommender:
                 current_market,
                 lookback_periods=50
             )
-            
+
             # Calculate expected performance
             expected_metrics = self.calculate_expected_performance(
                 historical_performance,
                 current_market
             )
-            
+
             # Score based on multiple factors
             score = self.score_strategy(
                 expected_metrics,
                 risk_tolerance,
                 current_market
             )
-            
+
             recommendations.append({
                 'strategy': strategy,
                 'score': score,
@@ -855,7 +855,7 @@ class StrategyRecommender:
                 'confidence': expected_metrics['confidence'],
                 'reasoning': self.generate_reasoning(strategy, historical_performance)
             })
-        
+
         # Return sorted recommendations
         return sorted(recommendations, key=lambda x: x['score'], reverse=True)
 ```
@@ -877,13 +877,13 @@ class PerformanceAttributor:
             'selection': self.calculate_selection_attribution(strategy_results),
             'risk_factors': await self.factor_attribution(strategy_results)
         }
-        
+
         # Context from RAG
         historical_attribution = await self.rag.get_similar_attributions(
             attribution,
             k=10
         )
-        
+
         # Generate insights
         return {
             'attribution': attribution,
@@ -916,7 +916,7 @@ class PerformanceAttributor:
 """,
         "labels": ["enhancement", "rag", "performance-analysis", "strategy-optimization"]
     })
-    
+
     # Issue 7: RAG-Enhanced Adaptive Agents
     issues.append({
         "title": "🤖 RAG-Enhanced Adaptive Agents",
@@ -942,7 +942,7 @@ class RAGAdaptiveAgent(AdaptiveAgent):
         super().__init__(agent_id, config)
         self.rag_engine = RAGEngine(config['rag_config'])
         self.experience_buffer = ExperienceBuffer(max_size=10000)
-        
+
     async def make_decision(
         self,
         market_data: pd.DataFrame,
@@ -951,7 +951,7 @@ class RAGAdaptiveAgent(AdaptiveAgent):
     ) -> TradingDecision:
         # Get base decision from parent class
         base_decision = await super().make_decision(market_data, symbol, position)
-        
+
         # Enhance with RAG
         # 1. Find similar historical decisions
         similar_decisions = await self.rag_engine.find_similar_decisions(
@@ -959,19 +959,19 @@ class RAGAdaptiveAgent(AdaptiveAgent):
             symbol,
             k=20
         )
-        
+
         # 2. Get contextual insights
         market_context = await self.rag_engine.get_market_context(
             symbol,
             market_data
         )
-        
+
         # 3. Learn from other agents' experiences
         peer_insights = await self.get_peer_agent_insights(
             base_decision,
             market_context
         )
-        
+
         # 4. Enhance decision
         enhanced_decision = self.enhance_decision_with_rag(
             base_decision,
@@ -979,14 +979,14 @@ class RAGAdaptiveAgent(AdaptiveAgent):
             market_context,
             peer_insights
         )
-        
+
         # 5. Generate explanation
         enhanced_decision.explanation = self.generate_decision_explanation(
             enhanced_decision,
             similar_decisions,
             market_context
         )
-        
+
         return enhanced_decision
 ```
 
@@ -996,7 +996,7 @@ class RAGAdaptiveAgent(AdaptiveAgent):
 class ExperienceReplaySystem:
     def __init__(self):
         self.experience_store = VectorStore()
-        
+
     async def store_experience(self, experience: Dict):
         # Enrich experience with outcomes
         enriched = {
@@ -1006,10 +1006,10 @@ class ExperienceReplaySystem:
             'outcome_1w': await self.get_outcome(experience, '1w'),
             'market_impact': await self.calculate_market_impact(experience)
         }
-        
+
         # Store in vector database for retrieval
         await self.experience_store.add_document(enriched)
-    
+
     async def replay_similar_experiences(
         self,
         current_features: Dict,
@@ -1020,7 +1020,7 @@ class ExperienceReplaySystem:
             current_features,
             k=k
         )
-        
+
         # Analyze outcomes
         analysis = {
             'success_rate': self.calculate_success_rate(similar),
@@ -1029,7 +1029,7 @@ class ExperienceReplaySystem:
             'best_practices': self.extract_best_practices(similar),
             'pitfalls': self.identify_common_pitfalls(similar)
         }
-        
+
         return analysis
 ```
 
@@ -1040,7 +1040,7 @@ class CrossAgentLearning:
     def __init__(self, agent_registry: AgentRegistry):
         self.registry = agent_registry
         self.knowledge_graph = KnowledgeGraph()
-        
+
     async def share_agent_insights(self, agent_id: str, insight: Dict):
         # Add to shared knowledge graph
         await self.knowledge_graph.add_insight({
@@ -1049,7 +1049,7 @@ class CrossAgentLearning:
             'insight': insight,
             'performance_impact': insight.get('performance_impact', 0)
         })
-    
+
     async def get_collective_intelligence(
         self,
         query_features: Dict,
@@ -1057,12 +1057,12 @@ class CrossAgentLearning:
     ) -> Dict:
         # Query all agents' experiences
         all_insights = []
-        
+
         for agent_id, agent in self.registry.get_active_agents():
             if agent_id != exclude_agent:
                 agent_insights = await agent.get_relevant_insights(query_features)
                 all_insights.extend(agent_insights)
-        
+
         # Synthesize collective wisdom
         return {
             'consensus_action': self.find_consensus(all_insights),
@@ -1078,19 +1078,19 @@ class CrossAgentLearning:
 class DecisionExplainer:
     def __init__(self):
         self.template_engine = ExplanationTemplates()
-        
+
     async def generate_explanation(
         self,
         decision: TradingDecision,
         rag_context: Dict
     ) -> str:
         explanation_parts = []
-        
+
         # 1. Base signal explanation
         explanation_parts.append(
             f"Base Signal: {decision.action} based on {decision.reasoning}"
         )
-        
+
         # 2. Historical context
         if rag_context.get('similar_decisions'):
             success_rate = rag_context['similar_decisions']['success_rate']
@@ -1098,26 +1098,26 @@ class DecisionExplainer:
                 f"Historical Context: {len(rag_context['similar_decisions'])} similar setups "
                 f"with {success_rate:.1%} success rate"
             )
-        
+
         # 3. Market regime context
         if rag_context.get('market_regime'):
             explanation_parts.append(
                 f"Market Regime: {rag_context['market_regime']} - "
                 f"{self.get_regime_guidance(rag_context['market_regime'])}"
             )
-        
+
         # 4. Risk warnings
         if rag_context.get('risk_warnings'):
             explanation_parts.append(
                 f"Risk Factors: {', '.join(rag_context['risk_warnings'])}"
             )
-        
+
         # 5. Peer agent consensus
         if rag_context.get('peer_consensus'):
             explanation_parts.append(
                 f"Agent Consensus: {rag_context['peer_consensus']['summary']}"
             )
-        
+
         return " | ".join(explanation_parts)
 ```
 
@@ -1144,7 +1144,7 @@ class DecisionExplainer:
 """,
         "labels": ["enhancement", "rag", "agents", "machine-learning", "high-priority"]
     })
-    
+
     # Issue 8: Vector Database Integration
     issues.append({
         "title": "🗄️ Vector Database Integration",
@@ -1198,7 +1198,7 @@ class VectorDatabaseConnector:
         self.db_type = db_type
         self.config = config
         self.client = self._initialize_client()
-        
+
     def _initialize_client(self):
         if self.db_type == 'chromadb':
             return chromadb.Client(Settings(**self.config))
@@ -1208,7 +1208,7 @@ class VectorDatabaseConnector:
         elif self.db_type == 'weaviate':
             return weaviate.Client(**self.config)
         # Add more as needed
-    
+
     async def upsert_vectors(
         self,
         vectors: List[Dict[str, Any]],
@@ -1216,7 +1216,7 @@ class VectorDatabaseConnector:
     ):
         # Batch upsert with error handling
         batch_size = self.config.get('batch_size', 100)
-        
+
         for i in range(0, len(vectors), batch_size):
             batch = vectors[i:i + batch_size]
             try:
@@ -1234,14 +1234,14 @@ class VectorIngestionPipeline:
         self.vector_db = vector_db
         self.preprocessor = DataPreprocessor()
         self.embedder = EmbeddingGenerator()
-        
+
     async def ingest_market_data(self, data: pd.DataFrame, metadata: Dict):
         # 1. Preprocess data
         processed = self.preprocessor.prepare_for_embedding(data)
-        
+
         # 2. Generate embeddings
         embeddings = await self.embedder.generate_embeddings(processed)
-        
+
         # 3. Prepare vector records
         vectors = []
         for i, (idx, row) in enumerate(processed.iterrows()):
@@ -1256,10 +1256,10 @@ class VectorIngestionPipeline:
                     'indicators': self.extract_indicators(row)
                 }
             })
-        
+
         # 4. Ingest to database
         await self.vector_db.upsert_vectors(vectors, namespace='market_data')
-        
+
         return len(vectors)
 ```
 
@@ -1270,7 +1270,7 @@ class OptimizedVectorQuery:
     def __init__(self, vector_db: VectorDatabaseConnector):
         self.vector_db = vector_db
         self.cache = QueryCache(ttl=3600)  # 1 hour cache
-        
+
     async def similarity_search(
         self,
         query_vector: List[float],
@@ -1283,7 +1283,7 @@ class OptimizedVectorQuery:
         cached_result = self.cache.get(cache_key)
         if cached_result:
             return cached_result
-        
+
         # Optimize query with pre-filtering
         if filters:
             # Use metadata filtering to reduce search space
@@ -1294,13 +1294,13 @@ class OptimizedVectorQuery:
             )
         else:
             results = await self.vector_db.query(query_vector, k)
-        
+
         # Post-process results
         processed_results = self._process_results(results, k)
-        
+
         # Cache results
         self.cache.set(cache_key, processed_results)
-        
+
         return processed_results
 ```
 
@@ -1311,26 +1311,26 @@ class VectorDatabaseBackup:
     def __init__(self, vector_db: VectorDatabaseConnector):
         self.vector_db = vector_db
         self.storage = BackupStorage()
-        
+
     async def backup_namespace(self, namespace: str, backup_id: str):
         # Stream vectors from database
         all_vectors = []
         offset = 0
         batch_size = 1000
-        
+
         while True:
             batch = await self.vector_db.fetch_vectors(
                 namespace,
                 offset=offset,
                 limit=batch_size
             )
-            
+
             if not batch:
                 break
-                
+
             all_vectors.extend(batch)
             offset += batch_size
-        
+
         # Compress and store
         backup_data = {
             'namespace': namespace,
@@ -1338,21 +1338,21 @@ class VectorDatabaseBackup:
             'vector_count': len(all_vectors),
             'vectors': all_vectors
         }
-        
+
         await self.storage.store_backup(backup_id, backup_data)
-        
+
         return len(all_vectors)
-    
+
     async def restore_namespace(self, backup_id: str, namespace: str):
         # Load backup
         backup_data = await self.storage.load_backup(backup_id)
-        
+
         # Restore vectors
         await self.vector_db.upsert_vectors(
             backup_data['vectors'],
             namespace
         )
-        
+
         return backup_data['vector_count']
 ```
 
@@ -1380,7 +1380,7 @@ class VectorDatabaseBackup:
 """,
         "labels": ["enhancement", "infrastructure", "database", "rag"]
     })
-    
+
     # Issue 9: RAG API Endpoints
     issues.append({
         "title": "🌐 RAG API Endpoints",
@@ -1446,7 +1446,7 @@ async def similarity_search(
     try:
         # Generate embedding for query
         query_embedding = await embedding_service.embed(query)
-        
+
         # Search in vector database
         results = await vector_db.similarity_search(
             query_embedding,
@@ -1454,10 +1454,10 @@ async def similarity_search(
             filters=filters,
             namespace=namespace
         )
-        
+
         # Enrich results with metadata
         enriched_results = await enrich_search_results(results)
-        
+
         return enriched_results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -1474,27 +1474,27 @@ async def get_market_context(
     Get comprehensive market context for a symbol
     \"\"\"
     context = MarketContext(symbol=symbol, date=date)
-    
+
     # Get historical patterns
     if include_patterns:
         patterns = await pattern_matcher.find_similar_patterns(
             symbol, date, lookback_days
         )
         context.similar_patterns = patterns
-    
+
     # Get news sentiment
     if include_news:
         news = await news_analyzer.get_sentiment(symbol, date)
         context.news_sentiment = news
-    
+
     # Get market regime
     regime = await regime_classifier.classify(date)
     context.market_regime = regime
-    
+
     # Get risk factors
     risks = await risk_detector.assess_risks(symbol, date)
     context.risk_factors = risks
-    
+
     return context
 
 @app.post("/api/v1/rag/insights")
@@ -1507,22 +1507,22 @@ async def generate_insights(
     Generate AI-powered insights for trading decision
     \"\"\"
     insights = TradingInsights()
-    
+
     # Find similar historical decisions
     if include_historical:
         similar = await find_similar_decisions(decision, k=20)
         insights.historical_performance = analyze_outcomes(similar)
-    
+
     # Generate recommendations
     insights.recommendations = await generate_recommendations(
         decision, context, similar
     )
-    
+
     # Risk assessment
     insights.risk_assessment = await assess_decision_risk(
         decision, context
     )
-    
+
     return insights
 ```
 
@@ -1535,24 +1535,24 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.subscriptions: Dict[str, List[WebSocket]] = {}
-    
+
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
-    
+
     async def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
         # Remove from all subscriptions
         for topic in self.subscriptions:
             if websocket in self.subscriptions[topic]:
                 self.subscriptions[topic].remove(websocket)
-    
+
     async def broadcast(self, message: dict, topic: str = None):
         if topic and topic in self.subscriptions:
             connections = self.subscriptions[topic]
         else:
             connections = self.active_connections
-        
+
         for connection in connections:
             try:
                 await connection.send_json(message)
@@ -1568,23 +1568,23 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             # Receive subscription requests
             data = await websocket.receive_json()
-            
+
             if data['action'] == 'subscribe':
                 topic = data['topic']
                 if topic not in manager.subscriptions:
                     manager.subscriptions[topic] = []
                 manager.subscriptions[topic].append(websocket)
-                
+
                 # Start streaming for topic
                 asyncio.create_task(
                     stream_topic_updates(topic, websocket)
                 )
-            
+
             elif data['action'] == 'query':
                 # Handle real-time RAG queries
                 result = await process_realtime_query(data['query'])
                 await websocket.send_json(result)
-                
+
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
 ```
@@ -1599,7 +1599,7 @@ class SearchRequest(BaseModel):
     k: int = Field(10, ge=1, le=100, description="Number of results")
     filters: Optional[Dict[str, Any]] = Field(None, description="Metadata filters")
     namespace: str = Field("default", description="Vector namespace")
-    
+
     @validator('query')
     def query_not_empty(cls, v):
         if not v.strip():
@@ -1688,7 +1688,7 @@ async def rate_limited_search(
 """,
         "labels": ["enhancement", "api", "rag", "websocket"]
     })
-    
+
     # Issue 10: Performance Monitoring Dashboard
     issues.append({
         "title": "📊 RAG Performance Monitoring Dashboard",
@@ -1743,7 +1743,7 @@ class RAGMetricsCollector:
     def __init__(self):
         self.metrics_store = TimeSeriesDB()
         self.aggregator = MetricsAggregator()
-        
+
     async def collect_query_metrics(self, query_id: str, metrics: Dict):
         \"\"\"Collect metrics for each RAG query\"\"\"
         await self.metrics_store.insert({
@@ -1755,7 +1755,7 @@ class RAGMetricsCollector:
             'results_count': metrics['results_count'],
             'relevance_score': metrics['relevance_score']
         })
-    
+
     async def collect_system_metrics(self):
         \"\"\"Collect system-wide metrics\"\"\"
         metrics = {
@@ -1765,7 +1765,7 @@ class RAGMetricsCollector:
             'active_connections': await self.count_active_connections(),
             'queue_depth': await self.get_queue_depth()
         }
-        
+
         await self.metrics_store.insert_system_metrics(metrics)
 ```
 
@@ -1776,32 +1776,32 @@ class RAGMetricsCollector:
 export const RAGDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics>();
   const [timeRange, setTimeRange] = useState<TimeRange>('1h');
-  
+
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000/api/v1/metrics/stream');
-    
+
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setMetrics(prev => updateMetrics(prev, data));
     };
-    
+
     return () => ws.close();
   }, []);
-  
+
   return (
     <DashboardLayout>
       <Header>
         <h1>RAG Performance Dashboard</h1>
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
       </Header>
-      
+
       <MetricsGrid>
         <OverviewCard metrics={metrics?.overview} />
         <PerformanceChart data={metrics?.performance} timeRange={timeRange} />
         <AccuracyMetrics data={metrics?.accuracy} />
         <UsageHeatmap data={metrics?.usage} />
       </MetricsGrid>
-      
+
       <AlertsPanel alerts={metrics?.alerts} />
       <InsightsPanel insights={metrics?.insights} />
     </DashboardLayout>
@@ -1819,22 +1819,22 @@ export const PerformanceChart: React.FC<{data: PerformanceData}> = ({ data }) =>
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="p50" 
-            stroke="#8884d8" 
+          <Line
+            type="monotone"
+            dataKey="p50"
+            stroke="#8884d8"
             name="Median"
           />
-          <Line 
-            type="monotone" 
-            dataKey="p95" 
-            stroke="#82ca9d" 
+          <Line
+            type="monotone"
+            dataKey="p95"
+            stroke="#82ca9d"
             name="95th Percentile"
           />
-          <Line 
-            type="monotone" 
-            dataKey="p99" 
-            stroke="#ffc658" 
+          <Line
+            type="monotone"
+            dataKey="p99"
+            stroke="#ffc658"
             name="99th Percentile"
           />
         </LineChart>
@@ -1851,10 +1851,10 @@ class RAGAlertingSystem:
     def __init__(self):
         self.alert_rules = self._load_alert_rules()
         self.notification_channels = self._setup_channels()
-        
+
     async def check_alerts(self, metrics: Dict):
         triggered_alerts = []
-        
+
         for rule in self.alert_rules:
             if self.evaluate_rule(rule, metrics):
                 alert = Alert(
@@ -1864,12 +1864,12 @@ class RAGAlertingSystem:
                     severity=rule.severity
                 )
                 triggered_alerts.append(alert)
-                
+
                 # Send notifications
                 await self.send_alert(alert)
-        
+
         return triggered_alerts
-    
+
     def evaluate_rule(self, rule: AlertRule, metrics: Dict) -> bool:
         # Example alert rules
         if rule.type == 'latency_threshold':
@@ -1879,7 +1879,7 @@ class RAGAlertingSystem:
         elif rule.type == 'accuracy_drop':
             return metrics.get('accuracy', 1) < rule.threshold
         # Add more rule types
-        
+
     async def send_alert(self, alert: Alert):
         for channel in self.notification_channels:
             if alert.severity >= channel.min_severity:
@@ -1911,7 +1911,7 @@ class RAGPerformanceAnalyzer:
     async def analyze_performance(self, time_range: str) -> Dict:
         \"\"\"Analyze RAG system performance\"\"\"
         metrics = await self.fetch_metrics(time_range)
-        
+
         analysis = {
             'query_performance': self.analyze_query_performance(metrics),
             'accuracy_trends': self.analyze_accuracy_trends(metrics),
@@ -1919,12 +1919,12 @@ class RAGPerformanceAnalyzer:
             'optimization_suggestions': self.generate_suggestions(metrics),
             'cost_analysis': self.analyze_costs(metrics)
         }
-        
+
         return analysis
-    
+
     def analyze_query_performance(self, metrics: List[Dict]) -> Dict:
         latencies = [m['latency'] for m in metrics]
-        
+
         return {
             'avg_latency': np.mean(latencies),
             'p50_latency': np.percentile(latencies, 50),
@@ -1933,10 +1933,10 @@ class RAGPerformanceAnalyzer:
             'latency_trend': self.calculate_trend(latencies),
             'peak_hours': self.identify_peak_usage(metrics)
         }
-    
+
     def identify_bottlenecks(self, metrics: List[Dict]) -> List[Dict]:
         bottlenecks = []
-        
+
         # Check vector DB performance
         if np.mean([m['vector_db_latency'] for m in metrics]) > 100:
             bottlenecks.append({
@@ -1944,7 +1944,7 @@ class RAGPerformanceAnalyzer:
                 'issue': 'High query latency',
                 'recommendation': 'Consider adding indexes or scaling'
             })
-        
+
         # Check embedding generation
         if np.mean([m['embedding_latency'] for m in metrics]) > 200:
             bottlenecks.append({
@@ -1952,7 +1952,7 @@ class RAGPerformanceAnalyzer:
                 'issue': 'Slow embedding computation',
                 'recommendation': 'Use GPU acceleration or caching'
             })
-        
+
         return bottlenecks
 ```
 
@@ -1981,7 +1981,7 @@ class RAGPerformanceAnalyzer:
 """,
         "labels": ["enhancement", "monitoring", "dashboard", "frontend", "rag"]
     })
-    
+
     return issues
 
 # Create the issues
@@ -2003,4 +2003,4 @@ print("\nNext steps:")
 print("1. Review the issues in rag_github_issues.json")
 print("2. Run the GitHub API script to create them")
 print("3. Prioritize and assign to team members")
-print("4. Begin implementation with Issue #1 (Core Infrastructure)") 
+print("4. Begin implementation with Issue #1 (Core Infrastructure)")

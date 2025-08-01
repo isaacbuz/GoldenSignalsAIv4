@@ -10,13 +10,13 @@ from typing import List
 async def test_endpoint(session: aiohttp.ClientSession, url: str, num_requests: int = 100):
     '''Test endpoint performance'''
     times = []
-    
+
     for _ in range(num_requests):
         start = time.time()
         async with session.get(url) as response:
             await response.json()
         times.append(time.time() - start)
-    
+
     return {
         'url': url,
         'requests': num_requests,
@@ -36,19 +36,19 @@ async def run_performance_tests():
         "/api/v1/signals/SPY/insights",
         "/api/v1/market/opportunities"
     ]
-    
+
     async with aiohttp.ClientSession() as session:
         # Warm up
         for endpoint in endpoints:
             await session.get(f"{base_url}{endpoint}")
-        
+
         # Run tests
         results = []
         for endpoint in endpoints:
             result = await test_endpoint(session, f"{base_url}{endpoint}")
             results.append(result)
             print(f"Tested {endpoint}: {result['avg_ms']:.2f}ms avg")
-        
+
         # Test concurrent requests
         print("\nTesting concurrent requests...")
         start = time.time()
@@ -56,13 +56,13 @@ async def run_performance_tests():
         await asyncio.gather(*tasks)
         concurrent_time = (time.time() - start) * 1000
         print(f"50 concurrent requests: {concurrent_time:.2f}ms total")
-        
+
         return results
 
 if __name__ == "__main__":
     print("Running performance tests...")
     results = asyncio.run(run_performance_tests())
-    
+
     print("\nPerformance Summary:")
     print("-" * 50)
     for result in results:

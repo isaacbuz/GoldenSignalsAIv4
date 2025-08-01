@@ -144,7 +144,7 @@ class ConsoleMonitor {
         }
 
         // Send critical errors to backend (but not console monitor errors)
-        if (entry.level === 'error' && 
+        if (entry.level === 'error' &&
             !entry.message.includes('WebSocket') &&
             !entry.message.includes('Network timeout') &&
             !entry.message.includes('CORS') &&
@@ -271,4 +271,4 @@ export function useConsoleMonitor() {
         getLogs: (filter?: Parameters<typeof consoleMonitor.getLogs>[0]) =>
             consoleMonitor.getLogs(filter)
     };
-} 
+}

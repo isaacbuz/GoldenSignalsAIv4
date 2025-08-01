@@ -10,9 +10,9 @@ from datetime import datetime
 
 def create_frontend_issues() -> List[Dict]:
     """Create comprehensive GitHub issues for frontend enhancements"""
-    
+
     issues = []
-    
+
     # EPIC Issue
     issues.append({
         "title": "EPIC: Frontend Enhancement - Utilize All Backend Capabilities",
@@ -54,7 +54,7 @@ This epic tracks the comprehensive frontend enhancement to fully utilize all bac
         "labels": ["epic", "frontend", "enhancement", "high-priority"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Phase 1: Core Infrastructure
     issues.append({
         "title": "Frontend Core Infrastructure Enhancement",
@@ -109,7 +109,7 @@ class EnhancedApiClient {
   // Backtesting endpoints
   async createBacktest(config: BacktestConfig): Promise<BacktestResult>
   async compareBacktests(ids: string[]): Promise<ComparisonResult>
-  
+
   // WebSocket management
   subscribeToBacktestProgress(id: string, callback: (progress) => void)
   subscribeToHybridSignals(symbols: string[], callback: (signal) => void)
@@ -126,7 +126,7 @@ class EnhancedApiClient {
         "labels": ["frontend", "infrastructure", "phase-1", "high-priority"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Phase 2: Advanced Backtesting Suite
     issues.append({
         "title": "Advanced Backtesting Suite Implementation",
@@ -225,7 +225,7 @@ Build professional-grade backtesting interface with real-time execution and adva
         "labels": ["frontend", "backtesting", "phase-2", "feature"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Phase 3: AI & Multimodal Integration
     issues.append({
         "title": "AI & Multimodal Integration Enhancement",
@@ -333,7 +333,7 @@ Create state-of-the-art AI trading assistant with multimodal capabilities.
         "labels": ["frontend", "ai", "multimodal", "phase-3", "feature"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Phase 4: Hybrid Signal Intelligence
     issues.append({
         "title": "Hybrid Signal Intelligence Dashboard",
@@ -444,7 +444,7 @@ Build advanced multi-agent signal fusion interface with real-time collaboration 
         "labels": ["frontend", "hybrid-signals", "visualization", "phase-4", "feature"],
         "milestone": "Frontend Enhancement Q2 2025"
     })
-    
+
     # Phase 5: Portfolio & Risk Management
     issues.append({
         "title": "Portfolio & Risk Management Tools",
@@ -556,7 +556,7 @@ Develop institutional-grade portfolio management and risk analysis tools.
         "labels": ["frontend", "portfolio", "risk-management", "phase-5", "feature"],
         "milestone": "Frontend Enhancement Q2 2025"
     })
-    
+
     # Phase 6: Admin & System Monitoring
     issues.append({
         "title": "Admin Dashboard & System Monitoring",
@@ -668,7 +668,7 @@ Create comprehensive admin tools for complete system observability and managemen
         "labels": ["frontend", "admin", "monitoring", "phase-6", "feature"],
         "milestone": "Frontend Enhancement Q2 2025"
     })
-    
+
     # Technical Debt & Performance
     issues.append({
         "title": "Frontend Performance Optimization",
@@ -747,7 +747,7 @@ Optimize frontend performance to meet target metrics and improve user experience
         "labels": ["frontend", "performance", "optimization", "technical-debt"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # UI/UX Enhancement
     issues.append({
         "title": "UI/UX Design System Enhancement",
@@ -858,7 +858,7 @@ Create a modern, consistent, and accessible design system for the enhanced front
         "labels": ["frontend", "ui-ux", "design-system", "enhancement"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Testing Strategy
     issues.append({
         "title": "Frontend Testing Strategy Implementation",
@@ -959,7 +959,7 @@ Implement comprehensive testing to ensure reliability and maintainability of enh
         "labels": ["frontend", "testing", "quality", "infrastructure"],
         "milestone": "Frontend Enhancement Q1 2025"
     })
-    
+
     # Documentation
     issues.append({
         "title": "Frontend Documentation & Developer Experience",
@@ -1061,7 +1061,7 @@ Create comprehensive documentation and tools for excellent developer experience.
         "labels": ["frontend", "documentation", "developer-experience"],
         "milestone": "Frontend Enhancement Q2 2025"
     })
-    
+
     return issues
 
 def save_issues_to_file(issues: List[Dict], filename: str = "frontend_enhancement_issues.json"):
@@ -1073,24 +1073,24 @@ def save_issues_to_file(issues: List[Dict], filename: str = "frontend_enhancemen
 def main():
     """Main function"""
     print("🚀 Creating Frontend Enhancement GitHub Issues...")
-    
+
     # Create issues
     issues = create_frontend_issues()
-    
+
     # Save to file
     save_issues_to_file(issues)
-    
+
     # Print summary
     print("\n📊 Issue Summary:")
     print(f"Total issues created: {len(issues)}")
     print("\nIssue titles:")
     for i, issue in enumerate(issues, 1):
         print(f"{i}. {issue['title']}")
-    
+
     print("\n✨ Next steps:")
     print("1. Review the generated issues in frontend_enhancement_issues.json")
     print("2. Run the GitHub API script to create these issues")
     print("3. Start implementation according to the phases")
 
 if __name__ == "__main__":
-    main() 
+    main()
