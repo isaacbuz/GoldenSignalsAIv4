@@ -118,7 +118,7 @@
     "happy-dom": "^18.0.1",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
-    "lint-staged": "^16.1.2",
+    "lint-staged": "^16.1.4",
     "msw": "^2.10.2",
     "neo4j-driver": "^5.15.0",
     "prettier": "^3.6.2",
