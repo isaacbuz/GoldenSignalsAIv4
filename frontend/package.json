@@ -126,7 +126,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
     "vite-bundle-analyzer": "^1.0.0",
-    "vite-plugin-pwa": "^0.17.4",
+    "vite-plugin-pwa": "^1.0.2",
     "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^1.6.1"
   },
