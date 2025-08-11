@@ -6524,19 +6524,19 @@ files = [
 
 [[package]]
 name = "rq"
-version = "1.16.2"
+version = "2.4.1"
 description = "RQ is a simple, lightweight, library for creating background jobs, and processing them."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "rq-1.16.2-py3-none-any.whl", hash = "sha256:52e619f6cb469b00e04da74305045d244b75fecb2ecaa4f26422add57d3c5f09"},
-    {file = "rq-1.16.2.tar.gz", hash = "sha256:5c5b9ad5fbaf792b8fada25cc7627f4d206a9a4455aced371d4f501cc3f13b34"},
+    {file = "rq-2.4.1-py3-none-any.whl", hash = "sha256:a3a0839ba3213a9be013b398670caf71d9360a0c8525f343687cf2c2199e5ec8"},
+    {file = "rq-2.4.1.tar.gz", hash = "sha256:40ba01af3edacc008ab376009a3a547278d2bfe02a77cd4434adc0b01788239f"},
 ]
 
 [package.dependencies]
 click = ">=5"
-redis = ">=3.5"
+redis = ">=3.5,<6 || >6"
 
 [[package]]
 name = "rsa"
@@ -8280,4 +8280,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "1755613a2f9e93e7231e774acf1f8b3b53994e51a34a6ec5870ace54110351e7"
+content-hash = "ca6ec6ae90d7164ad7b085139210d8c7d898e17351eb78752177fbff56f889be"
