@@ -10,7 +10,7 @@ license = "MIT"
 python = ">=3.11,<3.14"
 
 # Core Framework
-fastapi = "^0.104.1"
+fastapi = "^0.116.1"
 uvicorn = {extras = ["standard"], version = "^0.24.0"}
 websockets = "^10.4"
 python-socketio = "^5.10.0"
@@ -44,7 +44,7 @@ numba = "^0.59.0"
 dask = "^2023.12.0"
 
 # Database & Caching
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.43"}
 alembic = "^1.13.0"
 asyncpg = "^0.29.0"
 redis = {extras = ["hiredis"], version = "^5.0.1"}
@@ -70,7 +70,7 @@ cryptography = ">=42.0.4"
 
 # Configuration & Environment
 pydantic = {extras = ["email"], version = "^2.5.0"}
-pydantic-settings = "^2.1.0"
+pydantic-settings = "^2.10.1"
 pyyaml = "^6.0.1"
 python-dotenv = "^1.0.0"
 dynaconf = "^3.2.4"
