@@ -32,7 +32,7 @@ dill==0.3.7
 cloudpickle==2.2.1
 
 # Time Series
-prophet==1.1.4
+prophet==1.1.7
 pmdarima==2.0.3
 arch==6.1.0
 
