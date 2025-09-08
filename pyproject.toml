@@ -82,7 +82,7 @@ requests = "^2.31.0"
 
 # Task Queue & Background Jobs
 celery = {extras = ["redis"], version = "^5.3.4"}
-rq = "^1.15.1"
+rq = "^2.5.0"
 
 # Visualization & Plotting
 plotly = "^5.17.0"
