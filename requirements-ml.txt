@@ -29,7 +29,7 @@ plotly==5.15.0
 # Model Serialization
 joblib==1.5.2
 dill==0.3.7
-cloudpickle==2.2.1
+cloudpickle==3.1.1
 
 # Time Series
 prophet==1.1.7
