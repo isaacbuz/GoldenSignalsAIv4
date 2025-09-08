@@ -54,7 +54,7 @@ sqlalchemy==2.0.19
 alembic==1.11.2
 
 # Monitoring and Logging
-prometheus-client==0.17.1
+prometheus-client==0.22.1
 opentelemetry-api==1.19.0
 opentelemetry-sdk==1.19.0
 opentelemetry-instrumentation-fastapi==0.40b0
